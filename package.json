@@ -1,0 +1,24 @@
+{
+  "name": "onward",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "learner:dev": "pnpm --filter=\"learner\" dev",
+    "format": "prettier --check \"**/*.{svelte,js,ts,md,html,css,json}\"",
+    "lint": "eslint \"**/*.{svelte,js,ts}\"",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.27.0",
+    "eslint": "^9.27.0",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "eslint-plugin-svelte": "^3.9.0",
+    "globals": "^16.2.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.0",
+    "prettier": "^3.5.3",
+    "prettier-plugin-svelte": "^3.4.0",
+    "prettier-plugin-tailwindcss": "^0.6.11",
+    "typescript-eslint": "^8.33.0"
+  }
+}

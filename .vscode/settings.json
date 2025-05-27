@@ -1,0 +1,14 @@
+{
+  // Enables TypeScript support in `.svelte` files.
+  "svelte.enable-ts-plugin": true,
+
+  // Shows ESLint errors/warnings in `.svelte` files.
+  "eslint.validate": ["svelte"],
+
+  "[svelte]": {
+    "editor.defaultFormatter": "svelte.svelte-vscode"
+  },
+  "files.associations": {
+    "*.css": "tailwindcss"
+  }
+}

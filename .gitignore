@@ -1,0 +1,24 @@
+.DS_Store
+
+# Ignore editor directories and files.
+.idea
+.vscode/*
+!.vscode/settings.json
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Ignore node modules.
+node_modules
+
+# Ignore cache/output directories.
+.svelte-kit
+build
+dist
+out
+
+# Ignore environment variables.
+*.env*
+!.env.example

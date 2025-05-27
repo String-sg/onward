@@ -1,0 +1,33 @@
+diff --git a/dist/src/index.js b/dist/src/index.js
+index 16d4a342662255a40d9c1c2b6eb36ff3441458cd..883a8863055e3ca366fee50b7afb3f8fb8befb7e 100644
+--- a/dist/src/index.js
++++ b/dist/src/index.js
+@@ -131416,10 +131416,7 @@ class HumanFriendlyWriter {
+             process.stdout.clearScreenDown();
+         }
+         if (this.isVerbose) {
+-            this.stream.write('\n');
+-            this.stream.write('====================================\n');
+-            this.stream.write(`Loading svelte-check in workspace: ${workspaceDir}`);
+-            this.stream.write('\n');
++            this.stream.write(`Loading svelte-check in workspace: ${workspaceDir}\n`);
+             this.stream.write('Getting Svelte diagnostics...\n');
+             this.stream.write('\n');
+         }
+@@ -131433,7 +131430,7 @@ class HumanFriendlyWriter {
+             let msg;
+             if (this.isVerbose) {
+                 const code = this.formatRelatedCode(diagnostic, text);
+-                msg = `${diagnostic.message} ${source}\n${pc.cyan(code)}`;
++                msg = `${diagnostic.message} ${source}\n${pc.cyan(code.trimEnd())}`;
+             }
+             else {
+                 msg = `${diagnostic.message} ${source}`;
+@@ -131470,7 +131467,6 @@ class HumanFriendlyWriter {
+         return text.substring(src.offsetAt({ line, character: 0 }, text), src.offsetAt({ line, character: Number.MAX_SAFE_INTEGER }, text));
+     }
+     completion(_f, errorCount, warningCount, fileCountWithProblems) {
+-        this.stream.write('====================================\n');
+         const message = [
+             'svelte-check found ',
+             `${errorCount} ${errorCount === 1 ? 'error' : 'errors'} and `,

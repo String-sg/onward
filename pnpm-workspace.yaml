@@ -1,0 +1,9 @@
+packages:
+  - apps/*
+
+onlyBuiltDependencies:
+  - '@tailwindcss/oxide'
+  - esbuild
+
+patchedDependencies:
+  svelte-check: patches/svelte-check.patch
