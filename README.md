@@ -2,23 +2,31 @@
 
 ## 🛠️ Setup
 
-1. Install `pnpm` if you don't have it already.
+1. Install `pnpm` if you don't have it already:
 
 ```sh
 brew install pnpm
 ```
 
-2. Install dependencies.
+2. Install dependencies:
 
 ```sh
 pnpm install
 ```
 
-3. Run the bootstrap script.
+3. Bootstrap the project:
 
 ```sh
 ./bootstrap.sh
 ```
+
+4. Start local services:
+
+```sh
+docker compose up -d valkey
+```
+
+> 💡 You can stop services later with `docker compose down`.
 
 ## 🚀 Quick Start
 
