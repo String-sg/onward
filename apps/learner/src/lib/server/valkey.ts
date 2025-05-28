@@ -19,8 +19,8 @@ export const valkey = await GlideClient.createClient({
   },
   databaseId: Number(url.pathname.slice(1)) || 0,
 
-  // Enable TLS in production.
-  useTLS: env.NODE_ENV === 'production',
+  // Enable TLS if the query string contains `tls=true`.
+  useTLS: url.searchParams.get('tls') === 'true',
 });
 
 // A callback to close the Valkey instance when the server shuts down.
