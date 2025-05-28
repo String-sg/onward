@@ -1,0 +1,13 @@
+services:
+  valkey:
+    image: valkey/valkey:8.0.3-alpine3.21
+    container_name: onward-valkey
+    restart: unless-stopped
+    command: valkey-server --requirepass secret
+    ports:
+      - 6379:6379
+    volumes:
+      - valkey:/data
+
+volumes:
+  valkey:
