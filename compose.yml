@@ -9,5 +9,14 @@ services:
     volumes:
       - valkey:/data
 
+  learner:
+    image: onward/learner:latest
+    container_name: onward-learner
+    build:
+      context: .
+      dockerfile: apps/learner/Dockerfile
+    ports:
+      - 3000:3000
+
 volumes:
   valkey:

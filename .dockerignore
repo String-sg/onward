@@ -1,0 +1,23 @@
+.DS_Store
+
+# Ignore docker files.
+.dockerignore
+**/Dockerfile
+**/*.Dockerfile
+
+# Ignore git directory and files.
+.git
+.gitignore
+.gitattributes
+
+# Ignore node modules.
+**/node_modules
+
+# Ignore cache/output directories.
+**/.svelte-kit
+**/build
+**/dist
+**/out
+
+# Ignore environment variables.
+**/*.env*
