@@ -33,7 +33,7 @@ COPY . .
 RUN pnpm install --offline
 
 # Build internal dependencies.
-RUN pnpm --filter="@onward/auth" build
+RUN pnpm bootstrap
 
 # Build learner app.
 RUN pnpm --filter="learner" build

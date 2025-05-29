@@ -14,10 +14,10 @@ brew install pnpm
 pnpm install
 ```
 
-3. Bootstrap the project:
+3. Sets up the project:
 
 ```sh
-./bootstrap.sh
+./setup.sh
 ```
 
 4. Start local services:
@@ -44,6 +44,7 @@ All commands are run from the root of the project, from a terminal:
 | :------------------- | :-------------------------------- |
 | `pnpm learner:dev`   | Starts the `learner` dev server   |
 | `pnpm learner:build` | Builds the `learner` application  |
-| `pnpm auth:build`    | Builds the `@onward/auth` library |
+| `pnpm auth:build`    | Builds the `@onward/auth` package |
+| `pnpm bootstrap`     | Builds all internal dependencies  |
 | `pnpm format`        | Format the entrie codebase        |
 | `pnpm lint`          | Lint the entire codebase          |
