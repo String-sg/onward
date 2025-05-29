@@ -17,7 +17,8 @@ List the specific changes you've made. For example:
 ## 📝 Notes
 
 <!--
-Any additional context, notes, or considerations for reviewers.
+Optional: Include this section only if you have additional context that reviewers should know about.
+For example:
 - Are there any breaking changes?
 - Are there any dependencies that need to be updated?
 - Any known limitations or future improvements?
