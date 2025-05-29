@@ -6,6 +6,7 @@
     "learner:dev": "pnpm --filter=\"learner\" dev",
     "learner:build": "pnpm --filter=\"learner\" build",
     "auth:build": "pnpm --filter=\"auth\" build",
+    "bootstrap": "pnpm --filter=\"./packages/*\" build",
     "format": "prettier --check \"**/*.{svelte,js,ts,md,html,css,json}\"",
     "lint": "eslint \"**/*.{svelte,js,ts}\"",
     "prepare": "husky"
