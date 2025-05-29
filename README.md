@@ -2,31 +2,31 @@
 
 ## 🛠️ Setup
 
-1. Install `pnpm` if you don't have it already:
+1. **Install `pnpm`** (if you don't have it already):
 
 ```sh
 brew install pnpm
 ```
 
-2. Install dependencies:
+2. **Install dependencies**:
 
 ```sh
 pnpm install
 ```
 
-3. Sets up the project:
+3. **Set up the local environment**:
 
 ```sh
 ./setup.sh
 ```
 
-4. Start local services:
+4. **Start required local services**:
 
 ```sh
 docker compose up -d valkey
 ```
 
-> 💡 You can stop services later with `docker compose down`.
+> 💡 You can stop the services later with `docker compose down`.
 
 ## 🚀 Quick Start
 
