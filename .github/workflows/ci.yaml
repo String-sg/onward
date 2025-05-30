@@ -97,6 +97,7 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
+    needs: [format, lint, check]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
