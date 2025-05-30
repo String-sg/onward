@@ -6,13 +6,13 @@ FROM node:22.16.0-alpine3.21 AS base
 RUN mkdir /app
 WORKDIR /app
 
-# Disable `husky`.
-ENV HUSKY=0
-
 # ----------------------------------------
 # Build Stage
 # ----------------------------------------
 FROM base as build
+
+# Disable `husky`.
+ENV HUSKY=0
 
 # Install `pnpm`.
 ENV PNPM_HOME="/pnpm"
@@ -40,7 +40,7 @@ RUN pnpm --filter="learner" build
 
 # Install production dependencies.
 RUN find . -type d -name "node_modules" -prune -exec rm -rf {} +
-RUN pnpm install --offline --ignore-scripts --prod
+RUN pnpm --filter="learner" install --offline --ignore-scripts --prod
 
 # ----------------------------------------
 # Production Stage
@@ -61,10 +61,6 @@ USER zero
 
 COPY --from=build --chown=zero:zero /app/package.json ./package.json
 COPY --from=build --chown=zero:zero /app/node_modules ./node_modules
-
-COPY --from=build --chown=zero:zero /app/packages/auth/package.json ./packages/auth/package.json
-COPY --from=build --chown=zero:zero /app/packages/auth/node_modules ./packages/auth/node_modules
-COPY --from=build --chown=zero:zero /app/packages/auth/dist ./packages/auth/dist
 
 COPY --from=build --chown=zero:zero /app/apps/learner/package.json ./apps/learner/package.json
 COPY --from=build --chown=zero:zero /app/apps/learner/node_modules ./apps/learner/node_modules
