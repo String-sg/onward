@@ -14,6 +14,15 @@ export default ts.config(
   svelte.configs.recommended,
 
   {
+    files: ['.husky/install.js'],
+    languageOptions: {
+      globals: {
+        ...globals.node,
+      },
+    },
+  },
+
+  {
     files: ['**/*.svelte', '**/*.svelte.js', '**/*.svelte.ts'],
     languageOptions: {
       parserOptions: {
