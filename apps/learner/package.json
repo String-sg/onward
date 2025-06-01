@@ -8,7 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "check": "svelte-check",
-    "prepare": "svelte-kit sync"
+    "prepare": "svelte-kit sync || echo ''"
   },
   "dependencies": {
     "@valkey/valkey-glide": "1.3.5-rc13"

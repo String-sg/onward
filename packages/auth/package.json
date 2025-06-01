@@ -5,7 +5,7 @@
   "scripts": {
     "build": "svelte-package",
     "test": "vitest",
-    "prepare": "svelte-kit sync"
+    "prepare": "svelte-kit sync || echo ''"
   },
   "exports": {
     ".": {
