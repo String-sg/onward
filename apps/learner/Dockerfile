@@ -6,13 +6,12 @@ FROM node:22.16.0-alpine3.21 AS base
 RUN mkdir /app
 WORKDIR /app
 
+ENV NODE_ENV="production"
+
 # ----------------------------------------
 # Build Stage
 # ----------------------------------------
 FROM base as build
-
-# Disable `husky`.
-ENV HUSKY=0
 
 # Install `pnpm`.
 ENV PNPM_HOME="/pnpm"
@@ -40,13 +39,12 @@ RUN pnpm --filter="learner" build
 
 # Install production dependencies.
 RUN find . -type d -name "node_modules" -prune -exec rm -rf {} +
-RUN pnpm --filter="learner" install --offline --ignore-scripts --prod
+RUN pnpm --filter="learner" install --offline --prod
 
 # ----------------------------------------
 # Production Stage
 # ----------------------------------------
 FROM base AS production
-ENV NODE_ENV="production"
 
 RUN apk add --no-cache ca-certificates
 
