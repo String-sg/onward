@@ -91,6 +91,9 @@ jobs:
       - name: Bootstrap
         run: pnpm bootstrap
 
+      - name: Generate database client
+        run: pnpm db:generate
+
       - name: Check
         run: pnpm -r check
 
