@@ -1,11 +1,12 @@
 packages:
   - apps/*
   - packages/*
-
 onlyBuiltDependencies:
+  - '@prisma/client'
+  - '@prisma/engines'
   - '@tailwindcss/oxide'
   - esbuild
+  - prisma
   - protobufjs
-
 patchedDependencies:
   svelte-check: patches/svelte-check.patch

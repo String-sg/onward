@@ -15,6 +15,7 @@ node_modules
 
 # Ignore cache/output directories.
 .svelte-kit
+generated
 build
 dist
 out

@@ -1,0 +1,18 @@
+generator learner {
+  provider = "prisma-client"
+  output   = "../apps/learner/src/generated"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRES_URL")
+}
+
+model User {
+  id        BigInt   @id @default(autoincrement()) @map("id")
+  email     String   @unique @map("email")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("users")
+}
