@@ -8,11 +8,6 @@ WORKDIR /app
 
 ENV NODE_ENV="production"
 
-# ----------------------------------------
-# Build Stage
-# ----------------------------------------
-FROM base as build
-
 # Install `pnpm`.
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
@@ -21,18 +16,29 @@ RUN mkdir $PNPM_HOME && \
         chmod +x $PNPM_HOME/pnpm && \
         ln -s $PNPM_HOME/pnpm /usr/local/bin/pnpm
 
-# Fetch all the dependencies into the virtual store.
+# ----------------------------------------
+# Build Stage
+# ----------------------------------------
+FROM base as build
+
+# Skip `postinstall` script of `@prisma/client` during installation.
+ENV PRISMA_SKIP_POSTINSTALL_GENERATE=true
+
+# Fetch all dependencies into the virtual store.
 COPY pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY patches patches
 RUN pnpm fetch
 
 COPY . .
 
-# Install dependencies
+# Install dependencies.
 RUN pnpm install --offline
 
 # Build internal dependencies.
 RUN pnpm bootstrap
+
+# Generate database client.
+RUN pnpm db:generate
 
 # Build learner app.
 RUN pnpm --filter="learner" build
@@ -59,6 +65,7 @@ USER zero
 
 COPY --from=build --chown=zero:zero /app/package.json ./package.json
 COPY --from=build --chown=zero:zero /app/node_modules ./node_modules
+COPY --from=build --chown=zero:zero /app/prisma ./prisma
 
 COPY --from=build --chown=zero:zero /app/apps/learner/package.json ./apps/learner/package.json
 COPY --from=build --chown=zero:zero /app/apps/learner/node_modules ./apps/learner/node_modules

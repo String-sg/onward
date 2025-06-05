@@ -3,13 +3,13 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "learner:dev": "pnpm --filter=\"learner\" dev",
-    "learner:build": "pnpm --filter=\"learner\" build",
-    "auth:build": "pnpm --filter=\"auth\" build",
+    "db:generate": "prisma generate --generator=learner",
+    "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy",
     "bootstrap": "pnpm --filter=\"./packages/*\" build",
     "format": "prettier --check \"**/*.{svelte,js,ts,md,html,css,json}\"",
     "lint": "eslint \"**/*.{svelte,js,ts}\"",
-    "prepare": "node .husky/install.js"
+    "prepare": "node \"./.husky/install.js\""
   },
   "devDependencies": {
     "@eslint/js": "^9.27.0",
@@ -22,6 +22,7 @@
     "prettier": "^3.5.3",
     "prettier-plugin-svelte": "^3.4.0",
     "prettier-plugin-tailwindcss": "^0.6.11",
+    "prisma": "^6.8.2",
     "typescript-eslint": "^8.33.0"
   }
 }

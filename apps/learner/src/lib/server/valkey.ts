@@ -23,7 +23,7 @@ export const valkey = await GlideClient.createClient({
   useTLS: url.searchParams.get('tls') === 'true',
 });
 
-// A callback to close the Valkey instance when the server shuts down.
+// Close the connection to the Valkey instance when the server shuts down.
 process.on('sveltekit:shutdown', () => {
   valkey.close();
 });

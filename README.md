@@ -23,7 +23,7 @@ pnpm install
 4. **Start required local services**:
 
 ```sh
-docker compose up -d valkey
+docker compose up -d valkey postgres
 ```
 
 > 💡 You can stop the services later with `docker compose down`.
@@ -33,18 +33,18 @@ docker compose up -d valkey
 ### Learner
 
 ```sh
-pnpm learner:dev
+pnpm --filter="learner" dev
 ```
 
 ## 🧞 Commands
 
 All commands are run from the root of the project, from a terminal:
 
-| Command              | Action                            |
-| :------------------- | :-------------------------------- |
-| `pnpm learner:dev`   | Starts the `learner` dev server   |
-| `pnpm learner:build` | Builds the `learner` application  |
-| `pnpm auth:build`    | Builds the `@onward/auth` package |
-| `pnpm bootstrap`     | Builds all internal dependencies  |
-| `pnpm format`        | Format the entrie codebase        |
-| `pnpm lint`          | Lint the entire codebase          |
+| Command            | Action                                       |
+| :----------------- | :------------------------------------------- |
+| `pnpm db:generate` | Generate database client and other artifacts |
+| `pnpm db:migrate`  | Create and apply database migrations         |
+| `pnpm db:deploy`   | Apply pending database migrations            |
+| `pnpm bootstrap`   | Build internal dependencies                  |
+| `pnpm format`      | Format codebase                              |
+| `pnpm lint`        | Lint codebase                                |
