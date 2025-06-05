@@ -9,6 +9,19 @@ services:
     volumes:
       - valkey:/data
 
+  postgres:
+    image: postgres:17.5-alpine3.21
+    container_name: onward-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: onward-dev
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres:/var/lib/postgresql/data
+
   learner:
     image: onward/learner:latest
     container_name: onward-learner
@@ -20,3 +33,4 @@ services:
 
 volumes:
   valkey:
+  postgres:
