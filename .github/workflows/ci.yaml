@@ -121,3 +121,10 @@ jobs:
 
       - name: Test
         run: pnpm -r test
+
+  build-learner:
+    name: Build Learner App
+    uses: ./.github/workflows/build-image.yml
+    with:
+      dockerfile_path: apps/learner/Dockerfile
+      ecr_repository: ${{ vars.ECR_LEARNER_REPOSITORY }}
