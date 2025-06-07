@@ -10,9 +10,125 @@ datasource db {
 
 model User {
   id        BigInt   @id @default(autoincrement()) @map("id")
-  email     String   @unique @map("email")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  // Domain-Specific Fields
+  name             String @map("name") @db.VarChar(255)
+  email            String @unique @map("email")
+  googleProviderId String @unique @map("google_provider_id")
+
+  // Relations
+  Collection      Collection[]
+  Note            Note[]
+  LearningJourney LearningJourney[]
+
   @@map("users")
+}
+
+model Collection {
+  id        BigInt   @id @default(autoincrement()) @map("id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Domain-Specific Fields
+  kind  String @map("kind") @db.VarChar(255)
+  title String @map("title")
+
+  // Relations
+  userId          BigInt            @map("user_id")
+  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  LearningJourney LearningJourney[]
+  Thread          Thread[]
+
+  @@map("collections")
+}
+
+model Note {
+  id        BigInt   @id @default(autoincrement()) @map("id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Domain-Specific Fields
+  content String @map("content")
+  topic   String @map("topic") @db.VarChar(255)
+
+  // Relations
+  userId BigInt @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notes")
+}
+
+model MultiLearningUnit {
+  id        BigInt   @id @default(autoincrement()) @map("id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Domain-Specific Fields
+  title           String            @map("title")
+  collection      String            @map("collection") @db.VarChar(255)
+  tags            String[]          @default([]) @map("tags") @db.VarChar(255)
+  content_type    String            @map("content_type") @db.VarChar(255)
+  content_url     String            @map("content_url")
+  LearningJourney LearningJourney[]
+
+  @@map("multi_learning_units")
+}
+
+model LearningJourney {
+  id        BigInt   @id @default(autoincrement()) @map("id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Domain-Specific Fields
+  is_completed    Boolean @default(false) @map("is_completed")
+  last_checkpoint Decimal @map("last_checkpoint")
+
+  // Relations
+  userId              BigInt @map("user_id")
+  multiLearningUnitId BigInt @map("multi_learning_units_id")
+  collectionId        BigInt @map("collection_id")
+
+  user              User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  multiLearningUnit MultiLearningUnit @relation(fields: [multiLearningUnitId], references: [id])
+  collection        Collection        @relation(fields: [collectionId], references: [id])
+  Thread            Thread[]
+
+  @@map("learning_journeys")
+}
+
+model Thread {
+  id        BigInt   @id @default(autoincrement()) @map("id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Domain-Specific Fields
+  isActive Boolean @default(false) @map("is_active")
+
+  // Relations
+  learningJourneyId BigInt? @map("learning_journeys_id")
+  collectionId      BigInt? @map("collections_id")
+
+  learningJourney LearningJourney? @relation(fields: [learningJourneyId], references: [id])
+  collection      Collection?      @relation(fields: [collectionId], references: [id])
+  Message         Message[]
+
+  @@map("threads")
+}
+
+model Message {
+  id        BigInt   @id @default(autoincrement()) @map("id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Domain-Specific Fields
+  content String @map("content")
+  role    String @map("role") @db.VarChar(255)
+
+  // Relations
+  threadId BigInt @map("thread_id")
+  thread   Thread @relation(fields: [threadId], references: [id])
+
+  @@map("messages")
 }
