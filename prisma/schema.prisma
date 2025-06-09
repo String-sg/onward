@@ -18,5 +18,25 @@ model User {
   email            String @unique @map("email")
   googleProviderId String @unique @map("google_provider_id")
 
+  // Relations.
+  collections Collection[]
+
   @@map("users")
+}
+
+model Collection {
+  id        BigInt   @id @default(autoincrement()) @map("id")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  // Domain-Specific Fields.
+  kind  String @map("kind") @db.VarChar(255)
+  title String @map("title")
+
+  // Relations.
+  userId BigInt @map("user_id")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("collections")
 }
