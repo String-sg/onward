@@ -19,7 +19,8 @@ model User {
   googleProviderId String @unique @map("google_provider_id")
 
   // Relations.
-  collections Collection[]
+  collections      Collection[]
+  learningJourneys LearningJourney[]
 
   @@map("users")
 }
@@ -38,6 +39,8 @@ model Collection {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  learningJourneys LearningJourney[]
+
   @@map("collections")
 }
 
@@ -46,12 +49,36 @@ model MultiLearningUnit {
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
 
-  // Domain-Specific Fields
+  // Domain-Specific Fields.
   title        String   @map("title")
   collection   String   @map("collection") @db.VarChar(255)
   tags         String[] @default([]) @map("tags") @db.VarChar(255)
   content_type String   @map("content_type") @db.VarChar(255)
   content_url  String   @map("content_url")
 
+  // Relations.
+  learningJourneys LearningJourney[]
+
   @@map("multi_learning_units")
+}
+
+model LearningJourney {
+  id        BigInt   @id @default(autoincrement()) @map("id")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  // Domain-Specific Fields.
+  is_completed    Boolean @default(false) @map("is_completed")
+  last_checkpoint Decimal @map("last_checkpoint")
+
+  // Relations.
+  userId              BigInt @map("user_id")
+  multiLearningUnitId BigInt @map("multi_learning_units_id")
+  collectionId        BigInt @map("collection_id")
+
+  user              User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  multiLearningUnit MultiLearningUnit @relation(fields: [multiLearningUnitId], references: [id])
+  collection        Collection        @relation(fields: [collectionId], references: [id])
+
+  @@map("learning_journeys")
 }
