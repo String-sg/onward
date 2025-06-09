@@ -40,6 +40,7 @@ model Collection {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   learningJourneys LearningJourney[]
+  threads          Thread[]
 
   @@map("collections")
 }
@@ -80,5 +81,25 @@ model LearningJourney {
   multiLearningUnit MultiLearningUnit @relation(fields: [multiLearningUnitId], references: [id])
   collection        Collection        @relation(fields: [collectionId], references: [id])
 
+  threads Thread[]
+
   @@map("learning_journeys")
+}
+
+model Thread {
+  id        BigInt   @id @default(autoincrement()) @map("id")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  // Domain-Specific Fields
+  isActive Boolean @default(false) @map("is_active")
+
+  // Relations
+  learningJourneyId BigInt? @map("learning_journeys_id")
+  collectionId      BigInt? @map("collections_id")
+
+  learningJourney LearningJourney? @relation(fields: [learningJourneyId], references: [id])
+  collection      Collection?      @relation(fields: [collectionId], references: [id])
+
+  @@map("threads")
 }
