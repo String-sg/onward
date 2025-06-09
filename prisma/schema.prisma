@@ -91,15 +91,39 @@ model Thread {
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
 
-  // Domain-Specific Fields
+  // Domain-Specific Fields.
   isActive Boolean @default(false) @map("is_active")
 
-  // Relations
+  // Relations.
   learningJourneyId BigInt? @map("learning_journeys_id")
   collectionId      BigInt? @map("collections_id")
 
   learningJourney LearningJourney? @relation(fields: [learningJourneyId], references: [id])
   collection      Collection?      @relation(fields: [collectionId], references: [id])
 
+  messages Message[]
+
   @@map("threads")
+}
+
+model Message {
+  id        BigInt   @id @default(autoincrement()) @map("id")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  // Domain-Specific Fields.
+  content String @map("content")
+  role    Role   @map("role")
+
+  // Relations.
+  threadId BigInt @map("thread_id")
+
+  thread Thread @relation(fields: [threadId], references: [id])
+
+  @@map("messages")
+}
+
+enum Role {
+  USER
+  ASSISTANT
 }
