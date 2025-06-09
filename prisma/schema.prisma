@@ -10,9 +10,13 @@ datasource db {
 
 model User {
   id        BigInt   @id @default(autoincrement()) @map("id")
-  email     String   @unique @map("email")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  // Domain-Specific Fields.
+  name             String @map("name") @db.VarChar(255)
+  email            String @unique @map("email")
+  googleProviderId String @unique @map("google_provider_id")
 
   @@map("users")
 }
