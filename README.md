@@ -33,7 +33,7 @@ docker compose up -d valkey postgres
 ### Learner
 
 ```sh
-pnpm --filter="learner" dev
+pnpm --filter="@onward/learner" dev
 ```
 
 ## 🧞 Commands

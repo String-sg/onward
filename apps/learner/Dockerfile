@@ -40,12 +40,12 @@ RUN pnpm bootstrap
 # Generate database client.
 RUN pnpm db:generate
 
-# Build learner app.
-RUN pnpm --filter="learner" build
+# Build the app.
+RUN pnpm --filter="@onward/learner" build
 
 # Install production dependencies.
 RUN find . -type d -name "node_modules" -prune -exec rm -rf {} +
-RUN pnpm --filter="learner" install --offline --prod
+RUN pnpm --filter="@onward/learner" install --offline --prod
 
 # ----------------------------------------
 # Production Stage
