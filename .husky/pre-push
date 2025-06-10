@@ -1,1 +1,10 @@
-pnpm -r check
+affected_packages=$(pnpm ls --filter '...[origin/main]' --depth=-1 --json | jq -r '.[].name' | grep -v "^onward$" || true)
+if [ -z "$affected_packages" ]; then
+  echo "No affected packages to check."
+  exit 0
+fi
+
+for pkg in $affected_packages; do
+  echo "Running 'pnpm --filter=$pkg check'"
+  pnpm --filter="$pkg" check || exit 1
+done
