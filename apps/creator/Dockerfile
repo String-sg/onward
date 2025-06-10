@@ -37,15 +37,12 @@ RUN pnpm install --offline
 # Build internal dependencies.
 RUN pnpm bootstrap
 
-# Generate database client.
-RUN pnpm db:generate
-
 # Build the app.
-RUN pnpm --filter="@onward/learner" build
+RUN pnpm --filter="@onward/creator" build
 
 # Install production dependencies.
 RUN find . -type d -name "node_modules" -prune -exec rm -rf {} +
-RUN pnpm --filter="@onward/learner" install --offline --prod
+RUN pnpm --filter="@onward/creator" install --offline --prod
 
 # ----------------------------------------
 # Production Stage
@@ -65,12 +62,10 @@ USER zero
 
 COPY --from=build --chown=zero:zero /app/package.json ./package.json
 COPY --from=build --chown=zero:zero /app/node_modules ./node_modules
-COPY --from=build --chown=zero:zero /app/prisma ./prisma
 
-COPY --from=build --chown=zero:zero /app/apps/learner/package.json ./apps/learner/package.json
-COPY --from=build --chown=zero:zero /app/apps/learner/node_modules ./apps/learner/node_modules
-COPY --from=build --chown=zero:zero /app/apps/learner/build ./apps/learner/build
+COPY --from=build --chown=zero:zero /app/apps/creator/package.json ./apps/creator/package.json
+COPY --from=build --chown=zero:zero /app/apps/creator/build ./apps/creator/build
 
 EXPOSE 3000
 
-CMD ["node", "apps/learner/build/index.js"]
+CMD ["node", "apps/creator/build/index.js"]
