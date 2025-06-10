@@ -30,6 +30,12 @@ docker compose up -d valkey postgres
 
 ## 🚀 Quick Start
 
+### Creator
+
+```sh
+pnpm --filter="@onward/creator" dev
+```
+
 ### Learner
 
 ```sh
