@@ -1,14 +1,12 @@
 <script>
   import { Play } from '@lucide/svelte';
+
+  import Badge from '$lib/components/Badge.svelte';
 </script>
 
 <div class="px-6 pt-5">
   <div class="flex flex-col rounded-3xl bg-purple-100 p-6">
-    <div class="flex flex-wrap gap-1">
-      <div class="rounded-md bg-purple-200 px-2.5 py-0.5">
-        <span class="text-xs font-semibold text-purple-900">Special Educational Needs</span>
-      </div>
-    </div>
+    <Badge>Special Educational Needs</Badge>
 
     <div class="mt-1">
       <span class="text-xl font-medium text-slate-950">
