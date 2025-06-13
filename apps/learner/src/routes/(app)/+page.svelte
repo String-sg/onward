@@ -6,7 +6,15 @@
 
 <div class="px-6 pt-5">
   <div class="flex flex-col rounded-3xl bg-purple-100 p-6">
-    <Badge>Special Educational Needs</Badge>
+    <div class="flex flex-wrap gap-1">
+      <Badge variant="blue">Special Educational Needs</Badge>
+      <Badge variant="orange">Special Educational Needs</Badge>
+      <Badge variant="amber">Special Educational Needs</Badge>
+      <Badge variant="teal">Special Educational Needs</Badge>
+      <Badge variant="rose">Special Educational Needs</Badge>
+      <Badge variant="purple">Special Educational Needs</Badge>
+      <Badge variant="slate">Special Educational Needs</Badge>
+    </div>
 
     <div class="mt-1">
       <span class="text-xl font-medium text-slate-950">

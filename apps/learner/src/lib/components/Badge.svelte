@@ -1,15 +1,30 @@
 <script lang="ts">
   import type { Snippet } from 'svelte';
+  import type { HTMLAttributes } from 'svelte/elements';
 
-  interface Props {
+  interface Props extends HTMLAttributes<HTMLDivElement> {
+    variant: 'blue' | 'orange' | 'amber' | 'teal' | 'rose' | 'purple' | 'slate';
     children: Snippet;
   }
 
-  let { children }: Props = $props();
+  let { children, variant, class: clazz, ...otherProps }: Props = $props();
 </script>
 
-<div class="flex flex-wrap gap-1">
-  <div class="rounded-md bg-purple-200 px-2.5 py-0.5">
-    <span class="text-xs font-semibold text-purple-900">{@render children()}</span>
-  </div>
+<div
+  {...otherProps}
+  class={[
+    'rounded-md px-2.5 py-0.5',
+    variant === 'blue' && 'bg-blue-200 text-blue-900',
+    variant === 'orange' && 'bg-orange-200 text-orange-900',
+    variant === 'amber' && 'bg-amber-200 text-amber-900',
+    variant === 'teal' && 'bg-teal-200 text-teal-900',
+    variant === 'rose' && 'bg-rose-200 text-rose-900',
+    variant === 'purple' && 'bg-purple-200 text-purple-900',
+    variant === 'slate' && 'bg-slate-950 text-slate-50',
+    clazz,
+  ]}
+>
+  <span class="whitespace-nowrap text-xs font-semibold">
+    {@render children()}
+  </span>
 </div>
