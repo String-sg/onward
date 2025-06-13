@@ -7,5 +7,6 @@
     collection="Special Educational Needs"
     title="Navigating Special Educational Needs in Singapore: A Path to Inclusion"
     tags={['Podcast']}
+    isPlayPanelVisible={true}
   />
 </div>
