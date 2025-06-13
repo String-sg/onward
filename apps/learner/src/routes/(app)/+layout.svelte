@@ -20,79 +20,73 @@
 
       <div class="flex items-center rounded-[80px] bg-slate-100 px-4">
         <!-- Home -->
-        <div class="flex flex-1 items-center justify-center">
-          <a
-            href="/"
-            class="group flex cursor-pointer flex-col items-center justify-center gap-y-1 pb-4 pt-3"
+        <a
+          href="/"
+          class="group flex flex-1 cursor-pointer flex-col items-center justify-center gap-y-1 pb-4 pt-3"
+        >
+          <div
+            class={[
+              'rounded-[100px] px-5 py-1 transition-colors',
+              isHomePage && 'bg-slate-950 text-white',
+            ]}
           >
-            <div
-              class={[
-                'rounded-[100px] px-5 py-1 transition-colors',
-                isHomePage && 'bg-slate-950 text-white',
-              ]}
-            >
-              <Home />
-            </div>
-            <span
-              class={[
-                'text-center text-xs font-semibold',
-                isHomePage ? 'text-slate-950' : 'text-slate-700',
-              ]}
-            >
-              Home
-            </span>
-          </a>
-        </div>
+            <Home />
+          </div>
+          <span
+            class={[
+              'text-center text-xs font-semibold',
+              isHomePage ? 'text-slate-950' : 'text-slate-700',
+            ]}
+          >
+            Home
+          </span>
+        </a>
 
         <!-- Learning -->
-        <div class="flex flex-1 items-center justify-center">
-          <a
-            href="/learning"
-            class="group flex cursor-pointer flex-col items-center justify-center gap-y-1 pb-4 pt-3"
+        <a
+          href="/learning"
+          class="group flex flex-1 cursor-pointer flex-col items-center justify-center gap-y-1 pb-4 pt-3"
+        >
+          <div
+            class={[
+              'rounded-[100px] px-5 py-1 transition-colors',
+              isLearningPage && 'bg-slate-950 text-white',
+            ]}
           >
-            <div
-              class={[
-                'rounded-[100px] px-5 py-1 transition-colors',
-                isLearningPage && 'bg-slate-950 text-white',
-              ]}
-            >
-              <BookHeart />
-            </div>
-            <span
-              class={[
-                'text-center text-xs font-semibold',
-                isLearningPage ? 'text-slate-950' : 'text-slate-700',
-              ]}
-            >
-              Learning
-            </span>
-          </a>
-        </div>
+            <BookHeart />
+          </div>
+          <span
+            class={[
+              'text-center text-xs font-semibold',
+              isLearningPage ? 'text-slate-950' : 'text-slate-700',
+            ]}
+          >
+            Learning
+          </span>
+        </a>
 
         <!-- Explore -->
-        <div class="flex flex-1 items-center justify-center">
-          <a
-            href="/explore"
-            class="group flex cursor-pointer flex-col items-center justify-center gap-y-1 pb-4 pt-3"
+        <a
+          href="/explore"
+          class="group flex flex-1 cursor-pointer flex-col items-center justify-center gap-y-1 pb-4 pt-3"
+        >
+          <div
+            class={[
+              'rounded-[100px] px-5 py-1 transition-colors',
+              isExplorePage && 'bg-slate-950 text-white',
+            ]}
           >
-            <div
-              class={[
-                'rounded-[100px] px-5 py-1 transition-colors',
-                isExplorePage && 'bg-slate-950 text-white',
-              ]}
-            >
-              <Compass />
-            </div>
-            <span
-              class={[
-                'text-center text-xs font-semibold',
-                isExplorePage ? 'text-slate-950' : 'text-slate-700',
-              ]}
-            >
-              Explore
-            </span>
-          </a>
-        </div>
+            <Compass />
+          </div>
+          <span
+            class={[
+              'text-center text-xs font-semibold',
+              isExplorePage ? 'text-slate-950' : 'text-slate-700',
+            ]}
+          >
+            Explore
+          </span>
+        </a>
       </div>
     </div>
   </nav>
