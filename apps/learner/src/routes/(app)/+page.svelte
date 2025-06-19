@@ -6,6 +6,6 @@
   <MultiLearningUnit
     tags={[{ variant: 'purple', content: 'Special Educational Needs' }]}
     title="Navigating Special Educational Needs in Singapore: A Path to Inclusion"
-    isPlayPanelVisible={true}
+    showplaypanel
   />
 </div>

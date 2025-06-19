@@ -6,10 +6,10 @@
   interface Props {
     tags: { variant: BadgeVariant; content: string }[];
     title: string;
-    isPlayPanelVisible: boolean;
+    showplaypanel: boolean;
   }
 
-  let { title, tags, isPlayPanelVisible }: Props = $props();
+  let { title, tags, showplaypanel }: Props = $props();
 </script>
 
 <div class="flex flex-col gap-y-6 rounded-3xl bg-purple-100 p-6">
@@ -33,7 +33,7 @@
     </div>
   </div>
 
-  {#if isPlayPanelVisible}
+  {#if showplaypanel}
     <div class="flex items-center gap-x-3">
       <button
         class="flex cursor-pointer items-center gap-x-2 rounded-full bg-purple-300 px-6 py-4 transition-colors active:bg-purple-400/75"
