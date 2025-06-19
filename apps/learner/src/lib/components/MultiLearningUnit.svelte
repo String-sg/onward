@@ -5,6 +5,10 @@
 
   interface Props {
     /**
+     * The URL to navigate to when the user clicks on the MLU.
+     */
+    to: string;
+    /**
      * The tags to display on the MLU.
      */
     tags: { variant: BadgeVariant; content: string }[];
@@ -20,10 +24,10 @@
     showplaypanel?: boolean;
   }
 
-  let { title, tags, showplaypanel = false }: Props = $props();
+  let { to, title, tags, showplaypanel = false }: Props = $props();
 </script>
 
-<div class="flex flex-col gap-y-6 rounded-3xl bg-purple-100 p-6">
+<a href={to} class="flex flex-col gap-y-6 rounded-3xl bg-purple-100 p-6">
   <div class="flex flex-col gap-y-2">
     <div class="flex flex-wrap gap-1">
       {#each tags as tag (tag.content)}
@@ -86,4 +90,4 @@
       </div>
     </div>
   {/if}
-</div>
+</a>
