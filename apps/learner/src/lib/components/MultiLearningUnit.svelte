@@ -4,8 +4,19 @@
   import Badge, { type Variant as BadgeVariant } from '$lib/components/Badge.svelte';
 
   interface Props {
+    /**
+     * The tags to display on the MLU.
+     */
     tags: { variant: BadgeVariant; content: string }[];
+    /**
+     * The title of the MLU.
+     */
     title: string;
+    /**
+     * Whether to show the play panel.
+     *
+     * @default false
+     */
     showplaypanel?: boolean;
   }
 
