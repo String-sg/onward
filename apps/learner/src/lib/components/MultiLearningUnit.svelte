@@ -6,10 +6,10 @@
   interface Props {
     tags: { variant: BadgeVariant; content: string }[];
     title: string;
-    showplaypanel: boolean;
+    showplaypanel?: boolean;
   }
 
-  let { title, tags, showplaypanel }: Props = $props();
+  let { title, tags, showplaypanel = false }: Props = $props();
 </script>
 
 <div class="flex flex-col gap-y-6 rounded-3xl bg-purple-100 p-6">
