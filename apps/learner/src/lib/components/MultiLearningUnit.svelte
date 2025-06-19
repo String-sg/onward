@@ -3,41 +3,19 @@
 
   import Badge, { type Variant as BadgeVariant } from '$lib/components/Badge.svelte';
 
-  type Collection =
-    | 'Assessment Literacy'
-    | 'Differentiated Instruction'
-    | 'Inquiry-based Learning'
-    | 'e-Pedagogy'
-    | 'Character and Citizenship Education'
-    | 'Special Educational Needs';
-
-  type Tag = 'Podcast' | 'Note';
-
   interface Props {
+    tags: { variant: BadgeVariant; content: string }[];
     title: string;
-    collection: Collection;
-    tags: Tag[];
     isPlayPanelVisible: boolean;
   }
 
-  let { title, collection, tags, isPlayPanelVisible }: Props = $props();
-
-  const collectionVariantMapping: Record<Collection, BadgeVariant> = {
-    'Assessment Literacy': 'blue',
-    'Differentiated Instruction': 'orange',
-    'Inquiry-based Learning': 'amber',
-    'e-Pedagogy': 'teal',
-    'Character and Citizenship Education': 'rose',
-    'Special Educational Needs': 'purple',
-  };
+  let { title, tags, isPlayPanelVisible }: Props = $props();
 </script>
 
 <div class="flex flex-col rounded-3xl bg-purple-100 p-6">
   <div class="flex flex-wrap gap-1">
-    <Badge variant={collectionVariantMapping[collection]}>{collection}</Badge>
-
-    {#each tags as tag (tag)}
-      <Badge variant="slate">{tag}</Badge>
+    {#each tags as tag (tag.content)}
+      <Badge variant={tag.variant}>{tag.content}</Badge>
     {/each}
   </div>
 
