@@ -1,5 +1,6 @@
 <script lang="ts">
   import { Play } from '@lucide/svelte';
+  import type { MouseEventHandler } from 'svelte/elements';
 
   import Badge, { type Variant as BadgeVariant } from '$lib/components/Badge.svelte';
 
@@ -22,9 +23,20 @@
      * @default false
      */
     showplaypanel?: boolean;
+    /**
+     * A callback function that is called when the user clicks on the play button.
+     */
+    onplay?: MouseEventHandler<HTMLButtonElement>;
   }
 
-  let { to, title, tags, showplaypanel = false }: Props = $props();
+  let { to, title, tags, showplaypanel = false, onplay }: Props = $props();
+
+  const handlePlay: MouseEventHandler<HTMLButtonElement> = (event) => {
+    // Prevent the default behavior of the anchor tag from navigating to the URL.
+    event.preventDefault();
+
+    onplay?.(event);
+  };
 </script>
 
 <a href={to} class="flex flex-col gap-y-6 rounded-3xl bg-purple-100 p-6">
@@ -52,6 +64,7 @@
     <div class="flex items-center gap-x-3">
       <button
         class="flex cursor-pointer items-center gap-x-2 rounded-full bg-purple-300 px-6 py-4 transition-colors active:bg-purple-400/75"
+        onclick={handlePlay}
       >
         <Play />
         <span class="font-medium text-slate-950">Play</span>
