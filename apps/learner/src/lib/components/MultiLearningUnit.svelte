@@ -18,7 +18,7 @@
      */
     title: string;
     /**
-     * Whether to show the play panel.
+     * Determines whether the play panel is displayed.
      *
      * @default false
      */
