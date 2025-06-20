@@ -12,7 +12,7 @@
      */
     title: string;
     /**
-     * Icon component representing the collection.
+     * The icon component representing the collection.
      */
     icon: Icon;
     /**
@@ -24,7 +24,7 @@
      */
     noOfNotes: number;
     /**
-     * Visual colour theme for the card. Provided by the parent via `variantMap`.
+     * Visual colour theme for the card.
      */
     variant: Variant;
   }
