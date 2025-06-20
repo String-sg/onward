@@ -158,7 +158,7 @@ jobs:
         with:
           context: .
           file: apps/${{ matrix.app }}/Dockerfile
-          push: false
+          push: true
           platforms: linux/arm64
           tags: ${{ steps.metadata.outputs.tags }}
           cache-from: type=gha
