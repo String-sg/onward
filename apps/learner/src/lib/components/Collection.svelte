@@ -1,8 +1,6 @@
 <script lang="ts">
-  import type { HandHeart, MessageCircleQuestion, PersonStanding } from '@lucide/svelte';
+  import type { Icon } from '@lucide/svelte';
   import type { HTMLAttributes } from 'svelte/elements';
-
-  type Icon = typeof HandHeart | typeof MessageCircleQuestion | typeof PersonStanding;
 
   type Variant = 'purple' | 'rose' | 'amber';
 
@@ -14,7 +12,7 @@
     /**
      * The icon component representing the collection.
      */
-    icon: Icon;
+    icon: typeof Icon;
     /**
      * Total number of podcasts in this collection.
      */
@@ -31,15 +29,13 @@
 
   let {
     title,
-    icon,
+    icon: IconComponent,
     noOfPodcasts,
     noOfNotes,
     variant,
     class: clazz,
     ...otherProps
   }: Props = $props();
-
-  const IconComponent = icon;
 </script>
 
 <div
