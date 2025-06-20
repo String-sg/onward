@@ -1,16 +1,40 @@
-<script>
-  import { HandHeart } from '@lucide/svelte';
+<script lang="ts">
+  import { HandHeart, MessageCircleQuestion, PersonStanding } from '@lucide/svelte';
+
+  import Collection from '$lib/components/Collection.svelte';
+
+  const variantMap = {
+    'Special Educational Needs': 'purple',
+    'Character and Citizenship Education': 'rose',
+    'Inclusive Education': 'amber',
+  } as const;
+
+  const collections = [
+    {
+      title: 'Special Educational Needs',
+      icon: HandHeart,
+      noOfPodcasts: 12,
+      noOfNotes: 2,
+    },
+    {
+      title: 'Character and Citizenship Education',
+      icon: PersonStanding,
+      noOfPodcasts: 8,
+      noOfNotes: 3,
+    },
+    {
+      title: 'Inclusive Education',
+      icon: MessageCircleQuestion,
+      noOfPodcasts: 10,
+      noOfNotes: 1,
+    },
+  ] as const;
 </script>
 
-<div class="px-6 pt-5">
-  <div class="min-h-50 flex flex-col rounded-3xl bg-purple-500 p-4">
-    <div class="flex">
-      <div class="rounded-lg bg-purple-200 p-2">
-        <HandHeart />
-      </div>
+<div class="grid auto-rows-fr grid-cols-2 gap-4 px-6 pt-5">
+  {#each collections as collection, i (i)}
+    <div class={i === 0 ? 'col-span-2' : ''}>
+      <Collection {...collection} variant={variantMap[collection.title]} />
     </div>
-    <div class="pt-3 text-xl font-semibold text-white">Special Educational Needs (SEN)</div>
-    <div class="pt-2 text-sm text-white">12 podcasts</div>
-    <div class="pt-1 text-sm text-white">2 notes</div>
-  </div>
+  {/each}
 </div>
