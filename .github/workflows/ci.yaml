@@ -126,7 +126,11 @@ jobs:
     needs: [test]
     strategy:
       matrix:
-        app: [learner, creator]
+        include:
+          - app: learner
+            ecr-repository: ${{ vars.ECR_LEARNER_REPOSITORY }}
+          - app: creator
+            ecr-repository: ${{ vars.ECR_CREATOR_REPOSITORY }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -148,7 +152,7 @@ jobs:
         id: metadata
         uses: docker/metadata-action@v5
         with:
-          images: ${{ steps.login-ecr.outputs.registry }}/onward/${{ matrix.app }}
+          images: ${{ steps.login-ecr.outputs.registry }}/${{ matrix.ecr-repository }}
           tags: |
             type=ref,event=pr,suffix=-{{sha}}
             type=ref,event=pr,suffix=-latest
