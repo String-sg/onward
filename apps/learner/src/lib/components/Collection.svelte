@@ -2,20 +2,15 @@
   import type { HandHeart, MessageCircleQuestion, PersonStanding } from '@lucide/svelte';
   import type { HTMLAttributes } from 'svelte/elements';
 
-  type Collection =
-    | 'Special Educational Needs'
-    | 'Character and Citizenship Education'
-    | 'Inclusive Education';
-
   type Icon = typeof HandHeart | typeof MessageCircleQuestion | typeof PersonStanding;
 
   type Variant = 'purple' | 'rose' | 'amber';
 
   interface Props extends HTMLAttributes<HTMLDivElement> {
     /**
-     * The title of the MLU.
+     * The title of the Collection.
      */
-    title: Collection;
+    title: string;
     /**
      * Icon component representing the collection.
      */
