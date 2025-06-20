@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@prisma/client": "^6.8.2",
-    "@valkey/valkey-glide": "2.0.0"
+    "@valkey/valkey-glide": "2.0.1"
   },
   "devDependencies": {
     "@lucide/svelte": "^0.511.0",
