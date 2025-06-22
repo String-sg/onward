@@ -165,5 +165,5 @@ jobs:
           push: true
           platforms: linux/arm64
           tags: ${{ steps.metadata.outputs.tags }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=gha,scope=${{ matrix.app }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.app }}
