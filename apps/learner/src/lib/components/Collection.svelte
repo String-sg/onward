@@ -41,7 +41,7 @@
 <div
   {...otherProps}
   class={[
-    'min-h-50 flex h-full flex-col rounded-3xl p-4',
+    'min-h-50 flex h-full flex-col gap-y-2 rounded-3xl p-4',
     variant === 'purple' && 'bg-purple-500',
     variant === 'rose' && 'bg-rose-500',
     variant === 'amber' && 'bg-amber-500',
@@ -60,7 +60,11 @@
       <IconComponent />
     </div>
   </div>
-  <div class="pt-3 text-xl font-semibold text-white">{title}</div>
-  <div class="pt-2 text-sm text-white">{noOfPodcasts} podcasts</div>
-  <div class="pt-1 text-sm text-white">{noOfNotes} notes</div>
+
+  <span class="text-xl font-semibold text-white">{title}</span>
+
+  <div class="flex flex-col">
+    <span class="text-sm text-white">{noOfPodcasts} podcasts</span>
+    <span class="text-sm text-white">{noOfNotes} notes</span>
+  </div>
 </div>
