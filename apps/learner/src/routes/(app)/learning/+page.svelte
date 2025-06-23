@@ -9,8 +9,8 @@
   <Collection
     title="Special Educational Needs"
     icon={HandHeart}
-    noOfPodcasts={12}
-    noOfNotes={2}
+    numberofpodcasts={12}
+    numberofnotes={2}
     variant="purple"
   />
 
@@ -18,8 +18,8 @@
   <Collection
     title="Character and Citizenship Education"
     icon={PersonStanding}
-    noOfPodcasts={8}
-    noOfNotes={3}
+    numberofpodcasts={8}
+    numberofnotes={3}
     variant="rose"
   />
 
@@ -27,8 +27,8 @@
   <Collection
     title="Inclusive Education"
     icon={MessageCircleQuestion}
-    noOfPodcasts={10}
-    noOfNotes={1}
+    numberofpodcasts={10}
+    numberofnotes={1}
     variant="amber"
   />
 </div>

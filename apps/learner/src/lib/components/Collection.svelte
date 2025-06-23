@@ -9,24 +9,24 @@
      */
     title: string;
     /**
-     * The icon component representing the collection.
+     * The icon component representing the Collection.
      */
     icon: typeof Icon;
     /**
-     * Total number of podcasts in this collection.
+     * Total number of podcasts in this Collection.
      */
-    noOfPodcasts: number;
+    numberofpodcasts: number;
     /**
-     * Total number of notes in this collection.
+     * Total number of notes in this Collection.
      */
-    noOfNotes: number;
+    numberofnotes: number;
     /**
-     * Visual colour theme for the card.
+     * Visual colour theme for the Collection.
      */
     variant: Variant;
   }
 
-  let { title, icon: IconComponent, noOfPodcasts, noOfNotes, variant }: Props = $props();
+  let { title, icon: IconComponent, numberofpodcasts, numberofnotes, variant }: Props = $props();
 </script>
 
 <div
@@ -53,7 +53,7 @@
   <span class="text-xl font-semibold text-white">{title}</span>
 
   <div class="flex flex-col">
-    <span class="text-sm text-white">{noOfPodcasts} podcasts</span>
-    <span class="text-sm text-white">{noOfNotes} notes</span>
+    <span class="text-sm text-white">{numberofpodcasts} podcasts</span>
+    <span class="text-sm text-white">{numberofnotes} notes</span>
   </div>
 </div>
