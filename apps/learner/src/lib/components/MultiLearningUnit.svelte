@@ -1,66 +1,76 @@
 <script lang="ts">
   import { Play } from '@lucide/svelte';
+  import type { MouseEventHandler } from 'svelte/elements';
 
   import Badge, { type Variant as BadgeVariant } from '$lib/components/Badge.svelte';
 
-  type Collection =
-    | 'Assessment Literacy'
-    | 'Differentiated Instruction'
-    | 'Inquiry-based Learning'
-    | 'e-Pedagogy'
-    | 'Character and Citizenship Education'
-    | 'Special Educational Needs';
-
-  type Tag = 'Podcast' | 'Note';
-
   interface Props {
+    /**
+     * The URL to navigate to when the user clicks on the MLU.
+     */
+    to: string;
+    /**
+     * The tags to display on the MLU.
+     */
+    tags: { variant: BadgeVariant; content: string }[];
+    /**
+     * The title of the MLU.
+     */
     title: string;
-    collection: Collection;
-    tags: Tag[];
-    isPlayPanelVisible: boolean;
+    /**
+     * Determines whether the play panel is displayed.
+     *
+     * @default false
+     */
+    showplaypanel?: boolean;
+    /**
+     * A callback function that is called when the user clicks on the play button.
+     */
+    onplay?: MouseEventHandler<HTMLButtonElement>;
   }
 
-  let { title, collection, tags, isPlayPanelVisible }: Props = $props();
+  let { to, title, tags, showplaypanel = false, onplay }: Props = $props();
 
-  const collectionVariantMapping: Record<Collection, BadgeVariant> = {
-    'Assessment Literacy': 'blue',
-    'Differentiated Instruction': 'orange',
-    'Inquiry-based Learning': 'amber',
-    'e-Pedagogy': 'teal',
-    'Character and Citizenship Education': 'rose',
-    'Special Educational Needs': 'purple',
+  const handlePlay: MouseEventHandler<HTMLButtonElement> = (event) => {
+    // Prevent the default behavior of the anchor tag from navigating to the URL.
+    event.preventDefault();
+
+    onplay?.(event);
   };
 </script>
 
-<div class="flex flex-col rounded-3xl bg-purple-100 p-6">
-  <div class="flex flex-wrap gap-1">
-    <Badge variant={collectionVariantMapping[collection]}>{collection}</Badge>
+<a href={to} class="flex flex-col gap-y-6 rounded-3xl bg-purple-100 p-6">
+  <div class="flex flex-col gap-y-2">
+    <div class="flex flex-wrap gap-1">
+      {#each tags as tag (tag.content)}
+        <Badge variant={tag.variant}>{tag.content}</Badge>
+      {/each}
+    </div>
 
-    {#each tags as tag (tag)}
-      <Badge variant="slate">{tag}</Badge>
-    {/each}
+    <div class="flex flex-col gap-y-3">
+      <span class="text-xl font-medium text-slate-950">
+        {title}
+      </span>
+
+      <div class="flex gap-x-1">
+        <span class="text-sm text-slate-600">Guidance Branch</span>
+        <span class="text-sm text-slate-600">•</span>
+        <span class="text-sm text-slate-600">2 days ago</span>
+      </div>
+    </div>
   </div>
 
-  <div class="mt-1">
-    <span class="text-xl font-medium text-slate-950">
-      {title}
-    </span>
-  </div>
-
-  <div class="mt-3 flex gap-x-1">
-    <span class="text-sm text-slate-600">Guidance Branch</span>
-    <span class="text-sm text-slate-600">•</span>
-    <span class="text-sm text-slate-600">2 days ago</span>
-  </div>
-
-  {#if isPlayPanelVisible}
-    <div class="mt-5 flex justify-start gap-3">
-      <button class="flex items-center justify-center gap-2 rounded-full bg-purple-300 px-6 py-4">
+  {#if showplaypanel}
+    <div class="flex items-center gap-x-3">
+      <button
+        class="flex cursor-pointer items-center gap-x-2 rounded-full bg-purple-300 px-6 py-4 transition-colors active:bg-purple-400/75"
+        onclick={handlePlay}
+      >
         <Play />
-        <span>Play</span>
+        <span class="font-medium text-slate-950">Play</span>
       </button>
 
-      <div class="flex items-center justify-center gap-2">
+      <div class="flex items-center gap-x-2">
         <svg viewBox="0 0 24 24" class="h-6 w-6">
           <circle cx="12" cy="12" r="9" stroke="#D8B4FE" fill="none" stroke-width="3px" />
           <circle
@@ -93,4 +103,4 @@
       </div>
     </div>
   {/if}
-</div>
+</a>
