@@ -1,10 +1,9 @@
 <script lang="ts">
   import type { Icon } from '@lucide/svelte';
-  import type { HTMLAttributes } from 'svelte/elements';
 
   type Variant = 'purple' | 'rose' | 'amber';
 
-  interface Props extends HTMLAttributes<HTMLDivElement> {
+  interface Props {
     /**
      * The title of the Collection.
      */
@@ -27,25 +26,15 @@
     variant: Variant;
   }
 
-  let {
-    title,
-    icon: IconComponent,
-    noOfPodcasts,
-    noOfNotes,
-    variant,
-    class: clazz,
-    ...otherProps
-  }: Props = $props();
+  let { title, icon: IconComponent, noOfPodcasts, noOfNotes, variant }: Props = $props();
 </script>
 
 <div
-  {...otherProps}
   class={[
     'min-h-50 flex h-full flex-col gap-y-2 rounded-3xl p-4',
     variant === 'purple' && 'bg-purple-500',
     variant === 'rose' && 'bg-rose-500',
     variant === 'amber' && 'bg-amber-500',
-    clazz,
   ]}
 >
   <div class="flex">
