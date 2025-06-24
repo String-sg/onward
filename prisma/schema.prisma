@@ -59,6 +59,7 @@ model MultiLearningUnit {
 
   // Relations.
   learningJourneys LearningJourney[]
+  questionAnswers  QuestionAnswer[]
 
   @@map("multi_learning_units")
 }
@@ -122,4 +123,24 @@ model Message {
 enum Role {
   USER
   ASSISTANT
+}
+
+model QuestionAnswer {
+  id        BigInt   @id @default(autoincrement()) @map("id")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  // Domain-Specific Fields.
+  question    String   @map("question")
+  options     String[] @default([]) @map("options")
+  answer      Int      @map("answer") @db.SmallInt
+  explanation String   @map("explanation")
+  order       Int      @map("order") @db.SmallInt
+
+  // Relations.
+  multiLearningUnitId BigInt @map("multi_learning_units_id")
+
+  multiLearningUnit MultiLearningUnit @relation(fields: [multiLearningUnitId], references: [id])
+
+  @@map("question_answers")
 }
