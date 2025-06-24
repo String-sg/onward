@@ -11,7 +11,7 @@
 </script>
 
 <main class="mx-auto flex h-full w-full max-w-5xl flex-col">
-  <nav class="z-1000 sticky bg-white px-6 pt-6">
+  <nav class="z-1000 sticky bg-white px-6 py-5">
     <div class="flex flex-col gap-y-3">
       <div class="flex items-center justify-between">
         <span class="text-2xl font-semibold">Onward</span>
