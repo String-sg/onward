@@ -21,6 +21,7 @@ model User {
   // Relations.
   collections      Collection[]
   learningJourneys LearningJourney[]
+  threads          Thread[]
 
   @@map("users")
 }
@@ -40,7 +41,6 @@ model Collection {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   learningJourneys LearningJourney[]
-  threads          Thread[]
 
   @@map("collections")
 }
@@ -81,8 +81,6 @@ model LearningJourney {
   multiLearningUnit MultiLearningUnit @relation(fields: [multiLearningUnitId], references: [id])
   collection        Collection        @relation(fields: [collectionId], references: [id])
 
-  threads Thread[]
-
   @@map("learning_journeys")
 }
 
@@ -95,11 +93,9 @@ model Thread {
   isActive Boolean @default(false) @map("is_active")
 
   // Relations.
-  learningJourneyId BigInt? @map("learning_journeys_id")
-  collectionId      BigInt? @map("collections_id")
+  userId BigInt @map("user_id")
 
-  learningJourney LearningJourney? @relation(fields: [learningJourneyId], references: [id])
-  collection      Collection?      @relation(fields: [collectionId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   messages Message[]
 
