@@ -1,12 +1,11 @@
 <script>
-  import MultiLearningUnit from '$lib/components/MultiLearningUnit.svelte';
+  import FullMultiLearningUnit from '$lib/components/FullMultiLearningUnit.svelte';
 </script>
 
 <div class="px-6 pt-5">
-  <MultiLearningUnit
+  <FullMultiLearningUnit
     to="/"
     tags={[{ variant: 'purple', content: 'Special Educational Needs' }]}
     title="Navigating Special Educational Needs in Singapore: A Path to Inclusion"
-    showplaypanel
   />
 </div>

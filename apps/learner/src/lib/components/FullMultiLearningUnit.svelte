@@ -18,18 +18,12 @@
      */
     title: string;
     /**
-     * Determines whether the play panel is displayed.
-     *
-     * @default false
-     */
-    showplaypanel?: boolean;
-    /**
      * A callback function that is called when the user clicks on the play button.
      */
     onplay?: MouseEventHandler<HTMLButtonElement>;
   }
 
-  let { to, title, tags, showplaypanel = false, onplay }: Props = $props();
+  let { to, title, tags, onplay }: Props = $props();
 
   const handlePlay: MouseEventHandler<HTMLButtonElement> = (event) => {
     // Prevent the default behavior of the anchor tag from navigating to the URL.
@@ -60,47 +54,45 @@
     </div>
   </div>
 
-  {#if showplaypanel}
-    <div class="flex items-center gap-x-3">
-      <button
-        class="flex cursor-pointer items-center gap-x-2 rounded-full bg-purple-300 px-6 py-4 transition-colors active:bg-purple-400/75"
-        onclick={handlePlay}
-      >
-        <Play />
-        <span class="font-medium text-slate-950">Play</span>
-      </button>
+  <div class="flex items-center gap-x-3">
+    <button
+      class="flex cursor-pointer items-center gap-x-2 rounded-full bg-purple-300 px-6 py-4 transition-colors active:bg-purple-400/75"
+      onclick={handlePlay}
+    >
+      <Play />
+      <span class="font-medium text-slate-950">Play</span>
+    </button>
 
-      <div class="flex items-center gap-x-2">
-        <svg viewBox="0 0 24 24" class="h-6 w-6">
-          <circle cx="12" cy="12" r="9" stroke="#D8B4FE" fill="none" stroke-width="3px" />
-          <circle
-            cx="12"
-            cy="12"
-            r="9"
-            stroke="#A855F7"
-            fill="none"
-            stroke-width="3px"
-            stroke-dasharray="56.55"
-            stroke-dashoffset="12"
-            transform-origin="center"
-            transform="rotate(-90 0 0)"
-          />
-          <circle
-            cx="12"
-            cy="12"
-            r="9"
-            stroke="#6B21A8"
-            fill="none"
-            stroke-width="3px"
-            stroke-dasharray="56.55"
-            stroke-dashoffset="25"
-            transform-origin="center"
-            transform="rotate(-90 0 0)"
-          />
-        </svg>
+    <div class="flex items-center gap-x-2">
+      <svg viewBox="0 0 24 24" class="h-6 w-6">
+        <circle cx="12" cy="12" r="9" stroke="#D8B4FE" fill="none" stroke-width="3px" />
+        <circle
+          cx="12"
+          cy="12"
+          r="9"
+          stroke="#A855F7"
+          fill="none"
+          stroke-width="3px"
+          stroke-dasharray="56.55"
+          stroke-dashoffset="12"
+          transform-origin="center"
+          transform="rotate(-90 0 0)"
+        />
+        <circle
+          cx="12"
+          cy="12"
+          r="9"
+          stroke="#6B21A8"
+          fill="none"
+          stroke-width="3px"
+          stroke-dasharray="56.55"
+          stroke-dashoffset="25"
+          transform-origin="center"
+          transform="rotate(-90 0 0)"
+        />
+      </svg>
 
-        <span class="text-sm text-slate-600">23m left</span>
-      </div>
+      <span class="text-sm text-slate-600">23m left</span>
     </div>
-  {/if}
+  </div>
 </a>
