@@ -38,7 +38,7 @@ model Collection {
   // Relations.
   userId BigInt @map("user_id")
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id])
 
   learningJourneys LearningJourney[]
 
@@ -78,7 +78,7 @@ model LearningJourney {
   multiLearningUnitId BigInt @map("multi_learning_units_id")
   collectionId        BigInt @map("collection_id")
 
-  user              User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User              @relation(fields: [userId], references: [id])
   multiLearningUnit MultiLearningUnit @relation(fields: [multiLearningUnitId], references: [id])
   collection        Collection        @relation(fields: [collectionId], references: [id])
 
@@ -96,7 +96,7 @@ model Thread {
   // Relations.
   userId BigInt @map("user_id")
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id])
 
   messages Message[]
 
