@@ -39,9 +39,8 @@ model Collection {
   // Relations.
   userId BigInt @map("user_id")
 
-  user User @relation(fields: [userId], references: [id])
-
-  learningJourneys LearningJourney[]
+  user              User                @relation(fields: [userId], references: [id])
+  multiLearningUnit MultiLearningUnit[]
 
   @@map("collections")
 }
@@ -53,12 +52,14 @@ model MultiLearningUnit {
 
   // Domain-Specific Fields.
   title       String   @map("title")
-  collection  String   @map("collection") @db.VarChar(255)
   tags        String[] @default([]) @map("tags") @db.VarChar(255)
   contentType String   @map("content_type") @db.VarChar(255)
   contentURL  String   @map("content_url")
 
   // Relations.
+  collectionId BigInt @map("collection_id")
+
+  collection       Collection        @relation(fields: [collectionId], references: [id])
   learningJourneys LearningJourney[]
   questionAnswers  QuestionAnswer[]
 
@@ -77,11 +78,9 @@ model LearningJourney {
   // Relations.
   userId              BigInt @map("user_id")
   multiLearningUnitId BigInt @map("multi_learning_units_id")
-  collectionId        BigInt @map("collection_id")
 
   user              User              @relation(fields: [userId], references: [id])
   multiLearningUnit MultiLearningUnit @relation(fields: [multiLearningUnitId], references: [id])
-  collection        Collection        @relation(fields: [collectionId], references: [id])
 
   @@map("learning_journeys")
 }
