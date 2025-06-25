@@ -1,34 +1,10 @@
 # Onward
 
-## 🛠️ Setup
-
-1. **Install `pnpm`** (if you don't have it already):
-
-```sh
-brew install pnpm
-```
-
-2. **Install dependencies**:
-
-```sh
-pnpm install
-```
-
-3. **Set up the local environment**:
-
-```sh
-./setup.sh
-```
-
-4. **Start required local services**:
-
-```sh
-docker compose up -d valkey postgres
-```
-
-> 💡 You can stop the services later with `docker compose down`.
+A professional development platform that empowers teachers with flexible, personalized, and bite-sized learning resources — delivering practical growth opportunities that fit seamlessly into busy teaching schedules.
 
 ## 🚀 Quick Start
+
+Please ensure that you have completed the required [development setup](./CONTRIBUTING.md#development-setup) before proceeding.
 
 ### Creator
 
@@ -54,3 +30,7 @@ All commands are run from the root of the project, from a terminal:
 | `pnpm bootstrap`   | Build internal dependencies                  |
 | `pnpm format`      | Format codebase                              |
 | `pnpm lint`        | Lint codebase                                |
+
+## Contributing
+
+Contributions to Onward are welcome and highly appreciated. However, before you jump right into it, we would like you to review our [Contribution Guidelines](./CONTRIBUTING.md) to make sure you have a smooth experience contributing to Onward.
