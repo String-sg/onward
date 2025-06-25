@@ -34,6 +34,7 @@ model Collection {
   // Domain-Specific Fields.
   kind  String @map("kind") @db.VarChar(255)
   title String @map("title")
+  tag   String @map("tag") @db.VarChar(255)
 
   // Relations.
   userId BigInt @map("user_id")
