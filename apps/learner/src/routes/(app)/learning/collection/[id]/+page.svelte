@@ -8,7 +8,9 @@
   <div class="flex flex-col gap-6">
     <div class="flex items-center gap-3">
       <div class="flex h-14 w-12 items-center justify-center rounded-[100px] bg-slate-100">
-        <ChevronLeft class="h-6 w-6 text-slate-950" />
+        <a href="/learning">
+          <ChevronLeft class="h-6 w-6 text-slate-950" />
+        </a>
       </div>
       <span class="text-xl font-medium text-slate-950">Special Educational Needs</span>
     </div>
