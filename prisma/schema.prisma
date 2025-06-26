@@ -71,8 +71,8 @@ model LearningJourney {
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   // Domain-Specific Fields.
-  is_completed    Boolean @default(false) @map("is_completed")
-  last_checkpoint Decimal @map("last_checkpoint")
+  isCompleted    Boolean @default(false) @map("is_completed")
+  lastCheckpoint Decimal @map("last_checkpoint")
 
   // Relations.
   userId              BigInt @map("user_id")
