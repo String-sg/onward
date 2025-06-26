@@ -52,11 +52,11 @@ model MultiLearningUnit {
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   // Domain-Specific Fields.
-  title        String   @map("title")
-  collection   String   @map("collection") @db.VarChar(255)
-  tags         String[] @default([]) @map("tags") @db.VarChar(255)
-  content_type String   @map("content_type") @db.VarChar(255)
-  content_url  String   @map("content_url")
+  title       String   @map("title")
+  collection  String   @map("collection") @db.VarChar(255)
+  tags        String[] @default([]) @map("tags") @db.VarChar(255)
+  contentType String   @map("content_type") @db.VarChar(255)
+  contentURL  String   @map("content_url")
 
   // Relations.
   learningJourneys LearningJourney[]
