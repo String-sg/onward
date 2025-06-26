@@ -1,11 +1,5 @@
 <script lang="ts">
-  import {
-    BrainCircuit,
-    Funnel,
-    HandHeart,
-    MessageCircleQuestion,
-    PersonStanding,
-  } from '@lucide/svelte';
+  import { BrainCircuit, Funnel } from '@lucide/svelte';
 
   import Collection from '$lib/components/Collection.svelte';
 </script>
@@ -28,8 +22,8 @@
     <div class="grid auto-rows-fr grid-cols-2 gap-4 [&>:first-child]:col-span-2">
       <!-- Collection 1 -->
       <Collection
-        title="Special Educational Needs"
-        icon={HandHeart}
+        title="SEN peer support"
+        tag={{ variant: 'purple', content: 'Special Educational Needs' }}
         numberofpodcasts={12}
         numberofnotes={2}
         variant="purple"
@@ -37,20 +31,20 @@
 
       <!-- Collection 2 -->
       <Collection
-        title="Character and Citizenship Education"
-        icon={PersonStanding}
+        title="Learn to use AI"
+        tag={{ variant: 'amber', content: 'Artificial Intelligence' }}
         numberofpodcasts={8}
         numberofnotes={3}
-        variant="rose"
+        variant="amber"
       />
 
       <!-- Collection 3 -->
       <Collection
-        title="Inclusive Education"
-        icon={MessageCircleQuestion}
+        title="Strategies: Basic counselling"
+        tag={{ variant: 'teal', content: 'Supporting Student socio-emotional learning' }}
         numberofpodcasts={10}
         numberofnotes={1}
-        variant="amber"
+        variant="teal"
       />
     </div>
   </div>
