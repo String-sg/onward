@@ -12,10 +12,20 @@
       </div>
       <span class="text-xl font-medium text-slate-950">Special Educational Needs</span>
     </div>
-    <MultiLearningUnitMini
-      to="/mlu/1"
-      tags={[{ variant: 'purple', content: 'Special Educational Needs' }]}
-      title="Navigating Special Educational Needs in Singapore: A Path to Inclusion"
-    />
+    <div class="flex flex-col gap-3">
+      <span class="text-xl font-medium text-slate-950">12 podcasts</span>
+
+      <MultiLearningUnitMini
+        to="/mlu/1"
+        tags={[{ variant: 'purple', content: 'Special Educational Needs' }]}
+        title="Navigating Special Educational Needs in Singapore: A Path to Inclusion"
+      />
+
+      <MultiLearningUnitMini
+        to="/mlu/1"
+        tags={[{ variant: 'purple', content: 'Special Educational Needs' }]}
+        title="Navigating Special Educational Needs in Singapore: A Path to Inclusion"
+      />
+    </div>
   </div>
 </div>
