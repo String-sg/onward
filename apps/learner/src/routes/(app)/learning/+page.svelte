@@ -23,7 +23,7 @@
       <!-- Collection 1 -->
       <Collection
         title="SEN peer support"
-        tag={{ variant: 'purple', content: 'Special Educational Needs' }}
+        tag="Special Educational Needs"
         numberofpodcasts={12}
         numberofnotes={2}
         variant="purple"
@@ -33,7 +33,7 @@
       <!-- Collection 2 -->
       <Collection
         title="Learn to use AI"
-        tag={{ variant: 'amber', content: 'Artificial Intelligence' }}
+        tag="Artificial Intelligence"
         numberofpodcasts={8}
         numberofnotes={3}
         variant="amber"
@@ -43,7 +43,7 @@
       <!-- Collection 3 -->
       <Collection
         title="Strategies: Basic counselling"
-        tag={{ variant: 'teal', content: 'Supporting Student socio-emotional learning' }}
+        tag="Supporting Student socio-emotional learning"
         numberofpodcasts={10}
         numberofnotes={1}
         variant="teal"

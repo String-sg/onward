@@ -1,7 +1,7 @@
 <script lang="ts">
   type Variant = 'purple' | 'teal' | 'amber';
 
-  import Badge, { type Variant as BadgeVariant } from '$lib/components/Badge.svelte';
+  import Badge from '$lib/components/Badge.svelte';
 
   interface Props {
     /**
@@ -23,7 +23,7 @@
     /**
      * The tag to display on the Collection.
      */
-    tag: { variant: BadgeVariant; content: string };
+    tag: string;
     /**
      * The URL to navigate to when the user clicks on the MLU.
      */
@@ -43,9 +43,7 @@
   ]}
 >
   <div class="flex flex-wrap gap-2">
-    <Badge variant={tag.variant} class="truncate rounded-lg">
-      {tag.content}
-    </Badge>
+    <Badge {variant} class="truncate rounded-lg">{tag}</Badge>
   </div>
 
   <span class="text-xl font-semibold text-white">{title}</span>
