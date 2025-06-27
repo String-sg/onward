@@ -43,7 +43,7 @@
   ]}
 >
   <div class="flex flex-wrap gap-2">
-    <Badge variant={tag.variant} class="truncate rounded-lg" title={tag.content}>
+    <Badge variant={tag.variant} class="truncate rounded-lg">
       {tag.content}
     </Badge>
   </div>
