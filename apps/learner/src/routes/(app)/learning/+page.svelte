@@ -10,10 +10,10 @@
       <span class="text-xl font-semibold">Your learnings</span>
 
       <div class="flex gap-4">
-        <div class="flex h-14 w-12 items-center justify-center rounded-2xl bg-slate-100">
+        <div class="flex items-center justify-center rounded-2xl bg-slate-100 p-3">
           <BrainCircuit />
         </div>
-        <div class="flex h-14 w-12 items-center justify-center rounded-2xl bg-slate-100">
+        <div class="flex items-center justify-center rounded-2xl bg-slate-100 p-3">
           <Funnel />
         </div>
       </div>
