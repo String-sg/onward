@@ -7,15 +7,16 @@
 <div class="flex flex-col px-6">
   <div class="flex flex-col gap-6">
     <div class="flex items-center gap-3">
-      <div class="flex h-14 w-12 items-center justify-center rounded-[100px] bg-slate-100">
-        <a href="/learning">
-          <ChevronLeft class="h-6 w-6 text-slate-950" />
-        </a>
-      </div>
-      <span class="text-xl font-medium text-slate-950">Special Educational Needs</span>
+      <a
+        href="/learning"
+        class="flex items-center justify-center rounded-full bg-slate-100 px-2 py-3"
+      >
+        <ChevronLeft />
+      </a>
+      <span class="text-xl font-medium">Special Educational Needs</span>
     </div>
     <div class="flex flex-col gap-3">
-      <span class="text-xl font-medium text-slate-950">12 podcasts</span>
+      <span class="text-xl font-medium">12 podcasts</span>
 
       <MultiLearningUnitMini
         to="/mlu/1"
