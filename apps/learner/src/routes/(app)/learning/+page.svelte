@@ -21,37 +21,34 @@
 
     <div class="grid auto-rows-fr grid-cols-2 gap-4 [&>:first-child]:col-span-2">
       <!-- Collection 1 -->
-      <a href="/learning/collection/1">
-        <Collection
-          title="SEN peer support"
-          tag={{ variant: 'purple', content: 'Special Educational Needs' }}
-          numberofpodcasts={12}
-          numberofnotes={2}
-          variant="purple"
-        />
-      </a>
+      <Collection
+        title="SEN peer support"
+        tag={{ variant: 'purple', content: 'Special Educational Needs' }}
+        numberofpodcasts={12}
+        numberofnotes={2}
+        variant="purple"
+        to="/learning/collection/1"
+      />
 
       <!-- Collection 2 -->
-      <a href="/learning/collection/2">
-        <Collection
-          title="Learn to use AI"
-          tag={{ variant: 'amber', content: 'Artificial Intelligence' }}
-          numberofpodcasts={8}
-          numberofnotes={3}
-          variant="amber"
-        />
-      </a>
+      <Collection
+        title="Learn to use AI"
+        tag={{ variant: 'amber', content: 'Artificial Intelligence' }}
+        numberofpodcasts={8}
+        numberofnotes={3}
+        variant="amber"
+        to="/learning/collection/2"
+      />
 
       <!-- Collection 3 -->
-      <a href="/learning/collection/3">
-        <Collection
-          title="Strategies: Basic counselling"
-          tag={{ variant: 'teal', content: 'Supporting Student socio-emotional learning' }}
-          numberofpodcasts={10}
-          numberofnotes={1}
-          variant="teal"
-        />
-      </a>
+      <Collection
+        title="Strategies: Basic counselling"
+        tag={{ variant: 'teal', content: 'Supporting Student socio-emotional learning' }}
+        numberofpodcasts={10}
+        numberofnotes={1}
+        variant="teal"
+        to="/learning/collection/3"
+      />
     </div>
   </div>
 </div>

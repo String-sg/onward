@@ -24,12 +24,17 @@
      * The tag to display on the Collection.
      */
     tag: { variant: BadgeVariant; content: string };
+    /**
+     * The URL to navigate to when the user clicks on the MLU.
+     */
+    to: string;
   }
 
-  let { title, numberofpodcasts, numberofnotes, variant, tag }: Props = $props();
+  let { title, numberofpodcasts, numberofnotes, variant, tag, to }: Props = $props();
 </script>
 
-<div
+<a
+  href={to}
   class={[
     'min-h-50 flex h-full flex-col gap-y-2 rounded-3xl p-4',
     variant === 'purple' && 'bg-purple-500',
@@ -49,4 +54,4 @@
     <span class="text-sm text-white">{numberofpodcasts} podcasts</span>
     <span class="text-sm text-white">{numberofnotes} notes</span>
   </div>
-</div>
+</a>
