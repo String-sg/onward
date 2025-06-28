@@ -5,6 +5,14 @@
 
   interface Props {
     /**
+     * The URL to navigate to when the user clicks on the MLU.
+     */
+    to: string;
+    /**
+     * The tag to display on the Collection.
+     */
+    tag: string;
+    /**
      * The title of the Collection.
      */
     title: string;
@@ -20,14 +28,6 @@
      * Visual colour theme for the Collection.
      */
     variant: Variant;
-    /**
-     * The tag to display on the Collection.
-     */
-    tag: string;
-    /**
-     * The URL to navigate to when the user clicks on the MLU.
-     */
-    to: string;
   }
 
   let { title, numberofpodcasts, numberofnotes, variant, tag, to }: Props = $props();
