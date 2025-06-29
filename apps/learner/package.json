@@ -20,10 +20,10 @@
     "@sveltejs/adapter-node": "^5.2.12",
     "@sveltejs/kit": "^2.21.1",
     "@sveltejs/vite-plugin-svelte": "^5.0.3",
-    "@tailwindcss/vite": "^4.1.7",
+    "@tailwindcss/vite": "^4.1.11",
     "svelte": "^5.34.9",
     "svelte-check": "^4.2.1",
-    "tailwindcss": "^4.1.7",
+    "tailwindcss": "^4.1.11",
     "typescript": "^5.8.3",
     "vite": "^6.3.5"
   }
