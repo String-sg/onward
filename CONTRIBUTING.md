@@ -29,7 +29,6 @@ We enthusiastically welcome code contributions via Pull Requests (PRs)! If you'r
 1. **Discuss First (for significant changes):** If you're proposing a major change, new feature, or significant refactoring, please [open an issue](https://github.com/string-sg/onward/issues/new) first to discuss the approach and ensure it aligns with the project's goals. For smaller bug fixes, feel free to go straight to a PR.
 
 2. **Fork & Branch:**
-
    - Fork the repository on GitHub.
    - Clone your fork locally.
    - Create a descriptive branch from the `main` branch. Good branch names include the type of change and a short description (e.g. `fix/login-bug`, `feat/add-user-profile`, `docs/update-readme`).
@@ -42,12 +41,10 @@ We enthusiastically welcome code contributions via Pull Requests (PRs)! If you'r
 3. **Set Up Environment:** Follow the instructions in the [Development Setup](#development-setup) section to prepare your local environment.
 
 4. **Implement Changes:**
-
    - Write your code, adhering to the guidelines in the [Code Style Guidelines](#code-style-guidelines) section.
    - Ensure your changes address the intended issue or feature.
 
 5. **Write Tests:**
-
    - Add relevant unit or integration tests for any new functionality or bug fixes. We aim for good test coverage to maintain stability.
    - Ensure all tests pass by running:
      ```sh
@@ -57,7 +54,6 @@ We enthusiastically welcome code contributions via Pull Requests (PRs)! If you'r
 6. **Update Documentation:** If your changes affect user-facing features, internal APIs, or the development process, please update the relevant documentation (e.g. README, specific docs pages).
 
 7. **Commit Changes:**
-
    - Keep your commits logical and atomic.
    - Write clear and concise commit messages. We recommend following the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) specification (e.g. `fix: correct typo in contribution guide`, `feat: add user authentication`). This helps automate release notes and makes the history easier to understand.
    - Remember that `husky` hooks will run `lint-staged` and potentially other checks (like type checking on push) automatically.
