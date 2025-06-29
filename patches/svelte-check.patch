@@ -1,8 +1,8 @@
 diff --git a/dist/src/index.js b/dist/src/index.js
-index 16d4a342662255a40d9c1c2b6eb36ff3441458cd..883a8863055e3ca366fee50b7afb3f8fb8befb7e 100644
+index 53d21bd957dd4d3cb6ccd6c67a51d9dab137bd4c..de82ef78851949f8e8aabad9c0133e04f35a892f 100644
 --- a/dist/src/index.js
 +++ b/dist/src/index.js
-@@ -131416,10 +131416,7 @@ class HumanFriendlyWriter {
+@@ -131633,10 +131633,7 @@ class HumanFriendlyWriter {
              process.stdout.clearScreenDown();
          }
          if (this.isVerbose) {
@@ -14,7 +14,7 @@ index 16d4a342662255a40d9c1c2b6eb36ff3441458cd..883a8863055e3ca366fee50b7afb3f8f
              this.stream.write('Getting Svelte diagnostics...\n');
              this.stream.write('\n');
          }
-@@ -131433,7 +131430,7 @@ class HumanFriendlyWriter {
+@@ -131650,7 +131647,7 @@ class HumanFriendlyWriter {
              let msg;
              if (this.isVerbose) {
                  const code = this.formatRelatedCode(diagnostic, text);
@@ -23,7 +23,7 @@ index 16d4a342662255a40d9c1c2b6eb36ff3441458cd..883a8863055e3ca366fee50b7afb3f8f
              }
              else {
                  msg = `${diagnostic.message} ${source}`;
-@@ -131470,7 +131467,6 @@ class HumanFriendlyWriter {
+@@ -131687,7 +131684,6 @@ class HumanFriendlyWriter {
          return text.substring(src.offsetAt({ line, character: 0 }, text), src.offsetAt({ line, character: Number.MAX_SAFE_INTEGER }, text));
      }
      completion(_f, errorCount, warningCount, fileCountWithProblems) {
