@@ -39,13 +39,13 @@ model Collection {
   // Relations.
   userId BigInt @map("user_id")
 
-  user              User                @relation(fields: [userId], references: [id])
-  multiLearningUnit MultiLearningUnit[]
+  user         User           @relation(fields: [userId], references: [id])
+  learningUnit LearningUnit[]
 
   @@map("collections")
 }
 
-model MultiLearningUnit {
+model LearningUnit {
   id        BigInt   @id @default(autoincrement()) @map("id")
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
@@ -63,7 +63,7 @@ model MultiLearningUnit {
   learningJourneys LearningJourney[]
   questionAnswers  QuestionAnswer[]
 
-  @@map("multi_learning_units")
+  @@map("learning_units")
 }
 
 model LearningJourney {
@@ -76,11 +76,11 @@ model LearningJourney {
   lastCheckpoint Decimal @map("last_checkpoint")
 
   // Relations.
-  userId              BigInt @map("user_id")
-  multiLearningUnitId BigInt @map("multi_learning_units_id")
+  userId         BigInt @map("user_id")
+  learningUnitId BigInt @map("learning_units_id")
 
-  user              User              @relation(fields: [userId], references: [id])
-  multiLearningUnit MultiLearningUnit @relation(fields: [multiLearningUnitId], references: [id])
+  user         User         @relation(fields: [userId], references: [id])
+  learningUnit LearningUnit @relation(fields: [learningUnitId], references: [id])
 
   @@map("learning_journeys")
 }
@@ -138,9 +138,9 @@ model QuestionAnswer {
   order       Int      @map("order") @db.SmallInt
 
   // Relations.
-  multiLearningUnitId BigInt @map("multi_learning_units_id")
+  learningUnitId BigInt @map("learning_units_id")
 
-  multiLearningUnit MultiLearningUnit @relation(fields: [multiLearningUnitId], references: [id])
+  learningUnit LearningUnit @relation(fields: [learningUnitId], references: [id])
 
   @@map("question_answers")
 }
