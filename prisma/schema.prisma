@@ -77,7 +77,7 @@ model LearningJourney {
 
   // Relations.
   userId         BigInt @map("user_id")
-  learningUnitId BigInt @map("learning_units_id")
+  learningUnitId BigInt @map("learning_unit_id")
 
   user         User         @relation(fields: [userId], references: [id])
   learningUnit LearningUnit @relation(fields: [learningUnitId], references: [id])
@@ -138,7 +138,7 @@ model QuestionAnswer {
   order       Int      @map("order") @db.SmallInt
 
   // Relations.
-  learningUnitId BigInt @map("learning_units_id")
+  learningUnitId BigInt @map("learning_unit_id")
 
   learningUnit LearningUnit @relation(fields: [learningUnitId], references: [id])
 
