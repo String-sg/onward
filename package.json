@@ -7,7 +7,7 @@
     "db:migrate": "prisma migrate dev",
     "db:deploy": "prisma migrate deploy",
     "bootstrap": "pnpm --filter=\"./packages/*\" build",
-    "format": "prettier --check \"**/*.{svelte,js,ts,md,html,css,json}\"",
+    "format": "prettier --check \"**/*.{svelte,js,ts,md,html,css,json,yaml}\"",
     "lint": "eslint \"**/*.{svelte,js,ts}\"",
     "prepare": "node \"./.husky/install.js\""
   },
