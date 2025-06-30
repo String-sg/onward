@@ -11,14 +11,14 @@
 </script>
 
 <main class="mx-auto flex h-full w-full max-w-5xl flex-col">
-  <nav class="z-1000 sticky bg-white px-6 py-5">
+  <nav class="z-1000 sticky px-6 py-5">
     <div class="flex flex-col gap-y-3">
       <div class="flex items-center justify-between">
         <span class="text-2xl font-semibold">Onward</span>
-        <div class="h-10 w-10 rounded-full bg-gray-200"></div>
+        <div class="h-10 w-10 rounded-full bg-white"></div>
       </div>
 
-      <div class="flex items-center rounded-[80px] bg-slate-100 px-4">
+      <div class="flex items-center rounded-[80px] bg-white px-4">
         <!-- Home -->
         <a
           href="/"
