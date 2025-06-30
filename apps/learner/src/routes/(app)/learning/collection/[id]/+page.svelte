@@ -19,13 +19,13 @@
     <span class="text-xl font-medium">12 podcasts</span>
 
     <MultiLearningUnitMini
-      to="/mlu/1"
+      to="/content/1"
       tags={[{ variant: 'purple', content: 'Special Educational Needs' }]}
       title="Navigating Special Educational Needs in Singapore: A Path to Inclusion"
     />
 
     <MultiLearningUnitMini
-      to="/mlu/1"
+      to="/content/1"
       tags={[{ variant: 'purple', content: 'Special Educational Needs' }]}
       title="Navigating Special Educational Needs in Singapore: A Path to Inclusion"
     />
