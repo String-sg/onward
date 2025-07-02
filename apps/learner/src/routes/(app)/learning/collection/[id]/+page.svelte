@@ -1,7 +1,7 @@
 <script>
   import { ChevronLeft } from '@lucide/svelte';
 
-  import MultiLearningUnitMini from '$lib/components/MultiLearningUnitMini.svelte';
+  import LearningUnit from '$lib/components/LearningUnit.svelte';
 </script>
 
 <div class="flex flex-col gap-y-6 px-6">
@@ -18,16 +18,18 @@
   <div class="flex flex-col gap-3">
     <span class="text-xl font-medium">12 podcasts</span>
 
-    <MultiLearningUnitMini
+    <LearningUnit
       to="/content/1"
       tags={[{ variant: 'purple', content: 'Special Educational Needs' }]}
       title="Navigating Special Educational Needs in Singapore: A Path to Inclusion"
+      showplayerpanel={false}
     />
 
-    <MultiLearningUnitMini
+    <LearningUnit
       to="/content/1"
       tags={[{ variant: 'purple', content: 'Special Educational Needs' }]}
       title="Navigating Special Educational Needs in Singapore: A Path to Inclusion"
+      showplayerpanel={false}
     />
   </div>
 </div>

@@ -21,9 +21,13 @@
      * A callback function that is called when the user clicks on the play button.
      */
     onplay?: MouseEventHandler<HTMLButtonElement>;
+    /**
+     * A flag to display the player-related content.
+     */
+    showplayerpanel?: boolean;
   }
 
-  let { to, title, tags, onplay }: Props = $props();
+  let { to, title, tags, onplay, showplayerpanel = false }: Props = $props();
 
   const handlePlay: MouseEventHandler<HTMLButtonElement> = (event) => {
     // Prevent the default behavior of the anchor tag from navigating to the URL.
@@ -54,33 +58,35 @@
     </div>
   </div>
 
-  <div class="flex items-center gap-x-3">
-    <button
-      class="flex cursor-pointer items-center gap-x-2 rounded-full bg-slate-100 px-6 py-4"
-      onclick={handlePlay}
-    >
-      <Play />
-      <span class="font-medium text-slate-950">Play</span>
-    </button>
+  {#if showplayerpanel}
+    <div class="flex items-center gap-x-3">
+      <button
+        class="flex cursor-pointer items-center gap-x-2 rounded-full bg-slate-100 px-6 py-4"
+        onclick={handlePlay}
+      >
+        <Play />
+        <span class="font-medium text-slate-950">Play</span>
+      </button>
 
-    <div class="flex items-center gap-x-2">
-      <svg viewBox="0 0 24 24" class="h-6 w-6">
-        <circle cx="12" cy="12" r="9" stroke="#E2E8F0" fill="none" stroke-width="3px" />
-        <circle
-          cx="12"
-          cy="12"
-          r="9"
-          stroke="#020617"
-          fill="none"
-          stroke-width="3px"
-          stroke-dasharray="56.55"
-          stroke-dashoffset="12"
-          transform-origin="center"
-          transform="rotate(-90 0 0)"
-        />
-      </svg>
+      <div class="flex items-center gap-x-2">
+        <svg viewBox="0 0 24 24" class="h-6 w-6">
+          <circle cx="12" cy="12" r="9" stroke="#E2E8F0" fill="none" stroke-width="3px" />
+          <circle
+            cx="12"
+            cy="12"
+            r="9"
+            stroke="#020617"
+            fill="none"
+            stroke-width="3px"
+            stroke-dasharray="56.55"
+            stroke-dashoffset="12"
+            transform-origin="center"
+            transform="rotate(-90 0 0)"
+          />
+        </svg>
 
-      <span class="text-sm text-slate-600">23m left</span>
+        <span class="text-sm text-slate-600">23m left</span>
+      </div>
     </div>
-  </div>
+  {/if}
 </a>
