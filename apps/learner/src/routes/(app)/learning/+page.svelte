@@ -1,7 +1,5 @@
 <script lang="ts">
-  type Variant = 'purple' | 'teal' | 'amber';
-
-  import Collection from '$lib/components/Collection.svelte';
+  import Collection, { type Variant } from '$lib/components/Collection.svelte';
 
   const { data } = $props();
 </script>
