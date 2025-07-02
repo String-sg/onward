@@ -30,7 +30,7 @@
     variant: Variant;
   }
 
-  let { title, numberofpodcasts, numberofnotes, variant, tag, to }: Props = $props();
+  let { to, tag, title, numberofpodcasts, numberofnotes, variant }: Props = $props();
 </script>
 
 <a
