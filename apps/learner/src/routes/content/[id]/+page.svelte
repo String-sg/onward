@@ -13,9 +13,11 @@
       <ArrowLeft />
     </div>
 
-    <div class="rounded-full bg-slate-200 px-3 py-4">
+    <button
+      class="cursor-pointer rounded-full bg-slate-200 px-3 py-4 transition-colors hover:bg-slate-300"
+    >
       <Share />
-    </div>
+    </button>
   </div>
 
   <div class="flex flex-col gap-y-2 rounded-3xl bg-white p-4">
