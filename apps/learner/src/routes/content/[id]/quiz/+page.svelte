@@ -35,12 +35,11 @@
 
 <main class="mx-auto flex h-full w-full max-w-5xl flex-col">
   <div class="flex items-center justify-between px-6 py-5">
-    <a
-      href="/content/{contentId}"
-      class="cursor-pointer items-center rounded-[100px] bg-slate-200 px-3 py-4"
-    >
-      <ArrowLeft />
-    </a>
+    <div class="rounded-full bg-slate-200 px-3 py-4">
+      <a href="/content/{contentId}">
+        <ArrowLeft />
+      </a>
+    </div>
   </div>
 
   <div class="flex h-full flex-col px-6">
