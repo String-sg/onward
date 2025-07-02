@@ -62,7 +62,7 @@
             >
               {getOptionLetter(index)}
             </span>
-            <span class="text-sm">
+            <span class="w-full text-left text-sm">
               {option}
             </span>
           </button>
