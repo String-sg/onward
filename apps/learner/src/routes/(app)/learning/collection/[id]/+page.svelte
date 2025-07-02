@@ -12,7 +12,7 @@
     >
       <ChevronLeft />
     </a>
-    <span class="text-xl font-medium">Special Educational Needs</span>
+    <span class="text-xl font-medium">SEN peer support</span>
   </div>
 
   <div class="flex flex-col gap-3">

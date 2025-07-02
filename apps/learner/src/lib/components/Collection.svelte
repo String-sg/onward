@@ -1,5 +1,5 @@
 <script lang="ts">
-  type Variant = 'purple' | 'teal' | 'amber';
+  export type Variant = 'purple' | 'teal' | 'amber';
 
   import Badge from '$lib/components/Badge.svelte';
 
@@ -30,7 +30,7 @@
     variant: Variant;
   }
 
-  let { title, numberofpodcasts, numberofnotes, variant, tag, to }: Props = $props();
+  let { to, tag, title, numberofpodcasts, numberofnotes, variant }: Props = $props();
 </script>
 
 <a
