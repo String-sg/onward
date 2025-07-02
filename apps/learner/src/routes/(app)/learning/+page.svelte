@@ -1,22 +1,22 @@
 <script lang="ts">
-  import { page } from '$app/state';
-  import Collection from '$lib/components/Collection.svelte';
-  import type { LearningJourney } from '$lib/types';
+  type Variant = 'purple' | 'teal' | 'amber';
 
-  const { learningJourneys } = page.data as { learningJourneys: LearningJourney[] };
+  import Collection from '$lib/components/Collection.svelte';
+
+  const { data } = $props();
 </script>
 
 <div class="flex flex-col gap-y-6 px-6">
   <span class="text-xl font-semibold">Your learnings</span>
 
   <div class="grid auto-rows-fr grid-cols-2 gap-4 [&>:first-child]:col-span-2">
-    {#each learningJourneys as learning (learning.id)}
+    {#each data.learningJourneys as learning (learning.id)}
       <Collection
         title={learning.title}
         tag={learning.tag}
         numberofpodcasts={learning.numberofpodcasts}
         numberofnotes={learning.numberofnotes}
-        variant={learning.variant}
+        variant={learning.variant as Variant}
         to={learning.to}
       />
     {/each}
