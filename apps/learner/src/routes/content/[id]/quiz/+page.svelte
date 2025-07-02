@@ -49,15 +49,15 @@
         {#each currentQuestion.options as option, index (option)}
           <button
             class={[
-              selectedOptionIndex === index && 'border border-black',
               'flex w-full cursor-pointer items-center gap-3 rounded-2xl bg-white p-3',
+              selectedOptionIndex === index && 'border border-black',
             ]}
             onclick={() => selectOption(index)}
           >
             <span
               class={[
-                selectedOptionIndex === index ? 'bg-slate-900 text-white' : 'bg-slate-100',
                 'flex items-center justify-center rounded-lg px-2 py-1 text-xs font-semibold',
+                selectedOptionIndex === index ? 'bg-slate-900 text-white' : 'bg-slate-100',
               ]}
             >
               {getOptionLetter(index)}
@@ -73,10 +73,8 @@
     <div class="py-9.5 mt-auto">
       <button
         class={[
-          selectedOptionIndex === -1
-            ? ' cursor-not-allowed bg-slate-900/[0.5]'
-            : 'cursor-pointer bg-slate-900',
           'flex w-full justify-center rounded-full px-1 py-4 text-white',
+          selectedOptionIndex === -1 ? ' bg-slate-900/[0.5]' : 'cursor-pointer bg-slate-900',
         ]}
         onclick={nextQuestion}
         disabled={selectedOptionIndex === -1}
