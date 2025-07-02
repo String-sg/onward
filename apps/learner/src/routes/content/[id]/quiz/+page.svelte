@@ -58,7 +58,7 @@
             <span
               class={[
                 selectedOptionIndex === index ? 'bg-slate-900 text-white' : 'bg-slate-100',
-                'flex items-center justify-center rounded-lg px-2 py-1 text-xs',
+                'flex items-center justify-center rounded-lg px-2 py-1 text-xs font-semibold',
               ]}
             >
               {getOptionLetter(index)}
