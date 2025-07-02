@@ -34,10 +34,10 @@
 </script>
 
 <main class="mx-auto flex h-full w-full max-w-5xl flex-col">
-  <div class="item-center flex justify-between px-6 py-5">
+  <div class="flex items-center justify-between px-6 py-5">
     <a
       href="/content/{contentId}"
-      class="item-center cursor-pointer items-center rounded-[100px] bg-slate-200 px-3 py-4"
+      class="cursor-pointer items-center rounded-[100px] bg-slate-200 px-3 py-4"
     >
       <ArrowLeft />
     </a>
