@@ -49,7 +49,7 @@
         {#each currentQuestion.options as option, index (option)}
           <button
             class={[
-              'flex w-full cursor-pointer items-center gap-3 rounded-2xl bg-white p-3',
+              'flex w-full cursor-pointer items-center gap-x-3 rounded-2xl bg-white p-3',
               selectedOptionIndex === index && 'border border-black',
             ]}
             onclick={() => selectOption(index)}
