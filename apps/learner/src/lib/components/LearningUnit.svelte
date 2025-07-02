@@ -22,7 +22,7 @@
      */
     onplay?: MouseEventHandler<HTMLButtonElement>;
     /**
-     * A flag to display the player-related content.
+     * A flag to display the panel containing the Play button and progress indicator.
      */
     showplayerpanel?: boolean;
   }
