@@ -1,7 +1,10 @@
 <script lang="ts">
   import { ArrowLeft, Lightbulb, Play, Share } from '@lucide/svelte';
+  import { formatDistanceToNow } from 'date-fns';
 
   import Badge from '$lib/components/Badge.svelte';
+
+  const { data } = $props();
 </script>
 
 <div class="flex flex-col gap-y-6 p-6">
@@ -17,19 +20,23 @@
 
   <div class="flex flex-col gap-y-2 rounded-3xl bg-white p-4">
     <div class="flex flex-wrap gap-1">
-      <Badge variant="purple">Special Educational Needs</Badge>
+      {#each data.tags as tag (tag)}
+        <Badge variant="purple">{tag}</Badge>
+      {/each}
     </div>
 
     <div class="flex flex-col gap-y-6">
       <div class="flex flex-col gap-y-3">
         <span class="text-xl font-medium text-slate-950">
-          Navigating Special Educational Needs: A Path to Inclusion
+          {data.title}
         </span>
 
         <div class="flex gap-x-1">
           <span class="text-sm text-slate-600">By Guidance Branch</span>
           <span class="text-sm text-slate-600">•</span>
-          <span class="text-sm text-slate-600">2 days ago</span>
+          <span class="text-sm text-slate-600">
+            {formatDistanceToNow(data.createdAt, { addSuffix: true })}
+          </span>
         </div>
       </div>
 
@@ -42,7 +49,7 @@
         </button>
 
         <a
-          href="/content/1/quiz"
+          href={`/content/${data.id}/quiz`}
           class="py-2.75 flex cursor-pointer items-center justify-center gap-x-1 rounded-full border border-slate-300 bg-white px-4 text-slate-950 transition-colors hover:bg-slate-100"
         >
           <Lightbulb class="h-4 w-4" />
