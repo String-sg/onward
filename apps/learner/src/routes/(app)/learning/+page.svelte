@@ -7,7 +7,7 @@
 </script>
 
 <div class="flex flex-col gap-y-6 px-6">
-  <span class="text-xl font-semibold">Your Learnings</span>
+  <span class="text-xl font-semibold">Your learnings</span>
 
   <div class="grid auto-rows-fr grid-cols-2 gap-4 [&>:first-child]:col-span-2">
     {#each learningJourneys as learning (learning.id)}
