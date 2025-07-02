@@ -1,4 +1,6 @@
-export const load = async () => {
+import type { PageServerLoad } from './$types';
+
+export const load: PageServerLoad = async () => {
   return {
     title:
       'The quick brown fox jumps over the lazy dog The quick brown fox jumps over the lazy dog',
