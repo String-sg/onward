@@ -33,7 +33,7 @@
   };
 </script>
 
-<a href={to} class="flex flex-col gap-y-6 rounded-3xl bg-purple-100 p-6">
+<a href={to} class="flex flex-col gap-y-6 rounded-3xl bg-white p-6">
   <div class="flex flex-col gap-y-2">
     <div class="flex flex-wrap gap-1">
       {#each tags as tag (tag.content)}
@@ -56,7 +56,7 @@
 
   <div class="flex items-center gap-x-3">
     <button
-      class="flex cursor-pointer items-center gap-x-2 rounded-full bg-purple-300 px-6 py-4 transition-colors active:bg-purple-400/75"
+      class="flex cursor-pointer items-center gap-x-2 rounded-full bg-slate-100 px-6 py-4"
       onclick={handlePlay}
     >
       <Play />
@@ -65,28 +65,16 @@
 
     <div class="flex items-center gap-x-2">
       <svg viewBox="0 0 24 24" class="h-6 w-6">
-        <circle cx="12" cy="12" r="9" stroke="#D8B4FE" fill="none" stroke-width="3px" />
+        <circle cx="12" cy="12" r="9" stroke="#E2E8F0" fill="none" stroke-width="3px" />
         <circle
           cx="12"
           cy="12"
           r="9"
-          stroke="#A855F7"
+          stroke="#020617"
           fill="none"
           stroke-width="3px"
           stroke-dasharray="56.55"
           stroke-dashoffset="12"
-          transform-origin="center"
-          transform="rotate(-90 0 0)"
-        />
-        <circle
-          cx="12"
-          cy="12"
-          r="9"
-          stroke="#6B21A8"
-          fill="none"
-          stroke-width="3px"
-          stroke-dasharray="56.55"
-          stroke-dashoffset="25"
           transform-origin="center"
           transform="rotate(-90 0 0)"
         />
