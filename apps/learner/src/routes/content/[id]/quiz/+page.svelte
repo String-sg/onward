@@ -38,7 +38,7 @@
   }
 </script>
 
-<main class="mx-auto flex h-full w-full max-w-5xl flex-col bg-slate-100">
+<main class="mx-auto flex h-full w-full max-w-5xl flex-col">
   <div class="align-center flex justify-between px-6 py-5">
     <button
       class="align-center flex cursor-pointer gap-1 rounded-full bg-slate-200 p-2"
