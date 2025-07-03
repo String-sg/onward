@@ -2,16 +2,28 @@
   import { ArrowLeft, Lightbulb, Play, Share } from '@lucide/svelte';
   import { formatDistanceToNow } from 'date-fns';
 
+  import { afterNavigate } from '$app/navigation';
   import Badge from '$lib/components/Badge.svelte';
 
   const { data } = $props();
+
+  let returnTo = $state('/');
+
+  afterNavigate(({ from, type }) => {
+    if (type === 'enter' || !from) {
+      returnTo = '/';
+      return;
+    }
+
+    returnTo = from.url.pathname;
+  });
 </script>
 
 <div class="flex flex-col gap-y-6 p-6">
   <div class="flex justify-between">
-    <div class="rounded-full bg-slate-200 px-3 py-4">
+    <a href={returnTo} class="rounded-full bg-slate-200 px-3 py-4">
       <ArrowLeft />
-    </div>
+    </a>
 
     <button
       class="cursor-pointer rounded-full bg-slate-200 px-3 py-4 transition-colors hover:bg-slate-300"
