@@ -4,7 +4,7 @@
   import LearningUnit from '$lib/components/LearningUnit.svelte';
 </script>
 
-<div class="flex flex-col gap-y-4 px-6 py-5">
+<div class="flex flex-col gap-y-4 p-6">
   <div class="flex items-center gap-x-3">
     <a class="rounded-full bg-slate-200 px-3 py-4" href="/learning">
       <ArrowLeft />

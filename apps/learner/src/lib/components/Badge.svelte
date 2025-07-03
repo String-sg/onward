@@ -22,7 +22,7 @@
     variant === 'teal' && 'bg-teal-200 text-teal-900',
     variant === 'rose' && 'bg-rose-200 text-rose-900',
     variant === 'purple' && 'bg-purple-200 text-purple-900',
-    variant === 'slate' && 'bg-slate-200 text-black',
+    variant === 'slate' && 'bg-slate-200 text-slate-950',
     clazz,
   ]}
 >
