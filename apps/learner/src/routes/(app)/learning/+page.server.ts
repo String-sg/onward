@@ -10,7 +10,7 @@ export const load: PageServerLoad = async () => {
         numberofpodcasts: 12,
         numberofnotes: 2,
         variant: 'purple',
-        to: '/learning/collection/1',
+        to: '/collection/1',
       },
       {
         id: 2,
@@ -19,7 +19,7 @@ export const load: PageServerLoad = async () => {
         numberofpodcasts: 8,
         numberofnotes: 3,
         variant: 'amber',
-        to: '/learning/collection/2',
+        to: '/collection/2',
       },
       {
         id: 3,
@@ -28,7 +28,7 @@ export const load: PageServerLoad = async () => {
         numberofpodcasts: 10,
         numberofnotes: 1,
         variant: 'teal',
-        to: '/learning/collection/3',
+        to: '/collection/3',
       },
     ],
   };
