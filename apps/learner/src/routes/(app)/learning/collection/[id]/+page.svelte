@@ -22,14 +22,12 @@
       to="/content/1"
       tags={[{ variant: 'purple', content: 'Special Educational Needs' }]}
       title="Navigating Special Educational Needs in Singapore: A Path to Inclusion"
-      showplayerpanel={false}
     />
 
     <LearningUnit
       to="/content/1"
       tags={[{ variant: 'purple', content: 'Special Educational Needs' }]}
       title="Navigating Special Educational Needs in Singapore: A Path to Inclusion"
-      showplayerpanel={false}
     />
   </div>
 </div>
