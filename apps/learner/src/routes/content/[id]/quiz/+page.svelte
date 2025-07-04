@@ -2,6 +2,7 @@
   import { ArrowLeft } from '@lucide/svelte';
 
   import { page } from '$app/state';
+  import Progress from '$lib/components/Progress.svelte';
 
   const { data } = $props();
 
@@ -9,6 +10,10 @@
   let currentQuestionIndex = $state(0);
 
   let currentQuestion = $derived(data.questionAnswers[currentQuestionIndex]);
+
+  let percentageCompleted = $derived(
+    ((currentQuestionIndex + 1) / data.questionAnswers.length) * 100,
+  );
 
   const contentId = $derived(page.params.id);
 
@@ -35,10 +40,11 @@
 
 <main class="mx-auto flex h-full w-full max-w-5xl flex-col">
   <div class="flex h-full flex-col gap-y-6 p-6">
-    <div class="flex items-center">
+    <div class="flex items-center gap-x-8">
       <a class="rounded-full bg-slate-200 px-3 py-4" href="/content/{contentId}">
         <ArrowLeft />
       </a>
+      <Progress value={percentageCompleted} />
     </div>
 
     <div class="flex flex-1 flex-col gap-y-6">
