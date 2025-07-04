@@ -3,8 +3,9 @@
 
   interface Props extends HTMLAttributes<HTMLDivElement> {
     /**
-     * The progress value, between 0 and 100.
-     * Defaults to 0 if not provided.
+     * The current progress value, ranging from 0 to 100.
+     *
+     * @default 0
      */
     value?: number;
   }
