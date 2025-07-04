@@ -2,6 +2,7 @@
   import { ArrowLeft } from '@lucide/svelte';
 
   import { page } from '$app/state';
+  import Button from '$lib/components/Button.svelte';
 
   const { data } = $props();
 
@@ -67,11 +68,5 @@
     </div>
   </div>
 
-  <button
-    class="flex w-full cursor-pointer justify-center rounded-full bg-slate-900 px-1 py-4 text-white disabled:pointer-events-none disabled:opacity-50"
-    onclick={nextQuestion}
-    disabled={selectedOptionIndex === -1}
-  >
-    Check Answer
-  </button>
+  <Button onclick={nextQuestion} disabled={selectedOptionIndex === -1}>Check Answer</Button>
 </div>
