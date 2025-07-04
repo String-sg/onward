@@ -16,7 +16,7 @@
        */
       size?: 'md' | 'lg';
       /**
-       * Whether the button is disabled.
+       * Indicates whether the button is disabled.
        *
        * @default false
        */
