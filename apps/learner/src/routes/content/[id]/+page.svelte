@@ -4,6 +4,7 @@
 
   import { afterNavigate } from '$app/navigation';
   import Badge from '$lib/components/Badge.svelte';
+  import Button from '$lib/components/Button.svelte';
 
   const { data } = $props();
 
@@ -55,20 +56,15 @@
       </div>
 
       <div class="flex flex-col gap-y-4">
-        <button
-          class="py-2.75 flex cursor-pointer items-center justify-center gap-x-1 rounded-full border border-transparent bg-slate-950 px-4 text-white transition-colors hover:bg-slate-900/90 disabled:pointer-events-none disabled:opacity-50"
-        >
+        <Button size="md">
           <Play class="h-4 w-4" />
           <span class="font-medium">Play</span>
-        </button>
+        </Button>
 
-        <a
-          href={`/content/${data.id}/quiz`}
-          class="py-2.75 flex cursor-pointer items-center justify-center gap-x-1 rounded-full border border-slate-300 bg-white px-4 text-slate-950 transition-colors hover:bg-slate-100"
-        >
+        <Button href={`/content/${data.id}/quiz`} variant="secondary" size="md">
           <Lightbulb class="h-4 w-4" />
           <span class="font-medium">Take the quiz</span>
-        </a>
+        </Button>
       </div>
     </div>
   </div>
