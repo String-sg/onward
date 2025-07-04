@@ -45,6 +45,7 @@
       <ArrowLeft />
     </a>
     <Progress value={percentageCompleted} />
+    <span class="text-sm">{currentQuestionIndex + 1}/{data.questionAnswers.length}</span>
   </div>
 
   <div class="flex flex-1 flex-col gap-y-6">
