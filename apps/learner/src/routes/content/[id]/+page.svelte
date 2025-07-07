@@ -9,7 +9,7 @@
   const { data } = $props();
 
   let returnTo = $state('/');
-  let expanded = $state(false);
+  let isExpanded = $state(false);
 
   afterNavigate(({ from, type }) => {
     if (type === 'enter' || !from) {
@@ -20,8 +20,8 @@
     returnTo = from.url.pathname;
   });
 
-  const toggleExpanded = () => {
-    expanded = !expanded;
+  const toggleIsExpanded = () => {
+    isExpanded = !isExpanded;
   };
 </script>
 
@@ -79,16 +79,16 @@
       <div
         class={[
           'mask-b-from-10% max-h-20 overflow-hidden',
-          expanded && 'mask-b-from-100% max-h-full',
+          isExpanded && 'mask-b-from-100% max-h-full',
         ]}
       >
-        <p class={['line-clamp-4 text-sm', expanded && 'line-clamp-none']}>
+        <p class={['line-clamp-4 text-sm', isExpanded && 'line-clamp-none']}>
           {data.summary}
         </p>
       </div>
 
-      {#if !expanded}
-        <button class="flex w-fit cursor-pointer items-center gap-x-1" onclick={toggleExpanded}>
+      {#if !isExpanded}
+        <button class="flex w-fit cursor-pointer items-center gap-x-1" onclick={toggleIsExpanded}>
           <span class="text-sm font-medium">Read more</span>
           <ChevronsDown class="h-4 w-4" />
         </button>
