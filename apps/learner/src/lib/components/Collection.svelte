@@ -118,8 +118,8 @@
     </div>
 
     <div class="flex flex-col gap-y-2">
-      <div class="flex flex-wrap gap-y-1">
-        <Badge {variant} class="truncate rounded-lg">{tag}</Badge>
+      <div class="flex flex-col gap-y-1">
+        <Badge {variant}>{tag}</Badge>
 
         <span
           class={['text-xl font-semibold', variant === 'amber' ? 'text-slate-950' : 'text-white']}
