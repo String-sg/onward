@@ -23,8 +23,8 @@ export const load: PageServerLoad = async () => {
       },
       {
         id: 3,
-        tag: 'Supporting Student socio-emotional learning',
-        title: 'Strategies: Basic counselling',
+        tag: 'Teacher mental health literacy',
+        title: 'Understanding Mental Health',
         numberofpodcasts: 10,
         numberofnotes: 1,
         variant: 'teal',
