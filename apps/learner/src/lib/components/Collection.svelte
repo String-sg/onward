@@ -45,7 +45,7 @@
   <div class="flex flex-col gap-y-6">
     <div class="flex h-[320px] flex-col">
       <div class="flex justify-end">
-        <div class="p-2">
+        <div class="p-3">
           {#if variant === 'purple'}
             <svg
               xmlns="http://www.w3.org/2000/svg"
