@@ -11,7 +11,6 @@
   onMount(() => {
     const observer = new IntersectionObserver(([entry]) => {
       isWithinViewport = entry.isIntersecting;
-      console.log(isWithinViewport);
     });
 
     if (target) {
