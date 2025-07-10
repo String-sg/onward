@@ -40,7 +40,7 @@
   ></div>
 
   <div class="mx-auto w-full max-w-5xl px-4 py-3">
-    <div class="flex flex-col gap-y-3">
+    <div class="flex flex-col gap-y-4">
       <div class="flex items-center justify-between px-2">
         <span class="text-2xl font-semibold">Onward</span>
         <div class="h-10 w-10 rounded-full bg-white"></div>
@@ -117,7 +117,7 @@
   </div>
 </header>
 
-<main class="pt-42 relative mx-auto min-h-full w-full max-w-5xl px-4 pb-3">
+<main class="pt-43 relative mx-auto min-h-full w-full max-w-5xl px-4 pb-3">
   <div bind:this={target} class="absolute inset-x-0 top-0 h-px"></div>
 
   {@render children()}
