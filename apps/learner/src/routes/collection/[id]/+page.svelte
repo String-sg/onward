@@ -1,54 +1,98 @@
-<script>
+<script lang="ts">
   import { ArrowLeft } from '@lucide/svelte';
+  import { onMount } from 'svelte';
 
   import LearningUnit from '$lib/components/LearningUnit.svelte';
+
+  let isWithinViewport = $state(false);
+
+  let target: HTMLElement | null;
+
+  onMount(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      isWithinViewport = entry.isIntersecting;
+    });
+
+    if (target) {
+      observer.observe(target);
+    }
+
+    return () => {
+      if (target) {
+        observer.unobserve(target);
+      }
+    };
+  });
 </script>
 
-<div class="flex flex-col gap-y-4 p-6">
-  <div class="flex items-center gap-x-3">
-    <a class="rounded-full bg-slate-200 px-3 py-4" href="/learning">
-      <ArrowLeft />
-    </a>
-    <span class="text-xl font-medium">SEN peer support</span>
+<header class="fixed inset-x-0 top-0 z-50 bg-slate-100/90 backdrop-blur-sm">
+  <div
+    class={[
+      'absolute inset-x-0 top-full h-px bg-transparent transition-colors duration-300',
+      !isWithinViewport && '!bg-slate-950/7.5',
+    ]}
+  ></div>
+
+  <div class="mx-auto w-full max-w-5xl px-4 py-3">
+    <div class="flex items-center justify-between gap-x-8">
+      <div class="flex items-center gap-x-3">
+        <a href="/learning" class="rounded-full px-3 py-4 transition-colors hover:bg-slate-200">
+          <ArrowLeft />
+        </a>
+
+        <span class="text-xl font-medium">SEN peer support</span>
+      </div>
+    </div>
   </div>
+</header>
 
-  <div class="flex flex-col gap-y-2 rounded-3xl bg-slate-200 p-4">
-    <span class="font-semibold text-black">About this topic</span>
-    <span class="text-black">
-      Explore the world of Special Educational Needs (SEN) peer support that indicates Singapore
-      specific peer support knowledges, case studies and more to gain knowledge about SEN. This
-      topic encompasses a variety of bite-sized.
-    </span>
+<main class="pt-23 relative mx-auto min-h-full w-full max-w-5xl px-4 pb-3">
+  <div bind:this={target} class="absolute inset-x-0 top-0 h-px"></div>
+
+  <div class="flex flex-col gap-y-6">
+    <div class="shadow-xs flex flex-col gap-y-2 rounded-3xl bg-slate-200 p-4">
+      <span class="text-lg font-medium">About this topic</span>
+
+      <span>
+        Explore the world of Special Educational Needs (SEN) peer support that indicates Singapore
+        specific peer support knowledges, case studies and more to gain knowledge about SEN. This
+        topic encompasses a variety of bite-sized.
+      </span>
+    </div>
+
+    <div class="flex flex-col gap-y-3">
+      <div class="px-2">
+        <span class="text-xl font-semibold">12 podcasts</span>
+      </div>
+
+      <div class="flex flex-col gap-y-4">
+        <LearningUnit
+          to="/content/1"
+          tags={[
+            { variant: 'purple', content: 'Special Educational Needs' },
+            { variant: 'slate', content: 'Podcast' },
+          ]}
+          title="Navigating Special Educational Needs in Singapore: A Path to Inclusion"
+        />
+
+        <LearningUnit
+          to="/content/1"
+          tags={[
+            { variant: 'purple', content: 'Special Educational Needs' },
+            { variant: 'slate', content: 'Podcast' },
+          ]}
+          title="Navigating Special Educational Needs in Singapore: A Path to Inclusion"
+        />
+
+        <LearningUnit
+          to="/content/1"
+          tags={[
+            { variant: 'purple', content: 'Special Educational Needs' },
+            { variant: 'slate', content: 'Podcast' },
+          ]}
+          title="Navigating Special Educational Needs in Singapore: A Path to Inclusion"
+        />
+      </div>
+    </div>
   </div>
-
-  <div class="flex flex-col gap-y-3">
-    <span class="text-xl font-medium">12 podcasts</span>
-
-    <LearningUnit
-      to="/content/1"
-      tags={[
-        { variant: 'purple', content: 'Special Educational Needs' },
-        { variant: 'slate', content: 'Podcast' },
-      ]}
-      title="Navigating Special Educational Needs in Singapore: A Path to Inclusion"
-    />
-
-    <LearningUnit
-      to="/content/1"
-      tags={[
-        { variant: 'purple', content: 'Special Educational Needs' },
-        { variant: 'slate', content: 'Podcast' },
-      ]}
-      title="Navigating Special Educational Needs in Singapore: A Path to Inclusion"
-    />
-
-    <LearningUnit
-      to="/content/1"
-      tags={[
-        { variant: 'purple', content: 'Special Educational Needs' },
-        { variant: 'slate', content: 'Podcast' },
-      ]}
-      title="Navigating Special Educational Needs in Singapore: A Path to Inclusion"
-    />
-  </div>
-</div>
+</main>

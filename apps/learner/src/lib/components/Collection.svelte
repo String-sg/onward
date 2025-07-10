@@ -36,7 +36,7 @@
 <a
   href={to}
   class={[
-    'flex flex-col gap-y-2 rounded-3xl bg-gradient-to-b p-6',
+    'shadow-xs flex flex-col gap-y-2 rounded-3xl bg-gradient-to-b p-6',
     variant === 'purple' && 'from-purple-800 via-purple-500 to-fuchsia-500',
     variant === 'amber' && 'from-amber-400 to-yellow-300',
     variant === 'teal' && 'from-teal-400 to-blue-500',

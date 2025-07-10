@@ -37,7 +37,7 @@
   };
 </script>
 
-<a href={to} class="flex flex-col gap-y-6 rounded-3xl bg-white p-6">
+<a href={to} class="shadow-xs flex flex-col gap-y-6 rounded-3xl bg-white p-6">
   <div class="flex flex-col gap-y-2">
     <div class="flex flex-wrap gap-1">
       {#each tags as tag (tag.content)}
@@ -61,7 +61,7 @@
   {#if showplayerpanel}
     <div class="flex items-center gap-x-3">
       <button
-        class="flex cursor-pointer items-center gap-x-2 rounded-full bg-slate-100 px-6 py-4"
+        class="flex cursor-pointer items-center gap-x-2 rounded-full bg-slate-100 px-6 py-4 transition-colors hover:bg-slate-200"
         onclick={handlePlay}
       >
         <Play />
