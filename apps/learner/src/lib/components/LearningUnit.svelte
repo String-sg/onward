@@ -37,7 +37,7 @@
   };
 </script>
 
-<a href={to} class="flex flex-col gap-y-6 rounded-3xl bg-white p-6">
+<a href={to} class="shadow-xs flex flex-col gap-y-6 rounded-3xl bg-white p-6">
   <div class="flex flex-col gap-y-2">
     <div class="flex flex-wrap gap-1">
       {#each tags as tag (tag.content)}
