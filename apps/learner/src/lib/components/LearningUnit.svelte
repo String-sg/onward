@@ -61,7 +61,7 @@
   {#if showplayerpanel}
     <div class="flex items-center gap-x-3">
       <button
-        class="flex cursor-pointer items-center gap-x-2 rounded-full bg-slate-100 px-6 py-4"
+        class="flex cursor-pointer items-center gap-x-2 rounded-full bg-slate-100 px-6 py-4 transition-colors hover:bg-slate-200"
         onclick={handlePlay}
       >
         <Play />
