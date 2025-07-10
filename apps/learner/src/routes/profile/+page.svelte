@@ -1,1 +1,1 @@
-<div class="px-6 py-5">Profile page!</div>
+<div class="px-2">Profile page!</div>

@@ -1,1 +1,1 @@
-<div class="px-6">Explore page!</div>
+<div class="px-2">Explore page!</div>
