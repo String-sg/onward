@@ -125,7 +125,7 @@
       : 'invisible'}"
   >
     <div
-      class="inset-shadow-sm flex w-full max-w-5xl transform flex-col gap-y-5 rounded-t-3xl bg-white p-5 shadow-lg transition-all {isFeedbackModalOpen
+      class="inset-shadow-sm flex max-h-[70vh] w-full max-w-5xl transform flex-col gap-y-5 rounded-t-3xl bg-white p-5 shadow-lg transition-all {isFeedbackModalOpen
         ? 'translate-y-0 opacity-100'
         : 'translate-y-full opacity-0'}"
     >
@@ -141,7 +141,7 @@
         </button>
       </div>
 
-      <div class="flex flex-col gap-y-6">
+      <div class="flex flex-col gap-y-6 overflow-y-auto">
         <div class="flex flex-col gap-y-2">
           <span class="text-base font-medium">Your answer</span>
           {@render modalFeedbackButton(selectedOptionIndex)}
