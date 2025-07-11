@@ -125,7 +125,7 @@
       : 'invisible'}"
   >
     <div
-      class="flex w-full max-w-5xl transform flex-col gap-y-5 rounded-t-3xl bg-white p-5 shadow-lg transition-all {isFeedbackModalOpen
+      class="inset-shadow-sm flex w-full max-w-5xl transform flex-col gap-y-5 rounded-t-3xl bg-white p-5 shadow-lg transition-all {isFeedbackModalOpen
         ? 'translate-y-0 opacity-100'
         : 'translate-y-full opacity-0'}"
     >
@@ -134,7 +134,7 @@
           >{isCorrectAnswer ? 'Correct answer!' : 'Not quite right!'}</span
         >
         <button
-          class="cursor-pointer rounded-full bg-slate-200 px-2.5 py-3"
+          class="cursor-pointer rounded-full bg-slate-100 px-2.5 py-3"
           onclick={() => (isFeedbackModalOpen = false)}
         >
           <X />
@@ -153,7 +153,7 @@
           </div>
         {/if}
         <div class="flex flex-col gap-1 rounded-2xl bg-slate-100 p-3">
-          <span class="text-base font-medium text-slate-500">Explanation</span>
+          <span class="text-base font-medium text-zinc-600">Explanation</span>
           <span class="text-base">{currentQuestion.explanation}</span>
         </div>
       </div>
