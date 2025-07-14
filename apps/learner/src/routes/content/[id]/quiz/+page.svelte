@@ -62,7 +62,7 @@
     >
       <span
         class={[
-          'flex items-center justify-center rounded-lg bg-lime-400 px-2 py-1 text-xs font-semibold text-black',
+          'rounded-lg bg-lime-400 px-2 py-1 text-xs font-semibold text-black',
           optionIndex !== currentQuestion.answer - 1 && '!bg-slate-900 !text-white',
         ]}
       >
@@ -97,7 +97,7 @@
         >
           <span
             class={[
-              'flex items-center justify-center rounded-lg bg-slate-100 px-2 py-1 text-xs font-semibold text-black',
+              'rounded-lg bg-slate-100 px-2 py-1 text-xs font-semibold text-black',
               selectedOptionIndex === index && '!bg-slate-900 !text-white',
             ]}
           >
