@@ -130,9 +130,9 @@
         : 'translate-y-full opacity-0'}"
     >
       <div class="flex items-center justify-between">
-        <span class="py-2.5 text-xl/7 font-medium"
-          >{isCorrectAnswer ? 'Correct answer!' : 'Not quite right!'}</span
-        >
+        <span class="py-2.5 text-xl/7 font-medium">
+          {isCorrectAnswer ? 'Correct answer!' : 'Not quite right!'}
+        </span>
         <button
           class="cursor-pointer rounded-full bg-slate-100 px-2.5 py-3"
           onclick={() => (isFeedbackModalOpen = false)}
