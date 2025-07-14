@@ -1,5 +1,6 @@
 <script lang="ts">
   import { ArrowLeft, X } from '@lucide/svelte';
+  import { fade, slide } from 'svelte/transition';
 
   import { page } from '$app/state';
   import Button from '$lib/components/Button.svelte';
@@ -119,46 +120,43 @@
     disabled={selectedOptionIndex === -1 || isFeedbackModalOpen}>Check Answer</Button
   >
 
-  <div
-    class="fixed inset-0 flex items-end justify-center {isFeedbackModalOpen
-      ? 'visible'
-      : 'invisible'}"
-  >
-    <div
-      class="inset-shadow-sm flex max-h-[70vh] w-full max-w-5xl transform flex-col gap-y-5 rounded-t-3xl bg-white p-5 shadow-lg transition-all {isFeedbackModalOpen
-        ? 'translate-y-0 opacity-100'
-        : 'translate-y-full opacity-0'}"
-    >
-      <div class="flex items-center justify-between">
-        <span class="py-2.5 text-xl/7 font-medium">
-          {isCorrectAnswer ? 'Correct answer!' : 'Not quite right!'}
-        </span>
-        <button
-          class="cursor-pointer rounded-full bg-slate-100 px-2.5 py-3"
-          onclick={() => (isFeedbackModalOpen = false)}
-        >
-          <X />
-        </button>
-      </div>
-
-      <div class="flex flex-col gap-y-6 overflow-y-auto">
-        <div class="flex flex-col gap-y-2">
-          <span class="font-medium">Your answer</span>
-          {@render modalFeedbackButton(selectedOptionIndex)}
+  {#if isFeedbackModalOpen}
+    <div class="fixed inset-0 flex items-end justify-center" transition:fade>
+      <div
+        class="inset-shadow-sm flex max-h-[70vh] w-full max-w-5xl transform flex-col gap-y-5 rounded-t-3xl bg-white p-5 shadow-lg transition-all"
+        transition:slide={{ axis: 'y' }}
+      >
+        <div class="flex items-center justify-between">
+          <span class="py-2.5 text-xl/7 font-medium">
+            {isCorrectAnswer ? 'Correct answer!' : 'Not quite right!'}
+          </span>
+          <button
+            class="cursor-pointer rounded-full bg-slate-100 px-2.5 py-3 hover:bg-slate-200"
+            onclick={() => (isFeedbackModalOpen = false)}
+          >
+            <X />
+          </button>
         </div>
-        {#if !isCorrectAnswer}
+
+        <div class="flex flex-col gap-y-6 overflow-y-auto">
           <div class="flex flex-col gap-y-2">
-            <span class="font-medium">Correct answer</span>
-            {@render modalFeedbackButton(currentQuestion.answer - 1)}
+            <span class="font-medium">Your answer</span>
+            {@render modalFeedbackButton(selectedOptionIndex)}
           </div>
-        {/if}
-        <div class="flex flex-col gap-y-1 rounded-2xl bg-slate-100 p-3">
-          <span class="font-medium text-zinc-600">Explanation</span>
-          <span>{currentQuestion.explanation}</span>
+          {#if !isCorrectAnswer}
+            <div class="flex flex-col gap-y-2">
+              <span class="font-medium">Correct answer</span>
+              {@render modalFeedbackButton(currentQuestion.answer - 1)}
+            </div>
+          {/if}
+          <div class="flex flex-col gap-y-1 rounded-2xl bg-slate-100 p-3">
+            <span class="font-medium text-zinc-600">Explanation</span>
+            <span>{currentQuestion.explanation}</span>
+          </div>
         </div>
-      </div>
 
-      <Button onclick={nextQuestion}>Continue</Button>
+        <Button onclick={nextQuestion}>Continue</Button>
+      </div>
     </div>
-  </div>
+  {/if}
 </div>
