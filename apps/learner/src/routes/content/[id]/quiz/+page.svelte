@@ -63,7 +63,7 @@
       <span
         class={[
           'flex items-center justify-center rounded-lg bg-lime-400 px-2 py-1 text-xs font-semibold text-black',
-          !isCorrectAnswer && '!bg-slate-900 !text-white',
+          optionIndex !== currentQuestion.answer - 1 && '!bg-slate-900 !text-white',
         ]}
       >
         {getOptionLetter(optionIndex)}
