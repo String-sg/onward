@@ -152,7 +152,7 @@
             {@render modalFeedbackButton(currentQuestion.answer - 1)}
           </div>
         {/if}
-        <div class="flex flex-col gap-1 rounded-2xl bg-slate-100 p-3">
+        <div class="flex flex-col gap-y-1 rounded-2xl bg-slate-100 p-3">
           <span class="text-base font-medium text-zinc-600">Explanation</span>
           <span class="text-base">{currentQuestion.explanation}</span>
         </div>
