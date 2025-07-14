@@ -1,5 +1,18 @@
 <script lang="ts">
+  import FloatingPlayer from '$lib/components/FloatingPlayer.svelte';
   import LearningUnit from '$lib/components/LearningUnit.svelte';
+
+  let isFloatingPodcastVisible = $state(false);
+  let isPlaying = $state(false);
+
+  function handlePlay() {
+    isFloatingPodcastVisible = true;
+    isPlaying = true;
+  }
+
+  function togglePlayPause() {
+    isPlaying = !isPlaying;
+  }
 </script>
 
 <div class="flex flex-col gap-y-3">
@@ -13,6 +26,7 @@
       tags={[{ variant: 'purple', content: 'Special Educational Needs' }]}
       title="Navigating Special Educational Needs in Singapore: A Path to Inclusion"
       showplayerpanel
+      onplay={handlePlay}
     />
 
     <LearningUnit
@@ -20,6 +34,16 @@
       tags={[{ variant: 'purple', content: 'Special Educational Needs' }]}
       title="Navigating Special Educational Needs in Singapore: A Path to Inclusion"
       showplayerpanel
+      onplay={handlePlay}
     />
+
+    {#if isFloatingPodcastVisible}
+      <FloatingPlayer
+        to="/"
+        title="Navigating Special Educational Needs in Singapore: A Path to Inclusion"
+        isplaying={isPlaying}
+        onplay={togglePlayPause}
+      />
+    {/if}
   </div>
 </div>
