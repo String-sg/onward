@@ -68,7 +68,7 @@
       >
         {getOptionLetter(optionIndex)}
       </span>
-      <span class="text-left text-base">
+      <span class="text-left">
         {currentQuestion.options[optionIndex]}
       </span>
     </button>
@@ -103,7 +103,7 @@
           >
             {getOptionLetter(index)}
           </span>
-          <span class="text-left text-base">
+          <span class="text-left">
             {option}
           </span>
         </button>
@@ -143,18 +143,18 @@
 
       <div class="flex flex-col gap-y-6 overflow-y-auto">
         <div class="flex flex-col gap-y-2">
-          <span class="text-base font-medium">Your answer</span>
+          <span class="font-medium">Your answer</span>
           {@render modalFeedbackButton(selectedOptionIndex)}
         </div>
         {#if !isCorrectAnswer}
           <div class="flex flex-col gap-y-2">
-            <span class="text-base font-medium">Correct answer</span>
+            <span class="font-medium">Correct answer</span>
             {@render modalFeedbackButton(currentQuestion.answer - 1)}
           </div>
         {/if}
         <div class="flex flex-col gap-y-1 rounded-2xl bg-slate-100 p-3">
-          <span class="text-base font-medium text-zinc-600">Explanation</span>
-          <span class="text-base">{currentQuestion.explanation}</span>
+          <span class="font-medium text-zinc-600">Explanation</span>
+          <span>{currentQuestion.explanation}</span>
         </div>
       </div>
 
