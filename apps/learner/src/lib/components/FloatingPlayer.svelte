@@ -31,7 +31,7 @@
   };
 </script>
 
-<div class="z-100 fixed bottom-6 left-6 right-6 flex flex-col gap-4">
+<div class="z-100 fixed bottom-6 left-6 right-6 flex flex-col">
   <a href={to} class="inset-shadow-sm rounded-full bg-white/90 p-3 shadow-lg backdrop-blur-sm">
     <div class="flex items-center gap-x-3">
       <!-- Temporary album placeholder -->
