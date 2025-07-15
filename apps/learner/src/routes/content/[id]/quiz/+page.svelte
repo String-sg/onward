@@ -44,12 +44,13 @@
     }
   }
 
-  function checkAnswer() {
+  function handleCheckAnswer() {
     isCorrectAnswer = selectedOptionIndex + 1 === currentQuestion.answer;
+    isFeedbackModalOpen = true;
   }
 
-  function showFeedbackModal() {
-    isFeedbackModalOpen = true;
+  function closeFeedbackModal() {
+    isFeedbackModalOpen = false;
   }
 </script>
 
@@ -112,13 +113,9 @@
     </div>
   </div>
 
-  <Button
-    onclick={() => {
-      checkAnswer();
-      showFeedbackModal();
-    }}
-    disabled={selectedOptionIndex === -1 || isFeedbackModalOpen}>Check Answer</Button
-  >
+  <Button onclick={handleCheckAnswer} disabled={selectedOptionIndex === -1 || isFeedbackModalOpen}>
+    Check Answer
+  </Button>
 
   {#if isFeedbackModalOpen}
     <div class="fixed inset-0 flex items-end justify-center" transition:fade>
@@ -132,7 +129,7 @@
           </span>
           <button
             class="cursor-pointer rounded-full bg-slate-100 px-2.5 py-3 hover:bg-slate-200"
-            onclick={() => (isFeedbackModalOpen = false)}
+            onclick={closeFeedbackModal}
           >
             <X />
           </button>
