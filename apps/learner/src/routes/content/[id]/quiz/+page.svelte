@@ -87,7 +87,7 @@
   </div>
 
   <div class="flex flex-1 flex-col gap-y-6">
-    <span class="text-xl font-medium">{currentQuestion.question}</span>
+    <span class="text-xl font-medium leading-7">{currentQuestion.question}</span>
     <div class="flex flex-col items-start gap-y-2">
       {#each currentQuestion.options as option, index (option)}
         <button
@@ -124,7 +124,7 @@
         transition:slide={{ axis: 'y' }}
       >
         <div class="flex items-center justify-between">
-          <span class="py-2.5 text-xl/7 font-medium">
+          <span class="py-2.5 text-xl font-medium leading-7">
             {isCorrectAnswer ? 'Correct answer!' : 'Not quite right!'}
           </span>
           <button
