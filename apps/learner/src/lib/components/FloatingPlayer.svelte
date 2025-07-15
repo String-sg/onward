@@ -31,26 +31,27 @@
   };
 </script>
 
-<div class="z-100 fixed bottom-6 left-6 right-6 flex flex-col">
-  <a href={to} class="inset-shadow-sm rounded-full bg-white/90 p-3 shadow-lg backdrop-blur-sm">
-    <div class="flex items-center gap-x-3">
-      <!-- Temporary album placeholder -->
-      <div class="h-12 w-12 rounded-full bg-black"></div>
+<div class="z-100 fixed bottom-6 left-6 right-6">
+  <a
+    href={to}
+    class="inset-shadow-sm flex items-center gap-x-3 rounded-full bg-white/90 p-3 shadow-lg backdrop-blur-sm"
+  >
+    <!-- Temporary album placeholder -->
+    <div class="h-12 w-12 rounded-full bg-black"></div>
 
-      <div class="flex-1 truncate text-sm font-medium">
-        {title}
-      </div>
-
-      <button
-        class="flex cursor-pointer items-center rounded-full px-4 py-2 hover:bg-slate-50"
-        onclick={handlePlay}
-      >
-        {#if isplaying}
-          <Pause />
-        {:else}
-          <Play />
-        {/if}
-      </button>
+    <div class="flex-1 truncate text-sm font-medium">
+      {title}
     </div>
+
+    <button
+      class="flex cursor-pointer items-center rounded-full px-4 py-2 hover:bg-slate-50"
+      onclick={handlePlay}
+    >
+      {#if isplaying}
+        <Pause />
+      {:else}
+        <Play />
+      {/if}
+    </button>
   </a>
 </div>
