@@ -1,6 +1,6 @@
 <script lang="ts">
   import { ArrowLeft, X } from '@lucide/svelte';
-  import { fade, slide } from 'svelte/transition';
+  import { slide } from 'svelte/transition';
 
   import { page } from '$app/state';
   import Button from '$lib/components/Button.svelte';
@@ -118,7 +118,7 @@
   </Button>
 
   {#if isFeedbackModalOpen}
-    <div class="fixed inset-0 flex items-end justify-center" transition:fade>
+    <div class="fixed inset-0 flex items-end justify-center">
       <div
         class="inset-shadow-sm flex max-h-[70vh] w-full max-w-5xl transform flex-col gap-y-5 rounded-t-3xl bg-white p-5 shadow-lg transition-all"
         transition:slide={{ axis: 'y' }}
