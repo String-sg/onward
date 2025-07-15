@@ -64,7 +64,7 @@
     >
       <span
         class={[
-          'rounded-lg bg-lime-400 px-2 py-1 text-xs font-semibold text-black',
+          'rounded-lg bg-lime-400 px-2 py-1 text-xs font-semibold',
           optionIndex !== currentQuestion.answer - 1 && '!bg-slate-900 !text-white',
         ]}
       >
@@ -99,7 +99,7 @@
         >
           <span
             class={[
-              'rounded-lg bg-slate-100 px-2 py-1 text-xs font-semibold text-black',
+              'rounded-lg bg-slate-100 px-2 py-1 text-xs font-semibold',
               selectedOptionIndex === index && '!bg-slate-900 !text-white',
             ]}
           >
