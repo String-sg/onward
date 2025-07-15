@@ -2,11 +2,11 @@
   import FloatingPlayer from '$lib/components/FloatingPlayer.svelte';
   import LearningUnit from '$lib/components/LearningUnit.svelte';
 
-  let isFloatingPodcastVisible = $state(false);
+  let isFloatingPlayerVisible = $state(false);
   let isPlaying = $state(false);
 
   function handlePlay() {
-    isFloatingPodcastVisible = true;
+    isFloatingPlayerVisible = true;
     isPlaying = true;
   }
 
@@ -37,7 +37,7 @@
       onplay={handlePlay}
     />
 
-    {#if isFloatingPodcastVisible}
+    {#if isFloatingPlayerVisible}
       <FloatingPlayer
         to="/"
         title="Navigating Special Educational Needs in Singapore: A Path to Inclusion"
