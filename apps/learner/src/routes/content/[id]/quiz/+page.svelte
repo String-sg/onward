@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { ArrowLeft } from '@lucide/svelte';
+  import { ArrowLeft, X } from '@lucide/svelte';
+  import { slide } from 'svelte/transition';
 
   import { page } from '$app/state';
   import Button from '$lib/components/Button.svelte';
@@ -16,6 +17,10 @@
     ((currentQuestionIndex + 1) / data.questionAnswers.length) * 100,
   );
 
+  let isFeedbackModalOpen = $state(false);
+
+  let isCorrectAnswer = $state(false);
+
   const contentId = $derived(page.params.id);
 
   function selectOption(index: number) {
@@ -31,13 +36,46 @@
       if (currentQuestionIndex < data.questionAnswers.length - 1) {
         currentQuestionIndex++;
         selectedOptionIndex = -1;
+        isFeedbackModalOpen = false;
       } else {
         //TODO: Redirect quiz to completion page
         console.log('Quiz completed!');
       }
     }
   }
+
+  function handleCheckAnswer() {
+    isCorrectAnswer = selectedOptionIndex + 1 === currentQuestion.answer;
+    isFeedbackModalOpen = true;
+  }
+
+  function closeFeedbackModal() {
+    isFeedbackModalOpen = false;
+  }
 </script>
+
+{#snippet modalFeedbackButton(optionIndex: number)}
+  <div class="flex flex-col items-start">
+    <button
+      class={[
+        'gap-x-2.75 flex w-full items-center rounded-2xl bg-lime-200 p-3',
+        optionIndex !== currentQuestion.answer - 1 && '!bg-slate-100',
+      ]}
+    >
+      <span
+        class={[
+          'rounded-lg bg-lime-400 px-2 py-1 text-xs font-semibold',
+          optionIndex !== currentQuestion.answer - 1 && '!bg-slate-900 !text-white',
+        ]}
+      >
+        {getOptionLetter(optionIndex)}
+      </span>
+      <span class="text-left">
+        {currentQuestion.options[optionIndex]}
+      </span>
+    </button>
+  </div>
+{/snippet}
 
 <div class="flex h-full flex-col gap-y-6 p-6">
   <div class="flex items-center gap-x-8">
@@ -61,13 +99,13 @@
         >
           <span
             class={[
-              'flex items-center justify-center rounded-lg bg-slate-100 px-2 py-1 text-xs font-semibold text-black',
+              'rounded-lg bg-slate-100 px-2 py-1 text-xs font-semibold',
               selectedOptionIndex === index && '!bg-slate-900 !text-white',
             ]}
           >
             {getOptionLetter(index)}
           </span>
-          <span class="text-left text-sm">
+          <span class="text-left">
             {option}
           </span>
         </button>
@@ -75,5 +113,47 @@
     </div>
   </div>
 
-  <Button onclick={nextQuestion} disabled={selectedOptionIndex === -1}>Check Answer</Button>
+  <Button onclick={handleCheckAnswer} disabled={selectedOptionIndex === -1 || isFeedbackModalOpen}>
+    Check Answer
+  </Button>
+
+  {#if isFeedbackModalOpen}
+    <div class="fixed inset-0 flex items-end justify-center">
+      <div
+        class="inset-shadow-sm flex max-h-[70vh] w-full max-w-5xl transform flex-col gap-y-5 rounded-t-3xl bg-white p-5 shadow-lg transition-all"
+        transition:slide={{ axis: 'y' }}
+      >
+        <div class="flex items-center justify-between">
+          <span class="py-2.5 text-xl font-medium">
+            {isCorrectAnswer ? 'Correct answer!' : 'Not quite right!'}
+          </span>
+          <button
+            class="cursor-pointer rounded-full bg-slate-100 px-2.5 py-3 hover:bg-slate-200"
+            onclick={closeFeedbackModal}
+          >
+            <X />
+          </button>
+        </div>
+
+        <div class="flex flex-col gap-y-6 overflow-y-auto">
+          <div class="flex flex-col gap-y-2">
+            <span class="font-medium">Your answer</span>
+            {@render modalFeedbackButton(selectedOptionIndex)}
+          </div>
+          {#if !isCorrectAnswer}
+            <div class="flex flex-col gap-y-2">
+              <span class="font-medium">Correct answer</span>
+              {@render modalFeedbackButton(currentQuestion.answer - 1)}
+            </div>
+          {/if}
+          <div class="flex flex-col gap-y-1 rounded-2xl bg-slate-100 p-3">
+            <span class="font-medium text-zinc-600">Explanation</span>
+            <span>{currentQuestion.explanation}</span>
+          </div>
+        </div>
+
+        <Button onclick={nextQuestion}>Continue</Button>
+      </div>
+    </div>
+  {/if}
 </div>
