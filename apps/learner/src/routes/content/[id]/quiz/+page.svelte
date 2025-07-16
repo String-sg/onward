@@ -168,7 +168,7 @@
 {#if isFeedbackModalOpen}
   <div class="z-100 fixed inset-0 flex items-end justify-center">
     <div
-      class="inset-shadow-sm flex max-h-[70vh] w-full max-w-5xl transform flex-col gap-y-5 rounded-t-3xl bg-white px-4 pb-3 pt-4 shadow-lg transition-all"
+      class="inset-shadow-sm flex max-h-[70vh] w-full max-w-5xl transform flex-col gap-y-5 rounded-t-3xl bg-white px-4 py-3 shadow-lg transition-all"
       transition:slide={{ axis: 'y' }}
     >
       <div class="flex items-center justify-between">
