@@ -122,10 +122,10 @@
   </div>
 </header>
 
-<main class="pt-23 relative mx-auto min-h-full w-full max-w-5xl px-4 pb-3">
+<main class="pt-23 pb-23 relative mx-auto min-h-full w-full max-w-5xl px-4">
   <div bind:this={target} class="absolute inset-x-0 top-0 h-px"></div>
   <div class="flex h-full flex-col">
-    <div class="flex flex-1 flex-col gap-y-6">
+    <div class="flex flex-1 flex-col gap-y-6 overflow-y-auto">
       <span class="text-xl font-medium">{currentQuestion.question}</span>
       <div class="flex flex-col items-start gap-y-2">
         {#each currentQuestion.options as option, index (option)}
@@ -151,6 +151,11 @@
         {/each}
       </div>
     </div>
+  </div>
+</main>
+
+<div class="fixed inset-x-0 bottom-0 z-50 bg-slate-100/90 backdrop-blur-sm">
+  <div class="mx-auto w-full max-w-5xl px-4 py-3">
     <Button
       onclick={handleCheckAnswer}
       disabled={selectedOptionIndex === -1 || isFeedbackModalOpen}
@@ -158,7 +163,7 @@
       Check Answer
     </Button>
   </div>
-</main>
+</div>
 
 {#if isFeedbackModalOpen}
   <div class="fixed inset-0 flex items-end justify-center">
