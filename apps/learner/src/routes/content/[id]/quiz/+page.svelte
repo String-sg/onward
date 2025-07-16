@@ -15,6 +15,8 @@
   let isFeedbackModalOpen = $state(false);
   let isCorrectAnswer = $state(false);
   let target = $state<HTMLElement | null>(null);
+  let showCompletionModal = $state(false);
+
 
   let currentQuestion = $derived(data.questionAnswers[currentQuestionIndex]);
   let percentageCompleted = $derived(
@@ -39,8 +41,8 @@
         selectedOptionIndex = -1;
         isFeedbackModalOpen = false;
       } else {
-        //TODO: Redirect quiz to completion page
-        console.log('Quiz completed!');
+        isFeedbackModalOpen = false;
+        showCompletionModal = true;
       }
     }
   };
@@ -192,6 +194,28 @@
       </div>
 
       <Button width="full" onclick={nextQuestion}>Continue</Button>
+    </div>
+  </div>
+{/if}
+
+{#if showCompletionModal}
+  <div class="z-100 fixed inset-0 flex">
+    <div class="flex h-full w-full max-w-5xl flex-col bg-slate-950 px-4 py-3 transition-all">
+      <div class="flex flex-1 flex-col items-center justify-center">
+        <!-- TODO: placeholder image, to be replaced once confirmed -->
+        <div class="h-60 w-60 rounded-3xl bg-zinc-300"></div>
+      </div>
+
+      <div class="flex flex-auto flex-col items-center justify-center gap-y-4 text-white">
+        <span class="text-xl font-medium">That was insightful!</span>
+        <div class="flex flex-col items-center gap-y-2">
+          <span>You have earned completion status for</span>
+          <Badge variant="purple">Special Educational Needs</Badge>
+          <span>Track completed topics on your profile.</span>
+        </div>
+      </div>
+
+      <Button href={`/content/${contentId}`} variant="secondary">Done</Button>
     </div>
   </div>
 {/if}
