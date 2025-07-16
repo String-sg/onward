@@ -39,7 +39,7 @@
 
     {#if isFloatingPlayerVisible}
       <FloatingPlayer
-        to="/"
+        to="/podcast/1"
         title="Navigating Special Educational Needs in Singapore: A Path to Inclusion"
         isplaying={isPlaying}
         onplay={togglePlayPause}
