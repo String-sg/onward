@@ -54,7 +54,7 @@
         </div>
       {/if}
       <div class="pointer-events-auto py-3">
-        <FloatingChat to="/" />
+        <FloatingChat />
       </div>
     </div>
   </div>

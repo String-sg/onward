@@ -1,16 +1,4 @@
-<script lang="ts">
-  interface Props {
-    /**
-     * The URL to navigate to when the user clicks on the floating chat.
-     */
-    to: string;
-  }
-
-  let { to }: Props = $props();
-</script>
-
-<a
-  href={to}
+<button
   class="inset-shadow-sm flex items-center rounded-full bg-white/90 p-5 shadow-lg backdrop-blur-sm"
 >
   <!-- Icon SVG -->
@@ -93,4 +81,4 @@
       </clipPath>
     </defs>
   </svg>
-</a>
+</button>
