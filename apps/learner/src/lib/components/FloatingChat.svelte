@@ -1,12 +1,9 @@
 <script lang="ts">
   interface Props {
     /**
-     * The URL to navigate to when the user clicks on the floating player.
+     * The URL to navigate to when the user clicks on the floating chat.
      */
     to: string;
-    /**
-     * The title of the podcast.
-     */
   }
 
   let { to }: Props = $props();
