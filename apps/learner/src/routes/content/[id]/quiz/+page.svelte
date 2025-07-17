@@ -152,18 +152,18 @@
       </div>
     </div>
   </div>
-</main>
 
-<div class="fixed inset-x-0 bottom-0 z-50 bg-slate-100/90 backdrop-blur-sm">
-  <div class="mx-auto w-full max-w-5xl px-4 py-3">
-    <Button
-      onclick={handleCheckAnswer}
-      disabled={selectedOptionIndex === -1 || isFeedbackModalOpen}
-    >
-      Check Answer
-    </Button>
+  <div class="absolute inset-x-0 bottom-0 z-50 bg-slate-100/90 backdrop-blur-sm">
+    <div class="mx-auto px-4 py-3">
+      <Button
+        onclick={handleCheckAnswer}
+        disabled={selectedOptionIndex === -1 || isFeedbackModalOpen}
+      >
+        Check Answer
+      </Button>
+    </div>
   </div>
-</div>
+</main>
 
 {#if isFeedbackModalOpen}
   <div class="z-100 fixed inset-0 flex items-end justify-center">
