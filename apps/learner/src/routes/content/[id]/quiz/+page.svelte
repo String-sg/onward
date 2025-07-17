@@ -130,7 +130,7 @@
         {#each currentQuestion.options as option, index (option)}
           <button
             class={[
-              'py-4.75 px-2.75 flex w-full cursor-pointer items-center gap-x-3 rounded-2xl border border-transparent bg-white',
+              'py-4.75 px-2.75 flex w-full cursor-pointer items-center gap-x-3 rounded-2xl border border-transparent bg-white hover:border-black',
               selectedOptionIndex === index && '!border-black',
             ]}
             onclick={() => selectOption(index)}
