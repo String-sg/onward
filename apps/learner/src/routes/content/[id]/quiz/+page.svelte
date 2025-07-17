@@ -11,18 +11,32 @@
 
   let selectedOptionIndex = $state(-1);
   let currentQuestionIndex = $state(0);
+  let isFeedbackModalOpen = $state(false);
+  let isCorrectAnswer = $state(false);
+  let isWithinViewport = $state(false);
 
+  let target: HTMLElement | null;
   let currentQuestion = $derived(data.questionAnswers[currentQuestionIndex]);
-
   let percentageCompleted = $derived(
     ((currentQuestionIndex + 1) / data.questionAnswers.length) * 100,
   );
+  let contentId = $derived(page.params.id);
 
-  let isFeedbackModalOpen = $state(false);
+  onMount(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      isWithinViewport = entry.isIntersecting;
+    });
 
-  let isCorrectAnswer = $state(false);
+    if (target) {
+      observer.observe(target);
+    }
 
-  const contentId = $derived(page.params.id);
+    return () => {
+      if (target) {
+        observer.unobserve(target);
+      }
+    };
+  });
 
   function selectOption(index: number) {
     selectedOptionIndex = index;
@@ -53,26 +67,6 @@
   function closeFeedbackModal() {
     isFeedbackModalOpen = false;
   }
-
-  let isWithinViewport = $state(false);
-
-  let target: HTMLElement | null;
-
-  onMount(() => {
-    const observer = new IntersectionObserver(([entry]) => {
-      isWithinViewport = entry.isIntersecting;
-    });
-
-    if (target) {
-      observer.observe(target);
-    }
-
-    return () => {
-      if (target) {
-        observer.unobserve(target);
-      }
-    };
-  });
 </script>
 
 {#snippet modalFeedbackButton(optionIndex: number)}
@@ -91,6 +85,7 @@
       >
         {getOptionLetter(optionIndex)}
       </span>
+
       <span class="text-left">
         {currentQuestion.options[optionIndex]}
       </span>
@@ -115,7 +110,9 @@
         >
           <ArrowLeft />
         </a>
+
         <Progress value={percentageCompleted} />
+
         <span class="text-sm">{currentQuestionIndex + 1}/{data.questionAnswers.length}</span>
       </div>
     </div>
@@ -124,9 +121,11 @@
 
 <main class="pt-23 pb-23 relative mx-auto min-h-full w-full max-w-5xl px-4">
   <div bind:this={target} class="absolute inset-x-0 top-0 h-px"></div>
+
   <div class="flex h-full flex-col">
     <div class="flex flex-1 flex-col gap-y-6 overflow-y-auto">
       <span class="text-xl font-medium">{currentQuestion.question}</span>
+
       <div class="flex flex-col items-start gap-y-2">
         {#each currentQuestion.options as option, index (option)}
           <button
@@ -144,6 +143,7 @@
             >
               {getOptionLetter(index)}
             </span>
+
             <span class="text-left">
               {option}
             </span>
