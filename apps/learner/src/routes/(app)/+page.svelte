@@ -44,7 +44,7 @@
   <div class="mx-auto max-w-5xl px-4">
     <div class="flex justify-end gap-x-4">
       {#if isFloatingPlayerVisible}
-        <div class="pointer-events-auto mr-auto flex-grow overflow-x-hidden py-3">
+        <div class="pointer-events-auto flex-grow overflow-x-hidden py-3">
           <FloatingPlayer
             to="/"
             title="Navigating Special Educational Needs in Singapore: A Path to Inclusion"
