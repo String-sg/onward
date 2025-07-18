@@ -5,6 +5,7 @@
   import { fade, fly } from 'svelte/transition';
 
   import { Badge } from '$lib/components/Badge/index.js';
+  import { ChatView } from '$lib/components/ChatView';
   import { ChatWidget } from '$lib/components/ChatWidget/index.js';
   import { NowPlayingBar } from '$lib/components/NowPlayingBar/index.js';
   import { Portal } from '$lib/components/Portal/index.js';
@@ -13,6 +14,7 @@
   const { children } = $props();
 
   let isNowPlayingViewVisible = $state(false);
+  let isChatViewVisible = $state(false);
 
   const player = Player.create();
 
@@ -26,6 +28,14 @@
 
   const handleNowPlayingViewClose = () => {
     isNowPlayingViewVisible = false;
+  };
+
+  const handleChatWidgetClick = () => {
+    isChatViewVisible = true;
+  };
+
+  const handleChatViewClose = () => {
+    isChatViewVisible = false;
   };
 </script>
 
@@ -43,7 +53,7 @@
         />
       {/if}
 
-      <ChatWidget />
+      <ChatWidget onclick={handleChatWidgetClick} />
     </div>
   </div>
 </div>
@@ -151,3 +161,5 @@
     </div>
   {/if}
 </Portal>
+
+<ChatView isvisible={isChatViewVisible} onclose={handleChatViewClose} />
