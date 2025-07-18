@@ -3,18 +3,20 @@
   import { fade, fly } from 'svelte/transition';
 
   import Badge from '$lib/components/Badge/Badge.svelte';
-  import FloatingChat from '$lib/components/FloatingChat.svelte';
+  import { ChatModal } from '$lib/components/ChatModal/index.js';
+  import { FloatingChat } from '$lib/components/FloatingChat/index.js';
   import FloatingPlayer from '$lib/components/FloatingPlayer.svelte';
   import LearningUnit from '$lib/components/LearningUnit.svelte';
   import { Portal } from '$lib/components/Portal/index.js';
   import { AudioState } from '$lib/helpers/index.js';
 
-  let isModalOpen = $state(false);
+  let isPlayerModalOpen = $state(false);
+  let isChatModalOpen = $state(false);
 
   const audioState = AudioState.load();
 
   const handleFloatingPlayerClick = () => {
-    isModalOpen = !isModalOpen;
+    isPlayerModalOpen = !isPlayerModalOpen;
   };
 
   const handlePlay = () => {
@@ -24,6 +26,14 @@
 
   const togglePlayPause = () => {
     audioState.isPlaying = !audioState.isPlaying;
+  };
+
+  const openChatModal = () => {
+    isChatModalOpen = true;
+  };
+
+  const closeChatModal = () => {
+    isChatModalOpen = false;
   };
 </script>
 
@@ -63,13 +73,13 @@
         />
       {/if}
 
-      <FloatingChat />
+      <FloatingChat onclick={openChatModal} />
     </div>
   </div>
 </div>
 
 <Portal>
-  {#if isModalOpen}
+  {#if isPlayerModalOpen}
     <!-- Backdrop -->
     <div transition:fade={{ duration: 300 }} class="z-199 fixed inset-0 bg-slate-950/50"></div>
 
@@ -169,5 +179,9 @@
         </div>
       </div>
     </div>
+  {/if}
+
+  {#if isChatModalOpen}
+    <ChatModal onclose={closeChatModal} />
   {/if}
 </Portal>
