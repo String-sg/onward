@@ -1,12 +1,14 @@
 <script lang="ts">
   import { ArrowLeft } from '@lucide/svelte';
 
+  import ChatModal from '$lib/components/ChatModal.svelte';
   import FloatingChat from '$lib/components/FloatingChat.svelte';
   import FloatingPlayer from '$lib/components/FloatingPlayer.svelte';
   import LearningUnit from '$lib/components/LearningUnit.svelte';
   import { AudioState } from '$lib/helpers/index.js';
 
   let isModalOpen = $state(false);
+  let isChatModalOpen = $state(false);
 
   const audioState = AudioState.load();
 
@@ -22,6 +24,10 @@
   const togglePlayPause = () => {
     audioState.isPlaying = !audioState.isPlaying;
   };
+
+  const openChatModal = () => {
+    isChatModalOpen = true;
+  }
 </script>
 
 <div class="flex flex-col gap-y-3">
@@ -30,6 +36,30 @@
   </div>
 
   <div class="flex flex-col gap-y-4">
+    <LearningUnit
+      to="/content/1"
+      tags={[{ variant: 'purple', content: 'Special Educational Needs' }]}
+      title="Navigating Special Educational Needs in Singapore: A Path to Inclusion"
+      showplayerpanel
+      onplay={handlePlay}
+    />
+
+    <LearningUnit
+      to="/content/1"
+      tags={[{ variant: 'purple', content: 'Special Educational Needs' }]}
+      title="Navigating Special Educational Needs in Singapore: A Path to Inclusion"
+      showplayerpanel
+      onplay={handlePlay}
+    />
+
+    <LearningUnit
+      to="/content/1"
+      tags={[{ variant: 'purple', content: 'Special Educational Needs' }]}
+      title="Navigating Special Educational Needs in Singapore: A Path to Inclusion"
+      showplayerpanel
+      onplay={handlePlay}
+    />
+
     <LearningUnit
       to="/content/1"
       tags={[{ variant: 'purple', content: 'Special Educational Needs' }]}
@@ -62,7 +92,7 @@
         </div>
       {/if}
       <div class="pointer-events-auto py-3">
-        <FloatingChat />
+        <FloatingChat onclick={openChatModal} />
       </div>
     </div>
   </div>
@@ -82,4 +112,8 @@
       </header>
     </div>
   </div>
+{/if}
+
+{#if isChatModalOpen}
+  <ChatModal />
 {/if}
