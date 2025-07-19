@@ -19,7 +19,7 @@
     "nanoid": "^5.1.5"
   },
   "devDependencies": {
-    "@sveltejs/kit": "^2.22.2",
+    "@sveltejs/kit": "^2.25.1",
     "@sveltejs/package": "^2.3.12",
     "@sveltejs/vite-plugin-svelte": "^5.1.0",
     "@valkey/valkey-glide": "^2.0.1",
@@ -29,7 +29,7 @@
     "vitest": "^3.1.4"
   },
   "peerDependencies": {
-    "@sveltejs/kit": "^2.22.2",
+    "@sveltejs/kit": "^2.25.1",
     "@valkey/valkey-glide": "^2.0.1",
     "svelte": "^5.34.9"
   }
