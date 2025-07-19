@@ -6,7 +6,7 @@
 
   const { children } = $props();
 
-  let isWithinViewport = $state(false);
+  let isWithinViewport = $state(true);
 
   const isHomePage = $derived(page.url.pathname === '/');
   const isLearningPage = $derived(page.url.pathname === '/learning');

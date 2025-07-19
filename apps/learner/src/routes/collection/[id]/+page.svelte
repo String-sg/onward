@@ -4,7 +4,7 @@
 
   import LearningUnit from '$lib/components/LearningUnit.svelte';
 
-  let isWithinViewport = $state(false);
+  let isWithinViewport = $state(true);
 
   let target: HTMLElement | null;
 
