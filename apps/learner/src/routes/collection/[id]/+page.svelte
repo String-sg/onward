@@ -4,6 +4,10 @@
 
   import LearningUnit from '$lib/components/LearningUnit.svelte';
 
+  import type { PageData } from './$types';
+
+  let { data }: { data: PageData } = $props();
+
   let isWithinViewport = $state(true);
 
   let target: HTMLElement | null;
@@ -40,7 +44,7 @@
           <ArrowLeft />
         </a>
 
-        <span class="text-xl font-medium">SEN peer support</span>
+        <span class="text-xl font-medium">{data.collection.title}</span>
       </div>
     </div>
   </div>
@@ -54,44 +58,26 @@
       <span class="text-lg font-medium">About this topic</span>
 
       <span>
-        Explore the world of Special Educational Needs (SEN) peer support that indicates Singapore
-        specific peer support knowledges, case studies and more to gain knowledge about SEN. This
-        topic encompasses a variety of bite-sized.
+        {data.collection.description}
       </span>
     </div>
 
     <div class="flex flex-col gap-y-3">
       <div class="px-2">
-        <span class="text-xl font-semibold">12 podcasts</span>
+        <span class="text-xl font-semibold">{data.collection.learningUnits.length} podcasts</span>
       </div>
 
       <div class="flex flex-col gap-y-4">
-        <LearningUnit
-          to="/content/1"
-          tags={[
-            { variant: 'purple', content: 'Special Educational Needs' },
-            { variant: 'slate', content: 'Podcast' },
-          ]}
-          title="Navigating Special Educational Needs in Singapore: A Path to Inclusion"
-        />
-
-        <LearningUnit
-          to="/content/1"
-          tags={[
-            { variant: 'purple', content: 'Special Educational Needs' },
-            { variant: 'slate', content: 'Podcast' },
-          ]}
-          title="Navigating Special Educational Needs in Singapore: A Path to Inclusion"
-        />
-
-        <LearningUnit
-          to="/content/1"
-          tags={[
-            { variant: 'purple', content: 'Special Educational Needs' },
-            { variant: 'slate', content: 'Podcast' },
-          ]}
-          title="Navigating Special Educational Needs in Singapore: A Path to Inclusion"
-        />
+        {#each data.collection.learningUnits as learningUnit (learningUnit.id)}
+          <LearningUnit
+            id={learningUnit.id}
+            contentUrl={learningUnit.contentUrl}
+            to="/content/{learningUnit.id}"
+            duration={learningUnit.duration}
+            tags={learningUnit.tags}
+            title={learningUnit.title}
+          />
+        {/each}
       </div>
     </div>
   </div>
