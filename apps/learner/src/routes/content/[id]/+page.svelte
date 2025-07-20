@@ -10,7 +10,7 @@
   const { data } = $props();
 
   let returnTo = $state('/');
-  let isWithinViewport = $state(false);
+  let isWithinViewport = $state(true);
   let isExpanded = $state(false);
 
   let target: HTMLElement | null;
