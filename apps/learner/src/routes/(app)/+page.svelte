@@ -1,17 +1,24 @@
 <script lang="ts">
-  import FloatingPlayer from '$lib/components/FloatingPlayer.svelte';
   import LearningUnit from '$lib/components/LearningUnit.svelte';
+  import { audioPlayer } from '$lib/stores/AudioPlayerStore.svelte';
 
-  let isFloatingPlayerVisible = $state(false);
-  let isPlaying = $state(false);
+  import type { PageData } from './$types';
 
-  function handlePlay() {
-    isFloatingPlayerVisible = true;
-    isPlaying = true;
-  }
+  let { data }: { data: PageData } = $props();
 
-  function togglePlayPause() {
-    isPlaying = !isPlaying;
+  if (data.recentlyLearned) {
+    const audioProgressData = data.recentlyLearned
+      .filter((unit) => unit.learningJourney)
+      .map((unit) => ({
+        learningUnitId: unit.id,
+        currentTime: unit.learningJourney!.lastCheckpoint,
+        completed: unit.learningJourney!.isCompleted,
+        duration: unit.duration,
+      }));
+
+    if (audioProgressData.length > 0) {
+      audioPlayer.load(audioProgressData);
+    }
   }
 </script>
 
@@ -21,29 +28,16 @@
   </div>
 
   <div class="flex flex-col gap-y-4">
-    <LearningUnit
-      to="/content/1"
-      tags={[{ variant: 'purple', content: 'Special Educational Needs' }]}
-      title="Navigating Special Educational Needs in Singapore: A Path to Inclusion"
-      showplayerpanel
-      onplay={handlePlay}
-    />
-
-    <LearningUnit
-      to="/content/1"
-      tags={[{ variant: 'purple', content: 'Special Educational Needs' }]}
-      title="Navigating Special Educational Needs in Singapore: A Path to Inclusion"
-      showplayerpanel
-      onplay={handlePlay}
-    />
-
-    {#if isFloatingPlayerVisible}
-      <FloatingPlayer
-        to="/"
-        title="Navigating Special Educational Needs in Singapore: A Path to Inclusion"
-        isplaying={isPlaying}
-        onplay={togglePlayPause}
+    {#each data.recentlyLearned as learningUnit (learningUnit.id)}
+      <LearningUnit
+        id={learningUnit.id}
+        contentUrl={learningUnit.contentURL}
+        to="/content/{learningUnit.id}"
+        duration={learningUnit.duration}
+        tags={learningUnit.tags}
+        title={learningUnit.title}
+        showplayerpanel
       />
-    {/if}
+    {/each}
   </div>
 </div>
