@@ -1,6 +1,7 @@
 <script lang="ts">
   import { Pause, Play } from '@lucide/svelte';
-  import type { MouseEventHandler } from 'svelte/elements';
+
+  import { audioPlayer } from '$lib/stores/AudioPlayerStore.svelte';
 
   interface Props {
     /**
@@ -8,26 +9,32 @@
      */
     to: string;
     /**
-     * The title of the podcast.
-     */
-    title: string;
-    /**
-     * Indicates whether the player is in a playing or paused state.
-     */
-    isplaying?: boolean;
-    /**
      * A callback function that is called when the user clicks on the play button.
      */
-    onplay?: MouseEventHandler<HTMLButtonElement>;
+    onplay?: () => void;
   }
 
-  let { to, title, isplaying = false, onplay }: Props = $props();
+  let { to, onplay }: Props = $props();
 
-  const handlePlay: MouseEventHandler<HTMLButtonElement> = (event) => {
-    // Prevent the default behavior of the anchor tag from navigating to the URL.
+  let isCurrentlyPlaying = $derived(audioPlayer.activeAudio.status === 'playing');
+
+  const handlePlay = async (event: Event) => {
     event.preventDefault();
 
-    onplay?.(event);
+    const learningUnitId = audioPlayer.activeAudio.learningUnitId;
+
+    if (isCurrentlyPlaying) {
+      audioPlayer.pauseAudio();
+    } else if (audioPlayer.activeAudio.contentUrl && learningUnitId) {
+      const resumeTime = audioPlayer.getResumeTime(learningUnitId);
+      await audioPlayer.playAudio(
+        learningUnitId,
+        audioPlayer.activeAudio.contentUrl,
+        audioPlayer.activeAudio.title || undefined,
+        resumeTime,
+      );
+    }
+    onplay?.();
   };
 </script>
 
@@ -40,14 +47,14 @@
     <div class="h-12 w-12 rounded-full bg-black"></div>
 
     <div class="flex-1 truncate text-sm font-medium">
-      {title}
+      {audioPlayer.activeAudio.title || 'Untitled Audio'}
     </div>
 
     <button
       class="flex cursor-pointer items-center rounded-full px-4 py-2 hover:bg-slate-50"
       onclick={handlePlay}
     >
-      {#if isplaying}
+      {#if isCurrentlyPlaying}
         <Pause />
       {:else}
         <Play />
