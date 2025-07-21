@@ -15,12 +15,13 @@
   let isCorrectAnswer = $state(false);
   let isWithinViewport = $state(false);
 
-  let target: HTMLElement | null;
   let currentQuestion = $derived(data.questionAnswers[currentQuestionIndex]);
   let percentageCompleted = $derived(
     ((currentQuestionIndex + 1) / data.questionAnswers.length) * 100,
   );
   let contentId = $derived(page.params.id);
+
+  let target: HTMLElement | null;
 
   onMount(() => {
     const observer = new IntersectionObserver(([entry]) => {
