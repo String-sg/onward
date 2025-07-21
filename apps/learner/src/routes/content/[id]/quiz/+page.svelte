@@ -40,15 +40,15 @@
     };
   });
 
-  function selectOption(index: number) {
+  const selectOption = (index: number) => {
     selectedOptionIndex = index;
-  }
+  };
 
-  function getOptionLetter(index: number) {
+  const getOptionLetter = (index: number) => {
     return String.fromCharCode(65 + index);
-  }
+  };
 
-  function nextQuestion() {
+  const nextQuestion = () => {
     if (selectedOptionIndex !== -1) {
       if (currentQuestionIndex < data.questionAnswers.length - 1) {
         currentQuestionIndex++;
@@ -59,16 +59,16 @@
         console.log('Quiz completed!');
       }
     }
-  }
+  };
 
-  function handleCheckAnswer() {
+  const handleCheckAnswer = () => {
     isCorrectAnswer = selectedOptionIndex + 1 === currentQuestion.answer;
     isFeedbackModalOpen = true;
-  }
+  };
 
-  function closeFeedbackModal() {
+  const closeFeedbackModal = () => {
     isFeedbackModalOpen = false;
-  }
+  };
 </script>
 
 {#snippet modalFeedbackButton(optionIndex: number)}
