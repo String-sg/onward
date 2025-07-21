@@ -199,8 +199,8 @@
 {/if}
 
 {#if showCompletionModal}
-  <div class="z-100 fixed inset-0 flex">
-    <div class="flex h-full w-full max-w-5xl flex-col bg-slate-950 px-4 py-3 transition-all">
+  <div class="z-100 fixed inset-0 flex items-center justify-center bg-slate-950">
+    <div class="flex h-full w-full max-w-5xl flex-col px-4 py-3 transition-all">
       <div class="flex flex-1 flex-col items-center justify-center">
         <!-- TODO: placeholder image, to be replaced once confirmed -->
         <div class="h-60 w-60 rounded-3xl bg-zinc-300"></div>
