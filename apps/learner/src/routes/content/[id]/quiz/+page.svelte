@@ -4,6 +4,7 @@
   import { slide } from 'svelte/transition';
 
   import { page } from '$app/state';
+  import { Badge } from '$lib/components/Badge/index.js';
   import { Button } from '$lib/components/Button/index.js';
   import Progress from '$lib/components/Progress.svelte';
 
@@ -74,14 +75,14 @@
   <div class="flex flex-col items-start">
     <button
       class={[
-        'gap-x-2.75 flex w-full items-center rounded-2xl bg-lime-200 p-3',
-        optionIndex !== currentQuestion.answer - 1 && '!bg-slate-100',
+        'gap-x-2.75 py-3.75 flex w-full items-center rounded-2xl border border-transparent bg-lime-200 px-3',
+        optionIndex !== currentQuestion.answer - 1 && '!border-slate-950 !bg-white',
       ]}
     >
       <span
         class={[
-          'rounded-lg bg-lime-400 px-2 py-1 text-xs font-semibold',
-          optionIndex !== currentQuestion.answer - 1 && '!bg-slate-900 !text-white',
+          'rounded-lg bg-lime-400 px-2.5 py-1 font-semibold',
+          optionIndex !== currentQuestion.answer - 1 && '!bg-slate-950 !text-white',
         ]}
       >
         {getOptionLetter(optionIndex)}
@@ -113,8 +114,6 @@
         </a>
 
         <Progress value={percentageCompleted} />
-
-        <span class="text-sm">{currentQuestionIndex + 1}/{data.questionAnswers.length}</span>
       </div>
     </div>
   </div>
@@ -125,21 +124,27 @@
 
   <div class="flex h-full flex-col">
     <div class="flex flex-1 flex-col gap-y-6 overflow-y-auto">
-      <span class="text-xl font-medium">{currentQuestion.question}</span>
+      <div class="flex flex-col gap-y-2">
+        <Badge variant="slate">
+          Question {currentQuestionIndex + 1} of {data.questionAnswers.length}
+        </Badge>
+
+        <span class="text-xl font-medium">{currentQuestion.question}</span>
+      </div>
 
       <div class="flex flex-col items-start gap-y-2">
         {#each currentQuestion.options as option, index (option)}
           <button
             class={[
-              'py-4.75 px-2.75 flex w-full cursor-pointer items-center gap-x-3 rounded-2xl border border-transparent bg-white hover:border-black',
-              selectedOptionIndex === index && '!border-black',
+              'py-3.75 px-2.75 flex w-full cursor-pointer items-center gap-x-3 rounded-2xl border border-transparent bg-white hover:bg-slate-200',
+              selectedOptionIndex === index && '!border-slate-950',
             ]}
             onclick={() => selectOption(index)}
           >
             <span
               class={[
-                'rounded-lg bg-slate-100 px-2 py-1 text-xs font-semibold',
-                selectedOptionIndex === index && '!bg-slate-900 !text-white',
+                'rounded-lg bg-slate-100 px-2.5 py-1 font-semibold',
+                selectedOptionIndex === index && '!bg-slate-950 !text-white',
               ]}
             >
               {getOptionLetter(index)}
@@ -176,6 +181,7 @@
         <span class="py-2.5 text-xl font-medium">
           {isCorrectAnswer ? 'Correct answer!' : 'Not quite right!'}
         </span>
+
         <button
           class="cursor-pointer rounded-full bg-slate-100 px-2.5 py-3 hover:bg-slate-200"
           onclick={closeFeedbackModal}
@@ -189,6 +195,7 @@
           <span class="font-medium">Your answer</span>
           {@render modalFeedbackButton(selectedOptionIndex)}
         </div>
+
         {#if !isCorrectAnswer}
           <div class="flex flex-col gap-y-2">
             <span class="font-medium">Correct answer</span>
@@ -197,6 +204,7 @@
         {/if}
         <div class="flex flex-col gap-y-1 rounded-2xl bg-slate-100 p-3">
           <span class="font-medium text-zinc-600">Explanation</span>
+
           <span>{currentQuestion.explanation}</span>
         </div>
       </div>
