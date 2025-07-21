@@ -59,7 +59,7 @@
   </div>
 
   {#if showplayerpanel}
-    <div class="flex items-center justify-between">
+    <div class="flex items-center gap-x-3">
       <button
         class="flex cursor-pointer items-center gap-x-2 rounded-full bg-slate-100 px-6 py-4 transition-colors hover:bg-slate-200"
         onclick={handlePlay}
@@ -69,8 +69,6 @@
       </button>
 
       <div class="flex items-center gap-x-2">
-        <span class="text-sm text-slate-600">23m left</span>
-
         <svg viewBox="0 0 24 24" class="h-6 w-6">
           <circle cx="12" cy="12" r="9" stroke="#E2E8F0" fill="none" stroke-width="3px" />
           <circle
@@ -86,6 +84,8 @@
             transform="rotate(-90 0 0)"
           />
         </svg>
+
+        <span class="text-sm text-slate-600">23m left</span>
       </div>
     </div>
   {/if}
