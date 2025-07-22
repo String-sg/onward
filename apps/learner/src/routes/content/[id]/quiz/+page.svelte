@@ -1,12 +1,12 @@
 <script lang="ts">
   import { ArrowLeft, X } from '@lucide/svelte';
-  import { onMount } from 'svelte';
   import { slide } from 'svelte/transition';
 
   import { page } from '$app/state';
   import { Badge } from '$lib/components/Badge/index.js';
   import { Button } from '$lib/components/Button/index.js';
   import Progress from '$lib/components/Progress.svelte';
+  import { IsWithinViewport } from '$lib/helpers/index.js';
 
   const { data } = $props();
 
@@ -14,7 +14,6 @@
   let currentQuestionIndex = $state(0);
   let isFeedbackModalOpen = $state(false);
   let isCorrectAnswer = $state(false);
-  let isWithinViewport = $state(false);
 
   let currentQuestion = $derived(data.questionAnswers[currentQuestionIndex]);
   let percentageCompleted = $derived(
@@ -22,23 +21,9 @@
   );
   let contentId = $derived(page.params.id);
 
-  let target: HTMLElement | null;
+  let target = $state<HTMLElement | null>(null);
 
-  onMount(() => {
-    const observer = new IntersectionObserver(([entry]) => {
-      isWithinViewport = entry.isIntersecting;
-    });
-
-    if (target) {
-      observer.observe(target);
-    }
-
-    return () => {
-      if (target) {
-        observer.unobserve(target);
-      }
-    };
-  });
+  const isWithinViewport = new IsWithinViewport(() => target);
 
   const selectOption = (index: number) => {
     selectedOptionIndex = index;
@@ -97,7 +82,7 @@
   <div
     class={[
       'absolute inset-x-0 top-full h-px bg-transparent transition-colors duration-300',
-      !isWithinViewport && '!bg-slate-950/7.5',
+      target && !isWithinViewport.current && '!bg-slate-950/7.5',
     ]}
   ></div>
 
