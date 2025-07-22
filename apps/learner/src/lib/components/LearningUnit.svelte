@@ -1,8 +1,8 @@
 <script lang="ts">
   import { Play } from '@lucide/svelte';
-  import type { MouseEventHandler } from 'svelte/elements';
 
   import { Badge, type BadgeProps } from '$lib/components/Badge/index.js';
+  import { Button } from '$lib/components/Button/index.js';
 
   interface Props {
     /**
@@ -20,7 +20,7 @@
     /**
      * A callback function that is called when the user clicks on the play button.
      */
-    onplay?: MouseEventHandler<HTMLButtonElement>;
+    onplay?: () => void;
     /**
      * A flag to display the panel containing the Play button and progress indicator.
      */
@@ -29,11 +29,8 @@
 
   let { to, title, tags, onplay, showplayerpanel = false }: Props = $props();
 
-  const handlePlay: MouseEventHandler<HTMLButtonElement> = (event) => {
-    // Prevent the default behavior of the anchor tag from navigating to the URL.
-    event.preventDefault();
-
-    onplay?.(event);
+  const handlePlay = () => {
+    onplay?.();
   };
 </script>
 
@@ -60,13 +57,10 @@
 
   {#if showplayerpanel}
     <div class="flex items-center gap-x-3">
-      <button
-        class="flex cursor-pointer items-center gap-x-2 rounded-full bg-slate-100 px-6 py-4 transition-colors hover:bg-slate-200"
-        onclick={handlePlay}
-      >
+      <Button variant="secondary" size="lg" width="auto" onclick={handlePlay}>
         <Play />
         <span class="font-medium text-slate-950">Play</span>
-      </button>
+      </Button>
 
       <div class="flex items-center gap-x-2">
         <svg viewBox="0 0 24 24" class="h-6 w-6">
