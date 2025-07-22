@@ -18,6 +18,12 @@
      */
     size?: 'md' | 'lg';
     /**
+     * The width of the button.
+     *
+     * @default 'full'
+     */
+    width?: 'full' | 'auto';
+    /**
      * Indicates whether the button is disabled.
      *
      * @default false
@@ -28,6 +34,7 @@
   const {
     variant = 'primary',
     size = 'lg',
+    width = 'full',
     disabled = false,
     children,
     class: clazz,
@@ -40,11 +47,13 @@
     {...otherProps}
     aria-disabled={disabled}
     class={[
-      'flex w-full cursor-pointer items-center justify-center gap-x-1 rounded-full border px-4 transition-colors aria-disabled:pointer-events-none aria-disabled:border-transparent aria-disabled:bg-slate-900/50 aria-disabled:text-white',
+      'flex cursor-pointer items-center justify-center gap-x-1 rounded-full border px-4 transition-colors aria-disabled:pointer-events-none aria-disabled:border-transparent aria-disabled:bg-slate-900/50 aria-disabled:text-white',
       variant === 'primary' && 'border-transparent bg-slate-950 text-white hover:bg-slate-900/90',
       variant === 'secondary' && 'border-slate-300 bg-white text-slate-950 hover:bg-slate-100',
       size === 'md' && 'py-2.75',
       size === 'lg' && 'py-3',
+      width === 'full' && 'w-full',
+      width === 'auto' && 'w-auto',
       clazz,
     ]}
   >
@@ -56,11 +65,13 @@
     aria-disabled={disabled}
     {disabled}
     class={[
-      'flex w-full cursor-pointer items-center justify-center gap-x-1 rounded-full border px-4 transition-colors aria-disabled:pointer-events-none aria-disabled:border-transparent aria-disabled:bg-slate-900/50 aria-disabled:text-white',
+      'flex cursor-pointer items-center justify-center gap-x-1 rounded-full border px-4 transition-colors aria-disabled:pointer-events-none aria-disabled:border-transparent aria-disabled:bg-slate-900/50 aria-disabled:text-white',
       variant === 'primary' && 'border-transparent bg-slate-950 text-white hover:bg-slate-900/90',
       variant === 'secondary' && 'border-slate-300 bg-white text-slate-950 hover:bg-slate-100',
       size === 'md' && 'py-2.75',
       size === 'lg' && 'py-3',
+      width === 'full' && 'w-full',
+      width === 'auto' && 'w-auto',
       clazz,
     ]}
   >
