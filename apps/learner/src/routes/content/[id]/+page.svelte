@@ -3,7 +3,7 @@
   import { formatDistanceToNow } from 'date-fns';
 
   import { afterNavigate } from '$app/navigation';
-  import Badge from '$lib/components/Badge.svelte';
+  import { Badge } from '$lib/components/Badge/index.js';
   import Button from '$lib/components/Button.svelte';
   import { IsWithinViewport } from '$lib/helpers/index.js';
 

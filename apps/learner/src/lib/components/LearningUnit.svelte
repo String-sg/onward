@@ -2,7 +2,7 @@
   import { Play } from '@lucide/svelte';
   import type { MouseEventHandler } from 'svelte/elements';
 
-  import Badge, { type Variant as BadgeVariant } from '$lib/components/Badge.svelte';
+  import { Badge, type BadgeProps } from '$lib/components/Badge/index.js';
 
   interface Props {
     /**
@@ -12,7 +12,7 @@
     /**
      * The tags to display on the MLU.
      */
-    tags: { variant: BadgeVariant; content: string }[];
+    tags: { variant: BadgeProps['variant']; content: string }[];
     /**
      * The title of the MLU.
      */

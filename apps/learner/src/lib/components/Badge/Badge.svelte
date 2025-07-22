@@ -2,14 +2,12 @@
   import type { Snippet } from 'svelte';
   import type { HTMLAttributes } from 'svelte/elements';
 
-  export type Variant = 'blue' | 'orange' | 'amber' | 'teal' | 'rose' | 'purple' | 'slate';
-
-  interface Props extends HTMLAttributes<HTMLDivElement> {
-    variant: Variant;
+  export interface Props extends HTMLAttributes<HTMLDivElement> {
+    variant: 'blue' | 'orange' | 'amber' | 'teal' | 'rose' | 'purple' | 'slate';
     children: Snippet;
   }
 
-  let { children, variant, class: clazz, ...otherProps }: Props = $props();
+  let { variant, children, class: clazz, ...otherProps }: Props = $props();
 </script>
 
 <div

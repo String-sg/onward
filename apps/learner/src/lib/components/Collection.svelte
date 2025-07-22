@@ -1,7 +1,7 @@
 <script lang="ts">
   export type Variant = 'purple' | 'teal' | 'amber';
 
-  import Badge from '$lib/components/Badge.svelte';
+  import { Badge } from '$lib/components/Badge/index.js';
 
   interface Props {
     /**
