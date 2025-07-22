@@ -206,11 +206,11 @@
         <div class="h-60 w-60 rounded-3xl bg-zinc-300"></div>
       </div>
 
-      <div class="flex flex-auto flex-col items-center justify-center gap-y-4 text-white">
+      <div class="flex flex-auto flex-col justify-center gap-y-4 text-center text-white">
         <span class="text-xl font-medium">That was insightful!</span>
-        <div class="flex flex-col items-center gap-y-2">
+        <div class="flex flex-col gap-y-2">
           <span>You have earned completion status for</span>
-          <Badge variant="purple">Special Educational Needs</Badge>
+          <span>Special Educational Needs</span>
           <span>Track completed topics on your profile.</span>
         </div>
       </div>
