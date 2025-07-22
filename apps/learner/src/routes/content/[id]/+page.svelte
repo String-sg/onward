@@ -1,19 +1,19 @@
 <script lang="ts">
   import { ArrowLeft, ChevronsDown, Lightbulb, Play, Share } from '@lucide/svelte';
   import { formatDistanceToNow } from 'date-fns';
-  import { onMount } from 'svelte';
 
   import { afterNavigate } from '$app/navigation';
   import Badge from '$lib/components/Badge.svelte';
   import Button from '$lib/components/Button.svelte';
+  import { IsWithinViewport } from '$lib/helpers/index.js';
 
   const { data } = $props();
 
   let returnTo = $state('/');
-  let isWithinViewport = $state(true);
   let isExpanded = $state(false);
+  let target = $state<HTMLElement | null>(null);
 
-  let target: HTMLElement | null;
+  const isWithinViewport = new IsWithinViewport(() => target);
 
   afterNavigate(({ from, type }) => {
     if (type === 'enter' || !from) {
@@ -22,22 +22,6 @@
     }
 
     returnTo = from.url.pathname;
-  });
-
-  onMount(() => {
-    const observer = new IntersectionObserver(([entry]) => {
-      isWithinViewport = entry.isIntersecting;
-    });
-
-    if (target) {
-      observer.observe(target);
-    }
-
-    return () => {
-      if (target) {
-        observer.unobserve(target);
-      }
-    };
   });
 
   const toggleIsExpanded = () => {
@@ -49,7 +33,7 @@
   <div
     class={[
       'absolute inset-x-0 top-full h-px bg-transparent transition-colors duration-300',
-      !isWithinViewport && '!bg-slate-950/7.5',
+      target && !isWithinViewport.current && '!bg-slate-950/7.5',
     ]}
   ></div>
 
