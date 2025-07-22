@@ -1,41 +1,25 @@
 <script lang="ts">
   import { BookHeart, Compass, Home } from '@lucide/svelte';
-  import { onMount } from 'svelte';
 
   import { page } from '$app/state';
+  import { IsWithinViewport } from '$lib/helpers';
 
   const { children } = $props();
 
-  let isWithinViewport = $state(true);
+  let target = $state<HTMLElement | null>(null);
 
   const isHomePage = $derived(page.url.pathname === '/');
   const isLearningPage = $derived(page.url.pathname === '/learning');
   const isExplorePage = $derived(page.url.pathname === '/explore');
 
-  let target: HTMLElement | null;
-
-  onMount(() => {
-    const observer = new IntersectionObserver(([entry]) => {
-      isWithinViewport = entry.isIntersecting;
-    });
-
-    if (target) {
-      observer.observe(target);
-    }
-
-    return () => {
-      if (target) {
-        observer.unobserve(target);
-      }
-    };
-  });
+  const isWithinViewport = new IsWithinViewport(() => target);
 </script>
 
 <header class="fixed inset-x-0 top-0 z-50 bg-slate-100/90 backdrop-blur-sm">
   <div
     class={[
       'absolute inset-x-0 top-full h-px bg-transparent transition-colors duration-300',
-      !isWithinViewport && '!bg-slate-950/7.5',
+      target && !isWithinViewport.current && '!bg-slate-950/7.5',
     ]}
   ></div>
 
