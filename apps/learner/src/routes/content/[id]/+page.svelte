@@ -4,7 +4,7 @@
 
   import { afterNavigate } from '$app/navigation';
   import { Badge } from '$lib/components/Badge/index.js';
-  import Button from '$lib/components/Button.svelte';
+  import { Button } from '$lib/components/Button/index.js';
   import { IsWithinViewport } from '$lib/helpers/index.js';
 
   const { data } = $props();

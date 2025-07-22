@@ -1,27 +1,29 @@
 <script lang="ts">
   import type { HTMLAnchorAttributes, HTMLButtonAttributes } from 'svelte/elements';
 
-  type ButtonProps = Omit<HTMLButtonAttributes, 'disabled' | 'aria-disabled'> &
-    Omit<HTMLAnchorAttributes, 'aria-disabled'> & {
-      /**
-       * The variant of the button.
-       *
-       * @default 'primary'
-       */
-      variant?: 'primary' | 'secondary';
-      /**
-       * The size of the button.
-       *
-       * @default 'lg'
-       */
-      size?: 'md' | 'lg';
-      /**
-       * Indicates whether the button is disabled.
-       *
-       * @default false
-       */
-      disabled?: boolean;
-    };
+  export type Props = (
+    | Omit<HTMLButtonAttributes, 'disabled' | 'aria-disabled'>
+    | ({ href: string } & Omit<HTMLAnchorAttributes, 'href' | 'aria-disabled'>)
+  ) & {
+    /**
+     * The variant of the button.
+     *
+     * @default 'primary'
+     */
+    variant?: 'primary' | 'secondary';
+    /**
+     * The size of the button.
+     *
+     * @default 'lg'
+     */
+    size?: 'md' | 'lg';
+    /**
+     * Indicates whether the button is disabled.
+     *
+     * @default false
+     */
+    disabled?: boolean;
+  };
 
   const {
     variant = 'primary',
@@ -30,7 +32,7 @@
     children,
     class: clazz,
     ...otherProps
-  }: ButtonProps = $props();
+  }: Props = $props();
 </script>
 
 {#if 'href' in otherProps}
