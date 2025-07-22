@@ -132,7 +132,7 @@
         <span class="text-xl font-medium">{currentQuestion.question}</span>
       </div>
 
-      <div class="flex flex-col items-start gap-y-2">
+      <div class="flex flex-col gap-y-2">
         {#each currentQuestion.options as option, index (option)}
           <button
             class={[
