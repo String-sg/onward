@@ -71,27 +71,25 @@
   };
 </script>
 
-{#snippet modalFeedbackButton(optionIndex: number)}
-  <div class="flex flex-col items-start">
-    <button
+{#snippet feedbackAnswer(optionIndex: number)}
+  <div
+    class={[
+      'gap-x-2.75 py-3.75 flex w-full items-center rounded-2xl border border-transparent bg-lime-200 px-3',
+      optionIndex !== currentQuestion.answer - 1 && '!border-slate-950 !bg-white',
+    ]}
+  >
+    <span
       class={[
-        'gap-x-2.75 py-3.75 flex w-full items-center rounded-2xl border border-transparent bg-lime-200 px-3',
-        optionIndex !== currentQuestion.answer - 1 && '!border-slate-950 !bg-white',
+        'rounded-lg bg-lime-400 px-2.5 py-1 font-semibold',
+        optionIndex !== currentQuestion.answer - 1 && '!bg-slate-950 !text-white',
       ]}
     >
-      <span
-        class={[
-          'rounded-lg bg-lime-400 px-2.5 py-1 font-semibold',
-          optionIndex !== currentQuestion.answer - 1 && '!bg-slate-950 !text-white',
-        ]}
-      >
-        {getOptionLetter(optionIndex)}
-      </span>
+      {getOptionLetter(optionIndex)}
+    </span>
 
-      <span class="text-left">
-        {currentQuestion.options[optionIndex]}
-      </span>
-    </button>
+    <span class="text-left">
+      {currentQuestion.options[optionIndex]}
+    </span>
   </div>
 {/snippet}
 
@@ -193,13 +191,13 @@
       <div class="flex flex-col gap-y-6 overflow-y-auto">
         <div class="flex flex-col gap-y-2">
           <span class="font-medium">Your answer</span>
-          {@render modalFeedbackButton(selectedOptionIndex)}
+          {@render feedbackAnswer(selectedOptionIndex)}
         </div>
 
         {#if !isCorrectAnswer}
           <div class="flex flex-col gap-y-2">
             <span class="font-medium">Correct answer</span>
-            {@render modalFeedbackButton(currentQuestion.answer - 1)}
+            {@render feedbackAnswer(currentQuestion.answer - 1)}
           </div>
         {/if}
         <div class="flex flex-col gap-y-1 rounded-2xl bg-slate-100 p-3">
