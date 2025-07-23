@@ -159,7 +159,7 @@
         </span>
 
         <button
-          class="cursor-pointer rounded-full bg-slate-100 px-2.5 py-3 hover:bg-slate-200"
+          class="cursor-pointer rounded-full p-4 hover:bg-slate-100"
           onclick={closeFeedbackModal}
         >
           <X />
