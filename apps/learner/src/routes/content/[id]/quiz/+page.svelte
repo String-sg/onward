@@ -86,19 +86,12 @@
     ]}
   ></div>
 
-  <div class="mx-auto w-full max-w-5xl px-4 py-3">
-    <div class="flex items-center justify-between gap-x-8">
-      <div class="flex w-full items-center gap-x-3">
-        <a
-          href="/content/{contentId}"
-          class="rounded-full p-4 transition-colors hover:bg-slate-200"
-        >
-          <ArrowLeft />
-        </a>
+  <div class="mx-auto flex w-full max-w-5xl items-center justify-between gap-x-3 px-4 py-3">
+    <a href="/content/{contentId}" class="rounded-full p-4 transition-colors hover:bg-slate-200">
+      <ArrowLeft />
+    </a>
 
-        <Progress value={percentageCompleted} />
-      </div>
-    </div>
+    <Progress value={percentageCompleted} />
   </div>
 </header>
 
