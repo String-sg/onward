@@ -85,18 +85,18 @@
         <span class="text-xl font-medium">{currentQuestion.question}</span>
       </div>
 
-      <div class="flex flex-col gap-y-2">
+      <div class="flex flex-col gap-y-2 px-1">
         {#each currentQuestion.options as option, index (option)}
           <button
             class={[
-              'py-3.75 px-2.75 flex w-full cursor-pointer items-center gap-x-3 rounded-2xl border border-transparent bg-white hover:bg-slate-200',
+              'py-3.75 px-2.75 shadow-xs group flex cursor-pointer items-center gap-x-3 rounded-2xl border border-transparent bg-white transition-all hover:bg-slate-50 hover:shadow-sm',
               selectedOptionIndex === index && '!border-slate-950',
             ]}
             onclick={() => selectOption(index)}
           >
             <span
               class={[
-                'rounded-lg bg-slate-100 px-2.5 py-1 font-semibold',
+                'rounded-lg bg-slate-100 px-2.5 py-1 font-semibold transition-colors group-hover:bg-slate-200',
                 selectedOptionIndex === index && '!bg-slate-950 !text-white',
               ]}
             >
