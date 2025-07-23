@@ -149,7 +149,7 @@
           <span class="font-medium">Your answer</span>
           <div
             class={[
-              'gap-x-2.75 py-3.75 flex w-full items-center rounded-2xl border border-transparent bg-lime-200 px-3',
+              'py-3.75 px-2.75 flex w-full items-center gap-x-3 rounded-2xl border border-transparent bg-lime-200',
               selectedOptionIndex !== currentQuestion.answer - 1 && '!border-slate-950 !bg-white',
             ]}
           >
@@ -172,7 +172,7 @@
           <div class="flex flex-col gap-y-2">
             <span class="font-medium">Correct answer</span>
             <div
-              class="gap-x-2.75 py-3.75 flex w-full items-center rounded-2xl border border-transparent bg-lime-200 px-3"
+              class="py-3.75 px-2.75 flex w-full items-center gap-x-3 rounded-2xl border border-transparent bg-lime-200"
             >
               <span class="rounded-lg bg-lime-400 px-2.5 py-1 font-semibold">
                 {getOptionLetter(currentQuestion.answer - 1)}
