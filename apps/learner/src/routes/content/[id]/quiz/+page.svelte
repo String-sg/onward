@@ -14,14 +14,13 @@
   let currentQuestionIndex = $state(0);
   let isFeedbackModalOpen = $state(false);
   let isCorrectAnswer = $state(false);
+  let target = $state<HTMLElement | null>(null);
 
   let currentQuestion = $derived(data.questionAnswers[currentQuestionIndex]);
   let percentageCompleted = $derived(
     ((currentQuestionIndex + 1) / data.questionAnswers.length) * 100,
   );
   let contentId = $derived(page.params.id);
-
-  let target = $state<HTMLElement | null>(null);
 
   const isWithinViewport = new IsWithinViewport(() => target);
 
