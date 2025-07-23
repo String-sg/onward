@@ -3,7 +3,7 @@
   import { slide } from 'svelte/transition';
 
   import { page } from '$app/state';
-  import Button from '$lib/components/Button.svelte';
+  import { Button } from '$lib/components/Button/index.js';
   import Progress from '$lib/components/Progress.svelte';
 
   const { data } = $props();
