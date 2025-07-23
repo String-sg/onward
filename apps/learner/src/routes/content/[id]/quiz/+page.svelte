@@ -56,28 +56,6 @@
   };
 </script>
 
-{#snippet feedbackAnswer(optionIndex: number)}
-  <div
-    class={[
-      'gap-x-2.75 py-3.75 flex w-full items-center rounded-2xl border border-transparent bg-lime-200 px-3',
-      optionIndex !== currentQuestion.answer - 1 && '!border-slate-950 !bg-white',
-    ]}
-  >
-    <span
-      class={[
-        'rounded-lg bg-lime-400 px-2.5 py-1 font-semibold',
-        optionIndex !== currentQuestion.answer - 1 && '!bg-slate-950 !text-white',
-      ]}
-    >
-      {getOptionLetter(optionIndex)}
-    </span>
-
-    <span class="text-left">
-      {currentQuestion.options[optionIndex]}
-    </span>
-  </div>
-{/snippet}
-
 <header class="fixed inset-x-0 top-0 z-50 bg-slate-100/90 backdrop-blur-sm">
   <div
     class={[
@@ -169,13 +147,41 @@
       <div class="flex flex-col gap-y-6 overflow-y-auto">
         <div class="flex flex-col gap-y-2">
           <span class="font-medium">Your answer</span>
-          {@render feedbackAnswer(selectedOptionIndex)}
+          <div
+            class={[
+              'gap-x-2.75 py-3.75 flex w-full items-center rounded-2xl border border-transparent bg-lime-200 px-3',
+              selectedOptionIndex !== currentQuestion.answer - 1 && '!border-slate-950 !bg-white',
+            ]}
+          >
+            <span
+              class={[
+                'rounded-lg bg-lime-400 px-2.5 py-1 font-semibold',
+                selectedOptionIndex !== currentQuestion.answer - 1 && '!bg-slate-950 !text-white',
+              ]}
+            >
+              {getOptionLetter(selectedOptionIndex)}
+            </span>
+
+            <span class="text-left">
+              {currentQuestion.options[selectedOptionIndex]}
+            </span>
+          </div>
         </div>
 
         {#if !isCorrectAnswer}
           <div class="flex flex-col gap-y-2">
             <span class="font-medium">Correct answer</span>
-            {@render feedbackAnswer(currentQuestion.answer - 1)}
+            <div
+              class="gap-x-2.75 py-3.75 flex w-full items-center rounded-2xl border border-transparent bg-lime-200 px-3"
+            >
+              <span class="rounded-lg bg-lime-400 px-2.5 py-1 font-semibold">
+                {getOptionLetter(currentQuestion.answer - 1)}
+              </span>
+
+              <span class="text-left">
+                {currentQuestion.options[currentQuestion.answer - 1]}
+              </span>
+            </div>
           </div>
         {/if}
         <div class="flex flex-col gap-y-1 rounded-2xl bg-slate-100 p-3">
