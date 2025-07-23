@@ -1,5 +1,5 @@
 <button
-  class="inset-shadow-sm inset-shadow-slate-100 flex items-center rounded-full border border-slate-100 p-5 shadow-lg backdrop-blur-sm"
+  class="inset-shadow-sm inset-shadow-slate-200 flex items-center rounded-full border border-slate-100 p-5 shadow-lg backdrop-blur-sm"
 >
   <!-- Icon SVG -->
   <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
