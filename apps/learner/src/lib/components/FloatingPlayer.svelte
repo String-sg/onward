@@ -4,10 +4,6 @@
 
   interface Props {
     /**
-     * The URL to navigate to when the user clicks on the floating player.
-     */
-    to: string;
-    /**
      * The title of the podcast.
      */
     title: string;
@@ -19,9 +15,13 @@
      * A callback function that is called when the user clicks on the play button.
      */
     onplay?: MouseEventHandler<HTMLButtonElement>;
+    /**
+     * A callback function that is called when the user clicks on the floating player.
+     */
+    onclick?: (event: MouseEvent | KeyboardEvent) => void;
   }
 
-  let { to, title, isplaying = false, onplay }: Props = $props();
+  let { title, isplaying = false, onplay, onclick }: Props = $props();
 
   const handlePlay: MouseEventHandler<HTMLButtonElement> = (event) => {
     // Prevent the default behavior of the anchor tag from navigating to the URL.
@@ -29,11 +29,25 @@
 
     onplay?.(event);
   };
+
+  const handleClick = (event: MouseEvent | KeyboardEvent) => {
+    // Prevent default behavior and call the `onclick` callback.
+    event.preventDefault();
+
+    onclick?.(event);
+  };
 </script>
 
-<a
-  href={to}
-  class="inset-shadow-sm inset-shadow-slate-200 flex items-center gap-x-3 rounded-full border border-slate-100 p-3 shadow-lg backdrop-blur-sm"
+<div
+  class="inset-shadow-sm flex items-center justify-center gap-x-3 rounded-full bg-white/90 p-3 shadow-lg backdrop-blur-sm"
+  onclick={handleClick}
+  role="button"
+  tabindex="0"
+  onkeydown={(event) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      handleClick(event);
+    }
+  }}
 >
   <!-- Temporary album placeholder -->
   <div class="h-12 w-12 rounded-full bg-black"></div>
@@ -52,4 +66,4 @@
       <Play />
     {/if}
   </button>
-</a>
+</div>
