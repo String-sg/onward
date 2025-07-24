@@ -17,7 +17,6 @@
   let target = $state<HTMLElement | null>(null);
   let showCompletionModal = $state(false);
 
-
   let currentQuestion = $derived(data.questionAnswers[currentQuestionIndex]);
   let percentageCompleted = $derived(
     ((currentQuestionIndex + 1) / data.questionAnswers.length) * 100,
