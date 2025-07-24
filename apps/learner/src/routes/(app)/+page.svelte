@@ -72,7 +72,7 @@
 </div>
 
 {#if isModalOpen}
-  <div class="z-1000 fixed inset-0 bg-slate-950">
+  <div class="z-200 fixed inset-0 bg-slate-950">
     <!-- Modal Header -->
     <header class="flex items-center px-4 py-3">
       <button class="rounded-full p-4 transition-colors hover:bg-white/20" onclick={closeModal}>
