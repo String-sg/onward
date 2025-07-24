@@ -1,19 +1,30 @@
 <script lang="ts">
+  import { ArrowLeft } from '@lucide/svelte';
+
   import FloatingChat from '$lib/components/FloatingChat.svelte';
   import FloatingPlayer from '$lib/components/FloatingPlayer.svelte';
   import LearningUnit from '$lib/components/LearningUnit.svelte';
 
   let isFloatingPlayerVisible = $state(false);
   let isPlaying = $state(false);
+  let isModalOpen = $state(false);
 
-  function handlePlay() {
+  const handlePlay = () => {
     isFloatingPlayerVisible = true;
     isPlaying = true;
-  }
+  };
 
-  function togglePlayPause() {
+  const togglePlayPause = () => {
     isPlaying = !isPlaying;
-  }
+  };
+
+  const openModal = () => {
+    isModalOpen = true;
+  };
+
+  const closeModal = () => {
+    isModalOpen = false;
+  };
 </script>
 
 <div class="flex flex-col gap-y-3">
@@ -46,10 +57,10 @@
       {#if isFloatingPlayerVisible}
         <div class="pointer-events-auto flex-grow overflow-x-hidden py-3">
           <FloatingPlayer
-            to="/"
             title="Navigating Special Educational Needs in Singapore: A Path to Inclusion"
             isplaying={isPlaying}
             onplay={togglePlayPause}
+            onclick={openModal}
           />
         </div>
       {/if}
@@ -59,3 +70,14 @@
     </div>
   </div>
 </div>
+
+{#if isModalOpen}
+  <div class="z-1000 fixed inset-0 bg-slate-950">
+    <!-- Modal Header -->
+    <header class="flex items-center px-4 py-3">
+      <button class="rounded-full p-4 transition-colors hover:bg-white/20" onclick={closeModal}>
+        <ArrowLeft class="text-white" />
+      </button>
+    </header>
+  </div>
+{/if}
