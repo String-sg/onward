@@ -3,7 +3,7 @@
   import type { HTMLAttributes } from 'svelte/elements';
 
   export interface Props extends HTMLAttributes<HTMLDivElement> {
-    variant: 'blue' | 'orange' | 'amber' | 'teal' | 'rose' | 'purple' | 'slate';
+    variant: 'blue' | 'orange' | 'amber' | 'teal' | 'rose' | 'purple' | 'slate' | 'darkSlate';
     children: Snippet;
   }
 
@@ -20,7 +20,7 @@
     variant === 'teal' && 'bg-teal-200 text-teal-900',
     variant === 'rose' && 'bg-rose-200 text-rose-900',
     variant === 'purple' && 'bg-purple-200 text-purple-900',
-    variant === 'slate' && 'bg-slate-200 text-slate-950',
+    variant === 'darkSlate' && 'bg-slate-950 text-white',
     clazz,
   ]}
 >
