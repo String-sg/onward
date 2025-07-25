@@ -203,7 +203,7 @@
     <div class="flex h-full w-full max-w-5xl flex-col px-4 py-3 transition-all">
       <div class="flex flex-1 flex-col items-center justify-center">
         <!-- TODO: placeholder image, to be replaced once confirmed -->
-        <img class="h-60 w-60" src={`${base}/meteor.png`} alt="meteor logo" />
+        <img class="h-128 w-128" src={`${base}/meteor.png`} alt="meteor logo" />
       </div>
 
       <div class="flex flex-auto flex-col justify-center gap-y-4 text-center text-white">
