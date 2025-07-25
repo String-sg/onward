@@ -20,9 +20,9 @@
     /**
      * The width of the button.
      *
-     * @default 'full'
+     * @default 'fit'
      */
-    width?: 'full' | 'auto';
+    width?: 'fit' | 'full';
     /**
      * Indicates whether the button is disabled.
      *
@@ -34,7 +34,7 @@
   const {
     variant = 'primary',
     size = 'lg',
-    width = 'full',
+    width = 'fit',
     disabled = false,
     children,
     class: clazz,
@@ -52,8 +52,8 @@
       variant === 'secondary' && 'border-slate-300 bg-white text-slate-950 hover:bg-slate-100',
       size === 'md' && 'py-2.75',
       size === 'lg' && 'py-3',
+      width === 'fit' && 'w-fit',
       width === 'full' && 'w-full',
-      width === 'auto' && 'w-auto',
       clazz,
     ]}
   >
@@ -70,8 +70,8 @@
       variant === 'secondary' && 'border-slate-300 bg-white text-slate-950 hover:bg-slate-100',
       size === 'md' && 'py-2.75',
       size === 'lg' && 'py-3',
+      width === 'fit' && 'w-fit',
       width === 'full' && 'w-full',
-      width === 'auto' && 'w-auto',
       clazz,
     ]}
   >

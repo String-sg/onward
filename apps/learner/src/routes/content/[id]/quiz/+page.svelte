@@ -116,8 +116,9 @@
 <div class="fixed inset-x-0 bottom-0 z-50 bg-slate-100/90 backdrop-blur-sm">
   <div class="mx-auto w-full max-w-5xl px-4 py-3">
     <Button
-      onclick={handleCheckAnswer}
+      width="full"
       disabled={selectedOptionIndex === -1 || isFeedbackModalOpen}
+      onclick={handleCheckAnswer}
     >
       Check Answer
     </Button>
@@ -190,7 +191,7 @@
         </div>
       </div>
 
-      <Button onclick={nextQuestion}>Continue</Button>
+      <Button width="full" onclick={nextQuestion}>Continue</Button>
     </div>
   </div>
 {/if}
