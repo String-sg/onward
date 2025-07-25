@@ -7,6 +7,7 @@
   import { Badge } from '$lib/components/Badge/index.js';
   import { Button } from '$lib/components/Button/index.js';
   import Progress from '$lib/components/Progress.svelte';
+  import { Starfield } from '$lib/components/Starfield';
   import { useIsWithinViewport } from '$lib/helpers/index.js';
 
   const { data } = $props();
@@ -15,8 +16,8 @@
   let currentQuestionIndex = $state(0);
   let isFeedbackModalOpen = $state(false);
   let isCorrectAnswer = $state(false);
-  let target = $state<HTMLElement | null>(null);
   let showCompletionModal = $state(false);
+  let target = $state<HTMLElement | null>(null);
 
   let currentQuestion = $derived(data.questionAnswers[currentQuestionIndex]);
   let percentageCompleted = $derived(
@@ -200,6 +201,7 @@
 
 {#if showCompletionModal}
   <div class="z-100 fixed inset-0 flex items-center justify-center bg-slate-950">
+    <Starfield />
     <div class="flex h-full w-full max-w-5xl flex-col px-4 py-3 transition-all">
       <div class="flex flex-1 flex-col items-center justify-center">
         <!-- TODO: placeholder image, to be replaced once confirmed -->
