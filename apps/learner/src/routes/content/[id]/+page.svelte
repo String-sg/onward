@@ -77,12 +77,12 @@
         </div>
 
         <div class="flex flex-col gap-y-4">
-          <Button size="md">
+          <Button size="md" width="full">
             <Play class="h-4 w-4" />
             <span class="font-medium">Play</span>
           </Button>
 
-          <Button href={`/content/${data.id}/quiz`} variant="secondary" size="md">
+          <Button variant="secondary" size="md" width="full" href={`/content/${data.id}/quiz`}>
             <Lightbulb class="h-4 w-4" />
             <span class="font-medium">Take the quiz</span>
           </Button>

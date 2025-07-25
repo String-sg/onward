@@ -3,6 +3,7 @@
   import type { MouseEventHandler } from 'svelte/elements';
 
   import { Badge, type BadgeProps } from '$lib/components/Badge/index.js';
+  import { Button } from '$lib/components/Button/index.js';
 
   interface Props {
     /**
@@ -59,18 +60,13 @@
   </div>
 
   {#if showplayerpanel}
-    <div class="flex items-center justify-between">
-      <button
-        class="flex cursor-pointer items-center gap-x-2 rounded-full bg-slate-100 px-6 py-4 transition-colors hover:bg-slate-200"
-        onclick={handlePlay}
-      >
-        <Play />
-        <span class="font-medium text-slate-950">Play</span>
-      </button>
+    <div class="flex items-center gap-x-3">
+      <Button variant="secondary" onclick={handlePlay}>
+        <Play class="h-4 w-4" />
+        <span class="font-medium">Play</span>
+      </Button>
 
       <div class="flex items-center gap-x-2">
-        <span class="text-sm text-slate-600">23m left</span>
-
         <svg viewBox="0 0 24 24" class="h-6 w-6">
           <circle cx="12" cy="12" r="9" stroke="#E2E8F0" fill="none" stroke-width="3px" />
           <circle
@@ -86,6 +82,8 @@
             transform="rotate(-90 0 0)"
           />
         </svg>
+
+        <span class="text-sm text-slate-600">23m left</span>
       </div>
     </div>
   {/if}
