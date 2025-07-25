@@ -1,8 +1,8 @@
 <script lang="ts">
   import { ArrowLeft } from '@lucide/svelte';
 
-  import ChatModal from '$lib/components/ChatModal.svelte';
-  import FloatingChat from '$lib/components/FloatingChat/FloatingChat.svelte';
+  import { ChatModal } from '$lib/components/ChatModal/index.js';
+  import { FloatingChat } from '$lib/components/FloatingChat/index.js';
   import FloatingPlayer from '$lib/components/FloatingPlayer.svelte';
   import LearningUnit from '$lib/components/LearningUnit.svelte';
   import { AudioState } from '$lib/helpers/index.js';
@@ -27,6 +27,10 @@
 
   const openChatModal = () => {
     isChatModalOpen = true;
+  }
+
+  const closeChatModal = () => {
+    isChatModalOpen = false;
   }
 </script>
 
@@ -115,5 +119,5 @@
 {/if}
 
 {#if isChatModalOpen}
-  <ChatModal />
+  <ChatModal onclose={closeChatModal} />
 {/if}
