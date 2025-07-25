@@ -62,7 +62,7 @@
   {#if showplayerpanel}
     <div class="flex items-center gap-x-3">
       <Button variant="secondary" onclick={handlePlay}>
-        <Play />
+        <Play class="h-4 w-4" />
         <span class="font-medium">Play</span>
       </Button>
 
