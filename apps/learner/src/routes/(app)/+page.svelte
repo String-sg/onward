@@ -2,7 +2,7 @@
   import { ArrowLeft } from '@lucide/svelte';
 
   import ChatModal from '$lib/components/ChatModal.svelte';
-  import FloatingChat from '$lib/components/FloatingChat.svelte';
+  import FloatingChat from '$lib/components/FloatingChat/FloatingChat.svelte';
   import FloatingPlayer from '$lib/components/FloatingPlayer.svelte';
   import LearningUnit from '$lib/components/LearningUnit.svelte';
   import { AudioState } from '$lib/helpers/index.js';
