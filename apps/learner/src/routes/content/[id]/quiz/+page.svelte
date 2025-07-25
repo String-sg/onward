@@ -2,6 +2,7 @@
   import { ArrowLeft, X } from '@lucide/svelte';
   import { slide } from 'svelte/transition';
 
+  import { base } from '$app/paths';
   import { page } from '$app/state';
   import { Badge } from '$lib/components/Badge/index.js';
   import { Button } from '$lib/components/Button/index.js';
@@ -202,7 +203,7 @@
     <div class="flex h-full w-full max-w-5xl flex-col px-4 py-3 transition-all">
       <div class="flex flex-1 flex-col items-center justify-center">
         <!-- TODO: placeholder image, to be replaced once confirmed -->
-        <div class="h-60 w-60 rounded-3xl bg-zinc-300"></div>
+        <img class="h-60 w-60" src={`${base}/meteor.png`} alt="meteor logo" />
       </div>
 
       <div class="flex flex-auto flex-col justify-center gap-y-4 text-center text-white">
