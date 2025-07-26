@@ -2,18 +2,18 @@
   import { ArrowLeft } from '@lucide/svelte';
 
   import LearningUnit from '$lib/components/LearningUnit.svelte';
-  import { IsWithinViewport } from '$lib/helpers';
+  import { useIsWithinViewport } from '$lib/helpers';
 
   let target = $state<HTMLElement | null>(null);
 
-  const isWithinViewport = new IsWithinViewport(() => target);
+  const isWithinViewport = useIsWithinViewport(() => target);
 </script>
 
 <header class="fixed inset-x-0 top-0 z-50 bg-slate-100/90 backdrop-blur-sm">
   <div
     class={[
       'absolute inset-x-0 top-full h-px bg-transparent transition-colors duration-300',
-      target && !isWithinViewport.current && '!bg-slate-950/7.5',
+      !isWithinViewport.current && '!bg-slate-950/7.5',
     ]}
   ></div>
 

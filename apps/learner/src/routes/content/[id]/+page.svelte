@@ -5,7 +5,7 @@
   import { afterNavigate } from '$app/navigation';
   import { Badge } from '$lib/components/Badge/index.js';
   import { Button } from '$lib/components/Button/index.js';
-  import { IsWithinViewport } from '$lib/helpers/index.js';
+  import { useIsWithinViewport } from '$lib/helpers/index.js';
 
   const { data } = $props();
 
@@ -13,7 +13,7 @@
   let isExpanded = $state(false);
   let target = $state<HTMLElement | null>(null);
 
-  const isWithinViewport = new IsWithinViewport(() => target);
+  const isWithinViewport = useIsWithinViewport(() => target);
 
   afterNavigate(({ from, type }) => {
     if (type === 'enter' || !from) {
@@ -33,7 +33,7 @@
   <div
     class={[
       'absolute inset-x-0 top-full h-px bg-transparent transition-colors duration-300',
-      target && !isWithinViewport.current && '!bg-slate-950/7.5',
+      !isWithinViewport.current && '!bg-slate-950/7.5',
     ]}
   ></div>
 
