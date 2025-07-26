@@ -4,7 +4,7 @@
 
   import { afterNavigate } from '$app/navigation';
   import { Badge } from '$lib/components/Badge/index.js';
-  import { Button } from '$lib/components/Button/index.js';
+  import { Button, LinkButton } from '$lib/components/Button/index.js';
   import { IsWithinViewport } from '$lib/helpers/index.js';
 
   const { data } = $props();
@@ -77,15 +77,15 @@
         </div>
 
         <div class="flex flex-col gap-y-4">
-          <Button size="md">
+          <Button width="full">
             <Play class="h-4 w-4" />
             <span class="font-medium">Play</span>
           </Button>
 
-          <Button href={`/content/${data.id}/quiz`} variant="secondary" size="md">
+          <LinkButton variant="secondary" width="full" href={`/content/${data.id}/quiz`}>
             <Lightbulb class="h-4 w-4" />
             <span class="font-medium">Take the quiz</span>
-          </Button>
+          </LinkButton>
         </div>
       </div>
     </div>
