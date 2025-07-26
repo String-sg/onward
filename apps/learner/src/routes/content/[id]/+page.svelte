@@ -39,11 +39,11 @@
 
   <div class="mx-auto w-full max-w-5xl px-4 py-3">
     <div class="flex items-center justify-between gap-x-8">
-      <a href={returnTo} class="rounded-full px-3 py-4 transition-colors hover:bg-slate-200">
+      <a href={returnTo} class="rounded-full p-4 transition-colors hover:bg-slate-200">
         <ArrowLeft />
       </a>
 
-      <button class="cursor-pointer rounded-full px-3 py-4 transition-colors hover:bg-slate-200">
+      <button class="cursor-pointer rounded-full p-4 transition-colors hover:bg-slate-200">
         <Share />
       </button>
     </div>
