@@ -6,7 +6,7 @@
   import { Badge } from '$lib/components/Badge/index.js';
   import { Button } from '$lib/components/Button/index.js';
   import Progress from '$lib/components/Progress.svelte';
-  import { IsWithinViewport } from '$lib/helpers/index.js';
+  import { useIsWithinViewport } from '$lib/helpers/index.js';
 
   const { data } = $props();
 
@@ -22,7 +22,7 @@
   );
   let contentId = $derived(page.params.id);
 
-  const isWithinViewport = new IsWithinViewport(() => target);
+  const isWithinViewport = useIsWithinViewport(() => target);
 
   const selectOption = (index: number) => {
     selectedOptionIndex = index;
@@ -59,7 +59,7 @@
   <div
     class={[
       'absolute inset-x-0 top-full h-px bg-transparent transition-colors duration-300',
-      target && !isWithinViewport.current && '!bg-slate-950/7.5',
+      !isWithinViewport.current && '!bg-slate-950/7.5',
     ]}
   ></div>
 
