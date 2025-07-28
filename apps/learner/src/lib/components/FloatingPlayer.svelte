@@ -43,7 +43,7 @@
 </script>
 
 <div
-  class="inset-shadow-sm flex items-center justify-center gap-x-3 rounded-full bg-white/90 p-3 shadow-lg backdrop-blur-sm"
+  class="inset-shadow-sm inset-shadow-slate-200 flex items-center gap-x-3 rounded-full border border-slate-100 p-3 shadow-lg backdrop-blur-sm"
   onclick={handleClick}
   role="button"
   tabindex="0"
