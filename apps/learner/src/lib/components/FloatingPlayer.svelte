@@ -30,11 +30,15 @@
     onplay?.(event);
   };
 
-  const handleClick = (event: MouseEvent | KeyboardEvent) => {
-    // Prevent default behavior and call the `onclick` callback.
-    event.preventDefault();
+  const handleClick = () => {
+    onclick?.();
+  };
 
-    onclick?.(event);
+  const handleKeyDown = (event: KeyboardEvent) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      onclick?.();
+    }
   };
 </script>
 
@@ -43,11 +47,7 @@
   onclick={handleClick}
   role="button"
   tabindex="0"
-  onkeydown={(event) => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      handleClick(event);
-    }
-  }}
+  onkeydown={handleKeyDown}
 >
   <!-- Temporary album placeholder -->
   <div class="h-12 w-12 rounded-full bg-black"></div>
