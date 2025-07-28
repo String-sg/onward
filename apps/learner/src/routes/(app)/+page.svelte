@@ -69,14 +69,16 @@
 
 {#if isModalOpen}
   <div class="z-200 fixed inset-0 bg-slate-950">
-    <!-- Modal Header -->
-    <header class="flex items-center px-4 py-3">
-      <button
-        class="rounded-full p-4 transition-colors hover:bg-white/20"
-        onclick={handleFloatingPlayerClick}
-      >
-        <ArrowLeft class="text-white" />
-      </button>
-    </header>
+    <div class="mx-auto w-full max-w-5xl px-4 py-3">
+      <!-- Modal Header -->
+      <header class="flex items-center">
+        <button
+          class="rounded-full p-4 transition-colors hover:bg-white/20"
+          onclick={handleFloatingPlayerClick}
+        >
+          <ArrowLeft class="text-white" />
+        </button>
+      </header>
+    </div>
   </div>
 {/if}
