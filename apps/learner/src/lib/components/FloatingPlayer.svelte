@@ -18,7 +18,7 @@
     /**
      * A callback function that is called when the user clicks on the floating player.
      */
-    onclick?: (event: MouseEvent | KeyboardEvent) => void;
+    onclick?: () => void;
   }
 
   let { title, isplaying = false, onplay, onclick }: Props = $props();
