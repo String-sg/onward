@@ -18,12 +18,8 @@
     isPlaying = !isPlaying;
   };
 
-  const openModal = () => {
-    isModalOpen = true;
-  };
-
-  const closeModal = () => {
-    isModalOpen = false;
+  const handleFloatingPlayerClick = () => {
+    isModalOpen = !isModalOpen;
   };
 </script>
 
@@ -60,7 +56,7 @@
             title="Navigating Special Educational Needs in Singapore: A Path to Inclusion"
             isplaying={isPlaying}
             onplay={togglePlayPause}
-            onclick={openModal}
+            onclick={handleFloatingPlayerClick}
           />
         </div>
       {/if}
@@ -75,7 +71,10 @@
   <div class="z-200 fixed inset-0 bg-slate-950">
     <!-- Modal Header -->
     <header class="flex items-center px-4 py-3">
-      <button class="rounded-full p-4 transition-colors hover:bg-white/20" onclick={closeModal}>
+      <button
+        class="rounded-full p-4 transition-colors hover:bg-white/20"
+        onclick={handleFloatingPlayerClick}
+      >
         <ArrowLeft class="text-white" />
       </button>
     </header>
