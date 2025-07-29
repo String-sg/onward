@@ -36,7 +36,8 @@
 
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault(); // Prevent scrolling for Space key
+      // Prevent scrolling for `Space` key.
+      event.preventDefault();
       onclick?.();
     }
   };
