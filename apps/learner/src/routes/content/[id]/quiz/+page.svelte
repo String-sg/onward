@@ -206,8 +206,8 @@
       <div class="flex flex-1 flex-col items-center justify-center">
         <!-- TODO: placeholder image, to be replaced once confirmed -->
         <img
-          class="h-64 w-64 lg:h-96 lg:w-96"
-          srcset={`${base}/meteor/384w.webp 384w`}
+          sizes="(max-width: 1023px) 256px, 384px"
+          srcset={`${base}/meteor/256w.webp 256w, ${base}/meteor/384w.webp 384w`}
           src={`${base}/meteor/256w.webp`}
           alt="meteor logo"
         />
