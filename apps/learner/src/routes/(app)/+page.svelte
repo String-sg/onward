@@ -4,22 +4,24 @@
   import FloatingChat from '$lib/components/FloatingChat.svelte';
   import FloatingPlayer from '$lib/components/FloatingPlayer.svelte';
   import LearningUnit from '$lib/components/LearningUnit.svelte';
+  import { AudioState } from '$lib/helpers/index.js';
 
   let isFloatingPlayerVisible = $state(false);
-  let isPlaying = $state(false);
   let isModalOpen = $state(false);
 
-  const handlePlay = () => {
-    isFloatingPlayerVisible = true;
-    isPlaying = true;
-  };
-
-  const togglePlayPause = () => {
-    isPlaying = !isPlaying;
-  };
+  const audioState = AudioState.load();
 
   const handleFloatingPlayerClick = () => {
     isModalOpen = !isModalOpen;
+  };
+
+  const handlePlay = () => {
+    isFloatingPlayerVisible = true;
+    audioState.isPlaying = true;
+  };
+
+  const togglePlayPause = () => {
+    audioState.isPlaying = !audioState.isPlaying;
   };
 </script>
 
@@ -54,7 +56,7 @@
         <div class="pointer-events-auto flex-grow overflow-x-hidden py-3">
           <FloatingPlayer
             title="Navigating Special Educational Needs in Singapore: A Path to Inclusion"
-            isplaying={isPlaying}
+            isplaying={audioState.isPlaying}
             onplay={togglePlayPause}
             onclick={handleFloatingPlayerClick}
           />
