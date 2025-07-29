@@ -38,6 +38,7 @@
     if (event.key === 'Enter' || event.key === ' ') {
       // Prevent scrolling for `Space` key.
       event.preventDefault();
+
       onclick?.();
     }
   };
