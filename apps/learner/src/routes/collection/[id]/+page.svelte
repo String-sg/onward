@@ -22,7 +22,7 @@
       <div class="flex items-center gap-x-3">
         <a
           href="/learning"
-          class="rounded-full p-4 transition-colors hover:bg-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950"
+          class="rounded-full p-4 transition-colors hover:bg-slate-200 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950"
         >
           <ArrowLeft />
         </a>
