@@ -16,7 +16,7 @@
   let currentQuestionIndex = $state(0);
   let isFeedbackModalOpen = $state(false);
   let isCorrectAnswer = $state(false);
-  let showCompletionModal = $state(false);
+  let isCompletionModalOpen = $state(false);
   let target = $state<HTMLElement | null>(null);
 
   let currentQuestion = $derived(data.questionAnswers[currentQuestionIndex]);
@@ -43,7 +43,7 @@
         isFeedbackModalOpen = false;
       } else {
         isFeedbackModalOpen = false;
-        showCompletionModal = true;
+        isCompletionModalOpen = true;
       }
     }
   };
@@ -199,7 +199,7 @@
   </div>
 {/if}
 
-{#if showCompletionModal}
+{#if isCompletionModalOpen}
   <div class="z-100 fixed inset-0 flex items-center justify-center bg-slate-950">
     <Starfield />
     <div class="flex h-full w-full max-w-5xl flex-col px-4 py-3 transition-all">
