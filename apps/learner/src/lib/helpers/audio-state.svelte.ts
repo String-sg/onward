@@ -7,6 +7,7 @@ const AUDIO_STATE_KEY = Symbol('AudioState');
  */
 export class AudioState {
   isPlaying = $state(false);
+  isFloatingPlayerVisible = $state(false);
 
   /**
    * Set a new instance of the audio state in the context.
