@@ -5,7 +5,7 @@
   import { base } from '$app/paths';
   import { page } from '$app/state';
   import { Badge } from '$lib/components/Badge/index.js';
-  import { Button } from '$lib/components/Button/index.js';
+  import { Button, LinkButton } from '$lib/components/Button/index.js';
   import Progress from '$lib/components/Progress.svelte';
   import { Starfield } from '$lib/components/Starfield';
   import { useIsWithinViewport } from '$lib/helpers/index.js';
@@ -222,7 +222,7 @@
         </div>
       </div>
 
-      <Button href={`/content/${contentId}`} variant="secondary">Done</Button>
+      <LinkButton href={`/content/${contentId}`} variant="secondary" width="full">Done</LinkButton>
     </div>
   </div>
 {/if}
