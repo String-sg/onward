@@ -203,15 +203,12 @@
   <div class="z-100 fixed inset-0 flex items-center justify-center bg-slate-950">
     <Starfield />
     <div class="flex h-full w-full max-w-5xl flex-col px-4 py-3 transition-all">
-      <div class="flex flex-1 flex-col items-center justify-center">
-        <!-- TODO: placeholder image, to be replaced once confirmed -->
-        <img
-          sizes="(max-width: 1023px) 256px, 384px"
-          srcset={`${base}/meteor/256w.webp 256w, ${base}/meteor/384w.webp 384w`}
-          src={`${base}/meteor/256w.webp`}
-          alt="meteor logo"
-        />
-      </div>
+      <!-- TODO: placeholder image, to be replaced once confirmed -->
+      <picture class="flex flex-1 flex-col items-center justify-center">
+        <source media="(min-width: 1024px)" srcset={`${base}/meteor/384w.webp`} />
+        <source media="(max-width: 1023px)" srcset={`${base}/meteor/256w.webp`} />
+        <img class="h-64 w-64 lg:h-96 lg:w-96" src={`${base}/meteor/256w.webp`} alt="meteor logo" />
+      </picture>
 
       <div class="flex flex-auto flex-col justify-center gap-y-4 text-center text-white">
         <span class="text-xl font-medium">That was insightful!</span>
