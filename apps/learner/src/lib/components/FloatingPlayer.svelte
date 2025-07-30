@@ -47,11 +47,11 @@
 </script>
 
 <div
-  class="inset-shadow-sm inset-shadow-slate-200 flex items-center gap-x-3 rounded-full border border-slate-100 p-3 shadow-lg backdrop-blur-sm"
-  onclick={handleClick}
   role="button"
   tabindex="0"
+  onclick={handleClick}
   onkeydown={handleKeyDown}
+  class="inset-shadow-sm inset-shadow-slate-200 flex items-center gap-x-3 rounded-full border border-slate-100 p-3 shadow-lg backdrop-blur-sm"
 >
   <!-- Temporary album placeholder -->
   <div class="h-12 w-12 rounded-full bg-black"></div>
