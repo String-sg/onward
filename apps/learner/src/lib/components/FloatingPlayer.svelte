@@ -51,17 +51,17 @@
   tabindex="0"
   onclick={handleClick}
   onkeydown={handleKeyDown}
-  class="inset-shadow-sm inset-shadow-slate-200 flex items-center gap-x-3 rounded-full px-3 py-3.5 shadow-lg backdrop-blur-sm"
+  class="inset-shadow-sm inset-shadow-slate-200 grid w-full grid-cols-[auto_1fr_auto] items-center gap-x-3 rounded-full px-3 py-3.5 shadow-lg backdrop-blur-sm"
 >
-  <!-- Temporary album placeholder -->
+  <!-- Temporary image placeholder -->
   <div class="h-12 w-12 rounded-full bg-black"></div>
 
-  <div class="flex-1 truncate text-sm font-medium">
+  <span class="truncate text-sm font-medium">
     {title}
-  </div>
+  </span>
 
   <button
-    class="flex cursor-pointer items-center rounded-full px-4 py-2 hover:bg-slate-50"
+    class="flex cursor-pointer items-center rounded-full p-2 transition-colors hover:bg-slate-100"
     onclick={handlePlay}
   >
     {#if isplaying}
