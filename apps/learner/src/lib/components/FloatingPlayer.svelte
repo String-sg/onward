@@ -51,7 +51,7 @@
   tabindex="0"
   onclick={handleClick}
   onkeydown={handleKeyDown}
-  class="inset-shadow-sm inset-shadow-slate-200 grid w-full grid-cols-[auto_1fr_auto] items-center gap-x-3 rounded-full px-3 py-3.5 shadow-lg backdrop-blur-sm"
+  class="inset-shadow-sm inset-shadow-slate-200 grid w-full grid-cols-[auto_1fr_auto] items-center gap-x-3 rounded-full bg-white/30 px-3 py-3.5 shadow-sm backdrop-blur-sm"
 >
   <!-- Temporary image placeholder -->
   <div class="h-12 w-12 rounded-full bg-black"></div>
