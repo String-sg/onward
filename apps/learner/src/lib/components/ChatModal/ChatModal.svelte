@@ -24,7 +24,7 @@
     <div
       class={[
         'absolute inset-x-0 top-full h-px bg-transparent transition-colors duration-300',
-        target && !isWithinViewport.current && '!bg-slate-950/7.5',
+        !isWithinViewport.current && '!bg-slate-950/7.5',
       ]}
     ></div>
 
