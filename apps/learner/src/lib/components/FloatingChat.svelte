@@ -1,5 +1,5 @@
 <button
-  class="inset-shadow-sm inset-shadow-slate-200 p-5.5 flex cursor-pointer items-center justify-center rounded-full bg-white/30 shadow-sm backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
+  class="inset-shadow-sm inset-shadow-slate-200 p-5.5 pointer-events-auto flex cursor-pointer items-center justify-center rounded-full bg-white/30 shadow-sm backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
   aria-label="Open chat"
 >
   <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
