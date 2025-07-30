@@ -7,13 +7,13 @@
   import LearningUnit from '$lib/components/LearningUnit.svelte';
   import { AudioState } from '$lib/helpers/index.js';
 
-  let isModalOpen = $state(false);
+  let isPlayerModalOpen = $state(false);
   let isChatModalOpen = $state(false);
 
   const audioState = AudioState.load();
 
   const handleFloatingPlayerClick = () => {
-    isModalOpen = !isModalOpen;
+    isPlayerModalOpen = !isPlayerModalOpen;
   };
 
   const handlePlay = () => {
@@ -27,11 +27,11 @@
 
   const openChatModal = () => {
     isChatModalOpen = true;
-  }
+  };
 
   const closeChatModal = () => {
     isChatModalOpen = false;
-  }
+  };
 </script>
 
 <div class="flex flex-col gap-y-3">
@@ -102,7 +102,7 @@
   </div>
 </div>
 
-{#if isModalOpen}
+{#if isPlayerModalOpen}
   <div class="z-200 fixed inset-0 bg-slate-950">
     <div class="mx-auto w-full max-w-5xl px-4 py-3">
       <!-- Modal Header -->
