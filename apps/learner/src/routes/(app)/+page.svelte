@@ -85,11 +85,11 @@
         <div class="mx-auto flex w-full max-w-5xl flex-col items-center px-6">
           <!-- Badge -->
           <div class="flex w-full flex-col items-start gap-y-3">
-            <span>
-              {#each data.tags as tag (tag)}
-                <Badge variant="purple">{tag}</Badge>
-              {/each}
-            </span>
+            {#each data.tags as tag (tag)}
+              <Badge variant="purple" class="max-w-xs overflow-hidden whitespace-normal break-words"
+                >{tag}</Badge
+              >
+            {/each}
             <div class="mb-6 w-full text-xl text-white">
               {data.title}
             </div>
