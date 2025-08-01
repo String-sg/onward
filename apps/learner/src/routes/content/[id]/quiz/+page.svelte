@@ -208,9 +208,7 @@
         <!-- TODO: placeholder image, to be replaced once confirmed -->
         <picture class="flex flex-1 justify-center">
           <source media="(min-width: 1024px)" srcset={`${base}/meteor/384w.webp`} />
-
           <source media="(max-width: 1023px)" srcset={`${base}/meteor/256w.webp`} />
-
           <img
             class="h-64 w-64 lg:h-96 lg:w-96"
             src={`${base}/meteor/256w.webp`}
