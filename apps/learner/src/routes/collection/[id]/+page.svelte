@@ -54,6 +54,7 @@
 
       <div class="flex flex-col gap-y-4">
         <LearningUnit
+          id={1}
           to="/content/1"
           tags={[
             { variant: 'purple', content: 'Special Educational Needs' },
@@ -63,7 +64,8 @@
         />
 
         <LearningUnit
-          to="/content/1"
+          id={2}
+          to="/content/2"
           tags={[
             { variant: 'purple', content: 'Special Educational Needs' },
             { variant: 'slate', content: 'Podcast' },
@@ -72,7 +74,8 @@
         />
 
         <LearningUnit
-          to="/content/1"
+          id={3}
+          to="/content/3"
           tags={[
             { variant: 'purple', content: 'Special Educational Needs' },
             { variant: 'slate', content: 'Podcast' },
