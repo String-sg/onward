@@ -6,8 +6,18 @@ const AUDIO_STATE_KEY = Symbol('AudioState');
  * This class is used to store the audio state for the entire app.
  */
 export class AudioState {
+  learningUnitId = $state<number | null>(null);
   isPlaying = $state(false);
   isFloatingPlayerVisible = $state(false);
+
+  /**
+   * Checks if a specific learning unit is currently playing.
+   * @param learningUnitId - The ID of the learning unit to check
+   * @returns True if the specified unit is currently playing, false otherwise
+   */
+  isUnitPlaying(learningUnitId: number): boolean {
+    return this.isPlaying && this.learningUnitId === learningUnitId;
+  }
 
   /**
    * Set a new instance of the audio state in the context.
