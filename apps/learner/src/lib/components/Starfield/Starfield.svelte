@@ -1,491 +1,269 @@
-<div class="-z-1 fixed mx-auto min-h-full w-full max-w-5xl">
-  <svg class="absolute inset-0 h-full w-full">
-    <defs>
-      <path
-        id="star"
-        d="M-1.74846e-07 4C-1.74846e-07 4 2.28237 3.98544 3.13391 3.13391C3.98544 2.28237 4 -1.06686e-07 4 -1.06686e-07C4 -1.06686e-07 4.0217 2.27524 4.87323 3.12677C5.72476 3.9783 8 4 8 4C8 4 5.74043 4.03736 4.88889 4.88889C4.03736 5.74043 4 8 4 8C4 8 4.00111 5.70195 3.14958 4.85042C2.29805 3.99889 -1.74846e-07 4 -1.74846e-07 4Z"
-        fill="white"
-      />
-    </defs>
-    <g id="stars">
-      <use
-        href="#star"
-        transform="translate(677.273968659124,422.3698935975301) scale(0.5222381054375062)"
-      >
+<script lang="ts">
+  const stars = [
+    {
+      x: 677.273968659124,
+      y: 422.3698935975301,
+      scale: 0.5222381054375062,
+      duration: 4.2733297359815205,
+    },
+    {
+      x: 192.1181447916129,
+      y: 298.71933301973974,
+      scale: 1.432341397449943,
+      duration: 3.459301634983901,
+    },
+    {
+      x: 490.3780985426896,
+      y: 332.94305001971514,
+      scale: 1.3556295612675489,
+      duration: 3.953820772226616,
+    },
+    {
+      x: 422.9108256417509,
+      y: 193.583215112797,
+      scale: 1.5459126907847434,
+      duration: 3.5821964337869314,
+    },
+    {
+      x: 278.9441370780083,
+      y: 140.44619862701623,
+      scale: 1.760314347759756,
+      duration: 2.0051788440598193,
+    },
+    {
+      x: 350.740167055342,
+      y: 366.5729392953547,
+      scale: 1.4125093814460488,
+      duration: 1.2803628587760112,
+    },
+    {
+      x: 957.2436153817692,
+      y: 262.46733274029265,
+      scale: 0.9836072981792312,
+      duration: 3.5584793038197966,
+    },
+    {
+      x: 45.10827564779864,
+      y: 386.66060501480393,
+      scale: 0.9712149594669197,
+      duration: 2.3164446284893816,
+    },
+    {
+      x: 902.2565352198116,
+      y: 390.3791999879814,
+      scale: 1.698475325865536,
+      duration: 5.450117064757847,
+    },
+    {
+      x: 320.5348689204066,
+      y: 215.91702860077788,
+      scale: 1.387928940842679,
+      duration: 5.872866609218741,
+    },
+    {
+      x: 867.1154901605795,
+      y: 299.2223406604087,
+      scale: 1.2564458534755525,
+      duration: 2.536641035639782,
+    },
+    {
+      x: 893.1170732027624,
+      y: 35.103474714468504,
+      scale: 1.626373677686737,
+      duration: 4.233754046296133,
+    },
+    {
+      x: 696.7567921605307,
+      y: 153.47086565749774,
+      scale: 1.21020118527929,
+      duration: 3.2270652501971284,
+    },
+    {
+      x: 155.60235939753596,
+      y: 27.855439481219722,
+      scale: 1.921655058273599,
+      duration: 1.4741257029660613,
+    },
+    {
+      x: 444.5531357155744,
+      y: 14.500706625727828,
+      scale: 1.737323868548792,
+      duration: 1.350693430908379,
+    },
+    {
+      x: 704.7515279863466,
+      y: 9.128275567002554,
+      scale: 1.5652784951976353,
+      duration: 4.284391013623467,
+    },
+    {
+      x: 873.1437036652794,
+      y: 271.52322825961227,
+      scale: 1.9559931207141394,
+      duration: 1.6980080524627368,
+    },
+    {
+      x: 312.4408836459001,
+      y: 11.006781653166488,
+      scale: 1.692023396335434,
+      duration: 3.912016092288674,
+    },
+    {
+      x: 430.5952761802656,
+      y: 244.8352713774403,
+      scale: 1.4038304861783368,
+      duration: 1.1069987495672904,
+    },
+    {
+      x: 105.31494901527863,
+      y: 43.228256104652814,
+      scale: 1.887721024547592,
+      duration: 4.933983583554017,
+    },
+    {
+      x: 822.9037632427934,
+      y: 268.633420372071,
+      scale: 0.9362073279769061,
+      duration: 3.127285219421501,
+    },
+    {
+      x: 202.64854727286016,
+      y: 488.8534223014407,
+      scale: 0.9562419261010814,
+      duration: 4.0655402918755446,
+    },
+    {
+      x: 424.77047954304754,
+      y: 286.40619361562864,
+      scale: 0.5642044565280004,
+      duration: 2.2294917928500424,
+    },
+    {
+      x: 431.4377710782462,
+      y: 495.8849057190654,
+      scale: 1.566670245811697,
+      duration: 1.7330979463512515,
+    },
+    {
+      x: 852.1996021641519,
+      y: 240.6354297737483,
+      scale: 1.4082381487582731,
+      duration: 4.675538995610198,
+    },
+    {
+      x: 893.2059508558243,
+      y: 49.48201998642407,
+      scale: 1.7150721734974341,
+      duration: 5.992238583572892,
+    },
+    {
+      x: 544.1384415566132,
+      y: 11.057102548856603,
+      scale: 1.2701771170738971,
+      duration: 2.6207327802216946,
+    },
+    {
+      x: 28.563723228850378,
+      y: 142.56660280321705,
+      scale: 1.0010084594261548,
+      duration: 2.4968014706559103,
+    },
+    {
+      x: 680.8383578999632,
+      y: 37.52736087847972,
+      scale: 0.8276180827100621,
+      duration: 1.4401654572912728,
+    },
+    {
+      x: 731.0875865418021,
+      y: 405.0167671028758,
+      scale: 1.8030825760409939,
+      duration: 4.177996752965927,
+    },
+    {
+      x: 568.2593511136299,
+      y: 364.49486054825013,
+      scale: 1.980519720558816,
+      duration: 4.919764361974831,
+    },
+    {
+      x: 409.46623014965695,
+      y: 31.025271966876918,
+      scale: 1.6391962879793551,
+      duration: 3.2180168307098467,
+    },
+    {
+      x: 193.25222929318798,
+      y: 488.7155488369924,
+      scale: 1.5831902456627671,
+      duration: 2.256918404273221,
+    },
+    {
+      x: 561.6165546816358,
+      y: 327.23488808736863,
+      scale: 1.9268047853740455,
+      duration: 5.295544755329013,
+    },
+    {
+      x: 751.0870282691264,
+      y: 135.07881511922938,
+      scale: 1.866925722387992,
+      duration: 4.238731181728163,
+    },
+    {
+      x: 1006.5362493869949,
+      y: 366.15642832889563,
+      scale: 0.5874458761610675,
+      duration: 4.956855272707888,
+    },
+    {
+      x: 16.491362690747632,
+      y: 133.7139679138004,
+      scale: 1.1501220124791733,
+      duration: 2.972522954149733,
+    },
+    {
+      x: 801.7624003551687,
+      y: 66.78029631526367,
+      scale: 0.9640133542743693,
+      duration: 1.0529406359812044,
+    },
+    {
+      x: 9.9148883858771,
+      y: 232.69287048912264,
+      scale: 1.8742568678419442,
+      duration: 5.94949945494969,
+    },
+    {
+      x: 673.052972641188,
+      y: 128.66086697245856,
+      scale: 1.106139093882016,
+      duration: 1.938637561047325,
+    },
+  ];
+</script>
+
+<svg
+  class="-z-1 pointer-events-none absolute inset-0 mx-auto min-h-full w-full max-w-5xl px-4 py-3"
+>
+  <defs>
+    <path
+      id="star"
+      d="M-1.74846e-07 4C-1.74846e-07 4 2.28237 3.98544 3.13391 3.13391C3.98544 2.28237 4 -1.06686e-07 4 -1.06686e-07C4 -1.06686e-07 4.0217 2.27524 4.87323 3.12677C5.72476 3.9783 8 4 8 4C8 4 5.74043 4.03736 4.88889 4.88889C4.03736 5.74043 4 8 4 8C4 8 4.00111 5.70195 3.14958 4.85042C2.29805 3.99889 -1.74846e-07 4 -1.74846e-07 4Z"
+      fill="white"
+    />
+  </defs>
+  <g id="stars">
+    {#each stars as star (star)}
+      <use href="#star" transform="translate({star.x},{star.y}) scale({star.scale})">
         <animate
           attributeName="opacity"
           values="0;1;0"
           repeatCount="indefinite"
-          dur="4.2733297359815205s"
+          dur={star.duration}
         >
         </animate>
       </use>
-      <use
-        href="#star"
-        transform="translate(192.1181447916129,298.71933301973974) scale(1.432341397449943)"
-      >
-        <animate
-          attributeName="opacity"
-          values="0;1;0"
-          repeatCount="indefinite"
-          dur="3.459301634983901s"
-        >
-        </animate>
-      </use>
-      <use
-        href="#star"
-        transform="translate(490.3780985426896,332.94305001971514) scale(1.3556295612675489)"
-      >
-        <animate
-          attributeName="opacity"
-          values="0;1;0"
-          repeatCount="indefinite"
-          dur="3.953820772226616s"
-        >
-        </animate>
-      </use>
-      <use
-        href="#star"
-        transform="translate(422.9108256417509,193.583215112797) scale(1.5459126907847434)"
-      >
-        <animate
-          attributeName="opacity"
-          values="0;1;0"
-          repeatCount="indefinite"
-          dur="3.5821964337869314s"
-        >
-        </animate>
-      </use>
-      <use
-        href="#star"
-        transform="translate(278.9441370780083,140.44619862701623) scale(1.760314347759756)"
-      >
-        <animate
-          attributeName="opacity"
-          values="0;1;0"
-          repeatCount="indefinite"
-          dur="2.0051788440598193s"
-        >
-        </animate>
-      </use>
-      <use
-        href="#star"
-        transform="translate(350.740167055342,366.5729392953547) scale(1.4125093814460488)"
-      >
-        <animate
-          attributeName="opacity"
-          values="0;1;0"
-          repeatCount="indefinite"
-          dur="1.2803628587760112s"
-        >
-        </animate>
-      </use>
-      <use
-        href="#star"
-        transform="translate(957.2436153817692,262.46733274029265) scale(0.9836072981792312)"
-      >
-        <animate
-          attributeName="opacity"
-          values="0;1;0"
-          repeatCount="indefinite"
-          dur="3.5584793038197966s"
-        >
-        </animate>
-      </use>
-      <use
-        href="#star"
-        transform="translate(45.10827564779864,386.66060501480393) scale(0.9712149594669197)"
-      >
-        <animate
-          attributeName="opacity"
-          values="0;1;0"
-          repeatCount="indefinite"
-          dur="2.3164446284893816s"
-        >
-        </animate>
-      </use>
-      <use
-        href="#star"
-        transform="translate(902.2565352198116,390.3791999879814) scale(1.698475325865536)"
-      >
-        <animate
-          attributeName="opacity"
-          values="0;1;0"
-          repeatCount="indefinite"
-          dur="5.450117064757847s"
-        >
-        </animate>
-      </use>
-      <use
-        href="#star"
-        transform="translate(320.5348689204066,215.91702860077788) scale(1.387928940842679)"
-      >
-        <animate
-          attributeName="opacity"
-          values="0;1;0"
-          repeatCount="indefinite"
-          dur="5.872866609218741s"
-        >
-        </animate>
-      </use>
-      <use
-        href="#star"
-        transform="translate(867.1154901605795,299.2223406604087) scale(1.2564458534755525)"
-      >
-        <animate
-          attributeName="opacity"
-          values="0;1;0"
-          repeatCount="indefinite"
-          dur="2.536641035639782s"
-        >
-        </animate>
-      </use>
-      <use
-        href="#star"
-        transform="translate(893.1170732027624,35.103474714468504) scale(1.626373677686737)"
-      >
-        <animate
-          attributeName="opacity"
-          values="0;1;0"
-          repeatCount="indefinite"
-          dur="4.233754046296133s"
-        >
-        </animate>
-      </use>
-      <use
-        href="#star"
-        transform="translate(696.7567921605307,153.47086565749774) scale(1.21020118527929)"
-      >
-        <animate
-          attributeName="opacity"
-          values="0;1;0"
-          repeatCount="indefinite"
-          dur="3.2270652501971284s"
-        >
-        </animate>
-      </use>
-      <use
-        href="#star"
-        transform="translate(155.60235939753596,27.855439481219722) scale(1.921655058273599)"
-      >
-        <animate
-          attributeName="opacity"
-          values="0;1;0"
-          repeatCount="indefinite"
-          dur="1.4741257029660613s"
-        >
-        </animate>
-      </use>
-      <use
-        href="#star"
-        transform="translate(444.5531357155744,14.500706625727828) scale(1.737323868548792)"
-      >
-        <animate
-          attributeName="opacity"
-          values="0;1;0"
-          repeatCount="indefinite"
-          dur="1.350693430908379s"
-        >
-        </animate>
-      </use>
-      <use
-        href="#star"
-        transform="translate(704.7515279863466,9.128275567002554) scale(1.5652784951976353)"
-      >
-        <animate
-          attributeName="opacity"
-          values="0;1;0"
-          repeatCount="indefinite"
-          dur="4.284391013623467s"
-        >
-        </animate>
-      </use>
-      <use
-        href="#star"
-        transform="translate(873.1437036652794,271.52322825961227) scale(1.9559931207141394)"
-      >
-        <animate
-          attributeName="opacity"
-          values="0;1;0"
-          repeatCount="indefinite"
-          dur="1.6980080524627368s"
-        >
-        </animate>
-      </use>
-      <use
-        href="#star"
-        transform="translate(312.4408836459001,11.006781653166488) scale(1.692023396335434)"
-      >
-        <animate
-          attributeName="opacity"
-          values="0;1;0"
-          repeatCount="indefinite"
-          dur="3.912016092288674s"
-        >
-        </animate>
-      </use>
-      <use
-        href="#star"
-        transform="translate(430.5952761802656,244.8352713774403) scale(1.4038304861783368)"
-      >
-        <animate
-          attributeName="opacity"
-          values="0;1;0"
-          repeatCount="indefinite"
-          dur="1.1069987495672904s"
-        >
-        </animate>
-      </use>
-      <use
-        href="#star"
-        transform="translate(105.31494901527863,43.228256104652814) scale(1.887721024547592)"
-      >
-        <animate
-          attributeName="opacity"
-          values="0;1;0"
-          repeatCount="indefinite"
-          dur="4.933983583554017s"
-        >
-        </animate>
-      </use>
-      <use
-        href="#star"
-        transform="translate(822.9037632427934,268.633420372071) scale(0.9362073279769061)"
-      >
-        <animate
-          attributeName="opacity"
-          values="0;1;0"
-          repeatCount="indefinite"
-          dur="3.127285219421501s"
-        >
-        </animate>
-      </use>
-      <use
-        href="#star"
-        transform="translate(202.64854727286016,488.8534223014407) scale(0.9562419261010814)"
-      >
-        <animate
-          attributeName="opacity"
-          values="0;1;0"
-          repeatCount="indefinite"
-          dur="4.0655402918755446s"
-        >
-        </animate>
-      </use>
-      <use
-        href="#star"
-        transform="translate(424.77047954304754,286.40619361562864) scale(0.5642044565280004)"
-      >
-        <animate
-          attributeName="opacity"
-          values="0;1;0"
-          repeatCount="indefinite"
-          dur="2.2294917928500424s"
-        >
-        </animate>
-      </use>
-      <use
-        href="#star"
-        transform="translate(431.4377710782462,495.8849057190654) scale(1.566670245811697)"
-        ><animate
-          attributeName="opacity"
-          values="0;1;0"
-          repeatCount="indefinite"
-          dur="1.7330979463512515s"
-        >
-        </animate>
-      </use>
-      <use
-        href="#star"
-        transform="translate(852.1996021641519,240.6354297737483) scale(1.4082381487582731)"
-      >
-        <animate
-          attributeName="opacity"
-          values="0;1;0"
-          repeatCount="indefinite"
-          dur="4.675538995610198s"
-        >
-        </animate>
-      </use>
-      <use
-        href="#star"
-        transform="translate(893.2059508558243,49.48201998642407) scale(1.7150721734974341)"
-        ><animate
-          attributeName="opacity"
-          values="0;1;0"
-          repeatCount="indefinite"
-          dur="5.992238583572892s"
-        >
-        </animate>
-      </use>
-      <use
-        href="#star"
-        transform="translate(544.1384415566132,11.057102548856603) scale(1.2701771170738971)"
-      >
-        <animate
-          attributeName="opacity"
-          values="0;1;0"
-          repeatCount="indefinite"
-          dur="2.6207327802216946s"
-        >
-        </animate>
-      </use>
-      <use
-        href="#star"
-        transform="translate(28.563723228850378,142.56660280321705) scale(1.0010084594261548)"
-      >
-        <animate
-          attributeName="opacity"
-          values="0;1;0"
-          repeatCount="indefinite"
-          dur="2.4968014706559103s"
-        >
-        </animate>
-      </use>
-      <use
-        href="#star"
-        transform="translate(680.8383578999632,37.52736087847972) scale(0.8276180827100621)"
-      >
-        <animate
-          attributeName="opacity"
-          values="0;1;0"
-          repeatCount="indefinite"
-          dur="1.4401654572912728s"
-        >
-        </animate>
-      </use>
-      <use
-        href="#star"
-        transform="translate(731.0875865418021,405.0167671028758) scale(1.8030825760409939)"
-      >
-        <animate
-          attributeName="opacity"
-          values="0;1;0"
-          repeatCount="indefinite"
-          dur="4.177996752965927s"
-        >
-        </animate>
-      </use>
-      <use
-        href="#star"
-        transform="translate(568.2593511136299,364.49486054825013) scale(1.980519720558816)"
-      >
-        <animate
-          attributeName="opacity"
-          values="0;1;0"
-          repeatCount="indefinite"
-          dur="4.919764361974831s"
-        >
-        </animate>
-      </use>
-      <use
-        href="#star"
-        transform="translate(409.46623014965695,31.025271966876918) scale(1.6391962879793551)"
-      >
-        <animate
-          attributeName="opacity"
-          values="0;1;0"
-          repeatCount="indefinite"
-          dur="3.2180168307098467s"
-        >
-        </animate>
-      </use>
-      <use
-        href="#star"
-        transform="translate(193.25222929318798,488.7155488369924) scale(1.5831902456627671)"
-      >
-        <animate
-          attributeName="opacity"
-          values="0;1;0"
-          repeatCount="indefinite"
-          dur="2.256918404273221s"
-        >
-        </animate>
-      </use>
-      <use
-        href="#star"
-        transform="translate(561.6165546816358,327.23488808736863) scale(1.9268047853740455)"
-      >
-        <animate
-          attributeName="opacity"
-          values="0;1;0"
-          repeatCount="indefinite"
-          dur="5.295544755329013s"
-        >
-        </animate>
-      </use>
-      <use
-        href="#star"
-        transform="translate(751.0870282691264,135.07881511922938) scale(1.866925722387992)"
-      >
-        <animate
-          attributeName="opacity"
-          values="0;1;0"
-          repeatCount="indefinite"
-          dur="4.238731181728163s"
-        >
-        </animate>
-      </use>
-      <use
-        href="#star"
-        transform="translate(1006.5362493869949,366.15642832889563) scale(0.5874458761610675)"
-      >
-        <animate
-          attributeName="opacity"
-          values="0;1;0"
-          repeatCount="indefinite"
-          dur="4.956855272707888s"
-        >
-        </animate>
-      </use>
-      <use
-        href="#star"
-        transform="translate(16.491362690747632,133.7139679138004) scale(1.1501220124791733)"
-      >
-        <animate
-          attributeName="opacity"
-          values="0;1;0"
-          repeatCount="indefinite"
-          dur="2.972522954149733s"
-        >
-        </animate>
-      </use>
-      <use
-        href="#star"
-        transform="translate(801.7624003551687,66.78029631526367) scale(0.9640133542743693)"
-      >
-        <animate
-          attributeName="opacity"
-          values="0;1;0"
-          repeatCount="indefinite"
-          dur="1.0529406359812044s"
-        >
-        </animate>
-      </use>
-      <use
-        href="#star"
-        transform="translate(9.9148883858771,232.69287048912264) scale(1.8742568678419442)"
-      >
-        <animate
-          attributeName="opacity"
-          values="0;1;0"
-          repeatCount="indefinite"
-          dur="5.94949945494969s"
-        >
-        </animate>
-      </use>
-      <use
-        href="#star"
-        transform="translate(673.052972641188,128.66086697245856) scale(1.106139093882016)"
-      >
-        <animate
-          attributeName="opacity"
-          values="0;1;0"
-          repeatCount="indefinite"
-          dur="1.938637561047325s"
-        >
-        </animate>
-      </use>
-    </g>
-  </svg>
-</div>
+    {/each}
+  </g>
+</svg>
