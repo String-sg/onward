@@ -206,7 +206,7 @@
     <div class="mx-auto h-full w-full max-w-5xl px-4 py-3">
       <div class="flex h-full flex-col">
         <!-- TODO: placeholder image, to be replaced once confirmed -->
-        <picture class="flex flex-1 justify-center">
+        <picture class="flex flex-1 items-center justify-center">
           <source media="(min-width: 1024px)" srcset={`${base}/meteor/384w.webp`} />
           <source media="(max-width: 1023px)" srcset={`${base}/meteor/256w.webp`} />
           <img
