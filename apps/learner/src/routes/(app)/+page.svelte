@@ -69,7 +69,7 @@
 </div>
 
 {#if isModalOpen}
-  <div class="z-200 fixed inset-0 bg-slate-950">
+  <div class="z-200 fixed inset-0 bg-slate-950 text-white">
     <div class="mx-auto flex h-full w-full max-w-5xl flex-col px-6 py-4">
       <!-- Modal Header -->
       <header class="flex items-center">
@@ -77,7 +77,7 @@
           class="rounded-full p-4 transition-colors hover:bg-white/20 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
           onclick={handleFloatingPlayerClick}
         >
-          <ArrowLeft class="text-white" />
+          <ArrowLeft />
         </button>
       </header>
 
@@ -90,7 +90,7 @@
                 >{tag}</Badge
               >
             {/each}
-            <div class="mb-6 w-full text-xl text-white">
+            <div class="mb-6 w-full text-xl">
               {data.title}
             </div>
           </div>
@@ -109,8 +109,8 @@
 
           <!-- Time Display -->
           <div class="flex w-full justify-between">
-            <span class="text-white">14:32</span>
-            <span class="text-white">-2.00</span>
+            <span>14:32</span>
+            <span>-2.00</span>
           </div>
 
           <!-- Speed Control -->
@@ -118,7 +118,7 @@
             <button
               class="flex cursor-pointer items-center rounded-full bg-white/20 px-4 py-2 transition-colors hover:bg-white/20 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             >
-              <span class="text-sm font-medium text-white">1.0x speed</span>
+              <span class="text-sm font-medium">1.0x speed</span>
             </button>
           </div>
 
@@ -126,35 +126,35 @@
           <div class="flex w-full justify-evenly py-4">
             <!-- Backward Button -->
             <button
-              class="cursor-pointer rounded-full p-4 text-white transition-colors hover:bg-white/20 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+              class="cursor-pointer rounded-full p-4 transition-colors hover:bg-white/20 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             >
               <SkipBack />
             </button>
 
             <!-- Replay Button -->
             <button
-              class="cursor-pointer rounded-full p-4 text-white transition-colors hover:bg-white/20 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+              class="cursor-pointer rounded-full p-4 transition-colors hover:bg-white/20 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             >
               <RotateCcw />
             </button>
 
             <!-- Play/Pause Button -->
             <button
-              class="cursor-pointer rounded-full bg-white p-4 transition-colors hover:bg-white/50 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+              class="cursor-pointer rounded-full bg-white p-4 text-black transition-colors hover:bg-white/50 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             >
               <Pause />
             </button>
 
             <!-- Forward Button -->
             <button
-              class="cursor-pointer rounded-full p-4 text-white transition-colors hover:bg-white/20 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+              class="cursor-pointer rounded-full p-4 transition-colors hover:bg-white/20 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             >
               <RotateCw />
             </button>
 
             <!-- Next Button -->
             <button
-              class="cursor-pointer rounded-full p-4 text-white transition-colors hover:bg-white/20 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+              class="cursor-pointer rounded-full p-4 transition-colors hover:bg-white/20 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             >
               <SkipForward />
             </button>
