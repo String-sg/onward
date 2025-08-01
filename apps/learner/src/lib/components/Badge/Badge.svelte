@@ -13,7 +13,7 @@
 <div
   {...otherProps}
   class={[
-    'w-fit rounded-md px-2.5 py-0.5',
+    'inline-flex w-fit rounded-md px-2.5 py-1',
     variant === 'blue' && 'bg-blue-200 text-blue-900',
     variant === 'orange' && 'bg-orange-200 text-orange-900',
     variant === 'amber' && 'bg-amber-200 text-amber-900',
