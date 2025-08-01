@@ -6,7 +6,6 @@
   import LearningUnit from '$lib/components/LearningUnit.svelte';
   import { AudioState } from '$lib/helpers/index.js';
 
-  let isFloatingPlayerVisible = $state(false);
   let isModalOpen = $state(false);
 
   const audioState = AudioState.load();
@@ -16,7 +15,7 @@
   };
 
   const handlePlay = () => {
-    isFloatingPlayerVisible = true;
+    audioState.isFloatingPlayerVisible = true;
     audioState.isPlaying = true;
   };
 
@@ -52,7 +51,7 @@
 <div class="z-100 pointer-events-none fixed inset-x-0 bottom-0">
   <div class="mx-auto max-w-5xl px-4">
     <div class="flex justify-end gap-x-4">
-      {#if isFloatingPlayerVisible}
+      {#if audioState.isFloatingPlayerVisible}
         <div class="pointer-events-auto flex-grow overflow-x-hidden py-3">
           <FloatingPlayer
             title="Navigating Special Educational Needs in Singapore: A Path to Inclusion"
