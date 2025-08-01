@@ -10,17 +10,28 @@
 
   const audioState = AudioState.load();
 
+  const currentPlayingId = $derived(
+    audioState.isPlaying ? audioState.currentLearningUnit?.id : null,
+  );
+
   const handleFloatingPlayerClick = () => {
     isModalOpen = !isModalOpen;
   };
 
-  const handlePlay = () => {
-    audioState.isFloatingPlayerVisible = true;
-    audioState.isPlaying = true;
+  const handlePlay = (learningUnit: { id: number; title: string }) => {
+    if (currentPlayingId === learningUnit.id) {
+      audioState.pause();
+    } else {
+      audioState.play(learningUnit);
+    }
   };
 
-  const togglePlayPause = () => {
-    audioState.isPlaying = !audioState.isPlaying;
+  const handleResume = () => {
+    if (audioState.isPlaying) {
+      audioState.pause();
+    } else {
+      audioState.resume();
+    }
   };
 </script>
 
@@ -35,15 +46,25 @@
       tags={[{ variant: 'purple', content: 'Special Educational Needs' }]}
       title="Navigating Special Educational Needs in Singapore: A Path to Inclusion"
       showplayerpanel
-      onplay={handlePlay}
+      isplaying={currentPlayingId === 1 && audioState.isPlaying}
+      onplay={() =>
+        handlePlay({
+          id: 1,
+          title: 'Navigating Special Educational Needs in Singapore: A Path to Inclusion',
+        })}
     />
 
     <LearningUnit
-      to="/content/1"
+      to="/content/2"
       tags={[{ variant: 'purple', content: 'Special Educational Needs' }]}
-      title="Navigating Special Educational Needs in Singapore: A Path to Inclusion"
+      title="Testing the Waters: A Guide to Special Educational Needs in Singapore"
       showplayerpanel
-      onplay={handlePlay}
+      isplaying={currentPlayingId === 2}
+      onplay={() =>
+        handlePlay({
+          id: 2,
+          title: 'Testing the Waters: A Guide to Special Educational Needs in Singapore',
+        })}
     />
   </div>
 </div>
@@ -52,12 +73,14 @@
   <div class="mx-auto max-w-5xl px-4 py-3">
     <div class="flex justify-end gap-x-4">
       {#if audioState.isFloatingPlayerVisible}
-        <FloatingPlayer
-          title="Navigating Special Educational Needs in Singapore: A Path to Inclusion"
-          isplaying={audioState.isPlaying}
-          onplay={togglePlayPause}
-          onclick={handleFloatingPlayerClick}
-        />
+        <div class="pointer-events-auto flex-grow overflow-x-hidden py-3">
+          <FloatingPlayer
+            title={audioState.currentLearningUnit?.title}
+            isplaying={audioState.isPlaying}
+            onplay={handleResume}
+            onclick={handleFloatingPlayerClick}
+          />
+        </div>
       {/if}
 
       <FloatingChat />
