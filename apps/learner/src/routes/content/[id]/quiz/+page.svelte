@@ -2,10 +2,12 @@
   import { ArrowLeft, X } from '@lucide/svelte';
   import { slide } from 'svelte/transition';
 
+  import { base } from '$app/paths';
   import { page } from '$app/state';
   import { Badge } from '$lib/components/Badge/index.js';
-  import { Button } from '$lib/components/Button/index.js';
+  import { Button, LinkButton } from '$lib/components/Button/index.js';
   import Progress from '$lib/components/Progress.svelte';
+  import { Starfield } from '$lib/components/Starfield/index.js';
   import { useIsWithinViewport } from '$lib/helpers/index.js';
 
   const { data } = $props();
@@ -14,6 +16,7 @@
   let currentQuestionIndex = $state(0);
   let isFeedbackModalOpen = $state(false);
   let isCorrectAnswer = $state(false);
+  let isCompletionModalOpen = $state(false);
   let target = $state<HTMLElement | null>(null);
 
   let currentQuestion = $derived(data.questionAnswers[currentQuestionIndex]);
@@ -39,8 +42,8 @@
         selectedOptionIndex = -1;
         isFeedbackModalOpen = false;
       } else {
-        //TODO: Redirect quiz to completion page
-        console.log('Quiz completed!');
+        isFeedbackModalOpen = false;
+        isCompletionModalOpen = true;
       }
     }
   };
@@ -192,6 +195,45 @@
       </div>
 
       <Button width="full" onclick={nextQuestion}>Continue</Button>
+    </div>
+  </div>
+{/if}
+
+{#if isCompletionModalOpen}
+  <div class="z-100 fixed inset-0 h-full w-full bg-slate-950 text-white">
+    <Starfield />
+
+    <div class="mx-auto h-full w-full max-w-5xl px-4 py-3">
+      <div class="flex h-full flex-col">
+        <!-- TODO: placeholder image, to be replaced once confirmed -->
+        <picture class="flex flex-1 items-center justify-center">
+          <source media="(min-width: 1024px)" srcset={`${base}/meteor/384w.webp`} />
+          <source media="(max-width: 1023px)" srcset={`${base}/meteor/256w.webp`} />
+          <img
+            class="h-64 w-64 lg:h-96 lg:w-96"
+            src={`${base}/meteor/256w.webp`}
+            alt="meteor logo"
+          />
+        </picture>
+
+        <div class="flex flex-col items-center gap-y-20">
+          <div class="flex flex-col items-center gap-y-4 text-center">
+            <span class="text-xl font-medium">That was insightful!</span>
+
+            <div class="flex flex-col items-center gap-y-2">
+              <span>You have earned completion status for</span>
+
+              <Badge variant="purple">Special Educational Needs</Badge>
+
+              <span>Track completed topics on your profile.</span>
+            </div>
+          </div>
+
+          <LinkButton href={`/content/${contentId}`} variant="secondary" width="full">
+            Done
+          </LinkButton>
+        </div>
+      </div>
     </div>
   </div>
 {/if}
