@@ -14,9 +14,16 @@
     isModalOpen = !isModalOpen;
   };
 
-  const handlePlay = () => {
-    audioState.isFloatingPlayerVisible = true;
-    audioState.isPlaying = true;
+  const handlePlay = (id: number) => {
+    if (audioState.learningUnitId === id && audioState.isPlaying) {
+      // Same unit is playing, pause it
+      audioState.isPlaying = false;
+    } else {
+      // New unit or resuming
+      audioState.learningUnitId = id;
+      audioState.isFloatingPlayerVisible = true;
+      audioState.isPlaying = true;
+    }
   };
 
   const togglePlayPause = () => {
@@ -31,18 +38,22 @@
 
   <div class="flex flex-col gap-y-4">
     <LearningUnit
+      id={1}
       to="/content/1"
       tags={[{ variant: 'purple', content: 'Special Educational Needs' }]}
       title="Navigating Special Educational Needs in Singapore: A Path to Inclusion"
       showplayerpanel
+      isplaying={audioState.isUnitPlaying(1)}
       onplay={handlePlay}
     />
 
     <LearningUnit
-      to="/content/1"
+      id={2}
+      to="/content/2"
       tags={[{ variant: 'purple', content: 'Special Educational Needs' }]}
       title="Navigating Special Educational Needs in Singapore: A Path to Inclusion"
       showplayerpanel
+      isplaying={audioState.isUnitPlaying(2)}
       onplay={handlePlay}
     />
   </div>
