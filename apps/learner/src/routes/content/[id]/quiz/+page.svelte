@@ -7,7 +7,7 @@
   import { Badge } from '$lib/components/Badge/index.js';
   import { Button, LinkButton } from '$lib/components/Button/index.js';
   import Progress from '$lib/components/Progress.svelte';
-  import { Starfield } from '$lib/components/Starfield';
+  import { Starfield } from '$lib/components/Starfield/index.js';
   import { useIsWithinViewport } from '$lib/helpers/index.js';
 
   const { data } = $props();
