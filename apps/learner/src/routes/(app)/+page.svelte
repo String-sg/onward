@@ -5,7 +5,6 @@
   import FloatingChat from '$lib/components/FloatingChat.svelte';
   import FloatingPlayer from '$lib/components/FloatingPlayer.svelte';
   import LearningUnit from '$lib/components/LearningUnit.svelte';
-  import SliderThumb from '$lib/components/SliderThumb.svelte';
   import { AudioState } from '$lib/helpers/index.js';
 
   let isModalOpen = $state(false);
@@ -97,11 +96,11 @@
             <!-- Hardcoded: Filled (Progress) -->
             <div class="h-full w-3/4 rounded-full bg-white"></div>
 
-            <!-- Slider Thumb Component -->
-            <SliderThumb
-              position={75}
-              class="cursor-pointer opacity-0 transition-opacity group-hover:opacity-100"
-            />
+            <!-- Slider Thumb -->
+            <div
+              class="absolute left-3/4 top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 cursor-pointer rounded-full bg-white opacity-0 shadow transition-opacity group-hover:opacity-100"
+              draggable="true"
+            ></div>
           </div>
 
           <!-- Time Display -->
