@@ -200,7 +200,7 @@
 {/if}
 
 {#if isCompletionModalOpen}
-  <div class="z-100 fixed inset-0 h-full w-full bg-slate-950 text-white">
+  <div class="z-100 fixed inset-0 bg-slate-950 text-white">
     <Starfield />
 
     <div class="mx-auto h-full w-full max-w-5xl px-4 py-3">
