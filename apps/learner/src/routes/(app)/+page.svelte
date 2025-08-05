@@ -90,22 +90,24 @@
           </div>
         </div>
 
-        <!-- Slider -->
-        <div class="group relative mb-2 h-2 w-full rounded-full bg-slate-700">
-          <!-- Hardcoded: Filled (Progress) -->
-          <div class="h-full w-3/4 rounded-full bg-white"></div>
+        <div class="flex w-full flex-col gap-2">
+          <!-- Slider -->
+          <div class="group relative h-2 w-full rounded-full bg-slate-700">
+            <!-- Hardcoded: Filled (Progress) -->
+            <div class="h-full w-3/4 rounded-full bg-white"></div>
 
-          <!-- Thumb -->
-          <div
-            class="absolute left-3/4 top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 cursor-pointer rounded-full bg-white opacity-0 shadow transition-opacity group-hover:opacity-100"
-            draggable="true"
-          ></div>
-        </div>
+            <!-- Thumb -->
+            <div
+              class="absolute left-3/4 top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 cursor-pointer rounded-full bg-white opacity-0 shadow transition-opacity group-hover:opacity-100"
+              draggable="true"
+            ></div>
+          </div>
 
-        <!-- Time Display -->
-        <div class="flex w-full justify-between">
-          <span>14:32</span>
-          <span>-2.00</span>
+          <!-- Time Display -->
+          <div class="flex w-full justify-between">
+            <span>14:32</span>
+            <span>-2.00</span>
+          </div>
         </div>
 
         <!-- Speed Control -->
