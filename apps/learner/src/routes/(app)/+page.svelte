@@ -72,7 +72,7 @@
       <!-- Modal Header -->
       <header class="flex items-center">
         <button
-          class="rounded-full p-4 transition-colors hover:bg-white/20 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+          class="cursor-pointer rounded-full p-4 transition-colors hover:bg-white/20 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
           onclick={handleFloatingPlayerClick}
         >
           <ArrowLeft />
