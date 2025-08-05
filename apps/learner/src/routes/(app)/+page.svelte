@@ -85,9 +85,9 @@
         <!-- Badge and Title -->
         <div class="flex w-full flex-col items-start gap-y-3">
           <Badge variant="purple">Special Educational Needs</Badge>
-          <div class="w-full text-xl">
+          <a href="/content/1" class="w-full text-xl">
             Navigating Special Educational Needs: A Path to Inclusion
-          </div>
+          </a>
         </div>
 
         <div class="flex w-full flex-col gap-y-5">
