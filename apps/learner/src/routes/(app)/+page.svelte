@@ -81,7 +81,7 @@
 
       <div class="flex-1"></div>
 
-      <div class="flex flex-col gap-y-6 px-6">
+      <div class="flex flex-col gap-y-6">
         <!-- Badge and Title -->
         <div class="flex flex-col gap-y-3">
           <Badge variant="purple">Special Educational Needs</Badge>
@@ -121,7 +121,7 @@
           </div>
 
           <!-- Playback Controls -->
-          <div class="flex justify-evenly py-4">
+          <div class="flex justify-between py-4">
             <!-- Backward Button -->
             <button
               class="cursor-pointer rounded-full p-4 transition-colors hover:bg-white/20 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
