@@ -81,38 +81,38 @@
 
       <div class="flex-1"></div>
 
-      <div class="mx-auto flex w-full max-w-5xl flex-col items-center gap-y-6 px-6">
+      <div class="flex flex-col gap-y-6 px-6">
         <!-- Badge and Title -->
-        <div class="flex w-full flex-col items-start gap-y-3">
+        <div class="flex flex-col gap-y-3">
           <Badge variant="purple">Special Educational Needs</Badge>
-          <a href="/content/1" class="w-full text-xl">
+          <a href="/content/1" class="w-fit text-xl">
             Navigating Special Educational Needs: A Path to Inclusion
           </a>
         </div>
 
-        <div class="flex w-full flex-col gap-y-5">
-          <div class="flex w-full flex-col gap-y-2">
+        <div class="flex flex-col gap-y-5">
+          <div class="flex flex-col gap-y-2">
             <!-- Slider -->
-            <div class="group relative h-2 w-full rounded-full bg-slate-700">
+            <div class="group relative h-2 rounded-full bg-slate-700">
               <!-- Hardcoded: Filled (Progress) -->
               <div class="h-full w-3/4 rounded-full bg-white"></div>
 
               <!-- Thumb -->
               <div
-                class="absolute left-3/4 top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 cursor-pointer rounded-full bg-white opacity-0 shadow transition-opacity group-hover:opacity-100"
+                class="absolute left-3/4 top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 cursor-pointer rounded-full bg-white opacity-0 transition-opacity group-hover:opacity-100"
                 draggable="true"
               ></div>
             </div>
 
             <!-- Time Display -->
-            <div class="flex w-full justify-between">
+            <div class="flex justify-between">
               <span>14:32</span>
               <span>-2.00</span>
             </div>
           </div>
 
           <!-- Speed Control -->
-          <div class="flex w-full justify-center">
+          <div class="flex justify-center">
             <button
               class="flex cursor-pointer items-center rounded-full bg-white/20 px-4 py-2 transition-colors hover:bg-white/20 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             >
@@ -121,7 +121,7 @@
           </div>
 
           <!-- Playback Controls -->
-          <div class="flex w-full justify-evenly py-4">
+          <div class="flex justify-evenly py-4">
             <!-- Backward Button -->
             <button
               class="cursor-pointer rounded-full p-4 transition-colors hover:bg-white/20 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
