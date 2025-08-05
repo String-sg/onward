@@ -10,8 +10,6 @@
 
   let isModalOpen = $state(false);
 
-  const { data } = $props();
-
   const audioState = AudioState.load();
 
   const handleFloatingPlayerClick = () => {
@@ -84,15 +82,13 @@
 
       <div class="fixed inset-x-0 bottom-0">
         <div class="mx-auto flex w-full max-w-5xl flex-col items-center px-6">
-          <!-- Badge -->
+          <!-- Badge and Title -->
           <div class="flex w-full flex-col items-start gap-y-3">
-            {#each data.tags as tag (tag)}
-              <Badge variant="purple" class="max-w-xs overflow-hidden whitespace-normal break-words"
-                >{tag}</Badge
-              >
-            {/each}
+            <Badge variant="purple" class="max-w-xs overflow-hidden whitespace-normal break-words">
+              Special Educational Needs
+            </Badge>
             <div class="mb-6 w-full text-xl">
-              {data.title}
+              Navigating Special Educational Needs: A Path to Inclusion
             </div>
           </div>
 
