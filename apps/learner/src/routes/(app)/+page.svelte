@@ -68,7 +68,7 @@
 
 {#if isModalOpen}
   <div class="z-200 fixed inset-0 bg-slate-950 text-white">
-    <div class="mx-auto flex h-full w-full max-w-5xl flex-col px-6 py-4">
+    <div class="mx-auto flex h-full w-full max-w-5xl flex-col px-4 py-3">
       <!-- Modal Header -->
       <header class="flex items-center">
         <button
