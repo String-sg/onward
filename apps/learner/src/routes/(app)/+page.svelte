@@ -91,12 +91,12 @@
             </div>
           </div>
 
-          <!-- Progress Bar -->
+          <!-- Slider -->
           <div class="group relative mb-2 h-2 w-full rounded-full bg-slate-700">
             <!-- Hardcoded: Filled (Progress) -->
             <div class="h-full w-3/4 rounded-full bg-white"></div>
 
-            <!-- Slider Thumb -->
+            <!-- Thumb -->
             <div
               class="absolute left-3/4 top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 cursor-pointer rounded-full bg-white opacity-0 shadow transition-opacity group-hover:opacity-100"
               draggable="true"
