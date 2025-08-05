@@ -101,7 +101,7 @@
   </div>
 </header>
 
-<main class="pt-43 relative mx-auto min-h-full w-full max-w-5xl px-4 pb-3">
+<main class="pt-43 pb-25 relative mx-auto min-h-full w-full max-w-5xl px-4">
   <div bind:this={target} class="absolute inset-x-0 top-0 h-px"></div>
 
   {@render children()}

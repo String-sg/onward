@@ -35,31 +35,33 @@
   };
 
   const handleKeyDown = (event: KeyboardEvent) => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      // Prevent scrolling for `Space` key.
+    if (event.key === ' ') {
+      // Prevent the default behavior of scrolling.
       event.preventDefault();
+    }
 
+    if (event.key === 'Enter' || event.key === ' ') {
       onclick?.();
     }
   };
 </script>
 
 <div
-  class="inset-shadow-sm inset-shadow-slate-200 flex items-center gap-x-3 rounded-full border border-slate-100 p-3 shadow-lg backdrop-blur-sm"
-  onclick={handleClick}
   role="button"
   tabindex="0"
+  onclick={handleClick}
   onkeydown={handleKeyDown}
+  class="inset-shadow-sm inset-shadow-slate-200 pointer-events-auto grid w-full cursor-pointer grid-cols-[auto_1fr_auto] items-center gap-x-3 rounded-full bg-white/30 px-3 py-3.5 shadow-sm backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
 >
-  <!-- Temporary album placeholder -->
+  <!-- Temporary image placeholder -->
   <div class="h-12 w-12 rounded-full bg-black"></div>
 
-  <div class="flex-1 truncate text-sm font-medium">
+  <span class="truncate text-sm font-medium">
     {title}
-  </div>
+  </span>
 
   <button
-    class="flex cursor-pointer items-center rounded-full px-4 py-2 hover:bg-slate-50"
+    class="flex cursor-pointer items-center rounded-full p-2 transition-colors hover:bg-slate-100"
     onclick={handlePlay}
   >
     {#if isplaying}

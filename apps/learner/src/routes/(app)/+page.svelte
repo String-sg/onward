@@ -49,21 +49,18 @@
 </div>
 
 <div class="z-100 pointer-events-none fixed inset-x-0 bottom-0">
-  <div class="mx-auto max-w-5xl px-4">
+  <div class="mx-auto max-w-5xl px-4 py-3">
     <div class="flex justify-end gap-x-4">
       {#if audioState.isFloatingPlayerVisible}
-        <div class="pointer-events-auto flex-grow overflow-x-hidden py-3">
-          <FloatingPlayer
-            title="Navigating Special Educational Needs in Singapore: A Path to Inclusion"
-            isplaying={audioState.isPlaying}
-            onplay={togglePlayPause}
-            onclick={handleFloatingPlayerClick}
-          />
-        </div>
+        <FloatingPlayer
+          title="Navigating Special Educational Needs in Singapore: A Path to Inclusion"
+          isplaying={audioState.isPlaying}
+          onplay={togglePlayPause}
+          onclick={handleFloatingPlayerClick}
+        />
       {/if}
-      <div class="pointer-events-auto py-3">
-        <FloatingChat />
-      </div>
+
+      <FloatingChat />
     </div>
   </div>
 </div>
