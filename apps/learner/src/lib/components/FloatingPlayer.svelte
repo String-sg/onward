@@ -6,7 +6,7 @@
     /**
      * The title of the podcast.
      */
-    title: string;
+    title?: string;
     /**
      * Indicates whether the player is in a playing or paused state.
      */
@@ -24,8 +24,8 @@
   let { title, isplaying = false, onplay, onclick }: Props = $props();
 
   const handlePlay: MouseEventHandler<HTMLButtonElement> = (event) => {
-    // Prevent the default behavior of the anchor tag from navigating to the URL.
-    event.preventDefault();
+    // Prevent the event from bubbling up to the parent div's onclick handler.
+    event.stopPropagation();
 
     onplay?.(event);
   };

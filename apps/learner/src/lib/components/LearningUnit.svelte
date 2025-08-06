@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Play } from '@lucide/svelte';
+  import { Pause, Play } from '@lucide/svelte';
   import type { MouseEventHandler } from 'svelte/elements';
 
   import { Badge, type BadgeProps } from '$lib/components/Badge/index.js';
@@ -26,9 +26,13 @@
      * A flag to display the panel containing the Play button and progress indicator.
      */
     showplayerpanel?: boolean;
+    /**
+     * A flag to indicate whether the learning unit is currently playing.
+     */
+    isplaying?: boolean;
   }
 
-  let { to, title, tags, onplay, showplayerpanel = false }: Props = $props();
+  let { to, title, tags, onplay, showplayerpanel = false, isplaying = false }: Props = $props();
 
   const handlePlay: MouseEventHandler<HTMLButtonElement> = (event) => {
     // Prevent the default behavior of the anchor tag from navigating to the URL.
@@ -62,8 +66,13 @@
   {#if showplayerpanel}
     <div class="flex items-center gap-x-3">
       <Button variant="secondary" onclick={handlePlay}>
-        <Play class="h-4 w-4" />
-        <span class="font-medium">Play</span>
+        {#if isplaying}
+          <Pause class="h-4 w-4" />
+          <span class="font-medium">Pause</span>
+        {:else}
+          <Play class="h-4 w-4" />
+          <span class="font-medium">Play</span>
+        {/if}
       </Button>
 
       <div class="flex items-center gap-x-2">

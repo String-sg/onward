@@ -2,12 +2,18 @@ import { getContext, setContext } from 'svelte';
 
 const AUDIO_STATE_KEY = Symbol('AudioState');
 
+interface LearningUnit {
+  id: number;
+  title: string;
+}
+
 /**
  * This class is used to store the audio state for the entire app.
  */
 export class AudioState {
-  isPlaying = $state(false);
-  isFloatingPlayerVisible = $state(false);
+  #isPlaying = $state(false);
+  #isFloatingPlayerVisible = $state(false);
+  #currentLearningUnit = $state.raw<LearningUnit | null>(null);
 
   /**
    * Set a new instance of the audio state in the context.
@@ -27,5 +33,40 @@ export class AudioState {
     }
 
     return context;
+  }
+
+  get currentLearningUnit() {
+    return this.#currentLearningUnit;
+  }
+
+  get isPlaying() {
+    return this.#isPlaying;
+  }
+
+  get isFloatingPlayerVisible() {
+    return this.#isFloatingPlayerVisible;
+  }
+
+  /**
+   * Starts playing a learning unit.
+   */
+  play(learningUnit: LearningUnit) {
+    this.#currentLearningUnit = learningUnit;
+    this.#isPlaying = true;
+    this.#isFloatingPlayerVisible = true;
+  }
+
+  /**
+   * Pauses the currently playing unit.
+   */
+  pause() {
+    this.#isPlaying = false;
+  }
+
+  /**
+   * Resumes playback of the current learning unit.
+   */
+  resume() {
+    this.#isPlaying = true;
   }
 }
