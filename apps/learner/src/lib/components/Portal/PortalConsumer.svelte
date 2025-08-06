@@ -2,6 +2,9 @@
   import type { Snippet } from 'svelte';
 
   export interface Props {
+    /**
+     * The content to render within the portal.
+     */
     children?: Snippet;
   }
 
