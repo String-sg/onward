@@ -138,7 +138,7 @@
 
             <!-- Play/Pause Button -->
             <button
-              class="cursor-pointer rounded-full bg-white p-4 text-black transition-colors hover:bg-white/50 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+              class="cursor-pointer rounded-full bg-white p-4 text-black transition-colors hover:bg-white/75 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             >
               <Pause />
             </button>
