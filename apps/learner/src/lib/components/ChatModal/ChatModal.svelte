@@ -125,7 +125,7 @@
   <header class="inset-x-0 top-0 flex backdrop-blur-sm">
     <div
       class={[
-        'absolute inset-x-0 top-full h-px bg-transparent transition-colors duration-300',
+        'inset-x-0 top-full h-px bg-transparent transition-colors duration-300',
         !isWithinViewport.current && '!bg-slate-950/7.5',
       ]}
     ></div>
@@ -134,7 +134,7 @@
       <div class="flex items-center gap-x-2">
         <button
           onclick={onclose}
-          class="rounded-full p-4 transition-colors hover:bg-slate-200 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950"
+          class="cursor-pointer rounded-full p-4 transition-colors hover:bg-slate-200 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950"
         >
           <ArrowLeft />
         </button>
@@ -145,7 +145,7 @@
       {#if convo.length > 0}
         <button
           onclick={handleClear}
-          class="cursor-pointer rounded-full p-4 font-bold transition-colors hover:bg-slate-50 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950"
+          class="cursor-pointer rounded-full p-4 font-bold transition-colors hover:bg-slate-200 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950"
         >
           Clear
         </button>
