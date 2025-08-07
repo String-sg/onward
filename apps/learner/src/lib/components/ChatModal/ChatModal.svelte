@@ -180,7 +180,10 @@
             {#each convo as { role, content }, index (index)}
               <div class={['flex flex-col', role === 'user' && 'items-end']}>
                 <span
-                  class={['rounded-3xl p-4 text-left', role === 'user' && 'max-w-4/5 bg-white']}
+                  class={[
+                    'break-words rounded-3xl p-4 text-left',
+                    role === 'user' && 'max-w-4/5 bg-white',
+                  ]}
                 >
                   {content}
                 </span>
