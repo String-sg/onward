@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { ArrowLeft, SendHorizontal } from '@lucide/svelte';
+  import { ChevronDown, SendHorizontal } from '@lucide/svelte';
   import { onDestroy, onMount } from 'svelte';
   import type { MouseEventHandler } from 'svelte/elements';
   import { fade, fly } from 'svelte/transition';
@@ -136,7 +136,7 @@
           onclick={onclose}
           class="cursor-pointer rounded-full p-4 transition-colors hover:bg-slate-200 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950"
         >
-          <ArrowLeft />
+          <ChevronDown />
         </button>
 
         <Badge variant="darkSlate">Ask AI</Badge>
