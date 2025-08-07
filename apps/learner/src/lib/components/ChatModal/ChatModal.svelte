@@ -61,6 +61,7 @@
 
     convo = [...convo, { role: 'user', content: userPrompt }];
     userPrompt = '';
+    autoResizeTextarea();
 
     // Set AI typing state to true
     isAiTyping = true;
@@ -94,7 +95,6 @@
   const handleRecommendedPrompt = (prompt: string) => {
     userPrompt = prompt;
     handleSendPrompt();
-    autoResizeTextarea();
   };
 
   const handleKeyDown = (event: KeyboardEvent) => {
