@@ -1,20 +1,22 @@
 <script lang="ts">
-  import { ArrowLeft, Pause, RotateCcw, RotateCw, SkipBack, SkipForward } from '@lucide/svelte';
+  import { ChevronDown, Pause, RotateCcw, RotateCw, SkipBack, SkipForward } from '@lucide/svelte';
   import { fade, fly } from 'svelte/transition';
 
   import Badge from '$lib/components/Badge/Badge.svelte';
-  import FloatingChat from '$lib/components/FloatingChat.svelte';
+  import { ChatModal } from '$lib/components/ChatModal/index.js';
+  import { FloatingChat } from '$lib/components/FloatingChat/index.js';
   import FloatingPlayer from '$lib/components/FloatingPlayer.svelte';
   import LearningUnit from '$lib/components/LearningUnit.svelte';
   import { Portal } from '$lib/components/Portal/index.js';
   import { AudioState } from '$lib/helpers/index.js';
 
-  let isModalOpen = $state(false);
+  let isPlayerModalOpen = $state(false);
+  let isChatModalOpen = $state(false);
 
   const audioState = AudioState.load();
 
   const handleFloatingPlayerClick = () => {
-    isModalOpen = !isModalOpen;
+    isPlayerModalOpen = !isPlayerModalOpen;
   };
 
   const handlePlay = () => {
@@ -24,6 +26,14 @@
 
   const togglePlayPause = () => {
     audioState.isPlaying = !audioState.isPlaying;
+  };
+
+  const openChatModal = () => {
+    isChatModalOpen = true;
+  };
+
+  const closeChatModal = () => {
+    isChatModalOpen = false;
   };
 </script>
 
@@ -63,13 +73,13 @@
         />
       {/if}
 
-      <FloatingChat />
+      <FloatingChat onclick={openChatModal} />
     </div>
   </div>
 </div>
 
 <Portal>
-  {#if isModalOpen}
+  {#if isPlayerModalOpen}
     <!-- Backdrop -->
     <div transition:fade={{ duration: 300 }} class="z-199 fixed inset-0 bg-slate-950/50"></div>
 
@@ -85,7 +95,7 @@
             class="cursor-pointer rounded-full p-4 transition-colors hover:bg-white/20 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             onclick={handleFloatingPlayerClick}
           >
-            <ArrowLeft />
+            <ChevronDown />
           </button>
         </div>
 
@@ -169,5 +179,9 @@
         </div>
       </div>
     </div>
+  {/if}
+
+  {#if isChatModalOpen}
+    <ChatModal onclose={closeChatModal} />
   {/if}
 </Portal>
