@@ -14,7 +14,7 @@
 
   export interface Props {
     /**
-     * A callback function that is called when the user clicks on the Back button.
+     * A callback function that is called when the user clicks on the Close button.
      */
     onclose?: MouseEventHandler<HTMLButtonElement>;
   }
