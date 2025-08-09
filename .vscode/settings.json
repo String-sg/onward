@@ -2,8 +2,8 @@
   // Enables TypeScript support in `.svelte` files.
   "svelte.enable-ts-plugin": true,
 
-  // Shows ESLint errors/warnings in `.svelte` files.
-  "eslint.validate": ["svelte"],
+  // Shows ESLint errors/warnings in `.js`, `.ts`, and `.svelte` files.
+  "eslint.validate": ["javascript", "typescript", "svelte"],
 
   "[svelte]": {
     "editor.defaultFormatter": "svelte.svelte-vscode"
