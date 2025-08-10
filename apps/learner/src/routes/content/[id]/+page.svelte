@@ -1,5 +1,9 @@
 <script lang="ts">
-  import { ArrowLeft, ChevronsDown, Lightbulb, Play, Share } from '@lucide/svelte';
+  import ArrowLeft from '@lucide/svelte/icons/arrow-left';
+  import ChevronsDown from '@lucide/svelte/icons/chevrons-down';
+  import Lightbulb from '@lucide/svelte/icons/lightbulb';
+  import Play from '@lucide/svelte/icons/play';
+  import Share from '@lucide/svelte/icons/share';
   import { formatDistanceToNow } from 'date-fns';
 
   import { afterNavigate } from '$app/navigation';

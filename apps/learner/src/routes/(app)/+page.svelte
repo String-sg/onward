@@ -1,5 +1,10 @@
 <script lang="ts">
-  import { ArrowLeft, Pause, RotateCcw, RotateCw, SkipBack, SkipForward } from '@lucide/svelte';
+  import ArrowLeft from '@lucide/svelte/icons/arrow-left';
+  import Pause from '@lucide/svelte/icons/pause';
+  import RotateCcw from '@lucide/svelte/icons/rotate-ccw';
+  import RotateCw from '@lucide/svelte/icons/rotate-cw';
+  import SkipBack from '@lucide/svelte/icons/skip-back';
+  import SkipForward from '@lucide/svelte/icons/skip-forward';
   import { fade, fly } from 'svelte/transition';
 
   import Badge from '$lib/components/Badge/Badge.svelte';

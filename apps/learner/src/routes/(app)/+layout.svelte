@@ -1,5 +1,7 @@
 <script lang="ts">
-  import { BookHeart, Compass, Home } from '@lucide/svelte';
+  import BookHeart from '@lucide/svelte/icons/book-heart';
+  import Compass from '@lucide/svelte/icons/compass';
+  import Home from '@lucide/svelte/icons/home';
 
   import { page } from '$app/state';
   import { useIsWithinViewport } from '$lib/helpers';

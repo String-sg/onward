@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Play } from '@lucide/svelte';
+  import Play from '@lucide/svelte/icons/play';
   import type { MouseEventHandler } from 'svelte/elements';
 
   import { Badge, type BadgeProps } from '$lib/components/Badge/index.js';
