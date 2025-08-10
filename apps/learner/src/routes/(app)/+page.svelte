@@ -2,28 +2,44 @@
   import { ArrowLeft, Pause, RotateCcw, RotateCw, SkipBack, SkipForward } from '@lucide/svelte';
   import { fade, fly } from 'svelte/transition';
 
-  import Badge from '$lib/components/Badge/Badge.svelte';
+  import { Badge } from '$lib/components/Badge';
   import FloatingChat from '$lib/components/FloatingChat.svelte';
   import FloatingPlayer from '$lib/components/FloatingPlayer.svelte';
   import LearningUnit from '$lib/components/LearningUnit.svelte';
-  import { Portal } from '$lib/components/Portal/index.js';
-  import { AudioState } from '$lib/helpers/index.js';
+  import { Portal } from '$lib/components/Portal';
+  import { Player } from '$lib/states';
 
-  let isModalOpen = $state(false);
+  const { data } = $props();
 
-  const audioState = AudioState.load();
+  let isNowPlayingViewVisible = $state(false);
 
-  const handleFloatingPlayerClick = () => {
-    isModalOpen = !isModalOpen;
+  const player = Player.get();
+
+  const handleNowPlayingBarClick = () => {
+    isNowPlayingViewVisible = true;
   };
 
-  const handlePlay = () => {
-    audioState.isFloatingPlayerVisible = true;
-    audioState.isPlaying = true;
+  const handleNowPlayingBarPlay = () => {
+    player.toggle();
   };
 
-  const togglePlayPause = () => {
-    audioState.isPlaying = !audioState.isPlaying;
+  const handleNowPlayingViewClose = () => {
+    isNowPlayingViewVisible = false;
+  };
+
+  const handleLearningUnitPlay = (learningUnit: (typeof data.learningUnits)[0]) => {
+    player.play({
+      id: learningUnit.id,
+      title: learningUnit.title,
+    });
+  };
+
+  const handleLearningUnitPause = () => {
+    player.toggle();
+  };
+
+  const handleLearningUnitResume = () => {
+    player.toggle();
   };
 </script>
 
@@ -33,33 +49,32 @@
   </div>
 
   <div class="flex flex-col gap-y-4">
-    <LearningUnit
-      to="/content/1"
-      tags={[{ variant: 'purple', content: 'Special Educational Needs' }]}
-      title="Navigating Special Educational Needs in Singapore: A Path to Inclusion"
-      showplayerpanel
-      onplay={handlePlay}
-    />
-
-    <LearningUnit
-      to="/content/1"
-      tags={[{ variant: 'purple', content: 'Special Educational Needs' }]}
-      title="Navigating Special Educational Needs in Singapore: A Path to Inclusion"
-      showplayerpanel
-      onplay={handlePlay}
-    />
+    {#each data.learningUnits as learningUnit (learningUnit.id)}
+      <LearningUnit
+        to={`/content/${learningUnit.id}`}
+        tags={[{ variant: 'purple', content: 'Special Educational Needs' }]}
+        title={learningUnit.title}
+        player={{
+          isactive: player.currentTrack?.id === learningUnit.id,
+          isplaying: player.isPlaying,
+          onplay: () => handleLearningUnitPlay(learningUnit),
+          onpause: handleLearningUnitPause,
+          onresume: handleLearningUnitResume,
+        }}
+      />
+    {/each}
   </div>
 </div>
 
 <div class="z-100 pointer-events-none fixed inset-x-0 bottom-0">
   <div class="mx-auto max-w-5xl px-4 py-3">
     <div class="flex justify-end gap-x-4">
-      {#if audioState.isFloatingPlayerVisible}
+      {#if player.currentTrack}
         <FloatingPlayer
-          title="Navigating Special Educational Needs in Singapore: A Path to Inclusion"
-          isplaying={audioState.isPlaying}
-          onplay={togglePlayPause}
-          onclick={handleFloatingPlayerClick}
+          title={player.currentTrack.title}
+          isplaying={player.isPlaying}
+          onclick={handleNowPlayingBarClick}
+          onplay={handleNowPlayingBarPlay}
         />
       {/if}
 
@@ -69,7 +84,7 @@
 </div>
 
 <Portal>
-  {#if isModalOpen}
+  {#if isNowPlayingViewVisible}
     <!-- Backdrop -->
     <div transition:fade={{ duration: 300 }} class="z-199 fixed inset-0 bg-slate-950/50"></div>
 
@@ -83,7 +98,7 @@
         <div class="flex items-center">
           <button
             class="cursor-pointer rounded-full p-4 transition-colors hover:bg-white/20 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-            onclick={handleFloatingPlayerClick}
+            onclick={handleNowPlayingViewClose}
           >
             <ArrowLeft />
           </button>

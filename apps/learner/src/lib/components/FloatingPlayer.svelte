@@ -4,45 +4,45 @@
 
   interface Props {
     /**
-     * The title of the podcast.
+     * The title of the current playing track.
      */
     title: string;
     /**
-     * Indicates whether the player is in a playing or paused state.
+     * Indicates whether to display the play/pause button.
      */
-    isplaying?: boolean;
+    isplaying: boolean;
     /**
-     * A callback function that is called when the user clicks on the play button.
+     * A callback for clicking the entire component, excluding the play/pause button.
      */
-    onplay?: MouseEventHandler<HTMLButtonElement>;
+    onclick: () => void;
     /**
-     * A callback function that is called when the user clicks on the floating player.
+     * A callback for clicking the play/pause button.
      */
-    onclick?: () => void;
+    onplay: () => void;
   }
 
-  let { title, isplaying = false, onplay, onclick }: Props = $props();
-
-  const handlePlay: MouseEventHandler<HTMLButtonElement> = (event) => {
-    // Prevent the default behavior of the anchor tag from navigating to the URL.
-    event.preventDefault();
-
-    onplay?.(event);
-  };
+  let { title, isplaying = false, onclick, onplay }: Props = $props();
 
   const handleClick = () => {
-    onclick?.();
+    onclick();
   };
 
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.key === ' ') {
-      // Prevent the default behavior of scrolling.
+      // Prevent default scrolling behaviour.
       event.preventDefault();
     }
 
     if (event.key === 'Enter' || event.key === ' ') {
-      onclick?.();
+      onclick();
     }
+  };
+
+  const handlePlay: MouseEventHandler<HTMLButtonElement> = (event) => {
+    // Stop the event from bubbling up to the parent element.
+    event.stopPropagation();
+
+    onplay();
   };
 </script>
 

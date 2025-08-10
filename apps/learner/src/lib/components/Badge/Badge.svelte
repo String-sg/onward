@@ -11,7 +11,6 @@
 </script>
 
 <div
-  {...otherProps}
   class={[
     'inline-flex w-fit rounded-md px-2.5 py-1',
     variant === 'blue' && 'bg-blue-200 text-blue-900',
@@ -23,6 +22,7 @@
     variant === 'slate' && 'bg-slate-200 text-slate-950',
     clazz,
   ]}
+  {...otherProps}
 >
   <span class="whitespace-nowrap text-xs font-semibold">
     {@render children()}
