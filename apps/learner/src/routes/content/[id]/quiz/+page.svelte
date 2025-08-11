@@ -4,11 +4,11 @@
 
   import { base } from '$app/paths';
   import { page } from '$app/state';
-  import { Badge } from '$lib/components/Badge/index.js';
-  import { Button, LinkButton } from '$lib/components/Button/index.js';
+  import { Badge } from '$lib/components/Badge';
+  import { Button, LinkButton } from '$lib/components/Button';
   import Progress from '$lib/components/Progress.svelte';
-  import { Starfield } from '$lib/components/Starfield/index.js';
-  import { useIsWithinViewport } from '$lib/helpers/index.js';
+  import { Starfield } from '$lib/components/Starfield';
+  import { useIsWithinViewport } from '$lib/helpers';
 
   const { data } = $props();
 

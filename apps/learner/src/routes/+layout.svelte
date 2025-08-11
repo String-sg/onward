@@ -1,11 +1,11 @@
 <script lang="ts">
   import '../app.css';
 
-  import { AudioState } from '$lib/helpers/index.js';
+  import { Player } from '$lib/states';
 
   const { children } = $props();
 
-  AudioState.create();
+  Player.create();
 </script>
 
 {@render children()}

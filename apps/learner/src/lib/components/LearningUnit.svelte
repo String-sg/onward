@@ -1,40 +1,72 @@
 <script lang="ts">
-  import { Play } from '@lucide/svelte';
+  import { Pause, Play } from '@lucide/svelte';
   import type { MouseEventHandler } from 'svelte/elements';
 
-  import { Badge, type BadgeProps } from '$lib/components/Badge/index.js';
-  import { Button } from '$lib/components/Button/index.js';
+  import { Badge, type BadgeProps } from '$lib/components/Badge';
+  import { Button } from '$lib/components/Button';
 
   interface Props {
     /**
-     * The URL to navigate to when the user clicks on the MLU.
+     * The URL to navigate to when clicking the card.
      */
     to: string;
     /**
-     * The tags to display on the MLU.
+     * The tags to display on the card.
      */
     tags: { variant: BadgeProps['variant']; content: string }[];
     /**
-     * The title of the MLU.
+     * The title of the card.
      */
     title: string;
     /**
-     * A callback function that is called when the user clicks on the play button.
+     * An optional player object for showing playback controls and progress.
+     * If provided, displays the controls and progress.
      */
-    onplay?: MouseEventHandler<HTMLButtonElement>;
-    /**
-     * A flag to display the panel containing the Play button and progress indicator.
-     */
-    showplayerpanel?: boolean;
+    player?: {
+      /**
+       * Indicates whether this learning unit is the active track.
+       */
+      isactive: boolean;
+      /**
+       * Indicates whether this learning unit is playing.
+       */
+      isplaying: boolean;
+      /**
+       * A callback to start playback.
+       */
+      onplay: () => void;
+      /**
+       * A callback to pause playback.
+       */
+      onpause: () => void;
+      /**
+       * A callback to resume playback.
+       */
+      onresume: () => void;
+    } | null;
   }
 
-  let { to, title, tags, onplay, showplayerpanel = false }: Props = $props();
+  let { to, title, tags, player = null }: Props = $props();
 
   const handlePlay: MouseEventHandler<HTMLButtonElement> = (event) => {
-    // Prevent the default behavior of the anchor tag from navigating to the URL.
+    // Prevent default anchor navigation.
     event.preventDefault();
 
-    onplay?.(event);
+    player?.onplay();
+  };
+
+  const handlePause: MouseEventHandler<HTMLButtonElement> = (event) => {
+    // Prevent default anchor navigation.
+    event.preventDefault();
+
+    player?.onpause();
+  };
+
+  const handleResume: MouseEventHandler<HTMLButtonElement> = (event) => {
+    // Prevent default anchor navigation.
+    event.preventDefault();
+
+    player?.onresume();
   };
 </script>
 
@@ -59,12 +91,24 @@
     </div>
   </div>
 
-  {#if showplayerpanel}
+  {#if player}
     <div class="flex items-center gap-x-3">
-      <Button variant="secondary" onclick={handlePlay}>
-        <Play class="h-4 w-4" />
-        <span class="font-medium">Play</span>
-      </Button>
+      {#if player.isactive && player.isplaying}
+        <Button variant="secondary" onclick={handlePause}>
+          <Pause class="h-4 w-4" />
+          <span class="font-medium">Pause</span>
+        </Button>
+      {:else if player.isactive && !player.isplaying}
+        <Button variant="secondary" onclick={handleResume}>
+          <Play class="h-4 w-4" />
+          <span class="font-medium">Resume</span>
+        </Button>
+      {:else}
+        <Button variant="secondary" onclick={handlePlay}>
+          <Play class="h-4 w-4" />
+          <span class="font-medium">Play</span>
+        </Button>
+      {/if}
 
       <div class="flex items-center gap-x-2">
         <svg viewBox="0 0 24 24" class="h-6 w-6">
