@@ -67,7 +67,10 @@
   ></div>
 
   <div class="mx-auto flex w-full max-w-5xl items-center justify-between gap-x-3 px-4 py-3">
-    <a href="/content/{contentId}" class="rounded-full p-4 transition-colors hover:bg-slate-200">
+    <a
+      href="/content/{contentId}"
+      class="rounded-full p-4 transition-colors hover:bg-slate-200 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950"
+    >
       <ArrowLeft />
     </a>
 
@@ -92,7 +95,7 @@
         {#each currentQuestion.options as option, index (option)}
           <button
             class={[
-              'py-3.75 px-2.75 shadow-xs group flex cursor-pointer items-center gap-x-3 rounded-2xl border border-transparent bg-white transition-all hover:bg-slate-50 hover:shadow-sm',
+              'py-3.75 px-2.75 shadow-xs group flex cursor-pointer items-center gap-x-3 rounded-2xl border border-transparent bg-white transition-all hover:bg-slate-50 hover:shadow-sm focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950',
               selectedOptionIndex === index && '!border-slate-950',
             ]}
             onclick={() => selectOption(index)}
@@ -140,7 +143,7 @@
         </span>
 
         <button
-          class="cursor-pointer rounded-full p-4 hover:bg-slate-100"
+          class="cursor-pointer rounded-full p-4 hover:bg-slate-100 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950"
           onclick={closeFeedbackModal}
         >
           <X />
@@ -229,7 +232,12 @@
             </div>
           </div>
 
-          <LinkButton href={`/content/${contentId}`} variant="secondary" width="full">
+          <LinkButton
+            href={`/content/${contentId}`}
+            variant="secondary"
+            width="full"
+            class="focus-visible:outline-white"
+          >
             Done
           </LinkButton>
         </div>
