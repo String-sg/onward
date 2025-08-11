@@ -5,7 +5,7 @@
   import { Badge, type BadgeProps } from '$lib/components/Badge/index.js';
   import { Button } from '$lib/components/Button/index.js';
 
-  interface Props {
+  export interface Props {
     /**
      * The URL to navigate to when clicking the card.
      */

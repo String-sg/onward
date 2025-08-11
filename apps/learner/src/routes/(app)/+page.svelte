@@ -5,7 +5,7 @@
   import { Badge } from '$lib/components/Badge/index.js';
   import { FloatingChat } from '$lib/components/FloatingChat/index.js';
   import { FloatingPlayer } from '$lib/components/FloatingPlayer/index.js';
-  import LearningUnit from '$lib/components/LearningUnit.svelte';
+  import { LearningUnit } from '$lib/components/LearningUnit/index.js';
   import { Portal } from '$lib/components/Portal/index.js';
   import { Player } from '$lib/states/index.js';
 
