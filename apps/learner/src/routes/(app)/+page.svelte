@@ -3,7 +3,7 @@
   import { fade, fly } from 'svelte/transition';
 
   import { Badge } from '$lib/components/Badge/index.js';
-  import FloatingChat from '$lib/components/FloatingChat.svelte';
+  import { FloatingChat } from '$lib/components/FloatingChat/index.js';
   import FloatingPlayer from '$lib/components/FloatingPlayer.svelte';
   import LearningUnit from '$lib/components/LearningUnit.svelte';
   import { Portal } from '$lib/components/Portal/index.js';
