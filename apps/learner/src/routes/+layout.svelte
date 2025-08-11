@@ -1,7 +1,7 @@
 <script lang="ts">
   import '../app.css';
 
-  import { Player } from '$lib/states';
+  import { Player } from '$lib/states/index.js';
 
   const { children } = $props();
 

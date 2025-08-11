@@ -2,8 +2,8 @@
   import { Pause, Play } from '@lucide/svelte';
   import type { MouseEventHandler } from 'svelte/elements';
 
-  import { Badge, type BadgeProps } from '$lib/components/Badge';
-  import { Button } from '$lib/components/Button';
+  import { Badge, type BadgeProps } from '$lib/components/Badge/index.js';
+  import { Button } from '$lib/components/Button/index.js';
 
   interface Props {
     /**

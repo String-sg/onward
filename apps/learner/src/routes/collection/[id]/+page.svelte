@@ -2,7 +2,7 @@
   import { ArrowLeft } from '@lucide/svelte';
 
   import LearningUnit from '$lib/components/LearningUnit.svelte';
-  import { useIsWithinViewport } from '$lib/helpers';
+  import { useIsWithinViewport } from '$lib/helpers/index.js';
 
   let target = $state<HTMLElement | null>(null);
 

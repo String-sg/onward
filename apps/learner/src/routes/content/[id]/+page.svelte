@@ -3,9 +3,9 @@
   import { formatDistanceToNow } from 'date-fns';
 
   import { afterNavigate } from '$app/navigation';
-  import { Badge } from '$lib/components/Badge';
-  import { Button, LinkButton } from '$lib/components/Button';
-  import { useIsWithinViewport } from '$lib/helpers';
+  import { Badge } from '$lib/components/Badge/index.js';
+  import { Button, LinkButton } from '$lib/components/Button/index.js';
+  import { useIsWithinViewport } from '$lib/helpers/index.js';
 
   const { data } = $props();
 

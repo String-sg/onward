@@ -2,12 +2,12 @@
   import { ArrowLeft, Pause, RotateCcw, RotateCw, SkipBack, SkipForward } from '@lucide/svelte';
   import { fade, fly } from 'svelte/transition';
 
-  import { Badge } from '$lib/components/Badge';
+  import { Badge } from '$lib/components/Badge/index.js';
   import FloatingChat from '$lib/components/FloatingChat.svelte';
   import FloatingPlayer from '$lib/components/FloatingPlayer.svelte';
   import LearningUnit from '$lib/components/LearningUnit.svelte';
-  import { Portal } from '$lib/components/Portal';
-  import { Player } from '$lib/states';
+  import { Portal } from '$lib/components/Portal/index.js';
+  import { Player } from '$lib/states/index.js';
 
   const { data } = $props();
 

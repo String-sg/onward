@@ -2,7 +2,7 @@
   import { BookHeart, Compass, Home } from '@lucide/svelte';
 
   import { page } from '$app/state';
-  import { useIsWithinViewport } from '$lib/helpers';
+  import { useIsWithinViewport } from '$lib/helpers/index.js';
 
   const { children } = $props();
 
