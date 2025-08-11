@@ -95,7 +95,7 @@
         {#each currentQuestion.options as option, index (option)}
           <button
             class={[
-              'py-3.75 px-2.75 shadow-xs group flex cursor-pointer items-center gap-x-3 rounded-2xl border border-transparent bg-white transition-all hover:bg-slate-50 hover:shadow-sm focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950',
+              'py-3.75 px-2.75 shadow-xs group flex cursor-pointer items-center gap-x-3 rounded-2xl border border-transparent bg-white hover:bg-slate-50 hover:shadow-sm hover:transition-all focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950',
               selectedOptionIndex === index && '!border-slate-950',
             ]}
             onclick={() => selectOption(index)}
