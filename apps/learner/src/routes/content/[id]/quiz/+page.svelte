@@ -8,7 +8,7 @@
   import { Button, LinkButton } from '$lib/components/Button/index.js';
   import { Progress } from '$lib/components/Progress/index.js';
   import { Starfield } from '$lib/components/Starfield/index.js';
-  import { useIsWithinViewport } from '$lib/helpers/index.js';
+  import { IsWithinViewport } from '$lib/helpers/index.js';
 
   const { data } = $props();
 
@@ -25,7 +25,7 @@
   );
   let contentId = $derived(page.params.id);
 
-  const isWithinViewport = useIsWithinViewport(() => target);
+  const isWithinViewport = new IsWithinViewport(() => target);
 
   const selectOption = (index: number) => {
     selectedOptionIndex = index;

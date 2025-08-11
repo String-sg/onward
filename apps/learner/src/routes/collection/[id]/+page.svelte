@@ -2,11 +2,11 @@
   import { ArrowLeft } from '@lucide/svelte';
 
   import { LearningUnit } from '$lib/components/LearningUnit/index.js';
-  import { useIsWithinViewport } from '$lib/helpers/index.js';
+  import { IsWithinViewport } from '$lib/helpers/index.js';
 
   let target = $state<HTMLElement | null>(null);
 
-  const isWithinViewport = useIsWithinViewport(() => target);
+  const isWithinViewport = new IsWithinViewport(() => target);
 </script>
 
 <header class="fixed inset-x-0 top-0 z-50 bg-slate-100/90 backdrop-blur-sm">
