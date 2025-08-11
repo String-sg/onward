@@ -3,29 +3,29 @@
 
   import { Badge } from '$lib/components/Badge/index.js';
 
-  interface Props {
+  export interface Props {
     /**
-     * The URL to navigate to when the user clicks on the MLU.
+     * The URL to navigate to when clicking the collection.
      */
     to: string;
     /**
-     * The tag to display on the Collection.
+     * The tag to display on the collection.
      */
     tag: string;
     /**
-     * The title of the Collection.
+     * The title of the collection.
      */
     title: string;
     /**
-     * Total number of podcasts in this Collection.
+     * Total number of podcasts in this collection.
      */
     numberofpodcasts: number;
     /**
-     * Total number of notes in this Collection.
+     * Total number of notes in this collection.
      */
     numberofnotes: number;
     /**
-     * Visual colour theme for the Collection.
+     * Visual colour theme for the collection.
      */
     variant: Variant;
   }
