@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Collection, { type Variant } from '$lib/components/Collection.svelte';
+  import { Collection, type CollectionProps } from '$lib/components/Collection/index.js';
 
   const { data } = $props();
 </script>
@@ -17,7 +17,7 @@
         title={learning.title}
         numberofpodcasts={learning.numberofpodcasts}
         numberofnotes={learning.numberofnotes}
-        variant={learning.variant as Variant}
+        variant={learning.variant as CollectionProps['variant']}
       />
     {/each}
   </div>

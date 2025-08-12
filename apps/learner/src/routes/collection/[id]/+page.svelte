@@ -1,8 +1,8 @@
 <script lang="ts">
   import { ArrowLeft } from '@lucide/svelte';
 
-  import LearningUnit from '$lib/components/LearningUnit.svelte';
-  import { useIsWithinViewport } from '$lib/helpers';
+  import { LearningUnit } from '$lib/components/LearningUnit/index.js';
+  import { useIsWithinViewport } from '$lib/helpers/index.js';
 
   let target = $state<HTMLElement | null>(null);
 

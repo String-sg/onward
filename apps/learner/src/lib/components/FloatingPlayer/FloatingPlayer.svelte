@@ -2,7 +2,7 @@
   import { Pause, Play } from '@lucide/svelte';
   import type { MouseEventHandler } from 'svelte/elements';
 
-  interface Props {
+  export interface Props {
     /**
      * The title of the current playing track.
      */

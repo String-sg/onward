@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { HTMLAttributes } from 'svelte/elements';
 
-  interface Props extends HTMLAttributes<HTMLDivElement> {
+  export interface Props extends HTMLAttributes<HTMLDivElement> {
     /**
      * The current progress value, ranging from 0 to 100.
      *
