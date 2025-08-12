@@ -2,7 +2,7 @@
   import { BookHeart, Compass, Home } from '@lucide/svelte';
 
   import { page } from '$app/state';
-  import { useIsWithinViewport } from '$lib/helpers/index.js';
+  import { IsWithinViewport } from '$lib/helpers/index.js';
 
   const { children } = $props();
 
@@ -12,7 +12,7 @@
   const isLearningPage = $derived(page.url.pathname === '/learning');
   const isExplorePage = $derived(page.url.pathname === '/explore');
 
-  const isWithinViewport = useIsWithinViewport(() => target);
+  const isWithinViewport = new IsWithinViewport(() => target);
 </script>
 
 <header class="fixed inset-x-0 top-0 z-50 bg-slate-100/90 backdrop-blur-sm">

@@ -5,7 +5,7 @@
   import { afterNavigate } from '$app/navigation';
   import { Badge } from '$lib/components/Badge/index.js';
   import { Button, LinkButton } from '$lib/components/Button/index.js';
-  import { useIsWithinViewport } from '$lib/helpers/index.js';
+  import { IsWithinViewport } from '$lib/helpers/index.js';
 
   const { data } = $props();
 
@@ -13,7 +13,7 @@
   let isExpanded = $state(false);
   let target = $state<HTMLElement | null>(null);
 
-  const isWithinViewport = useIsWithinViewport(() => target);
+  const isWithinViewport = new IsWithinViewport(() => target);
 
   afterNavigate(({ from, type }) => {
     if (type === 'enter' || !from) {
