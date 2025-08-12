@@ -5,14 +5,15 @@
   import { fade, fly } from 'svelte/transition';
 
   import { Badge } from '$lib/components/Badge/index.js';
-  import { FloatingChat } from '$lib/components/FloatingChat/index.js';
-  import { FloatingPlayer } from '$lib/components/FloatingPlayer/index.js';
+  import { ChatWidget } from '$lib/components/ChatWidget/index.js';
+  import { NowPlayingBar } from '$lib/components/NowPlayingBar/index.js';
   import { Portal } from '$lib/components/Portal/index.js';
   import { Player } from '$lib/states/index.js';
 
   const { children } = $props();
 
   let isNowPlayingViewVisible = $state(false);
+
   const player = Player.create();
 
   const handleNowPlayingBarClick = () => {
@@ -34,7 +35,7 @@
   <div class="mx-auto max-w-5xl px-4 py-3">
     <div class="flex justify-end gap-x-4">
       {#if player.currentTrack}
-        <FloatingPlayer
+        <NowPlayingBar
           title={player.currentTrack.title}
           isplaying={player.isPlaying}
           onclick={handleNowPlayingBarClick}
@@ -42,7 +43,7 @@
         />
       {/if}
 
-      <FloatingChat />
+      <ChatWidget />
     </div>
   </div>
 </div>
