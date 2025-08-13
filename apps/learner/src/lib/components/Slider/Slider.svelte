@@ -1,8 +1,6 @@
 <script lang="ts">
   import type { PointerEventHandler } from 'svelte/elements';
 
-  import { convertStepsToPercentage, convertValueToSteps, linearScaleValue } from './helper';
-
   export interface Props {
     /**
      * The minimum value of the Slider.
@@ -41,6 +39,18 @@
   let currentTime = $state(value);
 
   let slider: HTMLDivElement | null = null;
+
+  const linearScaleValue = (
+    value: number,
+    [inputMin, inputMax]: [number, number],
+    [outputMin, outputMax]: [number, number],
+  ): number => ((value - inputMin) / (inputMax - inputMin)) * (outputMax - outputMin) + outputMin;
+
+  const convertValueToSteps = (value: number, step: number, [min, max]: [number, number]): number =>
+    Math.min(max, Math.max(min, Math.round((value - min) / step) * step));
+
+  const convertStepsToPercentage = (steps: number, [min, max]: [number, number]): number =>
+    ((steps - min) / (max - min)) * 100;
 
   // Update percentage and current time when props or state change
   $effect(() => {
