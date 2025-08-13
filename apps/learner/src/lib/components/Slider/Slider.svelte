@@ -40,15 +40,18 @@
 
   let slider: HTMLDivElement | null = null;
 
+  // Maps a value from one range to another.
   const linearScaleValue = (
     value: number,
     [inputMin, inputMax]: [number, number],
     [outputMin, outputMax]: [number, number],
   ): number => ((value - inputMin) / (inputMax - inputMin)) * (outputMax - outputMin) + outputMin;
 
+  // Snaps a value to the nearest step within the specified range.
   const convertValueToSteps = (value: number, step: number, [min, max]: [number, number]): number =>
     Math.min(max, Math.max(min, Math.round((value - min) / step) * step));
 
+  // Converts the current step position into a percentage.
   const convertStepsToPercentage = (steps: number, [min, max]: [number, number]): number =>
     ((steps - min) / (max - min)) * 100;
 
@@ -96,7 +99,7 @@
 <div class="flex flex-col gap-y-5">
   <!-- Slider -->
   <div
-    class="group relative flex h-2 w-full touch-none items-center rounded-full bg-slate-700"
+    class="relative flex h-2 w-full cursor-pointer touch-none items-center rounded-full bg-slate-700"
     bind:this={slider}
     onpointerdown={handlePointerDown}
     onpointermove={handlePointerMove}
@@ -111,7 +114,7 @@
     <!-- Thumb -->
     <div
       style="left: {percentage}%;"
-      class="absolute top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 cursor-pointer rounded-full bg-white opacity-0 transition-opacity group-hover:opacity-100"
+      class="absolute top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 cursor-pointer rounded-full bg-white opacity-0 transition-opacity hover:opacity-100"
     ></div>
   </div>
 </div>
