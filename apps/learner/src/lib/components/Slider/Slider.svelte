@@ -95,26 +95,23 @@
   };
 </script>
 
-<!-- Slider Component -->
-<div class="flex flex-col gap-y-5">
-  <!-- Slider -->
-  <div
-    class="relative flex h-2 w-full cursor-pointer touch-none items-center rounded-full bg-slate-700"
-    bind:this={slider}
-    onpointerdown={handlePointerDown}
-    onpointermove={handlePointerMove}
-    onpointerup={handlePointerUp}
-  >
-    <!-- Track Background -->
-    <div class="h-full w-full rounded-full bg-slate-700">
-      <!-- Filled Track -->
-      <div style="width: {percentage}%" class="h-full rounded-full bg-white"></div>
-    </div>
-
-    <!-- Thumb -->
-    <div
-      style="left: {percentage}%;"
-      class="absolute top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 cursor-pointer rounded-full bg-white opacity-0 transition-opacity hover:opacity-100"
-    ></div>
+<!-- Slider -->
+<div
+  class="relative flex h-2 w-full cursor-pointer touch-none items-center rounded-full bg-slate-700"
+  bind:this={slider}
+  onpointerdown={handlePointerDown}
+  onpointermove={handlePointerMove}
+  onpointerup={handlePointerUp}
+>
+  <!-- Track Background -->
+  <div class="h-full w-full rounded-full bg-slate-700">
+    <!-- Filled Track -->
+    <div style="width: {percentage}%" class="h-full rounded-full bg-white"></div>
   </div>
+
+  <!-- Thumb -->
+  <div
+    style="left: {percentage}%;"
+    class="absolute top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 cursor-pointer rounded-full bg-white opacity-0 transition-opacity hover:opacity-100"
+  ></div>
 </div>
