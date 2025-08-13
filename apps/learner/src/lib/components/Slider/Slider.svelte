@@ -1,12 +1,9 @@
 <script lang="ts">
   import type { PointerEventHandler } from 'svelte/elements';
 
-  // Import helper functions or implement them here
   import { convertStepsToPercentage, convertValueToSteps, linearScaleValue } from './helper';
 
-  export type OnValueChange = (value: number) => void;
-
-  interface Props {
+  export interface Props {
     /**
      * The minimum value of the Slider.
      *
@@ -32,12 +29,12 @@
      */
     value?: number;
     /**
-     * The callback when the value changes.
+     * A callback when the value changes.
      */
-    onValueChange?: OnValueChange;
+    onvaluechange?: (value: number) => void;
   }
 
-  const { min = 0, max = 300, step = 1, value = 0, onValueChange }: Props = $props();
+  const { min = 0, max = 300, step = 1, value = 0, onvaluechange }: Props = $props();
 
   let percentage = $state(0);
 
@@ -64,7 +61,7 @@
     currentTime = steps;
     percentage = convertStepsToPercentage(steps, [min, max]);
 
-    onValueChange?.(steps);
+    onvaluechange?.(steps);
   };
 
   const handlePointerDown: PointerEventHandler<HTMLDivElement> = (e) => {
