@@ -20,6 +20,20 @@
   const handleLearningUnitResume = () => {
     player.toggle();
   };
+
+  let currentValue = $state(0); // Slider's current value
+  const maxValue = 300; // Maximum value (e.g., total duration in seconds)
+
+  // Format seconds as mm:ss
+  const formatTime = (seconds: number): string => {
+    const minutes = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${minutes}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  const handleValueChange = (value: number) => {
+    currentValue = value; // Update the current value as the slider moves
+  };
 </script>
 
 <div class="flex flex-col gap-y-3">
