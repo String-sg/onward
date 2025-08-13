@@ -1,7 +1,7 @@
 <script lang="ts">
   import '../app.css';
 
-  import { ArrowLeft, Pause, RotateCcw, RotateCw, SkipBack, SkipForward } from '@lucide/svelte';
+  import { ChevronDown, Pause, RotateCcw, RotateCw, SkipBack, SkipForward } from '@lucide/svelte';
   import { fade, fly } from 'svelte/transition';
 
   import { Badge } from '$lib/components/Badge/index.js';
@@ -75,7 +75,7 @@
             class="cursor-pointer rounded-full p-4 transition-colors hover:bg-white/20 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             onclick={handleNowPlayingViewClose}
           >
-            <ArrowLeft />
+            <ChevronDown />
           </button>
         </div>
 
