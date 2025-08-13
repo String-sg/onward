@@ -7,18 +7,42 @@
   export type OnValueChange = (value: number) => void;
 
   interface Props {
-    min?: number; // Minimum value (e.g., 0 seconds)
-    max?: number; // Maximum value (e.g., total duration in seconds)
-    step?: number; // Increment step
-    value?: number; // Initial value
-    onValueChange?: OnValueChange; // Callback for value change
+    /**
+     * The minimum value of the Slider.
+     *
+     * @default '0'
+     */
+    min?: number;
+    /**
+     * Maximum value of the Slider, e.g., total duration in seconds.
+     *
+     * @default '300'
+     */
+    max?: number;
+    /**
+     * Increment value for each step of the Slider
+     *
+     * @default '1'
+     */
+    step?: number;
+    /**
+     * The initial value of the Slider.
+     *
+     * @default '0'
+     */
+    value?: number;
+    /**
+     * The callback when the value changes.
+     */
+    onValueChange?: OnValueChange;
   }
 
   const { min = 0, max = 300, step = 1, value = 0, onValueChange }: Props = $props();
 
-  // State variables
-  let percentage = $state(0); // Slider position in percentage
-  let currentTime = $state(value); // Current time in seconds
+  let percentage = $state(0);
+
+  let currentTime = $state(value);
+
   let slider: HTMLDivElement | null = null;
 
   // Update percentage and current time when props or state change
@@ -37,11 +61,9 @@
     const value = linearScaleValue(clientX, input, output);
     const steps = convertValueToSteps(value, step, [min, max]);
 
-    // Update state
     currentTime = steps;
     percentage = convertStepsToPercentage(steps, [min, max]);
 
-    // Trigger callback
     onValueChange?.(steps);
   };
 
