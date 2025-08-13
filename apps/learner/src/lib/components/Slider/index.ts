@@ -1,2 +1,1 @@
-export type { OnValueChange } from './Slider.svelte';
-export { default as Slider } from './Slider.svelte';
+export { default as Slider, type Props as SliderProps } from './Slider.svelte';
