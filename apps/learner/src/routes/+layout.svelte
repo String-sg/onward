@@ -14,7 +14,6 @@
   const { children } = $props();
 
   let isNowPlayingViewVisible = $state(false);
-
   let sliderCurrentValue = $state(0);
 
   const player = Player.create();
