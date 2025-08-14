@@ -18,12 +18,12 @@
      */
     isvisible: boolean;
     /**
-     * A callback function that is called when the user clicks on the Close button.
+     * A callback invoked when the view is closed.
      */
     onclose: () => void;
   }
 
-  const { onclose, isvisible }: Props = $props();
+  const { isvisible, onclose }: Props = $props();
 
   let target = $state<HTMLElement | null>(null);
   let query = $state('');
@@ -158,7 +158,7 @@
                     class="cursor-pointer rounded-3xl bg-white p-4 text-left hover:bg-slate-50 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950"
                     onclick={() => handleRecommendedQuery(recommendedQuery)}
                   >
-                    {query}
+                    {recommendedQuery}
                   </button>
                 {/each}
               {/if}
