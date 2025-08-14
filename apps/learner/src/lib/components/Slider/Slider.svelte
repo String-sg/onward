@@ -9,7 +9,7 @@
      */
     min?: number;
     /**
-     * Maximum value of the Slider, e.g., total duration in seconds.
+     * Maximum value of the Slider.
      *
      * @default '100'
      */
