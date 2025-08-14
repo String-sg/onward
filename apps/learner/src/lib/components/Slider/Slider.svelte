@@ -11,7 +11,7 @@
     /**
      * Maximum value of the Slider, e.g., total duration in seconds.
      *
-     * @default '300'
+     * @default '100'
      */
     max?: number;
     /**
@@ -32,7 +32,7 @@
     onvaluechange?: (value: number) => void;
   }
 
-  const { min = 0, max = 300, step = 1, value = 0, onvaluechange }: Props = $props();
+  const { min = 0, max = 100, step = 1, value = 0, onvaluechange }: Props = $props();
 
   let isSliding = $state(false);
 
