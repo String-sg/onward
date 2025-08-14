@@ -35,7 +35,7 @@
 
   const isWithinViewport = new IsWithinViewport(() => target);
 
-  const recommendedPrompt = [
+  const recommendedQueries = [
     'What are three quick strategies for teaching reading to a student with dyslexia in a mainstream classroom?',
     'How can I create a sensory-friendly classroom for students with autism spectrum disorder?',
   ];
@@ -61,7 +61,7 @@
     onclose();
   };
 
-  const handleSendPrompt = () => {
+  const handleSendQuery = () => {
     if (!query.trim()) return;
 
     thread.push({ role: 'user', content: query });
@@ -79,16 +79,16 @@
     }, 3000);
   };
 
-  const handleRecommendedPrompt = (prompt: string) => {
-    query = prompt;
-    handleSendPrompt();
+  const handleRecommendedQuery = (recommendedQuery: string) => {
+    query = recommendedQuery;
+    handleSendQuery();
   };
 
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.key === 'Enter' && !event.shiftKey) {
       // Prevent default behavior of creating a new line within textarea.
       event.preventDefault();
-      handleSendPrompt();
+      handleSendQuery();
     }
   };
 
@@ -153,12 +153,12 @@
 
             <div class="flex flex-col gap-y-2.5">
               {#if thread.length === 0}
-                {#each recommendedPrompt as prompt, index (index)}
+                {#each recommendedQueries as recommendedQuery, index (index)}
                   <button
                     class="cursor-pointer rounded-3xl bg-white p-4 text-left hover:bg-slate-50 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950"
-                    onclick={() => handleRecommendedPrompt(prompt)}
+                    onclick={() => handleRecommendedQuery(recommendedQuery)}
                   >
-                    {prompt}
+                    {query}
                   </button>
                 {/each}
               {/if}
@@ -196,7 +196,7 @@
             <textarea
               bind:value={query}
               bind:this={textareaElement}
-              name="prompt"
+              name="query"
               class="w-full resize-none items-center px-3 outline-0"
               placeholder="Ask AI about SEN"
               onkeydown={handleKeyDown}
@@ -208,7 +208,7 @@
             <button
               class="cursor-pointer rounded-full bg-slate-950 p-4 text-white transition-colors hover:bg-slate-900/70 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 disabled:pointer-events-none disabled:bg-slate-900/50"
               disabled={!isUserTyping || isAiTyping}
-              onclick={handleSendPrompt}
+              onclick={handleSendQuery}
             >
               <SendHorizontal />
             </button>
