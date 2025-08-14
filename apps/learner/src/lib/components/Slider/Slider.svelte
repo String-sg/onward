@@ -35,9 +35,7 @@
   const { min = 0, max = 100, step = 1, value = 0, onvaluechange }: Props = $props();
 
   let isSliding = $state(false);
-
   let percentage = $state(0);
-
   let currentTime = $state(value);
 
   let slider: HTMLDivElement | null = null;
