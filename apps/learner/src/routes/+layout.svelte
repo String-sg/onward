@@ -9,6 +9,7 @@
   import { ChatWidget } from '$lib/components/ChatWidget/index.js';
   import { NowPlayingBar } from '$lib/components/NowPlayingBar/index.js';
   import { Portal } from '$lib/components/Portal/index.js';
+  import { formatTime } from '$lib/components/Slider/helper.js';
   import { Slider } from '$lib/components/Slider/index.js';
   import { Player } from '$lib/states/index.js';
 
@@ -38,12 +39,6 @@
 
   const handleChatViewClose = () => {
     isChatViewVisible = false;
-  };
-
-  const formatTime = (seconds: number): string => {
-    const minutes = Math.floor(seconds / 60);
-    const secs = Math.floor(seconds % 60);
-    return `${minutes}:${secs.toString().padStart(2, '0')}`;
   };
 
   const handleValueChange = (value: number) => {
