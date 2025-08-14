@@ -1,6 +1,5 @@
 <script lang="ts">
   import { ChevronDown, SendHorizontal } from '@lucide/svelte';
-  import { onMount } from 'svelte';
   import type { MouseEventHandler } from 'svelte/elements';
   import { fade, fly } from 'svelte/transition';
 
@@ -41,15 +40,9 @@
     'How can I create a sensory-friendly classroom for students with autism spectrum disorder?',
   ];
 
-  // Disable scrolling when component mounts
-  onMount(() => {
-    document.body.style.overflow = 'hidden';
-    document.body.style.touchAction = 'none';
-
-    return () => {
-      document.body.style.overflow = '';
-      document.body.style.touchAction = '';
-    };
+  // Disable scrolling when view is visible
+  $effect(() => {
+    document.body.style.overflow = isvisible ? 'hidden' : '';
   });
 
   // Auto resize textarea
