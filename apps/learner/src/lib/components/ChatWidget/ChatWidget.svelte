@@ -1,4 +1,22 @@
+<script lang="ts">
+  import type { MouseEventHandler } from 'svelte/elements';
+
+  export interface Props {
+    /**
+     * A callback invoked when the widget is clicked.
+     */
+    onclick: () => void;
+  }
+
+  let { onclick }: Props = $props();
+
+  const handleClick: MouseEventHandler<HTMLButtonElement> = () => {
+    onclick();
+  };
+</script>
+
 <button
+  onclick={handleClick}
   class="inset-shadow-sm inset-shadow-slate-200 p-5.5 pointer-events-auto flex cursor-pointer items-center justify-center rounded-full bg-white/30 shadow-sm backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:shadow-md"
   aria-label="Open chat"
 >
