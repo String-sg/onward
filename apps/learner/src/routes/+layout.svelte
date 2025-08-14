@@ -20,8 +20,6 @@
 
   const player = Player.create();
 
-  const sliderMaxValue = 300;
-
   const handleNowPlayingBarClick = () => {
     isNowPlayingViewVisible = true;
   };
@@ -112,7 +110,7 @@
             <div class="flex flex-col gap-y-2">
               <Slider
                 min={0}
-                max={sliderMaxValue}
+                max={300}
                 step={1}
                 value={sliderCurrentValue}
                 onvaluechange={handleValueChange}
@@ -120,7 +118,7 @@
 
               <div class="flex justify-between">
                 <span>{formatTime(sliderCurrentValue)}</span>
-                <span>-{formatTime(sliderMaxValue - sliderCurrentValue)}</span>
+                <span>-{formatTime(300 - sliderCurrentValue)}</span>
               </div>
             </div>
 
