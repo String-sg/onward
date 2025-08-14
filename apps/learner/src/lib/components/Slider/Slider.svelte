@@ -99,11 +99,11 @@
 
 <!-- Slider -->
 <div
-  class="relative flex h-2 w-full cursor-pointer touch-none items-center rounded-full bg-slate-700"
   bind:this={slider}
   onpointerdown={handlePointerDown}
   onpointermove={handlePointerMove}
   onpointerup={handlePointerUp}
+  class="relative flex h-2 w-full cursor-pointer touch-none items-center rounded-full bg-slate-700"
 >
   <!-- Track Background -->
   <div class="h-full w-full rounded-full bg-slate-700">
