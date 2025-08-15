@@ -32,7 +32,7 @@
 </script>
 
 <Modal {isvisible} {onclose} variant="dark">
-  <div class="mx-auto flex size-full max-w-5xl flex-col gap-y-4 px-4 py-3">
+  <div class="mx-auto flex min-h-svh max-w-5xl flex-col gap-y-4 px-4 py-3">
     <!-- Navigation -->
     <div class="flex items-center">
       <button
