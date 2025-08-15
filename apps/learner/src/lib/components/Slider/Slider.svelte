@@ -71,9 +71,11 @@
   };
 
   const handlePointerMove: PointerEventHandler<HTMLDivElement> = (e) => {
-    if (e.currentTarget.hasPointerCapture(e.pointerId)) {
-      updateSlider(e.clientX);
+    if (!e.currentTarget.hasPointerCapture(e.pointerId)) {
+      return;
     }
+
+    updateSlider(e.clientX);
   };
 
   const handlePointerUp: PointerEventHandler<HTMLDivElement> = (e) => {
