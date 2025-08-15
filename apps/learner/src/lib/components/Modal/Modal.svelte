@@ -104,7 +104,7 @@
     <div
       transition:fly={{ duration: 300, y: '100%', opacity: 1 }}
       class={[
-        'z-201 fixed size-full overflow-y-auto',
+        'z-201 fixed overflow-y-auto',
         variant === 'light' && 'bg-white',
         variant === 'dark' && 'bg-slate-950 text-white',
         size === 'full' && 'inset-0',
