@@ -1,4 +1,12 @@
 <script lang="ts">
+  import type { HTMLAttributes } from 'svelte/elements';
+
+  export interface Props extends HTMLAttributes<HTMLDivElement> {
+    fill?: 'white';
+  }
+
+  let { fill }: Props = $props();
+
   const stars = [
     { x: 677.27, y: 422.37, scale: 0.52, duration: 4.27 },
     { x: 192.12, y: 298.72, scale: 1.43, duration: 3.46 },
@@ -50,7 +58,7 @@
     <path
       id="star"
       d="M-1.74846e-07 4C-1.74846e-07 4 2.28237 3.98544 3.13391 3.13391C3.98544 2.28237 4 -1.06686e-07 4 -1.06686e-07C4 -1.06686e-07 4.0217 2.27524 4.87323 3.12677C5.72476 3.9783 8 4 8 4C8 4 5.74043 4.03736 4.88889 4.88889C4.03736 5.74043 4 8 4 8C4 8 4.00111 5.70195 3.14958 4.85042C2.29805 3.99889 -1.74846e-07 4 -1.74846e-07 4Z"
-      fill="white"
+      fill={fill ? fill : 'slate'}
     />
   </defs>
   <g id="stars">
