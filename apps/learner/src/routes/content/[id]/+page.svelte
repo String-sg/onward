@@ -6,6 +6,7 @@
   import { Badge } from '$lib/components/Badge/index.js';
   import { Button, LinkButton } from '$lib/components/Button/index.js';
   import { IsWithinViewport } from '$lib/helpers/index.js';
+  import { Player } from '$lib/states/player.svelte.js';
 
   const { data } = $props();
 
@@ -14,6 +15,7 @@
   let target = $state<HTMLElement | null>(null);
 
   const isWithinViewport = new IsWithinViewport(() => target);
+  const player = Player.get();
 
   afterNavigate(({ from, type }) => {
     if (type === 'enter' || !from) {
@@ -26,6 +28,10 @@
 
   const toggleIsExpanded = () => {
     isExpanded = !isExpanded;
+  };
+
+  const handleQuizClick = () => {
+    player.stop();
   };
 </script>
 
@@ -87,7 +93,12 @@
             <span class="font-medium">Play</span>
           </Button>
 
-          <LinkButton variant="secondary" width="full" href={`/content/${data.id}/quiz`}>
+          <LinkButton
+            variant="secondary"
+            width="full"
+            href={`/content/${data.id}/quiz`}
+            onclick={handleQuizClick}
+          >
             <Lightbulb class="h-4 w-4" />
             <span class="font-medium">Take the quiz</span>
           </LinkButton>
