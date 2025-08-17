@@ -1,5 +1,6 @@
 <script lang="ts">
   import { ArrowLeft, X } from '@lucide/svelte';
+  import { onMount } from 'svelte';
   import { slide } from 'svelte/transition';
 
   import { base } from '$app/paths';
@@ -9,6 +10,7 @@
   import { Progress } from '$lib/components/Progress/index.js';
   import { Starfield } from '$lib/components/Starfield/index.js';
   import { IsWithinViewport } from '$lib/helpers/index.js';
+  import { Player } from '$lib/states/index.js';
 
   const { data } = $props();
 
@@ -26,6 +28,11 @@
   let contentId = $derived(page.params.id);
 
   const isWithinViewport = new IsWithinViewport(() => target);
+  const player = Player.get();
+
+  onMount(() => {
+    player.stop();
+  });
 
   const selectOption = (index: number) => {
     selectedOptionIndex = index;
