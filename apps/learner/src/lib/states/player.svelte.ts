@@ -3,7 +3,7 @@ import { getContext, setContext } from 'svelte';
 const PLAYER_CONTEXT_KEY = Symbol('Player');
 
 export interface Track {
-  id: string;
+  id: number;
   title: string;
 }
 
@@ -21,7 +21,7 @@ export interface Track {
  * const player = Player.create();
  *
  * // Play a track.
- * player.play({ id: '1', title: 'My Track' });
+ * player.play({ id: 1, title: 'My Track' });
  *
  * // Toggle playback.
  * player.toggle();
@@ -30,7 +30,7 @@ export interface Track {
  * console.log(player.isPlaying); // true or false
  *
  * // Get current track.
- * console.log(player.currentTrack); // { id: '1', title: 'My Track' } or null
+ * console.log(player.currentTrack); // { id: 1, title: 'My Track' } or null
  * ```
  */
 export class Player {

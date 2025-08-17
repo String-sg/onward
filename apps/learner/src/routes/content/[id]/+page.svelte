@@ -1,11 +1,12 @@
 <script lang="ts">
-  import { ArrowLeft, ChevronsDown, Lightbulb, Play, Share } from '@lucide/svelte';
+  import { ArrowLeft, ChevronsDown, Lightbulb, Pause, Play, Share } from '@lucide/svelte';
   import { formatDistanceToNow } from 'date-fns';
 
   import { afterNavigate } from '$app/navigation';
   import { Badge } from '$lib/components/Badge/index.js';
   import { Button, LinkButton } from '$lib/components/Button/index.js';
   import { IsWithinViewport } from '$lib/helpers/index.js';
+  import { Player, type Track } from '$lib/states/index.js';
 
   const { data } = $props();
 
@@ -14,6 +15,9 @@
   let target = $state<HTMLElement | null>(null);
 
   const isWithinViewport = new IsWithinViewport(() => target);
+  const player = Player.get();
+
+  let isActive = $derived(player.currentTrack?.id === data.id);
 
   afterNavigate(({ from, type }) => {
     if (type === 'enter' || !from) {
@@ -26,6 +30,22 @@
 
   const toggleIsExpanded = () => {
     isExpanded = !isExpanded;
+  };
+
+  // TODO: Change to LearningUnit type once it is added
+  const handlePlay = (learningUnit: Track) => {
+    player.play({
+      id: learningUnit.id,
+      title: learningUnit.title,
+    });
+  };
+
+  const handlePause = () => {
+    player.toggle();
+  };
+
+  const handleResume = () => {
+    player.toggle();
   };
 </script>
 
@@ -82,10 +102,26 @@
         </div>
 
         <div class="flex flex-col gap-y-4">
-          <Button width="full">
-            <Play class="h-4 w-4" />
-            <span class="font-medium">Play</span>
-          </Button>
+          {#if isActive && player.isPlaying}
+            <Button variant="primary" width="full" onclick={handlePause}>
+              <Pause class="h-4 w-4" />
+              <span class="font-medium">Pause</span>
+            </Button>
+          {:else if isActive && !player.isPlaying}
+            <Button variant="primary" width="full" onclick={handleResume}>
+              <Play class="h-4 w-4" />
+              <span class="font-medium">Resume</span>
+            </Button>
+          {:else}
+            <Button
+              variant="primary"
+              width="full"
+              onclick={() => handlePlay({ id: data.id, title: data.title })}
+            >
+              <Play class="h-4 w-4" />
+              <span class="font-medium">Play</span>
+            </Button>
+          {/if}
 
           <LinkButton variant="secondary" width="full" href={`/content/${data.id}/quiz`}>
             <Lightbulb class="h-4 w-4" />
