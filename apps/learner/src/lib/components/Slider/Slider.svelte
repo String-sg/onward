@@ -91,12 +91,17 @@
   onpointerdown={handlePointerDown}
   onpointermove={handlePointerMove}
   onpointerup={handlePointerUp}
-  class="relative flex h-2 w-full cursor-pointer touch-none items-center rounded-full bg-slate-700"
+  class="relative flex h-2 w-full cursor-pointer touch-none items-center"
 >
-  <!-- Track Background -->
-  <div class="h-full w-full rounded-full bg-slate-700">
-    <!-- Filled Track -->
-    <div style="width: {percentage}%" class="h-full rounded-full bg-white"></div>
+  <!-- Track (Progress style) -->
+  <div class="relative h-2 w-full overflow-hidden rounded-full bg-slate-700">
+    <!-- Filled Track (transform-based for perf) -->
+    <div
+      class={`absolute inset-y-0 left-0 w-full origin-left rounded-full bg-white ${
+        isSliding ? '' : 'transition-transform'
+      }`}
+      style={`transform: translateX(${percentage - 100}%); will-change: transform;`}
+    ></div>
   </div>
 
   <!-- Thumb -->
