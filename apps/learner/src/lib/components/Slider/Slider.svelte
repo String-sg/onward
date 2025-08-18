@@ -38,13 +38,12 @@
 
   let isSliding = $state(false);
   let percentage = $state(0);
-  let currentTime = $state(value);
 
   let slider: HTMLDivElement | null = null;
 
   // Update percentage and current time when props or state change
   $effect(() => {
-    const steps = convertValueToSteps(currentTime, step, [min, max]);
+    const steps = convertValueToSteps(value, step, [min, max]);
     percentage = convertStepsToPercentage(steps, [min, max]);
   });
 
@@ -55,13 +54,13 @@
     const rect = slider.getBoundingClientRect();
     const input: [number, number] = [rect.left, rect.right];
     const output: [number, number] = [min, max];
-    const value = linearScaleValue(clientX, input, output);
-    const steps = convertValueToSteps(value, step, [min, max]);
 
-    currentTime = steps;
-    percentage = convertStepsToPercentage(steps, [min, max]);
+    const rawValue = linearScaleValue(clientX, input, output);
+    const steppedValue = convertValueToSteps(rawValue, step, [min, max]);
 
-    onvaluechange?.(steps);
+    percentage = convertStepsToPercentage(steppedValue, [min, max]);
+
+    onvaluechange?.(steppedValue);
   };
 
   const handlePointerDown: PointerEventHandler<HTMLDivElement> = (e) => {
