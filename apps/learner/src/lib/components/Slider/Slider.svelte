@@ -104,9 +104,9 @@
 
   <!-- Thumb -->
   <div
-    style="left: {percentage}%;"
-    class={`absolute top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white transition-opacity ${
+    class={`absolute left-0 top-1/2 h-4 w-4 -translate-y-1/2 rounded-full bg-white transition-opacity ${
       isSliding ? 'opacity-100' : 'opacity-0 hover:opacity-100'
     }`}
+    style={`left: ${percentage}%; transform: translateX(-50%);`}
   ></div>
 </div>
