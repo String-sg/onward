@@ -10,7 +10,7 @@
   import { NowPlayingBar } from '$lib/components/NowPlayingBar/index.js';
   import { Portal } from '$lib/components/Portal/index.js';
   import { formatTime } from '$lib/components/Slider/helper.js';
-  import { Slider } from '$lib/components/Slider/index.js';
+  import { Slider, type SliderProps } from '$lib/components/Slider/index.js';
   import { Player } from '$lib/states/index.js';
 
   const { children } = $props();
@@ -41,7 +41,7 @@
     isChatViewVisible = false;
   };
 
-  const handleValueChange = (value: number) => {
+  const handleValueChange: SliderProps['onvaluechange'] = (value) => {
     sliderCurrentValue = value;
   };
 </script>
