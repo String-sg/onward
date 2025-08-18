@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { PointerEventHandler } from 'svelte/elements';
 
-  import { convertStepsToPercentage, convertValueToSteps, linearScaleValue } from './helper';
+  import { convertStepsToPercentage, convertValueToSteps, linearScaleValue } from './helper.js';
 
   export interface Props {
     /**

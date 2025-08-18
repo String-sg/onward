@@ -9,8 +9,8 @@
   import { ChatWidget } from '$lib/components/ChatWidget/index.js';
   import { NowPlayingBar } from '$lib/components/NowPlayingBar/index.js';
   import { Portal } from '$lib/components/Portal/index.js';
-  import { formatTime } from '$lib/components/Slider/helper.js';
   import { Slider, type SliderProps } from '$lib/components/Slider/index.js';
+  import { formatTime } from '$lib/helpers/index.js';
   import { Player } from '$lib/states/index.js';
 
   const { children } = $props();
