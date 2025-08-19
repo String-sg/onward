@@ -100,9 +100,8 @@
         <span class="font-medium">Continue with Google</span>
       </LinkButton>
 
-      <div class="flex flex-col items-center text-xs">
-        <span>By tapping Continue, you agree to our</span>
-        <span>Terms and Privacy Policy.</span>
+      <div class="text-center text-xs">
+        <span>By continuing, you agree to our <br />Terms and Privacy Policy.</span>
       </div>
     </div>
   </div>
