@@ -9,12 +9,15 @@
   import { ChatWidget } from '$lib/components/ChatWidget/index.js';
   import { NowPlayingBar } from '$lib/components/NowPlayingBar/index.js';
   import { Portal } from '$lib/components/Portal/index.js';
+  import { Slider, type SliderProps } from '$lib/components/Slider/index.js';
+  import { formatTime } from '$lib/helpers/index.js';
   import { Player } from '$lib/states/index.js';
 
   const { children } = $props();
 
   let isNowPlayingViewVisible = $state(false);
   let isChatViewVisible = $state(false);
+  let sliderCurrentValue = $state(0);
 
   const player = Player.create();
 
@@ -36,6 +39,10 @@
 
   const handleChatViewClose = () => {
     isChatViewVisible = false;
+  };
+
+  const handleValueChange: SliderProps['onvaluechange'] = (value) => {
+    sliderCurrentValue = value;
   };
 </script>
 
@@ -96,16 +103,17 @@
           <div class="flex flex-col gap-y-5">
             <!-- Slider and Timestamp -->
             <div class="flex flex-col gap-y-2">
-              <div class="group relative h-2 rounded-full bg-slate-700">
-                <div class="h-full w-3/4 rounded-full bg-white"></div>
-                <div
-                  class="absolute left-3/4 top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 cursor-pointer rounded-full bg-white opacity-0 transition-opacity group-hover:opacity-100"
-                ></div>
-              </div>
+              <Slider
+                min={0}
+                max={300}
+                step={1}
+                value={sliderCurrentValue}
+                onvaluechange={handleValueChange}
+              />
 
               <div class="flex justify-between">
-                <span>14:32</span>
-                <span>-2.00</span>
+                <span>{formatTime(sliderCurrentValue)}</span>
+                <span>-{formatTime(300 - sliderCurrentValue)}</span>
               </div>
             </div>
 
