@@ -9,7 +9,7 @@
   <div class="flex h-full flex-col">
     <div class="flex flex-col gap-y-3">
       <div class="flex w-full justify-center">
-        <svg width="52" height="52" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+        <svg width="48" height="48" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
           <path
             d="M16.0034 6.68726L17.7358 14.2625L25.3345 16.0007H25.3267L17.7358 17.7371L16.0034 25.3123V25.3337L16.0005 25.323L15.9985 25.3337V25.3123L14.2661 17.738L6.67236 16.0007H6.66846L14.2661 14.2625L15.9985 6.68726V6.66675L16.0005 6.67651L16.0034 6.66675V6.68726Z"
             fill="currentColor"
