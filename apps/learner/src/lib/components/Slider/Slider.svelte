@@ -36,7 +36,6 @@
 
   const { min = 0, max = 100, step = 1, value = 0, onvaluechange }: Props = $props();
 
-  let isSliding = $state(false);
   let percentage = $state(0);
 
   let slider: HTMLDivElement | null = null;
@@ -64,7 +63,6 @@
   };
 
   const handlePointerDown: PointerEventHandler<HTMLDivElement> = (e) => {
-    isSliding = true;
     e.currentTarget.setPointerCapture(e.pointerId);
     updateSlider(e.clientX);
   };
@@ -78,7 +76,6 @@
   };
 
   const handlePointerUp: PointerEventHandler<HTMLDivElement> = (e) => {
-    isSliding = false;
     if (e.currentTarget.hasPointerCapture(e.pointerId)) {
       e.currentTarget.releasePointerCapture(e.pointerId);
     }
@@ -93,9 +90,9 @@
   onpointerup={handlePointerUp}
   class="relative flex h-2 w-full cursor-pointer touch-none items-center"
 >
-  <!-- Track (Progress style) -->
+  <!-- Track -->
   <div class="relative h-2 w-full overflow-hidden rounded-full bg-slate-700">
-    <!-- Filled Track (transform-based for perf) -->
+    <!-- Filled Track -->
     <div
       class="absolute inset-y-0 left-0 w-full origin-left rounded-full bg-white"
       style={`transform: translateX(${percentage - 100}%)`}
@@ -104,10 +101,7 @@
 
   <!-- Thumb -->
   <div
-    class={[
-      'absolute -top-1/2 h-4 w-4 -translate-x-1/2 rounded-full bg-white opacity-0 transition-opacity hover:opacity-100',
-      isSliding && '!opacity-100',
-    ]}
+    class="absolute -top-1/2 h-4 w-4 -translate-x-1/2 rounded-full bg-white"
     style={`left: ${percentage}%`}
   ></div>
 </div>
