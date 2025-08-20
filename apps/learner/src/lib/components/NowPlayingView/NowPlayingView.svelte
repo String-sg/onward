@@ -9,16 +9,16 @@
 
   export interface Props {
     /**
-     * Indicates the visibility of the view.
+     * Indicates whether the view is open.
      */
-    isvisible: ModalProps['isvisible'];
+    isopen: ModalProps['isopen'];
     /**
      * A callback invoked when the view is closed.
      */
     onclose: ModalProps['onclose'];
   }
 
-  const { isvisible, onclose }: Props = $props();
+  const { isopen, onclose }: Props = $props();
 
   let position = $state(0);
 
@@ -31,7 +31,7 @@
   };
 </script>
 
-<Modal {isvisible} {onclose} variant="dark">
+<Modal {isopen} {onclose} variant="dark">
   <div class="mx-auto flex min-h-svh max-w-5xl flex-col gap-y-4 px-4 py-3">
     <!-- Navigation -->
     <div class="flex items-center">

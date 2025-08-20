@@ -9,13 +9,13 @@
 
   const { children } = $props();
 
-  let isNowPlayingViewVisible = $state(false);
-  let isChatViewVisible = $state(false);
+  let isNowPlayingViewOpen = $state(false);
+  let isChatViewOpen = $state(false);
 
   const player = Player.create();
 
   const handleNowPlayingBarClick = () => {
-    isNowPlayingViewVisible = true;
+    isNowPlayingViewOpen = true;
   };
 
   const handleNowPlayingBarPlay = () => {
@@ -23,15 +23,15 @@
   };
 
   const handleNowPlayingViewClose = () => {
-    isNowPlayingViewVisible = false;
+    isNowPlayingViewOpen = false;
   };
 
   const handleChatWidgetClick = () => {
-    isChatViewVisible = true;
+    isChatViewOpen = true;
   };
 
   const handleChatViewClose = () => {
-    isChatViewVisible = false;
+    isChatViewOpen = false;
   };
 </script>
 
@@ -52,6 +52,6 @@
   </div>
 </div>
 
-<NowPlayingView isvisible={isNowPlayingViewVisible} onclose={handleNowPlayingViewClose} />
+<NowPlayingView isopen={isNowPlayingViewOpen} onclose={handleNowPlayingViewClose} />
 
-<ChatView isvisible={isChatViewVisible} onclose={handleChatViewClose} />
+<ChatView isopen={isChatViewOpen} onclose={handleChatViewClose} />

@@ -6,9 +6,9 @@
 
   export interface Props extends HTMLAttributes<HTMLDivElement> {
     /**
-     * Indicates the visibility of the modal.
+     * Indicates whether the modal is open.
      */
-    isvisible: boolean;
+    isopen: boolean;
     /**
      * A callback invoked when the modal is closed.
      */
@@ -40,7 +40,7 @@
   }
 
   const {
-    isvisible,
+    isopen,
     onclose,
     variant = 'light',
     size = 'full',
@@ -54,7 +54,7 @@
   $effect.pre(() => {
     const prev = document.body.style.getPropertyValue('overflow');
 
-    if (isvisible) {
+    if (isopen) {
       document.body.style.setProperty('overflow', 'hidden');
     }
 
@@ -64,7 +64,7 @@
   });
 
   $effect(() => {
-    if (!closeonescape || !isvisible) {
+    if (!closeonescape || !isopen) {
       return;
     }
 
@@ -93,7 +93,7 @@
 </script>
 
 <Portal>
-  {#if isvisible}
+  {#if isopen}
     <!-- Backdrop -->
     <div
       transition:fade={{ duration: 300 }}
