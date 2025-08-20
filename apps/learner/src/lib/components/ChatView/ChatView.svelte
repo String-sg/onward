@@ -14,16 +14,16 @@
 
   export interface Props {
     /**
-     * Indicates whether the view is visible.
+     * Indicates whether the view is open.
      */
-    isvisible: boolean;
+    isopen: boolean;
     /**
      * A callback invoked when the view is closed.
      */
     onclose: () => void;
   }
 
-  const { isvisible, onclose }: Props = $props();
+  const { isopen, onclose }: Props = $props();
 
   let target = $state<HTMLElement | null>(null);
   let query = $state('');
@@ -40,21 +40,17 @@
     'How can I create a sensory-friendly classroom for students with autism spectrum disorder?',
   ];
 
-  // Disable scrolling when view is visible
+  // Disable scrolling when view is open.
   $effect(() => {
-    document.body.style.overflow = isvisible ? 'hidden' : '';
+    document.body.style.overflow = isopen ? 'hidden' : '';
   });
 
-  // Auto resize textarea
+  // Auto resize textarea.
   $effect(() => {
     if (!textareaElement) return;
 
     textareaElement.style.height = 'auto';
-    const maxHeight = 96; // Max Height for 4 rows
-
-    textareaElement.style.height = query
-      ? `${Math.min(textareaElement.scrollHeight, maxHeight)}px`
-      : '';
+    textareaElement.style.height = query ? `${Math.min(textareaElement.scrollHeight, 96)}px` : '';
   });
 
   const handleClose: MouseEventHandler<HTMLButtonElement> = () => {
@@ -67,7 +63,6 @@
     thread.push({ role: 'user', content: query });
     query = '';
 
-    // Set AI typing state to true
     isAiTyping = true;
 
     setTimeout(() => {
@@ -88,6 +83,7 @@
     if (event.key === 'Enter' && !event.shiftKey) {
       // Prevent default behavior of creating a new line within textarea.
       event.preventDefault();
+
       handleSendQuery();
     }
   };
@@ -98,7 +94,7 @@
 </script>
 
 <Portal>
-  {#if isvisible}
+  {#if isopen}
     <!-- Backdrop -->
     <div transition:fade={{ duration: 300 }} class="z-199 fixed inset-0 bg-slate-950/50"></div>
 
