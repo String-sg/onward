@@ -16,7 +16,7 @@
   </div>
 
   <div class="flex flex-col items-center justify-center gap-y-4 p-5">
-    <LinkButton href="/" variant="primary" width="full" class="max-w-sm gap-x-2">
+    <LinkButton href="/auth/google" variant="primary" width="full" class="max-w-sm gap-x-2">
       {@render googleIcon()}
       <span class="font-medium">Continue with Google</span>
     </LinkButton>
