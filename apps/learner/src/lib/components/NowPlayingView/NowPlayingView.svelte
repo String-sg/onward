@@ -38,14 +38,12 @@
     player.toggle();
   };
 
-  // Skip backward by 10 seconds
   const handleSkipBack = () => {
     const newPosition = Math.max(0, player.progress - 10);
 
     player.seek(newPosition);
   };
 
-  // Skip forward by 10 seconds
   const handleSkipForward = () => {
     const newPosition = Math.min(player.duration, player.progress + 10);
 
