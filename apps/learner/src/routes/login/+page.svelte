@@ -70,7 +70,7 @@
   </div>
 
   <div class="flex flex-col gap-y-6 p-5">
-    <LinkButton href="/" variant="primary" width="full" class="gap-x-2">
+    <LinkButton href="/auth/google" variant="primary" width="full" class="gap-x-2">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         preserveAspectRatio="xMidYMid"
