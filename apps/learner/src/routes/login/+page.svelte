@@ -3,7 +3,7 @@
   import { Starfield } from '$lib/components/Starfield/index.js';
 </script>
 
-<div class="mx-auto flex min-h-svh w-full max-w-5xl flex-col px-4 py-3">
+<main class="mx-auto flex min-h-svh w-full max-w-5xl flex-col px-4 py-3">
   <Starfield />
 
   <div class="flex flex-col gap-y-3 p-5">
@@ -70,7 +70,7 @@
   </div>
 
   <div class="flex flex-col gap-y-6 p-5">
-    <LinkButton class="gap-x-2" variant="primary" width="full" href="/">
+    <LinkButton href="/" variant="primary" width="full" class="gap-x-2">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         preserveAspectRatio="xMidYMid"
@@ -103,4 +103,4 @@
       <span>By continuing, you agree to our <br />Terms and Privacy Policy.</span>
     </div>
   </div>
-</div>
+</main>
