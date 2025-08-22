@@ -37,6 +37,7 @@
     player.play({
       id: learningUnit.id,
       title: learningUnit.title,
+      url: learningUnit.url,
     });
   };
 
@@ -116,7 +117,7 @@
             <Button
               variant="primary"
               width="full"
-              onclick={() => handlePlay({ id: data.id, title: data.title })}
+              onclick={() => handlePlay({ id: data.id, title: data.title, url: data.url })}
             >
               <Play class="h-4 w-4" />
               <span class="font-medium">Play</span>

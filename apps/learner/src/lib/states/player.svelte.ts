@@ -5,6 +5,7 @@ const PLAYER_CONTEXT_KEY = Symbol('Player');
 export interface Track {
   id: number;
   title: string;
+  url: string;
 }
 
 /**
@@ -36,6 +37,9 @@ export interface Track {
 export class Player {
   #isPlaying = $state(false);
   #currentTrack = $state.raw<Track | null>(null);
+  #audio: HTMLAudioElement | null = null;
+  #duration = $state(0);
+  #progress = $state(0);
 
   /**
    * Creates a new player instance and sets it in the context.
@@ -76,12 +80,76 @@ export class Player {
   }
 
   /**
+   * Returns the total duration of the current track in seconds.
+   */
+  get duration() {
+    return this.#duration;
+  }
+
+  /**
+   * Returns the current playback position in seconds.
+   */
+  get progress() {
+    return this.#progress;
+  }
+
+  /**
    * Plays the track with the specified metadata.
    * @param track - The track metadata.
    */
   play(track: Track) {
+    // Stop current audio if playing
+    if (this.#audio) {
+      this.#audio.pause();
+      this.#audio.currentTime = 0;
+    }
+
     this.#currentTrack = track;
+
+    // Load and play the new audio track
+    this.#audio = new Audio(track.url);
+
+    // Set up event listeners for duration and progress
+    this.#audio.onloadedmetadata = () => {
+      this.#duration = this.#audio?.duration || 0;
+    };
+
+    // Update progress as the track plays
+    this.#audio.ontimeupdate = () => {
+      this.#progress = this.#audio?.currentTime || 0;
+    };
+
+    // Reset progress when the track ends
+    this.#audio.onended = () => {
+      this.#isPlaying = false;
+      this.#progress = 0;
+    };
+
+    this.#audio.play();
     this.#isPlaying = true;
+  }
+
+  /**
+   * Sets the playback speed.
+   * @param speed - The desired playback speed (e.g., 0.5, 1.0, 1.5, 2.0).
+   */
+  setSpeed(speed: number) {
+    if (this.#audio) {
+      this.#audio.playbackRate = speed;
+    } else {
+      console.warn('No audio loaded. Cannot set playback speed.');
+    }
+  }
+
+  /**
+   * Seeks to the specified position in the current track.
+   * @param time - The time in seconds to seek to.
+   */
+  seek(time: number) {
+    if (this.#audio && time >= 0 && time <= this.#duration) {
+      this.#audio.currentTime = time;
+      this.#progress = time;
+    }
   }
 
   /**
@@ -89,8 +157,14 @@ export class Player {
    * If no track is loaded, this method does nothing.
    */
   toggle() {
-    if (!this.#currentTrack) {
+    if (!this.#currentTrack || !this.#audio) {
       return;
+    }
+
+    if (this.#isPlaying) {
+      this.#audio.pause();
+    } else {
+      this.#audio.play();
     }
 
     this.#isPlaying = !this.#isPlaying;
@@ -100,6 +174,11 @@ export class Player {
    * Stops the playback and clears the current track.
    */
   stop() {
+    if (this.#audio) {
+      this.#audio.pause();
+      this.#audio.currentTime = 0;
+    }
+
     this.#isPlaying = false;
     this.#currentTrack = null;
   }
