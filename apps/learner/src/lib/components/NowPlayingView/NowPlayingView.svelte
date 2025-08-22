@@ -21,10 +21,11 @@
 
   const { isopen, onclose }: Props = $props();
 
+  let playbackSpeed = $state(1.0);
+
   const player = Player.get();
 
   const speedOptions = [0.5, 1.0, 1.5, 2.0];
-  let playbackSpeed = $state(1.0);
 
   const handleClose: MouseEventHandler<HTMLButtonElement> = () => {
     onclose();
