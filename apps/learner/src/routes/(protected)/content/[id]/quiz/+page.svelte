@@ -208,7 +208,7 @@
 
 {#if isCompletionModalOpen}
   <div class="z-200 fixed inset-0 bg-slate-950 text-white">
-    <Starfield />
+    <Starfield class="text-white" />
 
     <div class="mx-auto h-full w-full max-w-5xl px-4 py-3">
       <div class="flex h-full flex-col">
