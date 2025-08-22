@@ -10,6 +10,7 @@
     player.play({
       id: learningUnit.id,
       title: learningUnit.title,
+      url: `/audio/${encodeURIComponent(learningUnit.url)}`,
     });
   };
 

@@ -36,6 +36,7 @@
     player.play({
       id: data.id,
       title: data.title,
+      url: data.url,
     });
   };
 
