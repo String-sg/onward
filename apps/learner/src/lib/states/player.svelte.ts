@@ -4,6 +4,7 @@ const PLAYER_CONTEXT_KEY = Symbol('Player');
 
 export interface Track {
   id: number;
+  tags: string[];
   title: string;
   url: string;
 }
