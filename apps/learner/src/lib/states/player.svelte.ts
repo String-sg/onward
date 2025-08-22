@@ -107,20 +107,16 @@ export class Player {
 
     this.#currentTrack = track;
 
-    // Load and play the new audio track
     this.#audio = new Audio(track.url);
 
-    // Set up event listeners for duration and progress
     this.#audio.onloadedmetadata = () => {
       this.#duration = this.#audio?.duration || 0;
     };
 
-    // Update progress as the track plays
     this.#audio.ontimeupdate = () => {
       this.#progress = this.#audio?.currentTime || 0;
     };
 
-    // Reset progress when the track ends
     this.#audio.onended = () => {
       this.#isPlaying = false;
       this.#progress = 0;
