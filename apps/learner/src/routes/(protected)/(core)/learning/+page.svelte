@@ -4,21 +4,21 @@
   const { data } = $props();
 </script>
 
-<div class="flex flex-col gap-y-3">
+<main class="pt-43 relative mx-auto flex min-h-svh max-w-5xl flex-col gap-y-3 px-4 pb-28">
   <div class="px-2">
     <span class="text-xl font-semibold">Your learnings</span>
   </div>
 
-  <div class="flex flex-col gap-y-3">
-    {#each data.learningJourneys as learning (learning.id)}
+  <div class="flex flex-col gap-y-4">
+    {#each data.collections as collection (collection.id)}
       <Collection
-        to={learning.to}
-        tag={learning.tag}
-        title={learning.title}
-        numberofpodcasts={learning.numberofpodcasts}
-        numberofnotes={learning.numberofnotes}
-        variant={learning.variant as CollectionProps['variant']}
+        to={collection.to}
+        tag={collection.tag}
+        title={collection.title}
+        numberofpodcasts={collection.numberofpodcasts}
+        numberofnotes={collection.numberofnotes}
+        variant={collection.variant as CollectionProps['variant']}
       />
     {/each}
   </div>
-</div>
+</main>
