@@ -6,7 +6,7 @@
 <main class="mx-auto flex min-h-svh w-full max-w-5xl flex-col px-4 py-3">
   <Starfield />
 
-  <div class="flex flex-col items-center justify-center gap-y-3 p-5">
+  <div class="flex flex-col items-center justify-center gap-y-3 py-5">
     {@render logo()}
     <span class="font-mono font-bold">Onward</span>
   </div>
@@ -15,7 +15,7 @@
     <span class="font-mono text-2xl font-bold">Get started.</span>
   </div>
 
-  <div class="flex flex-col items-center justify-center gap-y-4 p-5">
+  <div class="flex flex-col items-center justify-center gap-y-4 py-5">
     <LinkButton href="/" variant="primary" width="full" class="max-w-sm gap-x-2">
       {@render googleIcon()}
       <span class="font-medium">Continue with Google</span>
