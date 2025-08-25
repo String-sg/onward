@@ -18,6 +18,7 @@
         numberofpodcasts={learning.numberofpodcasts}
         numberofnotes={learning.numberofnotes}
         variant={learning.variant as CollectionProps['variant']}
+        image={learning.image}
       />
     {/each}
   </div>
