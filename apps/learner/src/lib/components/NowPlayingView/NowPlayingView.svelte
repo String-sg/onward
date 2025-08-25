@@ -1,11 +1,12 @@
 <script lang="ts">
-  import { ChevronDown, Pause, RotateCcw, RotateCw, SkipBack, SkipForward } from '@lucide/svelte';
+  import { ChevronDown, Pause, Play, RotateCcw, RotateCw } from '@lucide/svelte';
   import type { MouseEventHandler } from 'svelte/elements';
 
   import { Badge } from '$lib/components/Badge/index.js';
   import { Modal, type ModalProps } from '$lib/components/Modal/index.js';
   import { Slider, type SliderProps } from '$lib/components/Slider/index.js';
   import { formatTime } from '$lib/helpers/index.js';
+  import { Player } from '$lib/states/index.js';
 
   export interface Props {
     /**
@@ -20,14 +21,38 @@
 
   const { isopen, onclose }: Props = $props();
 
-  let position = $state(0);
+  let playbackSpeed = $state(1.0);
+
+  const player = Player.get();
+
+  const SPEED_OPTIONS = [0.5, 1.0, 1.5, 2.0];
 
   const handleClose: MouseEventHandler<HTMLButtonElement> = () => {
     onclose();
   };
 
   const handlePositionChange: SliderProps['onvaluechange'] = (value) => {
-    position = value;
+    player.seek(value);
+  };
+
+  const handlePlayPause = () => {
+    player.toggle();
+  };
+
+  const handleSkipBack = () => {
+    player.skipBack();
+  };
+
+  const handleSkipForward = () => {
+    player.skipForward();
+  };
+
+  const handleSpeedChange = () => {
+    const currentIndex = SPEED_OPTIONS.indexOf(playbackSpeed);
+    const nextIndex = (currentIndex + 1) % SPEED_OPTIONS.length;
+    playbackSpeed = SPEED_OPTIONS[nextIndex];
+
+    player.setSpeed(playbackSpeed);
   };
 </script>
 
@@ -48,14 +73,15 @@
     <div class="flex flex-col gap-y-6">
       <!-- Badge and Title -->
       <div class="flex flex-col gap-y-3">
-        <Badge variant="purple">Special Educational Needs</Badge>
-
-        <a
-          href="/content/1"
-          class="w-fit text-xl focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-        >
-          Navigating Special Educational Needs: A Path to Inclusion
-        </a>
+        {#if player.currentTrack}
+          <Badge variant="purple">{player.currentTrack.tags?.[0]}</Badge>
+          <a
+            href={`/content/${player.currentTrack.id}`}
+            class="w-fit text-xl focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+          >
+            {player.currentTrack.title}
+          </a>
+        {/if}
       </div>
 
       <div class="flex flex-col gap-y-5">
@@ -63,15 +89,15 @@
         <div class="flex flex-col gap-y-2">
           <Slider
             min={0}
-            max={300}
+            max={player.duration}
             step={1}
-            value={position}
+            value={player.progress}
             onvaluechange={handlePositionChange}
           />
 
           <div class="flex justify-between">
-            <span>{formatTime(position)}</span>
-            <span>-{formatTime(300 - position)}</span>
+            <span>{formatTime(player.progress)}</span>
+            <span>-{formatTime(player.duration - player.progress)}</span>
           </div>
         </div>
 
@@ -79,23 +105,18 @@
         <div class="flex justify-center">
           <button
             class="flex cursor-pointer items-center rounded-full bg-white/20 px-4 py-2 transition-colors hover:bg-white/30 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            onclick={handleSpeedChange}
           >
-            <span class="text-sm font-medium">1.0x speed</span>
+            <span class="text-sm font-medium">{playbackSpeed.toFixed(1)}x speed</span>
           </button>
         </div>
 
         <!-- Playback Controls -->
-        <div class="flex justify-between py-4">
-          <!-- Backward Button -->
+        <div class="flex justify-evenly py-4">
+          <!-- Skip Back Button -->
           <button
             class="cursor-pointer rounded-full p-3 transition-colors hover:bg-white/20 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:p-4"
-          >
-            <SkipBack />
-          </button>
-
-          <!-- Replay Button -->
-          <button
-            class="cursor-pointer rounded-full p-3 transition-colors hover:bg-white/20 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:p-4"
+            onclick={handleSkipBack}
           >
             <RotateCcw />
           </button>
@@ -103,22 +124,21 @@
           <!-- Play/Pause Button -->
           <button
             class="cursor-pointer rounded-full bg-white p-3 text-black transition-colors hover:bg-white/75 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:p-4"
+            onclick={handlePlayPause}
           >
-            <Pause />
+            {#if player.isPlaying}
+              <Pause />
+            {:else}
+              <Play />
+            {/if}
           </button>
 
-          <!-- Forward Button -->
+          <!-- Skip Forward Button -->
           <button
             class="cursor-pointer rounded-full p-3 transition-colors hover:bg-white/20 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:p-4"
+            onclick={handleSkipForward}
           >
             <RotateCw />
-          </button>
-
-          <!-- Next Button -->
-          <button
-            class="cursor-pointer rounded-full p-3 transition-colors hover:bg-white/20 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:p-4"
-          >
-            <SkipForward />
           </button>
         </div>
       </div>
