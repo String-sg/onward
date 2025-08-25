@@ -1,67 +1,49 @@
 <script lang="ts">
   import { ArrowLeft, X } from '@lucide/svelte';
   import { onMount } from 'svelte';
-  import { slide } from 'svelte/transition';
 
-  import { base } from '$app/paths';
-  import { page } from '$app/state';
   import { Badge } from '$lib/components/Badge/index.js';
   import { Button, LinkButton } from '$lib/components/Button/index.js';
-  import { Progress } from '$lib/components/Progress/index.js';
+  import { Modal } from '$lib/components/Modal/index.js';
   import { Starfield } from '$lib/components/Starfield/index.js';
-  import { IsWithinViewport } from '$lib/helpers/index.js';
+  import { IsWithinViewport, noop } from '$lib/helpers/index.js';
   import { Player } from '$lib/states/index.js';
 
-  const { data } = $props();
+  const { data, params } = $props();
 
-  let selectedOptionIndex = $state(-1);
-  let currentQuestionIndex = $state(0);
-  let isFeedbackModalOpen = $state(false);
-  let isCorrectAnswer = $state(false);
-  let isCompletionModalOpen = $state(false);
   let target = $state<HTMLElement | null>(null);
+  let currentQuestionIndex = $state(0);
+  let selectedOptionIndex = $state(-1);
+  let isFeedbackModalOpen = $state(false);
+  let isCompletionModalOpen = $state(false);
 
-  let currentQuestion = $derived(data.questionAnswers[currentQuestionIndex]);
-  let percentageCompleted = $derived(
-    ((currentQuestionIndex + 1) / data.questionAnswers.length) * 100,
-  );
-  let contentId = $derived(page.params.id);
+  const currentQuestion = $derived(data.questions[currentQuestionIndex]);
+  const isCorrectAnswer = $derived(selectedOptionIndex === currentQuestion.answerIndex);
 
-  const isWithinViewport = new IsWithinViewport(() => target);
   const player = Player.get();
+  const isWithinViewport = new IsWithinViewport(() => target);
 
   onMount(() => {
     player.stop();
   });
 
-  const selectOption = (index: number) => {
-    selectedOptionIndex = index;
+  const toggleFeedbackModalVisibility = () => {
+    isFeedbackModalOpen = !isFeedbackModalOpen;
   };
 
-  const getOptionLetter = (index: number) => {
-    return String.fromCharCode(65 + index);
-  };
+  const handleContinueClick = () => {
+    const isLastQuestion = currentQuestionIndex === data.questions.length - 1;
 
-  const nextQuestion = () => {
-    if (selectedOptionIndex !== -1) {
-      if (currentQuestionIndex < data.questionAnswers.length - 1) {
-        currentQuestionIndex++;
-        selectedOptionIndex = -1;
-        isFeedbackModalOpen = false;
-      } else {
-        isFeedbackModalOpen = false;
-        isCompletionModalOpen = true;
-      }
-    }
-  };
-
-  const handleCheckAnswer = () => {
-    isCorrectAnswer = selectedOptionIndex + 1 === currentQuestion.answer;
-    isFeedbackModalOpen = true;
-  };
-
-  const closeFeedbackModal = () => {
     isFeedbackModalOpen = false;
+
+    if (isLastQuestion) {
+      isCompletionModalOpen = true;
+      return;
+    }
+
+    // Move to next question.
+    currentQuestionIndex++;
+    selectedOptionIndex = -1;
   };
 </script>
 
@@ -73,174 +55,177 @@
     ]}
   ></div>
 
-  <div class="mx-auto flex w-full max-w-5xl items-center justify-between gap-x-3 px-4 py-3">
-    <a href="/content/{contentId}" class="rounded-full p-4 transition-colors hover:bg-slate-200">
-      <ArrowLeft />
-    </a>
+  <div class="mx-auto flex max-w-5xl items-center justify-between gap-x-3 px-4 py-3">
+    <div class="flex items-center gap-x-3">
+      <a
+        href="/content/{params.id}"
+        class="rounded-full p-4 transition-colors hover:bg-slate-200 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950"
+      >
+        <ArrowLeft />
+      </a>
 
-    <Progress value={percentageCompleted} />
+      <Badge variant="slate">
+        Question {currentQuestionIndex + 1} of {data.questions.length}
+      </Badge>
+    </div>
   </div>
 </header>
 
-<main class="pt-23 pb-23 relative mx-auto min-h-full w-full max-w-5xl px-4">
-  <div bind:this={target} class="absolute inset-x-0 top-0 h-px"></div>
+<div bind:this={target} class="absolute inset-x-0 top-0 h-px"></div>
 
-  <div class="flex h-full flex-col">
-    <div class="flex flex-1 flex-col gap-y-6 overflow-y-auto">
-      <div class="flex flex-col gap-y-2">
-        <Badge variant="slate">
-          Question {currentQuestionIndex + 1} of {data.questionAnswers.length}
-        </Badge>
+<main class="pt-23 relative mx-auto flex min-h-svh max-w-5xl flex-col gap-y-10 px-4 pb-3">
+  <div class="flex flex-1 flex-col gap-y-2">
+    {#each data.questions as q, qi (q.id)}
+      <div class={['flex flex-col gap-y-4', currentQuestionIndex !== qi && 'hidden']}>
+        <span id="question-{qi}" class="text-xl font-medium">{q.question}</span>
 
-        <span class="text-xl font-medium">{currentQuestion.question}</span>
-      </div>
-
-      <div class="flex flex-col gap-y-2 px-1">
-        {#each currentQuestion.options as option, index (option)}
-          <button
-            class={[
-              'py-3.75 px-2.75 shadow-xs group flex cursor-pointer items-center gap-x-3 rounded-2xl border border-transparent bg-white transition-all hover:bg-slate-50 hover:shadow-sm',
-              selectedOptionIndex === index && '!border-slate-950',
-            ]}
-            onclick={() => selectOption(index)}
-          >
-            <span
+        <div class="flex flex-col gap-y-2" role="radiogroup" aria-labelledby="question-{qi}">
+          {#each q.options as o, oi (o)}
+            <label
               class={[
-                'rounded-lg bg-slate-100 px-2.5 py-1 font-semibold transition-colors group-hover:bg-slate-200',
-                selectedOptionIndex === index && '!bg-slate-950 !text-white',
+                'has-focus-visible:outline-dashed shadow-xs group flex cursor-pointer items-center gap-x-3 rounded-2xl border-2 border-transparent bg-white px-2.5 py-3.5 transition-all',
+                'hover:translate-y-[-1px] hover:bg-slate-50 hover:shadow-sm',
+                'has-checked:hover:bg-white has-checked:border-slate-950 has-checked:hover:shadow-xs has-checked:hover:translate-none',
+                'has-focus-visible:outline-dashed has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-slate-950',
               ]}
             >
-              {getOptionLetter(index)}
-            </span>
+              <input
+                type="radio"
+                name="question-{qi}"
+                value={oi}
+                bind:group={selectedOptionIndex}
+                class="sr-only"
+              />
 
-            <span class="text-left">
-              {option}
-            </span>
-          </button>
-        {/each}
+              <span
+                class="group-has-checked:bg-slate-950 group-has-checked:text-white rounded-lg bg-slate-200 px-2.5 py-1 font-semibold transition-colors"
+              >
+                {String.fromCharCode(65 + oi)}
+              </span>
+
+              <span class="text-left">{o}</span>
+            </label>
+          {/each}
+        </div>
       </div>
-    </div>
+    {/each}
   </div>
+
+  <Button
+    width="full"
+    disabled={selectedOptionIndex === -1}
+    onclick={toggleFeedbackModalVisibility}
+  >
+    Check Answer
+  </Button>
 </main>
 
-<div class="fixed inset-x-0 bottom-0 z-50 bg-slate-100/90 backdrop-blur-sm">
-  <div class="mx-auto w-full max-w-5xl px-4 py-3">
-    <Button
-      width="full"
-      disabled={selectedOptionIndex === -1 || isFeedbackModalOpen}
-      onclick={handleCheckAnswer}
-    >
-      Check Answer
-    </Button>
-  </div>
-</div>
+<Modal isopen={isFeedbackModalOpen} onclose={toggleFeedbackModalVisibility} size="partial">
+  <header class="sticky inset-x-0 top-0 bg-white/90 backdrop-blur-sm">
+    <div class="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
+      <span class="text-xl font-medium">
+        {isCorrectAnswer ? 'Correct answer!' : 'Not quite right!'}
+      </span>
 
-{#if isFeedbackModalOpen}
-  <div class="z-100 fixed inset-0 flex items-end justify-center">
-    <div
-      class="inset-shadow-sm flex max-h-[70vh] w-full max-w-5xl transform flex-col gap-y-5 rounded-t-3xl bg-white px-4 py-3 shadow-lg transition-all"
-      transition:slide={{ axis: 'y' }}
-    >
-      <div class="flex items-center justify-between">
-        <span class="py-2.5 text-xl font-medium">
-          {isCorrectAnswer ? 'Correct answer!' : 'Not quite right!'}
-        </span>
+      <button
+        onclick={toggleFeedbackModalVisibility}
+        class="cursor-pointer rounded-full p-3 transition-colors hover:bg-slate-100 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950"
+      >
+        <X />
+      </button>
+    </div>
+  </header>
 
-        <button
-          class="cursor-pointer rounded-full p-4 hover:bg-slate-100"
-          onclick={closeFeedbackModal}
+  <main class="mx-auto flex min-h-[calc(100%-72px)] max-w-5xl flex-col gap-y-10 px-4 py-3">
+    <div class="flex flex-1 flex-col gap-y-4">
+      <div class="flex flex-col gap-y-2">
+        <span class="font-medium">Your answer</span>
+
+        <div
+          class={[
+            'shadow-xs flex items-center gap-x-3 rounded-2xl border-2 px-2.5 py-3.5',
+            isCorrectAnswer ? 'border-transparent bg-lime-200' : 'border-slate-950 bg-white',
+          ]}
         >
-          <X />
-        </button>
-      </div>
-
-      <div class="flex flex-col gap-y-6 overflow-y-auto">
-        <div class="flex flex-col gap-y-2">
-          <span class="font-medium">Your answer</span>
-          <div
+          <span
             class={[
-              'py-3.75 px-2.75 flex w-full items-center gap-x-3 rounded-2xl border border-transparent bg-lime-200',
-              selectedOptionIndex !== currentQuestion.answer - 1 && '!border-slate-950 !bg-white',
+              'rounded-lg px-2.5 py-1 font-semibold',
+              isCorrectAnswer ? 'bg-lime-400' : 'bg-slate-950 text-white',
             ]}
           >
-            <span
-              class={[
-                'rounded-lg bg-lime-400 px-2.5 py-1 font-semibold',
-                selectedOptionIndex !== currentQuestion.answer - 1 && '!bg-slate-950 !text-white',
-              ]}
-            >
-              {getOptionLetter(selectedOptionIndex)}
+            {String.fromCharCode(65 + selectedOptionIndex)}
+          </span>
+
+          <span class="text-left">
+            {currentQuestion.options[selectedOptionIndex]}
+          </span>
+        </div>
+      </div>
+
+      {#if !isCorrectAnswer}
+        <div class="flex flex-col gap-y-2">
+          <span class="font-medium">Correct answer</span>
+
+          <div
+            class="shadow-xs flex items-center gap-x-3 rounded-2xl border-2 border-transparent bg-lime-200 px-2.5 py-3.5"
+          >
+            <span class="rounded-lg bg-lime-400 px-2.5 py-1 font-semibold">
+              {String.fromCharCode(65 + currentQuestion.answerIndex)}
             </span>
 
             <span class="text-left">
-              {currentQuestion.options[selectedOptionIndex]}
+              {currentQuestion.options[currentQuestion.answerIndex]}
             </span>
           </div>
         </div>
+      {/if}
 
-        {#if !isCorrectAnswer}
-          <div class="flex flex-col gap-y-2">
-            <span class="font-medium">Correct answer</span>
-            <div
-              class="py-3.75 px-2.75 flex w-full items-center gap-x-3 rounded-2xl border border-transparent bg-lime-200"
-            >
-              <span class="rounded-lg bg-lime-400 px-2.5 py-1 font-semibold">
-                {getOptionLetter(currentQuestion.answer - 1)}
-              </span>
+      <div class="flex flex-col gap-y-2 rounded-2xl bg-slate-100 p-3">
+        <span class="font-medium text-slate-500">Explanation</span>
+        <span>{currentQuestion.explanation}</span>
+      </div>
+    </div>
 
-              <span class="text-left">
-                {currentQuestion.options[currentQuestion.answer - 1]}
-              </span>
-            </div>
-          </div>
-        {/if}
-        <div class="flex flex-col gap-y-1 rounded-2xl bg-slate-100 p-3">
-          <span class="font-medium text-zinc-600">Explanation</span>
+    <Button width="full" onclick={handleContinueClick}>Continue</Button>
+  </main>
+</Modal>
 
-          <span>{currentQuestion.explanation}</span>
+<Modal isopen={isCompletionModalOpen} onclose={noop} variant="dark">
+  <Starfield class="text-white" />
+
+  <div class="mx-auto flex min-h-svh max-w-5xl flex-col px-4 py-3">
+    <div class="flex flex-1 flex-col items-center justify-center">
+      <enhanced:img
+        src="$lib/assets/meteors.png?w=768"
+        alt="meteors"
+        sizes="384px"
+        class="h-full w-full object-contain"
+      />
+    </div>
+
+    <div class="flex flex-col gap-y-12">
+      <div class="flex flex-col gap-y-4 text-center">
+        <span class="text-xl font-medium">That was insightful!</span>
+
+        <div class="flex flex-col items-center gap-y-2">
+          <span>You have earned completion status for</span>
+
+          <Badge variant="purple">Special Educational Needs</Badge>
+
+          <span>Track completed topics on your profile.</span>
         </div>
       </div>
 
-      <Button width="full" onclick={nextQuestion}>Continue</Button>
-    </div>
-  </div>
-{/if}
-
-{#if isCompletionModalOpen}
-  <div class="z-200 fixed inset-0 bg-slate-950 text-white">
-    <Starfield class="text-white" />
-
-    <div class="mx-auto h-full w-full max-w-5xl px-4 py-3">
-      <div class="flex h-full flex-col">
-        <!-- TODO: placeholder image, to be replaced once confirmed -->
-        <picture class="flex flex-1 items-center justify-center">
-          <source media="(min-width: 1024px)" srcset={`${base}/meteor/384w.webp`} />
-          <source media="(max-width: 1023px)" srcset={`${base}/meteor/256w.webp`} />
-          <img
-            class="h-64 w-64 lg:h-96 lg:w-96"
-            src={`${base}/meteor/256w.webp`}
-            alt="meteor logo"
-          />
-        </picture>
-
-        <div class="flex flex-col items-center gap-y-20">
-          <div class="flex flex-col items-center gap-y-4 text-center">
-            <span class="text-xl font-medium">That was insightful!</span>
-
-            <div class="flex flex-col items-center gap-y-2">
-              <span>You have earned completion status for</span>
-
-              <Badge variant="purple">Special Educational Needs</Badge>
-
-              <span>Track completed topics on your profile.</span>
-            </div>
-          </div>
-
-          <LinkButton href={`/content/${contentId}`} variant="secondary" width="full">
-            Done
-          </LinkButton>
-        </div>
+      <div class="flex flex-col items-center py-5">
+        <LinkButton
+          href={`/content/${params.id}`}
+          variant="secondary"
+          width="full"
+          class="max-w-sm"
+        >
+          Done
+        </LinkButton>
       </div>
     </div>
   </div>
-{/if}
+</Modal>
