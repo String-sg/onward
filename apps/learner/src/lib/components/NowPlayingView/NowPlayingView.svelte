@@ -25,7 +25,7 @@
 
   const player = Player.get();
 
-  const speedOptions = [0.5, 1.0, 1.5, 2.0];
+  const SPEED_OPTIONS = [0.5, 1.0, 1.5, 2.0];
 
   const handleClose: MouseEventHandler<HTMLButtonElement> = () => {
     onclose();
@@ -52,9 +52,9 @@
   };
 
   const handleSpeedChange = () => {
-    const currentIndex = speedOptions.indexOf(playbackSpeed);
-    const nextIndex = (currentIndex + 1) % speedOptions.length;
-    playbackSpeed = speedOptions[nextIndex];
+    const currentIndex = SPEED_OPTIONS.indexOf(playbackSpeed);
+    const nextIndex = (currentIndex + 1) % SPEED_OPTIONS.length;
+    playbackSpeed = SPEED_OPTIONS[nextIndex];
 
     player.setSpeed(playbackSpeed);
   };
