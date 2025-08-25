@@ -40,15 +40,11 @@
   };
 
   const handleSkipBack = () => {
-    const newPosition = Math.max(0, player.progress - 10);
-
-    player.seek(newPosition);
+    player.skipBack();
   };
 
   const handleSkipForward = () => {
-    const newPosition = Math.min(player.duration, player.progress + 10);
-
-    player.seek(newPosition);
+    player.skipForward();
   };
 
   const handleSpeedChange = () => {
