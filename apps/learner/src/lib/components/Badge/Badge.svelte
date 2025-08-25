@@ -2,8 +2,14 @@
   import type { Snippet } from 'svelte';
   import type { HTMLAttributes } from 'svelte/elements';
 
-  export interface Props extends HTMLAttributes<HTMLDivElement> {
+  export interface Props extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
+    /**
+     * The variant of the badge.
+     */
     variant: 'blue' | 'orange' | 'amber' | 'teal' | 'rose' | 'purple' | 'slate' | 'slate-dark';
+    /**
+     * The content of the badge.
+     */
     children: Snippet;
   }
 
