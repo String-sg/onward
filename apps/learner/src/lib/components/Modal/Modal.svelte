@@ -108,7 +108,7 @@
         variant === 'light' && 'bg-white',
         variant === 'dark' && 'bg-slate-950 text-white',
         size === 'full' && 'inset-0',
-        size === 'partial' && 'inset-x-0 top-1/4',
+        size === 'partial' && 'inset-x-0 bottom-0 top-1/4',
         clazz,
       ]}
       {...otherProps}
