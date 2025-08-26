@@ -91,8 +91,8 @@
     <!-- Navigation -->
     <div class="flex items-center">
       <button
-        class="cursor-pointer rounded-full p-4 transition-colors hover:bg-white/20 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
         onclick={handleClose}
+        class="cursor-pointer rounded-full p-4 transition-colors hover:bg-white/20 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
       >
         <ChevronDown />
       </button>
@@ -134,8 +134,8 @@
         <!-- Speed Control -->
         <div class="flex justify-center">
           <button
-            class="flex cursor-pointer items-center rounded-full bg-white/20 px-4 py-2 transition-colors hover:bg-white/30 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             onclick={handleSpeedChange}
+            class="flex cursor-pointer items-center rounded-full bg-white/20 px-4 py-2 transition-colors hover:bg-white/30 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
           >
             <span class="text-sm font-medium">{playbackspeed.toFixed(1)}x speed</span>
           </button>
@@ -145,16 +145,16 @@
         <div class="flex justify-evenly py-4">
           <!-- Skip Back Button -->
           <button
-            class="cursor-pointer rounded-full p-3 transition-colors hover:bg-white/20 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:p-4"
             onclick={onskipback}
+            class="cursor-pointer rounded-full p-3 transition-colors hover:bg-white/20 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:p-4"
           >
             <RotateCcw />
           </button>
 
           <!-- Play/Pause Button -->
           <button
-            class="cursor-pointer rounded-full bg-white p-3 text-black transition-colors hover:bg-white/75 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:p-4"
             onclick={onplaypause}
+            class="cursor-pointer rounded-full bg-white p-3 text-black transition-colors hover:bg-white/75 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:p-4"
           >
             {#if isplaying}
               <Pause />
@@ -165,8 +165,8 @@
 
           <!-- Skip Forward Button -->
           <button
-            class="cursor-pointer rounded-full p-3 transition-colors hover:bg-white/20 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:p-4"
             onclick={onskipforward}
+            class="cursor-pointer rounded-full p-3 transition-colors hover:bg-white/20 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:p-4"
           >
             <RotateCw />
           </button>
