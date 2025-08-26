@@ -36,8 +36,8 @@ export interface Track {
  * ```
  */
 export class Player {
-  #isPlaying = $state(false);
   #currentTrack = $state.raw<Track | null>(null);
+  #isPlaying = $state(false);
   #duration = $state(0);
   #progress = $state(0);
   #playbackSpeedIndex = $state(1);
