@@ -13,13 +13,13 @@ export const load: PageServerLoad = async () => {
         id: 2,
         tags: ['Special Educational Needs'],
         title: 'Testing the Waters: A Guide to Special Educational Needs in Singapore',
-        url: '/ADHD in Classrooms_ Strategies That Work.wav',
+        url: 'ADHD in Classrooms_ Strategies That Work.wav',
       },
       {
         id: 3,
         tags: ['Special Educational Needs'],
         title: 'The quick brown fox jumps over the lazy dog',
-        url: '/ADHD in Classrooms_ Strategies That Work.wav',
+        url: 'ADHD in Classrooms_ Strategies That Work.wav',
       },
     ],
   };

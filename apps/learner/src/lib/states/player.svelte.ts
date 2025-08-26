@@ -41,6 +41,9 @@ export class Player {
   #audio: HTMLAudioElement | null = null;
   #duration = $state(0);
   #progress = $state(0);
+  #playbackSpeedIndex = $state(1);
+
+  static SPEED_OPTIONS = [0.5, 1.0, 1.5, 2.0];
 
   /**
    * Creates a new player instance and sets it in the context.
@@ -95,6 +98,32 @@ export class Player {
   }
 
   /**
+   * Returns the playback speed.
+   */
+  get playbackSpeed() {
+    return Player.SPEED_OPTIONS[this.#playbackSpeedIndex] ?? Player.SPEED_OPTIONS[1];
+  }
+
+  /**
+   * Returns the remaining playback time in seconds.
+   * Ensures that the value is always non-negative.
+   */
+  getRemainingTime(): number {
+    return Math.max(0, this.#duration - this.#progress);
+  }
+
+  /**
+   * Cycles through available playback speeds.
+   */
+  cycleSpeed() {
+    this.#playbackSpeedIndex = (this.#playbackSpeedIndex + 1) % Player.SPEED_OPTIONS.length;
+
+    if (this.#audio) {
+      this.#audio.playbackRate = this.playbackSpeed;
+    }
+  }
+
+  /**
    * Plays the track with the specified metadata.
    * @param track - The track metadata.
    */
@@ -131,6 +160,14 @@ export class Player {
    * @param speed - The desired playback speed (e.g., 0.5, 1.0, 1.5, 2.0).
    */
   setSpeed(speed: number) {
+    const index = Player.SPEED_OPTIONS.indexOf(speed);
+    if (index === -1) {
+      console.warn(`Invalid playback speed: ${speed}`);
+      return;
+    }
+
+    this.#playbackSpeedIndex = index;
+
     if (this.#audio) {
       this.#audio.playbackRate = speed;
     } else {
@@ -143,7 +180,12 @@ export class Player {
    * @param time - The time in seconds to seek to.
    */
   seek(time: number) {
-    if (this.#audio && time >= 0 && time <= this.#duration) {
+    if (!this.#audio) {
+      console.warn('No audio loaded. Cannot seek.');
+      return;
+    }
+
+    if (time >= 0 && time <= this.#duration) {
       this.#audio.currentTime = time;
       this.#progress = time;
     }

@@ -24,6 +24,22 @@
     isNowPlayingViewOpen = false;
   };
 
+  const handleSeek = (value: number) => {
+    player.seek(value);
+  };
+
+  const handleSkipBack = () => {
+    player.skipBack();
+  };
+
+  const handleSkipForward = () => {
+    player.skipForward();
+  };
+
+  const handleSpeedChange = () => {
+    player.cycleSpeed();
+  };
+
   const handleChatWidgetClick = () => {
     isChatViewOpen = true;
   };
@@ -50,6 +66,18 @@
   </div>
 </div>
 
-<NowPlayingView isopen={isNowPlayingViewOpen} onclose={handleNowPlayingViewClose} />
-
+<NowPlayingView
+  isopen={isNowPlayingViewOpen}
+  onclose={handleNowPlayingViewClose}
+  isplaying={player.isPlaying}
+  playbackspeed={player.playbackSpeed}
+  duration={player.duration}
+  progress={player.progress}
+  currenttrack={player.currentTrack}
+  onplaypause={handleNowPlayingBarPlay}
+  onseek={handleSeek}
+  onskipback={handleSkipBack}
+  onskipforward={handleSkipForward}
+  onspeedchange={handleSpeedChange}
+/>
 <ChatView isopen={isChatViewOpen} onclose={handleChatViewClose} />
