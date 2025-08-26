@@ -38,10 +38,11 @@ export interface Track {
 export class Player {
   #isPlaying = $state(false);
   #currentTrack = $state.raw<Track | null>(null);
-  #audio: HTMLAudioElement | null = null;
   #duration = $state(0);
   #progress = $state(0);
   #playbackSpeedIndex = $state(1);
+
+  #audio: HTMLAudioElement | null = null;
 
   static SPEED_OPTIONS = [0.5, 1.0, 1.5, 2.0];
 
