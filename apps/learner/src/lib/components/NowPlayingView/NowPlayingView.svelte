@@ -6,7 +6,6 @@
   import { Modal, type ModalProps } from '$lib/components/Modal/index.js';
   import { Slider, type SliderProps } from '$lib/components/Slider/index.js';
   import { formatTime } from '$lib/helpers/index.js';
-  import { Player } from '$lib/states/index.js';
 
   export interface Props {
     /**
@@ -17,42 +16,73 @@
      * A callback invoked when the view is closed.
      */
     onclose: ModalProps['onclose'];
+    /**
+     * Indicates whether the player is currently playing.
+     */
+    isplaying: boolean;
+    /**
+     * The current playback speed of the audio.
+     */
+    playbackspeed: number;
+    /**
+     * The total duration of the current track in seconds.
+     */
+    duration: number;
+    /**
+     * The current playback progress in seconds.
+     */
+    progress: number;
+    /**
+     * Metadata of the current track being played.
+     */
+    currenttrack: { id: number; tags: string[]; title: string } | null;
+    /**
+     * A callback to handle when the play/pause button is clicked.
+     */
+    onplaypause: () => void;
+    /**
+     * A callback to handle when the slider's value changes.
+     */
+    onseek: (value: number) => void;
+    /**
+     * A callback to handle when the skip-back button is clicked.
+     */
+    onskipback: () => void;
+    /**
+     * Callback to handle when the skip-forward button is clicked.
+     */
+    onskipforward: () => void;
+    /**
+     * Callback to handle when the playback speed is changed.
+     */
+    onspeedchange: () => void;
   }
 
-  const { isopen, onclose }: Props = $props();
-
-  let playbackSpeed = $state(1.0);
-
-  const player = Player.get();
-
-  const SPEED_OPTIONS = [0.5, 1.0, 1.5, 2.0];
+  const {
+    isopen,
+    onclose,
+    isplaying,
+    playbackspeed,
+    duration,
+    progress,
+    currenttrack,
+    onplaypause,
+    onseek,
+    onskipback,
+    onskipforward,
+    onspeedchange,
+  }: Props = $props();
 
   const handleClose: MouseEventHandler<HTMLButtonElement> = () => {
     onclose();
   };
 
   const handlePositionChange: SliderProps['onvaluechange'] = (value) => {
-    player.seek(value);
-  };
-
-  const handlePlayPause = () => {
-    player.toggle();
-  };
-
-  const handleSkipBack = () => {
-    player.skipBack();
-  };
-
-  const handleSkipForward = () => {
-    player.skipForward();
+    onseek(value);
   };
 
   const handleSpeedChange = () => {
-    const currentIndex = SPEED_OPTIONS.indexOf(playbackSpeed);
-    const nextIndex = (currentIndex + 1) % SPEED_OPTIONS.length;
-    playbackSpeed = SPEED_OPTIONS[nextIndex];
-
-    player.setSpeed(playbackSpeed);
+    onspeedchange();
   };
 </script>
 
@@ -73,13 +103,13 @@
     <div class="flex flex-col gap-y-6">
       <!-- Badge and Title -->
       <div class="flex flex-col gap-y-3">
-        {#if player.currentTrack}
-          <Badge variant="purple">{player.currentTrack.tags?.[0]}</Badge>
+        {#if currenttrack}
+          <Badge variant="purple">{currenttrack.tags?.[0]}</Badge>
           <a
-            href={`/content/${player.currentTrack.id}`}
+            href={`/content/${currenttrack.id}`}
             class="w-fit text-xl focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
           >
-            {player.currentTrack.title}
+            {currenttrack.title}
           </a>
         {/if}
       </div>
@@ -89,15 +119,15 @@
         <div class="flex flex-col gap-y-2">
           <Slider
             min={0}
-            max={player.duration}
+            max={duration}
             step={1}
-            value={player.progress}
+            value={progress}
             onvaluechange={handlePositionChange}
           />
 
           <div class="flex justify-between">
-            <span>{formatTime(player.progress)}</span>
-            <span>-{formatTime(player.duration - player.progress)}</span>
+            <span>{formatTime(progress)}</span>
+            <span>-{formatTime(duration - progress)}</span>
           </div>
         </div>
 
@@ -107,7 +137,7 @@
             class="flex cursor-pointer items-center rounded-full bg-white/20 px-4 py-2 transition-colors hover:bg-white/30 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             onclick={handleSpeedChange}
           >
-            <span class="text-sm font-medium">{playbackSpeed.toFixed(1)}x speed</span>
+            <span class="text-sm font-medium">{playbackspeed.toFixed(1)}x speed</span>
           </button>
         </div>
 
@@ -116,7 +146,7 @@
           <!-- Skip Back Button -->
           <button
             class="cursor-pointer rounded-full p-3 transition-colors hover:bg-white/20 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:p-4"
-            onclick={handleSkipBack}
+            onclick={onskipback}
           >
             <RotateCcw />
           </button>
@@ -124,9 +154,9 @@
           <!-- Play/Pause Button -->
           <button
             class="cursor-pointer rounded-full bg-white p-3 text-black transition-colors hover:bg-white/75 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:p-4"
-            onclick={handlePlayPause}
+            onclick={onplaypause}
           >
-            {#if player.isPlaying}
+            {#if isplaying}
               <Pause />
             {:else}
               <Play />
@@ -136,7 +166,7 @@
           <!-- Skip Forward Button -->
           <button
             class="cursor-pointer rounded-full p-3 transition-colors hover:bg-white/20 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:p-4"
-            onclick={handleSkipForward}
+            onclick={onskipforward}
           >
             <RotateCw />
           </button>
