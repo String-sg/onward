@@ -129,36 +129,37 @@ export class Player {
    * @param track - The track metadata.
    */
   play(track: Track) {
+    if (!this.#audio) {
+      this.#audio = new Audio();
+      this.#audio.onloadedmetadata = () => {
+        this.#duration = this.#audio?.duration || 0;
+      };
+      this.#audio.ontimeupdate = () => {
+        this.#progress = this.#audio?.currentTime || 0;
+      };
+      this.#audio.onended = () => {
+        this.#isPlaying = false;
+        this.#progress = 0;
+      };
+      this.#audio.onplaying = () => {
+        this.#isPlaying = true;
+      };
+      this.#audio.onpause = () => {
+        this.#isPlaying = false;
+      };
+    }
+
     // Stop current audio if playing
-    if (this.#audio) {
+    if (this.#audio.src !== track.url) {
       this.#audio.pause();
-      this.#audio.currentTime = 0;
+      // Update the source for the new track
+      this.#audio.src = track.url;
+      // Load the new track metadata
+      this.#audio.load();
+      this.#progress = 0;
     }
 
     this.#currentTrack = track;
-
-    this.#audio = new Audio(track.url);
-
-    this.#audio.onloadedmetadata = () => {
-      this.#duration = this.#audio?.duration || 0;
-    };
-
-    this.#audio.ontimeupdate = () => {
-      this.#progress = this.#audio?.currentTime || 0;
-    };
-
-    this.#audio.onended = () => {
-      this.#isPlaying = false;
-      this.#progress = 0;
-    };
-
-    this.#audio.onplaying = () => {
-      this.#isPlaying = true;
-    };
-
-    this.#audio.onpause = () => {
-      this.#isPlaying = false;
-    };
 
     this.#audio.play();
     this.#isPlaying = true;
