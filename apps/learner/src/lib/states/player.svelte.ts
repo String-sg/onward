@@ -152,6 +152,14 @@ export class Player {
       this.#progress = 0;
     };
 
+    this.#audio.onplaying = () => {
+      this.#isPlaying = true;
+    };
+
+    this.#audio.onpause = () => {
+      this.#isPlaying = false;
+    };
+
     this.#audio.play();
     this.#isPlaying = true;
   }
@@ -206,8 +214,6 @@ export class Player {
     } else {
       this.#audio.play();
     }
-
-    this.#isPlaying = !this.#isPlaying;
   }
 
   /**
