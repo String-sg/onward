@@ -10,7 +10,7 @@ export const load: PageServerLoad = async () => {
         numberofpodcasts: 8,
         numberofnotes: 3,
         to: '/collection/1',
-        type: 'ai',
+        type: 'AI',
       },
       {
         id: 2,
@@ -19,7 +19,7 @@ export const load: PageServerLoad = async () => {
         numberofpodcasts: 12,
         numberofnotes: 2,
         to: '/collection/2',
-        type: 'sen',
+        type: 'SEN',
       },
       {
         id: 3,
@@ -28,7 +28,7 @@ export const load: PageServerLoad = async () => {
         numberofpodcasts: 10,
         numberofnotes: 1,
         to: '/collection/3',
-        type: 'mentalHealth',
+        type: 'MENTAL_HEALTH',
       },
     ],
   };

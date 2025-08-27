@@ -9,8 +9,8 @@
     <span class="text-xl font-semibold">Your learnings</span>
   </div>
 
-  <div class="flex flex-col gap-y-4">
-    {#each data.collections as collection (collection.id)}
+  <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
+    {#each data.learningJourneys as learning (learning.id)}
       <Collection
         to={collection.to}
         tag={collection.tag}
