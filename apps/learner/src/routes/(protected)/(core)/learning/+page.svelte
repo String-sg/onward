@@ -17,7 +17,7 @@
         title={collection.title}
         numberofpodcasts={collection.numberofpodcasts}
         numberofnotes={collection.numberofnotes}
-        variant={collection.variant as CollectionProps['variant']}
+        type={collection.variant as CollectionProps['type']}
       />
     {/each}
   </div>
