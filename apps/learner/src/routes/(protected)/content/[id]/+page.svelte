@@ -6,7 +6,7 @@
   import { Badge } from '$lib/components/Badge/index.js';
   import { Button, LinkButton } from '$lib/components/Button/index.js';
   import { IsWithinViewport } from '$lib/helpers/index.js';
-  import { Player, type Track } from '$lib/states/index.js';
+  import { Player } from '$lib/states/index.js';
 
   const { data } = $props();
 
@@ -32,11 +32,10 @@
     isExpanded = !isExpanded;
   };
 
-  // TODO: Change to LearningUnit type once it is added
-  const handlePlay = (learningUnit: Track) => {
+  const handlePlay = () => {
     player.play({
-      id: learningUnit.id,
-      title: learningUnit.title,
+      id: data.id,
+      title: data.title,
     });
   };
 
@@ -110,11 +109,7 @@
             <span class="font-medium">Resume</span>
           </Button>
         {:else}
-          <Button
-            variant="primary"
-            width="full"
-            onclick={() => handlePlay({ id: data.id, title: data.title })}
-          >
+          <Button variant="primary" width="full" onclick={handlePlay}>
             <Play class="h-4 w-4" />
             <span class="font-medium">Play</span>
           </Button>
