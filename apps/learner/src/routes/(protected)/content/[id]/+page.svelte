@@ -6,7 +6,7 @@
   import { Badge } from '$lib/components/Badge/index.js';
   import { Button, LinkButton } from '$lib/components/Button/index.js';
   import { IsWithinViewport } from '$lib/helpers/index.js';
-  import { Player, type Track } from '$lib/states/index.js';
+  import { Player } from '$lib/states/index.js';
 
   const { data } = $props();
 
@@ -32,11 +32,10 @@
     isExpanded = !isExpanded;
   };
 
-  // TODO: Change to LearningUnit type once it is added
-  const handlePlay = (learningUnit: Track) => {
+  const handlePlay = () => {
     player.play({
-      id: learningUnit.id,
-      title: learningUnit.title,
+      id: data.id,
+      title: data.title,
     });
   };
 
@@ -57,101 +56,93 @@
     ]}
   ></div>
 
-  <div class="mx-auto w-full max-w-5xl px-4 py-3">
-    <div class="flex items-center justify-between gap-x-8">
-      <a
-        href={returnTo}
-        class="rounded-full p-4 transition-colors hover:bg-slate-200 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950"
-      >
-        <ArrowLeft />
-      </a>
+  <div class="mx-auto flex w-full max-w-5xl items-center justify-between gap-x-8 px-4 py-3">
+    <a
+      href={returnTo}
+      class="rounded-full p-4 transition-colors hover:bg-slate-200 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950"
+    >
+      <ArrowLeft />
+    </a>
 
-      <button
-        class="cursor-pointer rounded-full p-4 transition-colors hover:bg-slate-200 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950"
-      >
-        <Share />
-      </button>
-    </div>
+    <button
+      class="cursor-pointer rounded-full p-4 transition-colors hover:bg-slate-200 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950"
+    >
+      <Share />
+    </button>
   </div>
 </header>
 
-<main class="pt-23 relative mx-auto min-h-full w-full max-w-5xl px-4 pb-3">
-  <div bind:this={target} class="absolute inset-x-0 top-0 h-px"></div>
+<div bind:this={target} class="absolute inset-x-0 top-0 h-px"></div>
 
-  <div class="flex flex-col gap-y-6">
-    <div class="shadow-xs flex flex-col gap-y-2 rounded-3xl bg-white p-4">
-      <div class="flex flex-wrap gap-1">
-        {#each data.tags as tag (tag)}
-          <Badge variant="purple">{tag}</Badge>
-        {/each}
-      </div>
+<main class="pt-23 relative mx-auto flex min-h-svh max-w-5xl flex-col gap-y-6 px-4 pb-28">
+  <div class="shadow-xs flex flex-col gap-y-2 rounded-3xl bg-white p-4">
+    <div class="flex flex-wrap gap-1">
+      {#each data.tags as tag (tag)}
+        <Badge variant="purple">{tag}</Badge>
+      {/each}
+    </div>
 
-      <div class="flex flex-col gap-y-6">
-        <div class="flex flex-col gap-y-3">
-          <span class="text-xl font-medium text-slate-950">
-            {data.title}
+    <div class="flex flex-col gap-y-6">
+      <div class="flex flex-col gap-y-3">
+        <span class="text-xl font-medium text-slate-950">
+          {data.title}
+        </span>
+
+        <div class="flex gap-x-1">
+          <span class="text-sm text-slate-600">By Guidance Branch</span>
+          <span class="text-sm text-slate-600">•</span>
+          <span class="text-sm text-slate-600">
+            {formatDistanceToNow(data.createdAt, { addSuffix: true })}
           </span>
-
-          <div class="flex gap-x-1">
-            <span class="text-sm text-slate-600">By Guidance Branch</span>
-            <span class="text-sm text-slate-600">•</span>
-            <span class="text-sm text-slate-600">
-              {formatDistanceToNow(data.createdAt, { addSuffix: true })}
-            </span>
-          </div>
-        </div>
-
-        <div class="flex flex-col gap-y-4">
-          {#if isActive && player.isPlaying}
-            <Button variant="primary" width="full" onclick={handlePause}>
-              <Pause class="h-4 w-4" />
-              <span class="font-medium">Pause</span>
-            </Button>
-          {:else if isActive && !player.isPlaying}
-            <Button variant="primary" width="full" onclick={handleResume}>
-              <Play class="h-4 w-4" />
-              <span class="font-medium">Resume</span>
-            </Button>
-          {:else}
-            <Button
-              variant="primary"
-              width="full"
-              onclick={() => handlePlay({ id: data.id, title: data.title })}
-            >
-              <Play class="h-4 w-4" />
-              <span class="font-medium">Play</span>
-            </Button>
-          {/if}
-
-          <LinkButton variant="secondary" width="full" href={`/content/${data.id}/quiz`}>
-            <Lightbulb class="h-4 w-4" />
-            <span class="font-medium">Take the quiz</span>
-          </LinkButton>
         </div>
       </div>
+
+      <div class="flex flex-col gap-y-4">
+        {#if isActive && player.isPlaying}
+          <Button variant="primary" width="full" onclick={handlePause}>
+            <Pause class="h-4 w-4" />
+            <span class="font-medium">Pause</span>
+          </Button>
+        {:else if isActive && !player.isPlaying}
+          <Button variant="primary" width="full" onclick={handleResume}>
+            <Play class="h-4 w-4" />
+            <span class="font-medium">Resume</span>
+          </Button>
+        {:else}
+          <Button variant="primary" width="full" onclick={handlePlay}>
+            <Play class="h-4 w-4" />
+            <span class="font-medium">Play</span>
+          </Button>
+        {/if}
+
+        <LinkButton variant="secondary" width="full" href={`/content/${data.id}/quiz`}>
+          <Lightbulb class="h-4 w-4" />
+          <span class="font-medium">Take the quiz</span>
+        </LinkButton>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex flex-col items-center gap-y-4">
+    <div
+      class={[
+        'mask-b-from-10% max-h-28 overflow-hidden',
+        isExpanded && 'mask-b-from-100% max-h-full',
+      ]}
+    >
+      <p class={['line-clamp-4 text-lg', isExpanded && 'line-clamp-none']}>
+        {data.summary}
+      </p>
     </div>
 
-    <div class="flex flex-col items-center gap-y-4">
-      <div
-        class={[
-          'mask-b-from-10% max-h-28 overflow-hidden',
-          isExpanded && 'mask-b-from-100% max-h-full',
-        ]}
+    {#if !isExpanded}
+      <button
+        class="flex w-fit cursor-pointer items-center gap-x-1 px-4 py-2"
+        onclick={toggleIsExpanded}
       >
-        <p class={['line-clamp-4 text-lg', isExpanded && 'line-clamp-none']}>
-          {data.summary}
-        </p>
-      </div>
-
-      {#if !isExpanded}
-        <button
-          class="flex w-fit cursor-pointer items-center gap-x-1 px-4 py-2"
-          onclick={toggleIsExpanded}
-        >
-          <span class="text-sm font-medium">Read more</span>
-          <ChevronsDown class="h-4 w-4" />
-        </button>
-      {/if}
-    </div>
+        <span class="text-sm font-medium">Read more</span>
+        <ChevronsDown class="h-4 w-4" />
+      </button>
+    {/if}
   </div>
 </main>

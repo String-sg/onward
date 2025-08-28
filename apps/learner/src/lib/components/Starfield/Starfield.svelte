@@ -51,7 +51,7 @@
 
 <svg
   class={[
-    '-z-1 pointer-events-none absolute inset-0 mx-auto min-h-full w-full max-w-5xl px-4 py-3',
+    '-z-1 pointer-events-none absolute inset-0 mx-auto min-h-svh w-full max-w-5xl px-4 py-3',
     clazz,
   ]}
   {...otherProps}
