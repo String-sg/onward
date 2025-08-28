@@ -1,12 +1,13 @@
 import { copyFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 
+import { enhancedImages } from '@sveltejs/enhanced-img';
 import { sveltekit } from '@sveltejs/kit/vite';
 import tailwindcss from '@tailwindcss/vite';
 import { defineConfig, type Plugin, type ResolvedConfig } from 'vite';
 
 export default defineConfig({
-  plugins: [sveltekit(), tailwindcss(), prismaQueryEngine()],
+  plugins: [enhancedImages(), sveltekit(), tailwindcss(), prismaQueryEngine()],
 });
 
 /**
