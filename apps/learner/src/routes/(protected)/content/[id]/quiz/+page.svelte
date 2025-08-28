@@ -84,7 +84,7 @@
             <label
               class={[
                 'has-focus-visible:outline-dashed shadow-xs group flex cursor-pointer items-center gap-x-3 rounded-2xl border-2 border-transparent bg-white px-2.5 py-3.5 transition-all',
-                'hover:translate-y-[-1px] hover:bg-slate-50 hover:shadow-sm',
+                'hover:shadow-sm hover:ring-1 hover:ring-slate-300',
                 'has-checked:hover:bg-white has-checked:border-slate-950 has-checked:hover:shadow-xs has-checked:hover:translate-none',
                 'has-focus-visible:outline-dashed has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-slate-950',
               ]}
