@@ -10,14 +10,14 @@
   </div>
 
   <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
-    {#each data.learningJourneys as learning (learning.id)}
+    {#each data.collections as collection (collection.id)}
       <Collection
         to={collection.to}
         tag={collection.tag}
         title={collection.title}
         numberofpodcasts={collection.numberofpodcasts}
         numberofnotes={collection.numberofnotes}
-        type={collection.variant as CollectionProps['type']}
+        type={collection.type as CollectionProps['type']}
       />
     {/each}
   </div>
