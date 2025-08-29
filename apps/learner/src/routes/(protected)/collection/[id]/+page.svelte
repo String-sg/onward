@@ -41,7 +41,7 @@
       <span class="text-xl font-semibold">In Progress</span>
     </div>
 
-    <div class="flex flex-col gap-y-4">
+    <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
       <LearningUnit
         to="/content/1"
         tags={[
@@ -76,7 +76,7 @@
       <span class="text-xl font-semibold">Completed</span>
     </div>
 
-    <div class="flex flex-col gap-y-4">
+    <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
       <LearningUnit
         to="/content/1"
         tags={[

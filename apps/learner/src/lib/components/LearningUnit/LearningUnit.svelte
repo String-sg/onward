@@ -70,7 +70,10 @@
   };
 </script>
 
-<a href={to} class="shadow-xs flex flex-col gap-y-6 rounded-3xl bg-white p-6">
+<a
+  href={to}
+  class="shadow-xs flex flex-col gap-y-6 rounded-3xl bg-white p-6 transition-shadow hover:ring-1 hover:ring-slate-300 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950"
+>
   <div class="flex flex-col gap-y-2">
     <div class="flex flex-wrap gap-1">
       {#each tags as tag (tag.content)}
