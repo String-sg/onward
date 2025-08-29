@@ -9,7 +9,7 @@ export const load: PageServerLoad = async () => {
         title: 'Learn to use AI',
         numberofpodcasts: 8,
         numberofnotes: 3,
-        to: '/collection/1',
+        to: '/usercollection/1',
         type: 'AI',
       },
       {
@@ -18,7 +18,7 @@ export const load: PageServerLoad = async () => {
         title: 'SEN peer support',
         numberofpodcasts: 12,
         numberofnotes: 2,
-        to: '/collection/2',
+        to: '/usercollection/2',
         type: 'SEN',
       },
       {
@@ -27,7 +27,7 @@ export const load: PageServerLoad = async () => {
         title: 'Understanding Mental Health',
         numberofpodcasts: 10,
         numberofnotes: 1,
-        to: '/collection/3',
+        to: '/usercollection/3',
         type: 'MENTAL_HEALTH',
       },
     ],
