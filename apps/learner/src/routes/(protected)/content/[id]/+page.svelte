@@ -35,7 +35,9 @@
   const handlePlay = () => {
     player.play({
       id: data.id,
+      tags: data.tags,
       title: data.title,
+      url: data.url,
     });
   };
 

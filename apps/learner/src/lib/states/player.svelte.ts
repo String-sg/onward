@@ -4,7 +4,9 @@ const PLAYER_CONTEXT_KEY = Symbol('Player');
 
 export interface Track {
   id: number;
+  tags: string[];
   title: string;
+  url: string;
 }
 
 /**
@@ -34,8 +36,15 @@ export interface Track {
  * ```
  */
 export class Player {
-  #isPlaying = $state(false);
+  static readonly PLAYBACK_SPEED_OPTIONS = [0.5, 1.0, 1.5, 2.0];
+
   #currentTrack = $state.raw<Track | null>(null);
+  #isPlaying = $state(false);
+  #duration = $state(0);
+  #progress = $state(0);
+  #playbackSpeedIndex = $state(1);
+
+  #audio: HTMLAudioElement | null = null;
 
   /**
    * Creates a new player instance and sets it in the context.
@@ -76,12 +85,93 @@ export class Player {
   }
 
   /**
+   * Returns the total duration of the current track in seconds.
+   */
+  get duration() {
+    return this.#duration;
+  }
+
+  /**
+   * Returns the current playback position in seconds.
+   */
+  get progress() {
+    return this.#progress;
+  }
+
+  /**
+   * Returns the playback speed.
+   */
+  get playbackSpeed() {
+    return Player.PLAYBACK_SPEED_OPTIONS[this.#playbackSpeedIndex];
+  }
+
+  /**
+   * Cycles through available playback speeds.
+   */
+  cyclePlaybackSpeed() {
+    this.#playbackSpeedIndex =
+      (this.#playbackSpeedIndex + 1) % Player.PLAYBACK_SPEED_OPTIONS.length;
+
+    if (this.#audio) {
+      this.#audio.playbackRate = this.playbackSpeed;
+    }
+  }
+
+  /**
    * Plays the track with the specified metadata.
    * @param track - The track metadata.
    */
   play(track: Track) {
+    if (!this.#audio) {
+      this.#audio = new Audio();
+      this.#audio.onloadedmetadata = () => {
+        this.#duration = this.#audio?.duration || 0;
+      };
+      this.#audio.ontimeupdate = () => {
+        this.#progress = this.#audio?.currentTime || 0;
+      };
+      this.#audio.onended = () => {
+        this.#isPlaying = false;
+        this.#progress = 0;
+      };
+      this.#audio.onplaying = () => {
+        this.#isPlaying = true;
+      };
+      this.#audio.onpause = () => {
+        this.#isPlaying = false;
+      };
+    }
+
+    // Stop current audio if playing
+    if (this.#audio.src !== track.url) {
+      this.#audio.pause();
+      // Update the source for the new track
+      this.#audio.src = track.url;
+      // Load the new track metadata
+      this.#audio.load();
+      this.#progress = 0;
+    }
+
     this.#currentTrack = track;
+
+    this.#audio.play();
     this.#isPlaying = true;
+  }
+
+  /**
+   * Seeks to the specified position in the current track.
+   * @param time - The time in seconds to seek to.
+   */
+  seek(time: number) {
+    if (!this.#audio) {
+      console.warn('No audio loaded. Cannot seek.');
+      return;
+    }
+
+    if (time >= 0 && time <= this.#duration) {
+      this.#audio.currentTime = time;
+      this.#progress = time;
+    }
   }
 
   /**
@@ -89,18 +179,55 @@ export class Player {
    * If no track is loaded, this method does nothing.
    */
   toggle() {
-    if (!this.#currentTrack) {
+    if (!this.#currentTrack || !this.#audio) {
       return;
     }
 
-    this.#isPlaying = !this.#isPlaying;
+    if (this.#isPlaying) {
+      this.#audio.pause();
+    } else {
+      this.#audio.play();
+    }
   }
 
   /**
    * Stops the playback and clears the current track.
    */
   stop() {
+    if (this.#audio) {
+      this.#audio.pause();
+      this.#audio.currentTime = 0;
+    }
+
     this.#isPlaying = false;
     this.#currentTrack = null;
+  }
+
+  /**
+   * Skips backward by a specified amount of time.
+   * If the resulting position is less than 0, it will clamp to 0.
+   * @param seconds - The number of seconds to skip backward. Defaults to 10 seconds.
+   */
+  skipBack(seconds = 10) {
+    if (!this.#audio) {
+      console.warn('No audio loaded. Cannot skip back.');
+      return;
+    }
+
+    this.seek(Math.max(0, this.#progress - seconds));
+  }
+
+  /**
+   * Skips forward by a specified amount of time.
+   * If the resulting position exceeds the track duration, it will clamp to the duration.
+   * @param seconds - The number of seconds to skip forward. Defaults to 10 seconds.
+   */
+  skipForward(seconds = 10) {
+    if (!this.#audio) {
+      console.warn('No audio loaded. Cannot skip forward.');
+      return;
+    }
+
+    this.seek(Math.min(this.#duration, this.#progress + seconds));
   }
 }
