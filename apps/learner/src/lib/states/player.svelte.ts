@@ -108,14 +108,6 @@ export class Player {
   }
 
   /**
-   * Returns the remaining playback time in seconds.
-   * Ensures that the value is always non-negative.
-   */
-  getRemainingTime(): number {
-    return Math.max(0, this.#duration - this.#progress);
-  }
-
-  /**
    * Cycles through available playback speeds.
    */
   cyclePlaybackSpeed() {
@@ -166,26 +158,6 @@ export class Player {
 
     this.#audio.play();
     this.#isPlaying = true;
-  }
-
-  /**
-   * Sets the playback speed.
-   * @param speed - The desired playback speed (e.g., 0.5, 1.0, 1.5, 2.0).
-   */
-  setSpeed(speed: number) {
-    const index = Player.PLAYBACK_SPEED_OPTIONS.indexOf(speed);
-    if (index === -1) {
-      console.warn(`Invalid playback speed: ${speed}`);
-      return;
-    }
-
-    this.#playbackSpeedIndex = index;
-
-    if (this.#audio) {
-      this.#audio.playbackRate = speed;
-    } else {
-      console.warn('No audio loaded. Cannot set playback speed.');
-    }
   }
 
   /**
