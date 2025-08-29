@@ -36,6 +36,8 @@ export interface Track {
  * ```
  */
 export class Player {
+  static readonly PLAYBACK_SPEED_OPTIONS = [0.5, 1.0, 1.5, 2.0];
+
   #currentTrack = $state.raw<Track | null>(null);
   #isPlaying = $state(false);
   #duration = $state(0);
@@ -43,8 +45,6 @@ export class Player {
   #playbackSpeedIndex = $state(1);
 
   #audio: HTMLAudioElement | null = null;
-
-  static SPEED_OPTIONS = [0.5, 1.0, 1.5, 2.0];
 
   /**
    * Creates a new player instance and sets it in the context.
@@ -102,7 +102,9 @@ export class Player {
    * Returns the playback speed.
    */
   get playbackSpeed() {
-    return Player.SPEED_OPTIONS[this.#playbackSpeedIndex] ?? Player.SPEED_OPTIONS[1];
+    return (
+      Player.PLAYBACK_SPEED_OPTIONS[this.#playbackSpeedIndex] ?? Player.PLAYBACK_SPEED_OPTIONS[1]
+    );
   }
 
   /**
@@ -117,7 +119,8 @@ export class Player {
    * Cycles through available playback speeds.
    */
   cycleSpeed() {
-    this.#playbackSpeedIndex = (this.#playbackSpeedIndex + 1) % Player.SPEED_OPTIONS.length;
+    this.#playbackSpeedIndex =
+      (this.#playbackSpeedIndex + 1) % Player.PLAYBACK_SPEED_OPTIONS.length;
 
     if (this.#audio) {
       this.#audio.playbackRate = this.playbackSpeed;
@@ -170,7 +173,7 @@ export class Player {
    * @param speed - The desired playback speed (e.g., 0.5, 1.0, 1.5, 2.0).
    */
   setSpeed(speed: number) {
-    const index = Player.SPEED_OPTIONS.indexOf(speed);
+    const index = Player.PLAYBACK_SPEED_OPTIONS.indexOf(speed);
     if (index === -1) {
       console.warn(`Invalid playback speed: ${speed}`);
       return;
