@@ -5,21 +5,21 @@ export const load: PageServerLoad = async () => {
     collections: [
       {
         id: 1,
-        tag: 'Special Educational Needs',
-        title: 'SEN peer support',
-        numberofpodcasts: 12,
-        numberofnotes: 2,
-        variant: 'purple',
-        to: '/collection/1',
-      },
-      {
-        id: 2,
         tag: 'Artificial Intelligence',
         title: 'Learn to use AI',
         numberofpodcasts: 8,
         numberofnotes: 3,
-        variant: 'amber',
+        to: '/collection/1',
+        type: 'AI',
+      },
+      {
+        id: 2,
+        tag: 'Special Educational Needs',
+        title: 'SEN peer support',
+        numberofpodcasts: 12,
+        numberofnotes: 2,
         to: '/collection/2',
+        type: 'SEN',
       },
       {
         id: 3,
@@ -27,8 +27,8 @@ export const load: PageServerLoad = async () => {
         title: 'Understanding Mental Health',
         numberofpodcasts: 10,
         numberofnotes: 1,
-        variant: 'teal',
         to: '/collection/3',
+        type: 'MENTAL_HEALTH',
       },
     ],
   };
