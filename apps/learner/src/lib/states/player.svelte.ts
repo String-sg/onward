@@ -118,7 +118,7 @@ export class Player {
   /**
    * Cycles through available playback speeds.
    */
-  cycleSpeed() {
+  cyclePlaybackSpeed() {
     this.#playbackSpeedIndex =
       (this.#playbackSpeedIndex + 1) % Player.PLAYBACK_SPEED_OPTIONS.length;
 

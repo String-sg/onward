@@ -37,7 +37,7 @@
   };
 
   const handleSpeedChange = () => {
-    player.cycleSpeed();
+    player.cyclePlaybackSpeed();
   };
 
   const handleChatWidgetClick = () => {
