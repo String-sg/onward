@@ -102,9 +102,7 @@ export class Player {
    * Returns the playback speed.
    */
   get playbackSpeed() {
-    return (
-      Player.PLAYBACK_SPEED_OPTIONS[this.#playbackSpeedIndex] ?? Player.PLAYBACK_SPEED_OPTIONS[1]
-    );
+    return Player.PLAYBACK_SPEED_OPTIONS[this.#playbackSpeedIndex];
   }
 
   /**
