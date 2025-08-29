@@ -41,7 +41,7 @@
 
 <a
   href={to}
-  class="shadow-xs flex flex-col gap-y-2 rounded-3xl bg-white bg-gradient-to-b p-6 transition-all hover:translate-y-[-1px] hover:bg-slate-50 hover:shadow-sm"
+  class="shadow-xs flex flex-col gap-y-2 rounded-3xl bg-white bg-gradient-to-b p-6 transition-shadow hover:ring-1 hover:ring-slate-300 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950"
 >
   <div class="flex flex-col gap-y-8">
     <div class="flex justify-center">
