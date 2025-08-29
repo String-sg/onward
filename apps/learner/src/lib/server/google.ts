@@ -56,6 +56,7 @@ export class GoogleOAuth {
       redirect_uri: this.redirectUri,
       code_challenge: codeChallenge,
       code_challenge_method: CodeChallengeMethod.S256,
+      hd: env.GOOGLE_HOSTED_DOMAIN,
     });
 
     // Store auth state and pkce verifier in Valkey
