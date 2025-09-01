@@ -145,9 +145,9 @@ export class Player {
     // Stop current audio if playing
     if (this.#audio.src !== track.url) {
       this.#audio.pause();
-      // Update the source for the new track
-      this.#audio.src = track.url;
+
       // Load the new track metadata
+      this.#audio.src = track.url;
       this.#audio.load();
       this.#progress = 0;
     }
