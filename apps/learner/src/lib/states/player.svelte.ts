@@ -173,6 +173,34 @@ export class Player {
   }
 
   /**
+   * Skips backward by a specified amount of time.
+   * If the resulting position is less than 0, it will clamp to 0.
+   * @param seconds - The number of seconds to skip backward. Defaults to 10 seconds.
+   */
+  skipBack(seconds = 10) {
+    if (!this.#audio) {
+      console.warn('No audio loaded. Cannot skip back.');
+      return;
+    }
+
+    this.seek(Math.max(0, this.#progress - seconds));
+  }
+
+  /**
+   * Skips forward by a specified amount of time.
+   * If the resulting position exceeds the track duration, it will clamp to the duration.
+   * @param seconds - The number of seconds to skip forward. Defaults to 10 seconds.
+   */
+  skipForward(seconds = 10) {
+    if (!this.#audio) {
+      console.warn('No audio loaded. Cannot skip forward.');
+      return;
+    }
+
+    this.seek(Math.min(this.#duration, this.#progress + seconds));
+  }
+
+  /**
    * Toggles the playback state.
    * If no track is loaded, this method does nothing.
    */
@@ -199,33 +227,5 @@ export class Player {
 
     this.#isPlaying = false;
     this.#currentTrack = null;
-  }
-
-  /**
-   * Skips backward by a specified amount of time.
-   * If the resulting position is less than 0, it will clamp to 0.
-   * @param seconds - The number of seconds to skip backward. Defaults to 10 seconds.
-   */
-  skipBack(seconds = 10) {
-    if (!this.#audio) {
-      console.warn('No audio loaded. Cannot skip back.');
-      return;
-    }
-
-    this.seek(Math.max(0, this.#progress - seconds));
-  }
-
-  /**
-   * Skips forward by a specified amount of time.
-   * If the resulting position exceeds the track duration, it will clamp to the duration.
-   * @param seconds - The number of seconds to skip forward. Defaults to 10 seconds.
-   */
-  skipForward(seconds = 10) {
-    if (!this.#audio) {
-      console.warn('No audio loaded. Cannot skip forward.');
-      return;
-    }
-
-    this.seek(Math.min(this.#duration, this.#progress + seconds));
   }
 }
