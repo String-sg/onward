@@ -142,7 +142,6 @@ export class Player {
       };
     }
 
-    // Stop current audio if playing
     if (this.#audio.src !== track.url) {
       this.#audio.pause();
 
