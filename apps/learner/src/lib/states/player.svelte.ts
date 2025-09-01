@@ -155,7 +155,6 @@ export class Player {
     this.#currentTrack = track;
 
     this.#audio.play();
-    this.#isPlaying = true;
   }
 
   /**
