@@ -183,7 +183,7 @@ export class Player {
       return;
     }
 
-    this.seek(Math.max(0, this.#progress - seconds));
+    this.seek(this.#progress - seconds);
   }
 
   /**
@@ -197,7 +197,7 @@ export class Player {
       return;
     }
 
-    this.seek(Math.min(this.#duration, this.#progress + seconds));
+    this.seek(this.#progress + seconds);
   }
 
   /**
