@@ -166,10 +166,11 @@ export class Player {
       return;
     }
 
-    if (time >= 0 && time <= this.#duration) {
-      this.#audio.currentTime = time;
-      this.#progress = time;
-    }
+    // Clamp `time` between 0 and the track's duration.
+    const clampedTime = Math.max(0, Math.min(time, this.#duration));
+
+    this.#audio.currentTime = clampedTime;
+    this.#progress = clampedTime;
   }
 
   /**
