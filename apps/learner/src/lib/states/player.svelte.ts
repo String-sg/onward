@@ -149,9 +149,9 @@ export class Player {
       this.#audio.src = track.url;
       this.#audio.load();
       this.#progress = 0;
-    }
 
-    this.#currentTrack = track;
+      this.#currentTrack = track;
+    }
 
     this.#audio.play();
   }
