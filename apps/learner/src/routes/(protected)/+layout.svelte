@@ -66,18 +66,20 @@
   </div>
 </div>
 
-<NowPlayingView
-  isopen={isNowPlayingViewOpen}
-  onclose={handleNowPlayingViewClose}
-  isplaying={player.isPlaying}
-  playbackspeed={player.playbackSpeed}
-  duration={player.duration}
-  progress={player.progress}
-  currenttrack={player.currentTrack}
-  onplaypause={handleNowPlayingBarPlay}
-  onseek={handleSeek}
-  onskipback={handleSkipBack}
-  onskipforward={handleSkipForward}
-  onspeedchange={handleSpeedChange}
-/>
+{#if player.currentTrack}
+  <NowPlayingView
+    isopen={isNowPlayingViewOpen}
+    onclose={handleNowPlayingViewClose}
+    isplaying={player.isPlaying}
+    playbackspeed={player.playbackSpeed}
+    duration={player.duration}
+    progress={player.progress}
+    currenttrack={player.currentTrack}
+    onplaypause={handleNowPlayingBarPlay}
+    onseek={handleSeek}
+    onskipback={handleSkipBack}
+    onskipforward={handleSkipForward}
+    onspeedchange={handleSpeedChange}
+  />
+{/if}
 <ChatView isopen={isChatViewOpen} onclose={handleChatViewClose} />

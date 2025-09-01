@@ -6,6 +6,7 @@
   import { Modal, type ModalProps } from '$lib/components/Modal/index.js';
   import { Slider, type SliderProps } from '$lib/components/Slider/index.js';
   import { formatTime } from '$lib/helpers/index.js';
+  import type { Track } from '$lib/states/index.js';
 
   export interface Props {
     /**
@@ -35,7 +36,7 @@
     /**
      * Metadata of the current track being played.
      */
-    currenttrack: { id: number; tags: string[]; title: string } | null;
+    currenttrack: Track;
     /**
      * A callback to handle when the play/pause button is clicked.
      */
