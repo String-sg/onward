@@ -1,5 +1,7 @@
 import { getContext, setContext } from 'svelte';
 
+import { browser } from '$app/environment';
+
 const PLAYER_CONTEXT_KEY = Symbol('Player');
 
 export interface Track {
@@ -46,6 +48,37 @@ export class Player {
 
   #audio: HTMLAudioElement | null = null;
 
+  constructor() {
+    $effect(() => {
+      this.#audio = new Audio();
+
+      this.#audio.onloadedmetadata = () => {
+        this.#duration = this.#audio?.duration || 0;
+      };
+      this.#audio.ontimeupdate = () => {
+        this.#progress = this.#audio?.currentTime || 0;
+      };
+      this.#audio.onended = () => {
+        this.#isPlaying = false;
+        this.#progress = 0;
+      };
+      this.#audio.onplaying = () => {
+        this.#isPlaying = true;
+      };
+      this.#audio.onpause = () => {
+        this.#isPlaying = false;
+      };
+
+      return () => {
+        if (this.#audio) {
+          this.#audio.src = '';
+          this.#audio.load();
+          this.#audio = null;
+        }
+      };
+    });
+  }
+
   /**
    * Creates a new player instance and sets it in the context.
    * @returns The new player instance.
@@ -62,9 +95,8 @@ export class Player {
   static get() {
     const context: Player | undefined = getContext(PLAYER_CONTEXT_KEY);
     if (!context) {
-      throw new Error(`Player context not found`);
+      throw new Error('Player context not found');
     }
-
     return context;
   }
 
@@ -109,6 +141,10 @@ export class Player {
    * Cycles through available playback speeds.
    */
   cyclePlaybackSpeed() {
+    if (!browser || !this.#audio) {
+      throw new OperationUnpermittedError();
+    }
+
     this.#playbackSpeedIndex =
       (this.#playbackSpeedIndex + 1) % Player.PLAYBACK_SPEED_OPTIONS.length;
 
@@ -122,24 +158,8 @@ export class Player {
    * @param track - The track metadata.
    */
   play(track: Track) {
-    if (!this.#audio) {
-      this.#audio = new Audio();
-      this.#audio.onloadedmetadata = () => {
-        this.#duration = this.#audio?.duration || 0;
-      };
-      this.#audio.ontimeupdate = () => {
-        this.#progress = this.#audio?.currentTime || 0;
-      };
-      this.#audio.onended = () => {
-        this.#isPlaying = false;
-        this.#progress = 0;
-      };
-      this.#audio.onplaying = () => {
-        this.#isPlaying = true;
-      };
-      this.#audio.onpause = () => {
-        this.#isPlaying = false;
-      };
+    if (!browser || !this.#audio) {
+      throw new OperationUnpermittedError();
     }
 
     if (this.#audio.src !== track.url) {
@@ -161,9 +181,8 @@ export class Player {
    * @param time - The time in seconds to seek to.
    */
   seek(time: number) {
-    if (!this.#audio) {
-      console.warn('No audio loaded. Cannot seek.');
-      return;
+    if (!browser || !this.#audio) {
+      throw new OperationUnpermittedError();
     }
 
     // Clamp `time` between 0 and the track's duration.
@@ -175,39 +194,32 @@ export class Player {
 
   /**
    * Skips backward by a specified amount of time.
-   * If the resulting position is less than 0, it will clamp to 0.
    * @param seconds - The number of seconds to skip backward. Defaults to 10 seconds.
    */
   skipBack(seconds = 10) {
-    if (!this.#audio) {
-      console.warn('No audio loaded. Cannot skip back.');
-      return;
+    if (!browser || !this.#audio) {
+      throw new OperationUnpermittedError();
     }
-
     this.seek(this.#progress - seconds);
   }
 
   /**
    * Skips forward by a specified amount of time.
-   * If the resulting position exceeds the track duration, it will clamp to the duration.
    * @param seconds - The number of seconds to skip forward. Defaults to 10 seconds.
    */
   skipForward(seconds = 10) {
-    if (!this.#audio) {
-      console.warn('No audio loaded. Cannot skip forward.');
-      return;
+    if (!browser || !this.#audio) {
+      throw new OperationUnpermittedError();
     }
-
     this.seek(this.#progress + seconds);
   }
 
   /**
    * Toggles the playback state.
-   * If no track is loaded, this method does nothing.
    */
   toggle() {
-    if (!this.#currentTrack || !this.#audio) {
-      return;
+    if (!browser || !this.#audio) {
+      throw new OperationUnpermittedError();
     }
 
     if (this.#isPlaying) {
@@ -221,12 +233,20 @@ export class Player {
    * Stops the playback and clears the current track.
    */
   stop() {
-    if (this.#audio) {
-      this.#audio.pause();
-      this.#audio.currentTime = 0;
+    if (!browser || !this.#audio) {
+      throw new OperationUnpermittedError();
     }
+
+    this.#audio.pause();
+    this.#audio.currentTime = 0;
 
     this.#isPlaying = false;
     this.#currentTrack = null;
+  }
+}
+
+class OperationUnpermittedError extends Error {
+  constructor() {
+    super('This operation is not permitted outside the browser environment.');
   }
 }
