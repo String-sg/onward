@@ -58,7 +58,7 @@
   <div class="mx-auto flex max-w-5xl items-center justify-between gap-x-3 px-4 py-3">
     <div class="flex items-center gap-x-3">
       <a
-        href="/content/{params.id}"
+        href="/unit/{params.id}"
         class="rounded-full p-4 transition-colors hover:bg-slate-200 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950"
       >
         <ArrowLeft />
