@@ -1,6 +1,7 @@
 <script lang="ts">
   import { ArrowLeft, ChevronsDown, Lightbulb, Pause, Play, Share } from '@lucide/svelte';
   import { formatDistanceToNow } from 'date-fns';
+  import { onMount } from 'svelte';
 
   import { afterNavigate } from '$app/navigation';
   import { Badge } from '$lib/components/Badge/index.js';
@@ -19,13 +20,33 @@
 
   let isActive = $derived(player.currentTrack?.id === data.id);
 
+  const storageKey = `quiz_origin`;
+
+  onMount(() => {
+    if (typeof window === 'undefined') return;
+
+    const storedPath = sessionStorage.getItem(storageKey);
+    if (storedPath) {
+      returnTo = storedPath;
+    }
+    sessionStorage.clear();
+  });
+
   afterNavigate(({ from, type }) => {
+    if (typeof window === 'undefined') return;
+
     if (type === 'enter' || !from) {
       returnTo = '/';
+      sessionStorage.setItem(storageKey, '/');
       return;
     }
 
-    returnTo = from.url.pathname;
+    const fromPath = from.url.pathname;
+
+    if (fromPath.includes('/quiz')) return;
+
+    returnTo = fromPath;
+    sessionStorage.setItem(storageKey, fromPath);
   });
 
   const toggleIsExpanded = () => {
