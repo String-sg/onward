@@ -112,7 +112,7 @@ To contribute code, you'll need to set up your development environment.
 5. **Set up S3 local bucket with minio**
    1. Login to minio web browser at `http://localhost:9001`
    2. Create a bucket
-   3. Change `AWS_S3_BUCKET` in .env with the created bucket
+   3. Change `S3_BUCKET` in .env with the created bucket
 
 6. **Run tests:**
 
