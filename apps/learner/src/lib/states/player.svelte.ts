@@ -187,7 +187,6 @@ export class Player {
     const clampedTime = Math.max(0, Math.min(time, this.#duration));
 
     this.#audio.currentTime = clampedTime;
-    this.#progress = clampedTime;
   }
 
   /**
