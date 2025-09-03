@@ -237,7 +237,8 @@ export class Player {
     }
 
     this.#audio.pause();
-    this.#audio.currentTime = 0;
+    this.#audio.src = '';
+    this.#audio.load();
 
     this.#currentTrack = null;
   }
