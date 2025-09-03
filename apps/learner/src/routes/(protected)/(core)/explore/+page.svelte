@@ -12,8 +12,9 @@
       <a
         href="/"
         class="rounded-2xl px-4 py-2 text-sm font-medium hover:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2"
-        >See all</a
       >
+        See all
+      </a>
     </div>
     <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
       {#each data.learningUnits as learningUnit (learningUnit.id)}
@@ -32,8 +33,9 @@
       <a
         href="/"
         class="rounded-2xl px-4 py-2 text-sm font-medium hover:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2"
-        >See all</a
       >
+        See all
+      </a>
     </div>
     <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
       {#each data.collections as collection (collection.id)}
