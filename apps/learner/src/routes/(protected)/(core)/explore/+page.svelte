@@ -10,7 +10,7 @@
     <div class="flex flex-row justify-between px-2">
       <span class="text-xl font-semibold">Learning units</span>
       <a
-        href="/"
+        href="/units"
         class="rounded-2xl px-4 py-2 text-sm font-medium hover:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2"
       >
         See all
@@ -31,7 +31,7 @@
     <div class="flex flex-row justify-between px-2">
       <span class="text-xl font-semibold">Learning topics</span>
       <a
-        href="/"
+        href="/topics"
         class="rounded-2xl px-4 py-2 text-sm font-medium hover:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2"
       >
         See all
