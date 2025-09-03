@@ -197,6 +197,7 @@ export class Player {
     if (!browser || !this.#audio) {
       throw new OperationUnpermittedError();
     }
+
     this.seek(this.#progress - seconds);
   }
 
@@ -208,6 +209,7 @@ export class Player {
     if (!browser || !this.#audio) {
       throw new OperationUnpermittedError();
     }
+
     this.seek(this.#progress + seconds);
   }
 
