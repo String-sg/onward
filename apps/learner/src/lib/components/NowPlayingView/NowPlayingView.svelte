@@ -81,10 +81,6 @@
   const handlePositionChange: SliderProps['onvaluechange'] = (value) => {
     onseek(value);
   };
-
-  const handleSpeedChange = () => {
-    onspeedchange();
-  };
 </script>
 
 <Modal {isopen} {onclose} variant="dark">
@@ -133,7 +129,7 @@
         <!-- Speed Control -->
         <div class="flex justify-center">
           <button
-            onclick={handleSpeedChange}
+            onclick={onspeedchange}
             class="flex cursor-pointer items-center rounded-full bg-white/20 px-4 py-2 transition-colors hover:bg-white/30 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
           >
             <span class="text-sm font-medium">{playbackspeed.toFixed(1)}x speed</span>
