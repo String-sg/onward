@@ -239,7 +239,6 @@ export class Player {
     this.#audio.pause();
     this.#audio.currentTime = 0;
 
-    this.#isPlaying = false;
     this.#currentTrack = null;
   }
 }
