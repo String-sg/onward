@@ -104,15 +104,13 @@
     <div class="flex flex-col gap-y-6">
       <!-- Badge and Title -->
       <div class="flex flex-col gap-y-3">
-        {#if currenttrack}
-          <Badge variant="purple">{currenttrack.tags?.[0]}</Badge>
-          <a
-            href={`/content/${currenttrack.id}`}
-            class="w-fit text-xl focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-          >
-            {currenttrack.title}
-          </a>
-        {/if}
+        <Badge variant="purple">{currenttrack.tags?.[0]}</Badge>
+        <a
+          href={`/content/${currenttrack.id}`}
+          class="w-fit text-xl focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+        >
+          {currenttrack.title}
+        </a>
       </div>
 
       <div class="flex flex-col gap-y-5">
