@@ -11,7 +11,7 @@
     <div class="flex flex-row justify-between px-2">
       <span class="text-xl font-semibold">Learning units</span>
       <a
-        href="/units"
+        href="/explore/units"
         class="rounded-2xl px-4 py-2 text-sm font-medium hover:bg-slate-200 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950"
       >
         See all
@@ -36,12 +36,6 @@
   <div class="flex flex-col gap-y-3">
     <div class="flex flex-row justify-between px-2">
       <span class="text-xl font-semibold">Learning topics</span>
-      <a
-        href="/topics"
-        class="rounded-2xl px-4 py-2 text-sm font-medium hover:bg-slate-200 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950"
-      >
-        See all
-      </a>
     </div>
     <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
       {#each data.collections as collection (collection.id)}
