@@ -54,6 +54,7 @@ export class Player {
 
       this.#audio.onloadedmetadata = () => {
         this.#duration = this.#audio?.duration || 0;
+        this.#progress = 0;
       };
       this.#audio.ontimeupdate = () => {
         this.#progress = this.#audio?.currentTime || 0;
@@ -166,7 +167,6 @@ export class Player {
       // Load the new track metadata
       this.#audio.src = track.url;
       this.#audio.load();
-      this.#progress = 0;
 
       this.#currentTrack = track;
     }
