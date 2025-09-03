@@ -148,9 +148,7 @@ export class Player {
     this.#playbackSpeedIndex =
       (this.#playbackSpeedIndex + 1) % Player.PLAYBACK_SPEED_OPTIONS.length;
 
-    if (this.#audio) {
-      this.#audio.playbackRate = this.playbackSpeed;
-    }
+    this.#audio.playbackRate = this.playbackSpeed;
   }
 
   /**
