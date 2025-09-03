@@ -21,6 +21,7 @@ interface SessionData extends JSONObject {
   id: string;
   csrfToken: string;
   userId: string | number | null;
+  kv: JSONObject;
 }
 
 export default class Session {
@@ -42,6 +43,7 @@ export default class Session {
       id: options.generateId?.() ?? nanoid(DEFAULT_SESSION_ID_LENGTH),
       csrfToken: options.generateCSRFToken?.() ?? nanoid(DEFAULT_CSRF_TOKEN_LENGTH),
       userId: null,
+      kv: {},
     });
   }
 
@@ -137,6 +139,42 @@ export default class Session {
   csrfToken(): string {
     return mask(this.#data.csrfToken);
   }
+
+  /**
+   * Stores a value in the session's key-value store.
+   *
+   * @param key - The key to set.
+   * @param value - The value to set.
+   */
+  set(key: string, value: JSONValue) {
+    this.#data.kv[key] = value;
+  }
+
+  /**
+   * Deletes a value from the session's key-value store.
+   *
+   * @param key - The key to delete.
+   */
+  del(key: string) {
+    delete this.#data.kv[key];
+  }
+
+  /**
+   * Returns the value associated with the given key from the session's key-value store. If the key
+   * is not found and no default value is provided, `undefined` is returned.
+   *
+   * @param key - The key to get.
+   * @param defaultValue - An optional default value to return if the key is not found.
+   * @returns Either the value associated with the key, the default value if one is provided, or `undefined` if no default value is provided.
+   */
+  get<T extends JSONValue>(key: string, defaultValue?: T): T | undefined {
+    const value = this.#data.kv[key];
+    if (value === undefined) {
+      return defaultValue ?? undefined;
+    }
+
+    return value as T;
+  }
 }
 
 /**
@@ -155,7 +193,9 @@ function isSessionData(data: JSONValue): data is SessionData {
     'userId' in data &&
     (typeof data['userId'] === 'string' ||
       typeof data['userId'] === 'number' ||
-      data['userId'] === null)
+      data['userId'] === null) &&
+    'kv' in data &&
+    typeof data['kv'] === 'object'
     ? true
     : false;
 }
