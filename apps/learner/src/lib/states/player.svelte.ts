@@ -184,9 +184,7 @@ export class Player {
     }
 
     // Clamp `time` between 0 and the track's duration.
-    const clampedTime = Math.max(0, Math.min(time, this.#duration));
-
-    this.#audio.currentTime = clampedTime;
+    this.#audio.currentTime = Math.max(0, Math.min(time, this.#duration));
   }
 
   /**
