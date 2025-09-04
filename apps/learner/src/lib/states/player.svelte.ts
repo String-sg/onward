@@ -4,6 +4,8 @@ import { browser } from '$app/environment';
 
 const PLAYER_CONTEXT_KEY = Symbol('Player');
 
+const PLAYBACK_SPEED_OPTIONS = [0.5, 1.0, 1.5, 2.0];
+
 export interface Track {
   id: number;
   tags: string[];
@@ -38,8 +40,6 @@ export interface Track {
  * ```
  */
 export class Player {
-  static readonly PLAYBACK_SPEED_OPTIONS = [0.5, 1.0, 1.5, 2.0];
-
   #currentTrack = $state.raw<Track | null>(null);
   #isPlaying = $state(false);
   #duration = $state(0);
@@ -135,7 +135,7 @@ export class Player {
    * Returns the playback speed.
    */
   get playbackSpeed() {
-    return Player.PLAYBACK_SPEED_OPTIONS[this.#playbackSpeedIndex];
+    return PLAYBACK_SPEED_OPTIONS[this.#playbackSpeedIndex];
   }
 
   /**
@@ -146,8 +146,7 @@ export class Player {
       throw new OperationUnpermittedError();
     }
 
-    this.#playbackSpeedIndex =
-      (this.#playbackSpeedIndex + 1) % Player.PLAYBACK_SPEED_OPTIONS.length;
+    this.#playbackSpeedIndex = (this.#playbackSpeedIndex + 1) % PLAYBACK_SPEED_OPTIONS.length;
 
     this.#audio.playbackRate = this.playbackSpeed;
   }
