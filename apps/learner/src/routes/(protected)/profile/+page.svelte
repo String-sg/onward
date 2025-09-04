@@ -87,9 +87,9 @@
 
         <div class="flex items-center gap-x-1">
           <span class="text-xl font-medium">
-            {frequency === 'Weekly'
-              ? data.learningUnitsConsumedByWeek
-              : data.learningUnitsConsumedByMonth}
+            {frequency === 'Monthly'
+              ? data.learningUnitsConsumedByMonth
+              : data.learningUnitsConsumedByWeek}
           </span>
           <span class="text-slate-500">MLUs</span>
         </div>
@@ -106,9 +106,9 @@
 
         <div class="flex items-center gap-x-1">
           <span class="text-xl font-medium">
-            {frequency === 'Weekly'
-              ? data.learningUnitsCompletedByWeek
-              : data.learningUnitsCompletedByMonth}
+            {frequency === 'Monthly'
+              ? data.learningUnitsCompletedByMonth
+              : data.learningUnitsCompletedByWeek}
           </span>
           <span class="text-slate-500">MLUs</span>
         </div>
