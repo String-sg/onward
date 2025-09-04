@@ -104,12 +104,16 @@ To contribute code, you'll need to set up your development environment.
 4. **Start required local services**:
 
    ```sh
-   docker compose up -d valkey postgres
+   docker compose up -d valkey postgres minio
    ```
 
    > 💡 You can stop the services later with `docker compose down`.
 
-5. **Run tests:**
+5. **Set up bucket in MinIO**
+   1. Login to MinIO console at `http://localhost:9001`
+   2. Create a bucket named `onward`
+
+6. **Run tests:**
 
    ```sh
    pnpm -r test
