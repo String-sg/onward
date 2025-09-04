@@ -1,10 +1,16 @@
 import { getContext, setContext } from 'svelte';
 
+import { browser } from '$app/environment';
+
 const PLAYER_CONTEXT_KEY = Symbol('Player');
+
+const PLAYBACK_SPEED_OPTIONS = [0.5, 1.0, 1.5, 2.0];
 
 export interface Track {
   id: number;
+  tags: string[];
   title: string;
+  url: string;
 }
 
 /**
@@ -34,8 +40,45 @@ export interface Track {
  * ```
  */
 export class Player {
-  #isPlaying = $state(false);
   #currentTrack = $state.raw<Track | null>(null);
+  #isPlaying = $state(false);
+  #duration = $state(0);
+  #progress = $state(0);
+  #playbackSpeedIndex = $state(1);
+
+  #audio: HTMLAudioElement | null = null;
+
+  constructor() {
+    $effect(() => {
+      this.#audio = new Audio();
+
+      this.#audio.onloadedmetadata = () => {
+        this.#duration = this.#audio?.duration || 0;
+        this.#progress = 0;
+      };
+      this.#audio.ontimeupdate = () => {
+        this.#progress = this.#audio?.currentTime || 0;
+      };
+      this.#audio.onended = () => {
+        this.#isPlaying = false;
+        this.#progress = 0;
+      };
+      this.#audio.onplaying = () => {
+        this.#isPlaying = true;
+      };
+      this.#audio.onpause = () => {
+        this.#isPlaying = false;
+      };
+
+      return () => {
+        if (this.#audio) {
+          this.#audio.src = '';
+          this.#audio.load();
+          this.#audio = null;
+        }
+      };
+    });
+  }
 
   /**
    * Creates a new player instance and sets it in the context.
@@ -53,9 +96,8 @@ export class Player {
   static get() {
     const context: Player | undefined = getContext(PLAYER_CONTEXT_KEY);
     if (!context) {
-      throw new Error(`Player context not found`);
+      throw new Error('Player context not found');
     }
-
     return context;
   }
 
@@ -76,31 +118,131 @@ export class Player {
   }
 
   /**
+   * Returns the total duration of the current track in seconds.
+   */
+  get duration() {
+    return this.#duration;
+  }
+
+  /**
+   * Returns the current playback position in seconds.
+   */
+  get progress() {
+    return this.#progress;
+  }
+
+  /**
+   * Returns the playback speed.
+   */
+  get playbackSpeed() {
+    return PLAYBACK_SPEED_OPTIONS[this.#playbackSpeedIndex];
+  }
+
+  /**
+   * Cycles through available playback speeds.
+   */
+  cyclePlaybackSpeed() {
+    if (!browser || !this.#audio) {
+      throw new OperationUnpermittedError();
+    }
+
+    this.#playbackSpeedIndex = (this.#playbackSpeedIndex + 1) % PLAYBACK_SPEED_OPTIONS.length;
+
+    this.#audio.playbackRate = this.playbackSpeed;
+  }
+
+  /**
    * Plays the track with the specified metadata.
    * @param track - The track metadata.
    */
   play(track: Track) {
-    this.#currentTrack = track;
-    this.#isPlaying = true;
+    if (!browser || !this.#audio) {
+      throw new OperationUnpermittedError();
+    }
+
+    if (this.#audio.src !== track.url) {
+      this.#audio.pause();
+
+      // Load the new track metadata
+      this.#audio.src = track.url;
+      this.#audio.load();
+
+      this.#currentTrack = track;
+    }
+
+    this.#audio.play();
+  }
+
+  /**
+   * Seeks to the specified position in the current track.
+   * @param time - The time in seconds to seek to.
+   */
+  seek(time: number) {
+    if (!browser || !this.#audio) {
+      throw new OperationUnpermittedError();
+    }
+
+    // Clamp `time` between 0 and the track's duration.
+    this.#audio.currentTime = Math.max(0, Math.min(time, this.#duration));
+  }
+
+  /**
+   * Skips backward by a specified amount of time.
+   * @param seconds - The number of seconds to skip backward. Defaults to 10 seconds.
+   */
+  skipBack(seconds = 10) {
+    if (!browser || !this.#audio) {
+      throw new OperationUnpermittedError();
+    }
+
+    this.seek(this.#progress - seconds);
+  }
+
+  /**
+   * Skips forward by a specified amount of time.
+   * @param seconds - The number of seconds to skip forward. Defaults to 10 seconds.
+   */
+  skipForward(seconds = 10) {
+    if (!browser || !this.#audio) {
+      throw new OperationUnpermittedError();
+    }
+
+    this.seek(this.#progress + seconds);
   }
 
   /**
    * Toggles the playback state.
-   * If no track is loaded, this method does nothing.
    */
   toggle() {
-    if (!this.#currentTrack) {
-      return;
+    if (!browser || !this.#audio) {
+      throw new OperationUnpermittedError();
     }
 
-    this.#isPlaying = !this.#isPlaying;
+    if (this.#isPlaying) {
+      this.#audio.pause();
+    } else {
+      this.#audio.play();
+    }
   }
 
   /**
    * Stops the playback and clears the current track.
    */
   stop() {
-    this.#isPlaying = false;
+    if (!browser || !this.#audio) {
+      throw new OperationUnpermittedError();
+    }
+
+    this.#audio.pause();
+    this.#audio.src = '';
+    this.#audio.load();
+
     this.#currentTrack = null;
+  }
+}
+
+class OperationUnpermittedError extends Error {
+  constructor() {
+    super('This operation is not permitted outside the browser environment.');
   }
 }

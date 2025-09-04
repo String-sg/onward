@@ -9,7 +9,9 @@
   const handleLearningUnitPlay = (learningUnit: (typeof data.learningUnits)[0]) => {
     player.play({
       id: learningUnit.id,
+      tags: learningUnit.tags,
       title: learningUnit.title,
+      url: `/audio/${encodeURIComponent(learningUnit.url)}`,
     });
   };
 
@@ -31,7 +33,7 @@
     {#each data.learningUnits as learningUnit (learningUnit.id)}
       <LearningUnit
         to={`/content/${learningUnit.id}`}
-        tags={[{ variant: 'purple', content: 'Special Educational Needs' }]}
+        tags={learningUnit.tags.map((tag) => ({ variant: 'purple', content: tag }))}
         title={learningUnit.title}
         player={{
           isactive: player.currentTrack?.id === learningUnit.id,
