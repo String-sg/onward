@@ -104,7 +104,7 @@ To contribute code, you'll need to set up your development environment.
 4. **Start required local services**:
 
    ```sh
-   docker compose up -d valkey postgres minio
+   docker compose up -d valkey postgres minio weaviate
    ```
 
    > 💡 You can stop the services later with `docker compose down`.

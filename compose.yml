@@ -36,6 +36,23 @@ services:
       - minio:/data
     command: server /data --console-address :9001
 
+  weaviate:
+    image: semitechnologies/weaviate:1.32.4
+    container_name: onward-weaviate
+    restart: unless-stopped
+    environment:
+      ENABLE_MODULES: 'text2vec-openai'
+      ASYNC_INDEXING: true
+      AUTHENTICATION_APIKEY_ENABLED: true
+      AUTHENTICATION_APIKEY_USERS: dummy
+      AUTHENTICATION_APIKEY_ALLOWED_KEYS: secret
+    command: weaviate --host 0.0.0.0 --port 50050 --scheme http
+    ports:
+      - 50050:50050
+      - 50051:50051
+    volumes:
+      - weaviate:/data
+
   learner:
     image: onward/learner:latest
     container_name: onward-learner
@@ -58,3 +75,4 @@ volumes:
   valkey:
   postgres:
   minio:
+  weaviate:
