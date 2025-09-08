@@ -23,12 +23,12 @@ export const load: PageServerLoad = async ({ params }) => {
     if (!learningUnit) throw error(404, 'Learning unit not found');
 
     return {
-      id: learningUnit.id.toString(),
+      id: learningUnit.id,
       tags: learningUnit.tags,
       title: learningUnit.title,
       summary: learningUnit.summary,
       url: learningUnit.contentURL,
-      createdAt: learningUnit.createdAt.toISOString(),
+      createdAt: learningUnit.createdAt,
     };
   } finally {
     await prisma.$disconnect();
