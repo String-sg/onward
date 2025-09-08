@@ -8,7 +8,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "check": "svelte-kit sync && svelte-check --fail-on-warnings",
-    "prepare": "svelte-kit sync || echo ''"
+    "prepare": "svelte-kit sync || echo ''",
+    "seed": "node --import=tsx prisma/seed.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.879.0",
@@ -26,6 +27,7 @@
     "@sveltejs/vite-plugin-svelte": "^6.1.0",
     "@tailwindcss/vite": "^4.1.11",
     "date-fns": "^4.1.0",
+    "dotenv": "^17.2.2",
     "google-auth-library": "^10.3.0",
     "nanoid": "^5.1.5",
     "pino": "^9.9.0",
@@ -33,6 +35,7 @@
     "svelte": "^5.38.0",
     "svelte-check": "^4.3.0",
     "tailwindcss": "^4.1.11",
+    "tsx": "^4.20.5",
     "typescript": "^5.9.2",
     "vite": "^7.1.1"
   }
