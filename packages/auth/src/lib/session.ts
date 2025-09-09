@@ -2,7 +2,7 @@ import { type GlideClient, TimeUnit } from '@valkey/valkey-glide';
 import { safeDestr } from 'destr';
 import { nanoid } from 'nanoid';
 
-import { mask } from './utils/mask';
+import { mask } from './utils/mask.js';
 
 /**
  * The default length of the session ID.
@@ -13,56 +13,81 @@ const DEFAULT_SESSION_ID_LENGTH = 32;
  */
 const DEFAULT_CSRF_TOKEN_LENGTH = 32;
 
-type JSONPrimitive = string | number | boolean | null;
-type JSONValue = JSONPrimitive | JSONValue[] | JSONObject;
-type JSONObject = { [Key in string]: JSONValue };
-
-interface SessionData extends JSONObject {
-  id: string;
-  csrfToken: string;
-  userId: string | number | null;
-  kv: JSONObject;
+export interface User {
+  id: string | number;
+  email: string;
+  name: string;
 }
 
-export default class Session {
-  #data: SessionData;
+type JSONPrimitive = string | number | boolean | null;
+type JSONValue = JSONPrimitive | JSONValue[] | JSONObject;
+type JSONObject = { [key in string]: JSONValue };
 
-  private constructor(data: SessionData) {
+/**
+ * A class representing a session.
+ */
+export default class Session {
+  #id: string;
+  #csrfToken: string;
+  #user: User | null;
+  #data: JSONObject;
+
+  private constructor({
+    id,
+    csrfToken,
+    user,
+    data,
+  }: {
+    id: string;
+    csrfToken: string;
+    user: User | null;
+    data: JSONObject;
+  }) {
+    this.#id = id;
+    this.#csrfToken = csrfToken;
+    this.#user = user;
     this.#data = data;
   }
 
   /**
-   * Creates a new {@link Session} instance.
+   * Creates a {@link Session} with an optional user. If a valid user is provided, the session is
+   * considered authenticated. Otherwise, the session is considered unauthenticated.
    *
-   * @returns A new {@link Session} instance.
+   * @param user - The user to associate with the session.
+   * @param options.generateId - An optional function to override the default session ID generation.
+   * @param options.generateCSRFToken - An optional function to override the default CSRF token generation.
+   * @returns A {@link Session} with the user associated with it.
    */
   static create(
-    options: { generateId?: () => string; generateCSRFToken?: () => string } = {},
-  ): Session {
+    user: User | null,
+    options: {
+      generateId?: () => string;
+      generateCSRFToken?: () => string;
+    } = {},
+  ) {
     return new Session({
       id: options.generateId?.() ?? nanoid(DEFAULT_SESSION_ID_LENGTH),
       csrfToken: options.generateCSRFToken?.() ?? nanoid(DEFAULT_CSRF_TOKEN_LENGTH),
-      userId: null,
-      kv: {},
+      user,
+      data: {},
     });
   }
 
   /**
-   * Prepares a {@link Session} instance by retrieving it from Valkey using the provided key. If
-   * the key is empty or the stored session data is invalid or missing, a new session is created
-   * and returned.
+   * Prepares a {@link Session} by retrieving it from Valkey using the provided key. Returns `null` if
+   * the session does not exist or the session data is invalid.
    *
    * @param valkey - The Valkey client.
-   * @param key - The key to use to retrieve the session data from Valkey.
+   * @param key - An unique key used to retrieve the session from Valkey.
    * @param options.namespace - An optional namespace to prefix the key with.
-   * @returns A valid {@link Session} instance, either retrieved from Valkey or newly created.
+   * @returns A {@link Session} with the data retrieved from Valkey, or `null` if the session does not exist or the session data is invalid.
    */
   static async prepare(
     valkey: GlideClient,
     key: string,
     options: { namespace?: string } = {},
   ): Promise<Session | null> {
-    if (!key.length) {
+    if (!key) {
       return null;
     }
 
@@ -72,25 +97,68 @@ export default class Session {
       return null;
     }
 
-    let data: JSONValue;
+    let payload: JSONObject;
     try {
-      data = safeDestr(value.toString());
+      payload = safeDestr(value.toString());
     } catch {
       return null;
     }
 
-    if (!isSessionData(data)) {
+    if (
+      !payload ||
+      typeof payload !== 'object' ||
+      !('id' in payload) ||
+      typeof payload['id'] !== 'string' ||
+      !('csrfToken' in payload) ||
+      typeof payload['csrfToken'] !== 'string' ||
+      !('user' in payload) ||
+      typeof payload['user'] !== 'object' ||
+      Array.isArray(payload['user']) ||
+      !('data' in payload) ||
+      !payload['data'] ||
+      typeof payload['data'] !== 'object' ||
+      Array.isArray(payload['data'])
+    ) {
       return null;
     }
 
-    return new Session(data);
+    if (payload['user'] === null) {
+      return new Session({
+        id: payload['id'],
+        csrfToken: payload['csrfToken'],
+        user: null,
+        data: payload['data'],
+      });
+    }
+
+    if (
+      !payload['user']['id'] ||
+      (typeof payload['user']['id'] !== 'string' && typeof payload['user']['id'] !== 'number') ||
+      !payload['user']['email'] ||
+      typeof payload['user']['email'] !== 'string' ||
+      !payload['user']['name'] ||
+      typeof payload['user']['name'] !== 'string'
+    ) {
+      return null;
+    }
+
+    return new Session({
+      id: payload['id'],
+      csrfToken: payload['csrfToken'],
+      user: {
+        id: payload['user']['id'],
+        email: payload['user']['email'],
+        name: payload['user']['name'],
+      },
+      data: payload['data'],
+    });
   }
 
   /**
-   * Commits the {@link Session} instance to Valkey using the session's ID as the key.
+   * Commits the given {@link Session} to Valkey using the session's ID as the key.
    *
    * @param valkey - The Valkey client.
-   * @param session - The {@link Session} instance to commit.
+   * @param session - The {@link Session} to commit.
    * @param options.namespace - An optional namespace to prefix the key with.
    * @param options.ttl - An optional time-to-live (TTL) for the session in seconds. If not provided, the session will **NOT** expire.
    */
@@ -99,45 +167,76 @@ export default class Session {
     session: Session,
     options: { namespace?: string; ttl?: number } = {},
   ): Promise<void> {
-    if (!session.#data.id || !session.#data.csrfToken) {
-      return;
-    }
-
-    const key = options.namespace ? `${options.namespace}:${session.#data.id}` : session.#data.id;
-    const value = JSON.stringify(session.#data);
+    const key = options.namespace ? `${options.namespace}:${session.#id}` : session.#id;
+    const value = JSON.stringify({
+      id: session.#id,
+      csrfToken: session.#csrfToken,
+      user: session.#user,
+      data: session.#data,
+    });
 
     await valkey.set(
       key,
       value,
-      options.ttl
-        ? {
-            expiry: { type: TimeUnit.Seconds, count: options.ttl },
-          }
-        : undefined,
+      options.ttl ? { expiry: { type: TimeUnit.Seconds, count: options.ttl } } : undefined,
     );
   }
 
   /**
-   * The unique identifier for the session.
+   * Destroys the {@link Session} from Valkey using the provided key.
+   *
+   * @param valkey - The Valkey client.
+   * @param key - An unique key used to destroy the {@link Session} data from Valkey.
+   * @param options.namespace - An optional namespace to prefix the key with.
+   */
+  static async destroy(
+    valkey: GlideClient,
+    key: string,
+    options: { namespace?: string } = {},
+  ): Promise<void> {
+    if (!key) {
+      return;
+    }
+
+    key = options.namespace ? `${options.namespace}:${key}` : key;
+    await valkey.del([key]);
+  }
+
+  /**
+   * Returns the unique identifier for the session.
+   *
+   * @returns The unique identifier for the session.
    */
   get id(): string {
-    return this.#data.id;
+    return this.#id;
   }
 
   /**
-   * Whether the session is authenticated.
+   * Returns `true` if the session is authenticated, meaning an user is associated with it.
+   * Otherwise, returns `false`.
+   *
+   * @returns `true` if the session is authenticated. Otherwise, returns `false`.
    */
   get isAuthenticated(): boolean {
-    return !!this.#data.userId;
+    return !!this.#user;
   }
 
   /**
-   * Returns a masked CSRF token for use in forms.
+   * Returns a masked CSRF token.
    *
    * @returns A masked version of the current CSRF token.
    */
   csrfToken(): string {
-    return mask(this.#data.csrfToken);
+    return mask(this.#csrfToken);
+  }
+
+  /**
+   * Returns the user associated with the session, or `null` if the session is unauthenticated.
+   *
+   * @returns The user associated with the session, or `null` if the session is unauthenticated.
+   */
+  get user(): User | null {
+    return this.#user ? { ...this.#user } : null;
   }
 
   /**
@@ -147,7 +246,7 @@ export default class Session {
    * @param value - The value to set.
    */
   set(key: string, value: JSONValue) {
-    this.#data.kv[key] = value;
+    this.#data[key] = value;
   }
 
   /**
@@ -156,46 +255,23 @@ export default class Session {
    * @param key - The key to delete.
    */
   del(key: string) {
-    delete this.#data.kv[key];
+    delete this.#data[key];
   }
 
   /**
    * Returns the value associated with the given key from the session's key-value store. If the key
-   * is not found and no default value is provided, `undefined` is returned.
+   * does not exist and no default value is provided, `null` is returned.
    *
    * @param key - The key to get.
-   * @param defaultValue - An optional default value to return if the key is not found.
-   * @returns Either the value associated with the key, the default value if one is provided, or `undefined` if no default value is provided.
+   * @param defaultValue - An optional default value to return if the key does not exist.
+   * @returns Either the value associated with the key, the default value if one is provided, or `null` if no default value is provided.
    */
-  get<T extends JSONValue>(key: string, defaultValue?: T): T | undefined {
-    const value = this.#data.kv[key];
-    if (value === undefined) {
-      return defaultValue ?? undefined;
+  get<T extends JSONValue>(key: string, defaultValue?: T): T | null {
+    const value = this.#data[key];
+    if (!value) {
+      return defaultValue ?? null;
     }
 
     return value as T;
   }
-}
-
-/**
- * Checks if the data is a valid {@link SessionData} object.
- *
- * @param data - The data to check.
- * @returns `true` if the data is a valid {@link SessionData} object. Otherwise, returns `false`.
- */
-function isSessionData(data: JSONValue): data is SessionData {
-  return data &&
-    typeof data === 'object' &&
-    'id' in data &&
-    typeof data['id'] === 'string' &&
-    'csrfToken' in data &&
-    typeof data['csrfToken'] === 'string' &&
-    'userId' in data &&
-    (typeof data['userId'] === 'string' ||
-      typeof data['userId'] === 'number' ||
-      data['userId'] === null) &&
-    'kv' in data &&
-    typeof data['kv'] === 'object'
-    ? true
-    : false;
 }

@@ -21,7 +21,7 @@ const TIME_UINT_REGEX = /(\d{1,5})([dmhs]{1})/;
  * parseDuration("");         // null (empty string)
  * ```
  */
-export default function parseDuration(input: string): number | null {
+export function parseDuration(input: string): number | null {
   input = input.trim();
 
   // Return `null` if the input is an empty string.

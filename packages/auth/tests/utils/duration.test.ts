@@ -1,4 +1,4 @@
-import parseDuration from '$lib/utils/duration';
+import { parseDuration } from '$lib/utils/duration';
 
 test.each([
   ['1d', 86400],

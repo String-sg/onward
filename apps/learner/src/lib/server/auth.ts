@@ -115,7 +115,6 @@ export function generateGoogleAuthURL({
  *   codeVerifier: "code-verifier"
  * });
  * ```
- *
  */
 export async function exchangeGoogleCodeForIdToken({
   origin,
