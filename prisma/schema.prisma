@@ -21,7 +21,6 @@ model User {
   avatarURL        String @map("avatar_url")
 
   // Relations.
-  collections      Collection[]
   learningJourneys LearningJourney[]
   threads          Thread[]
 
@@ -34,14 +33,10 @@ model Collection {
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   // Domain-Specific Fields.
-  kind  String @map("kind") @db.VarChar(255)
   title String @map("title")
   tag   String @map("tag") @db.VarChar(255)
 
   // Relations.
-  userId BigInt @map("user_id")
-
-  user         User           @relation(fields: [userId], references: [id])
   learningUnit LearningUnit[]
 
   @@map("collections")
