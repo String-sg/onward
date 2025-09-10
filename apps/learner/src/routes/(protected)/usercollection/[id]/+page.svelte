@@ -23,7 +23,7 @@
     <div class="flex items-center justify-between gap-x-8">
       <div class="flex items-center gap-x-3">
         <a
-          href="/explore"
+          href="/learning"
           class="rounded-full p-4 transition-colors hover:bg-slate-200 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950"
         >
           <ArrowLeft />
@@ -38,18 +38,25 @@
 <div bind:this={target} class="absolute inset-x-0 top-0 h-px"></div>
 
 <main class="pt-23 relative mx-auto flex min-h-svh max-w-5xl flex-col gap-y-6 px-4 pb-28">
-  <div class="shadow-xs flex flex-col gap-y-2 rounded-3xl bg-slate-200 p-4">
-    <span class="text-lg font-medium">About this topic</span>
-    <span>
-      Explore the world of Special Educational Needs (SEN) peer support that indicates Singapore
-      specific peer support knowledges, case studies and more to gain knowledge about SEN. This
-      topic encompasses a variety of bite-sized.
-    </span>
+  <div class="flex flex-col gap-y-3">
+    <div class="px-2">
+      <span class="text-xl font-semibold">In Progress</span>
+    </div>
+
+    <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
+      {#each data.learningUnits as learningUnit (learningUnit.id)}
+        <LearningUnit
+          to={learningUnit.to}
+          tags={learningUnit.tags as LearningUnitProps['tags']}
+          title={learningUnit.title}
+        />
+      {/each}
+    </div>
   </div>
 
   <div class="flex flex-col gap-y-3">
     <div class="px-2">
-      <span class="text-xl font-semibold">12 Podcasts</span>
+      <span class="text-xl font-semibold">Completed</span>
     </div>
 
     <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
