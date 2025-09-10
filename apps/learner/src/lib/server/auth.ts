@@ -163,6 +163,11 @@ export async function verifyGoogleIdToken(idToken: string): Promise<GoogleProfil
     return null;
   }
 
+  // If the Google hosted domain is set, make sure the `hd` claim matches the hosted domain.
+  if (env.GOOGLE_HOSTED_DOMAIN && payload.hd !== env.GOOGLE_HOSTED_DOMAIN) {
+    return null;
+  }
+
   return {
     id: payload.sub,
     email: payload.email,
