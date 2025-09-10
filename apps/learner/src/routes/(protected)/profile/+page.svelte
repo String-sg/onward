@@ -79,7 +79,7 @@
       <div class="flex items-center justify-between rounded-3xl bg-white p-4">
         <div class="flex items-center gap-x-2">
           <div class="rounded-full bg-black p-2 text-white">
-            <BookOpenCheck />
+            <BookOpenCheck class="h-4 w-4" />
           </div>
 
           <span>No. of MLUs consumed</span>
@@ -98,7 +98,7 @@
       <div class="flex items-center justify-between rounded-3xl bg-white p-4">
         <div class="flex items-center gap-x-2">
           <div class="rounded-full bg-black p-2 text-white">
-            <Lightbulb />
+            <Lightbulb class="h-4 w-4" />
           </div>
 
           <span>Completed MLUs</span>
