@@ -73,6 +73,7 @@ export const GET: RequestHandler = async (event) => {
           name: profile.name,
           email: profile.email,
           googleProviderId: profile.id,
+          avatarURL: profile.picture,
         },
       });
     } catch (err) {
