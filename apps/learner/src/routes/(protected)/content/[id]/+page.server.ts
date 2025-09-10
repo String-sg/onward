@@ -1,13 +1,32 @@
+import { error } from '@sveltejs/kit';
+
+import { db } from '$lib/server/db';
+
 import type { PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async () => {
+export const load: PageServerLoad = async ({ params }) => {
+  const learningUnit = await db.learningUnit.findUnique({
+    where: { id: BigInt(params.id) },
+    select: {
+      id: true,
+      tags: true,
+      title: true,
+      summary: true,
+      contentURL: true,
+      createdAt: true,
+    },
+  });
+
+  if (!learningUnit) {
+    throw error(404);
+  }
+
   return {
-    id: 1,
-    tags: ['Special Educational Needs'],
-    title: 'Navigating Special Educational Needs: A Path to Inclusion',
-    summary:
-      "This podcast explores how teachers in Singapore can effectively support students with Special Educational Needs (SEN) in mainstream classrooms, fostering inclusion through practical strategies and collaboration. Learn key approaches to address diverse learning needs, align with MOE's inclusive education goals, and create equitable learning environments.",
-    url: '/audio/ADHD in Classrooms_ Strategies That Work.wav',
-    createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+    id: learningUnit.id,
+    tags: learningUnit.tags,
+    title: learningUnit.title,
+    summary: learningUnit.summary,
+    url: learningUnit.contentURL,
+    createdAt: learningUnit.createdAt,
   };
 };

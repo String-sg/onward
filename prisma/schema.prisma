@@ -55,6 +55,7 @@ model LearningUnit {
   tags        String[] @default([]) @map("tags") @db.VarChar(255)
   contentType String   @map("content_type") @db.VarChar(255)
   contentURL  String   @map("content_url")
+  summary     String   @map("summary")
 
   // Relations.
   collectionId BigInt @map("collection_id")
