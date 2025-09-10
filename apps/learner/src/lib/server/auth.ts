@@ -35,7 +35,7 @@ export interface GoogleProfile {
    */
   name: string;
   /**
-   * An URL to the picture of the Google profile.
+   * A URL to the picture of the Google profile.
    */
   picture: string;
 }
