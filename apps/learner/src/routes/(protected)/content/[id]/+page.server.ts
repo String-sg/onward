@@ -5,10 +5,8 @@ import { db } from '$lib/server/db';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ params }) => {
-  const id = BigInt(params.id);
-
   const learningUnit = await db.learningUnit.findUnique({
-    where: { id },
+    where: { id: BigInt(params.id) },
     select: {
       id: true,
       tags: true,
@@ -19,7 +17,9 @@ export const load: PageServerLoad = async ({ params }) => {
     },
   });
 
-  if (!learningUnit) throw error(404, 'Learning unit not found');
+  if (!learningUnit) {
+    throw error(404);
+  }
 
   return {
     id: learningUnit.id,
