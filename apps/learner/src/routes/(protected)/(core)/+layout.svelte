@@ -27,7 +27,12 @@
     <div class="flex flex-col gap-y-4">
       <div class="flex items-center justify-between px-2">
         <span class="text-2xl font-semibold">Onward</span>
-        <div class="h-10 w-10 rounded-full bg-white"></div>
+        <a
+          href="/profile"
+          aria-label="Profile"
+          class="h-10 w-10 cursor-pointer rounded-full bg-white"
+        >
+        </a>
       </div>
 
       <div class="shadow-xs flex items-center rounded-[80px] bg-white px-4">
