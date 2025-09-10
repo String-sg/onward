@@ -16,7 +16,6 @@
         tag={collection.tag}
         title={collection.title}
         numberofpodcasts={collection.numberofpodcasts}
-        numberofnotes={collection.numberofnotes}
         type={collection.type as CollectionProps['type']}
       />
     {/each}

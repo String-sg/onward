@@ -11,7 +11,7 @@
       <span class="text-xl font-semibold">Learning units</span>
       <a
         href="/units"
-        class="rounded-2xl px-4 py-2 text-sm font-medium hover:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2"
+        class="rounded-2xl px-4 py-2 text-sm font-medium hover:bg-slate-200 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950"
       >
         See all
       </a>
@@ -32,7 +32,7 @@
       <span class="text-xl font-semibold">Learning topics</span>
       <a
         href="/topics"
-        class="rounded-2xl px-4 py-2 text-sm font-medium hover:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2"
+        class="rounded-2xl px-4 py-2 text-sm font-medium hover:bg-slate-200 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950"
       >
         See all
       </a>
@@ -44,7 +44,6 @@
           tag={collection.tag}
           title={collection.title}
           numberofpodcasts={collection.numberofpodcasts}
-          numberofnotes={collection.numberofnotes}
           type={collection.type as CollectionProps['type']}
         />
       {/each}

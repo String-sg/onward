@@ -27,16 +27,12 @@
      */
     numberofpodcasts: number;
     /**
-     * Total number of notes in this collection.
-     */
-    numberofnotes: number;
-    /**
      * Defines the visual theme and icon for the collection.
      */
     type: Type;
   }
 
-  let { to, tag, title, numberofpodcasts, numberofnotes, type }: Props = $props();
+  let { to, tag, title, numberofpodcasts, type }: Props = $props();
 </script>
 
 <a
@@ -65,7 +61,6 @@
 
       <div class="flex flex-col">
         <span class="text-sm">{numberofpodcasts} podcasts</span>
-        <span class="text-sm">{numberofnotes} notes</span>
       </div>
     </div>
   </div>

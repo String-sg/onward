@@ -1,12 +1,14 @@
 <script lang="ts">
   import { ArrowLeft } from '@lucide/svelte';
 
-  import { LearningUnit } from '$lib/components/LearningUnit/index.js';
+  import { LearningUnit, type LearningUnitProps } from '$lib/components/LearningUnit/index.js';
   import { IsWithinViewport } from '$lib/helpers/index.js';
 
   let target = $state<HTMLElement | null>(null);
 
   const isWithinViewport = new IsWithinViewport(() => target);
+
+  const { data } = $props();
 </script>
 
 <header class="fixed inset-x-0 top-0 z-50 bg-slate-100/90 backdrop-blur-sm">
@@ -51,32 +53,13 @@
     </div>
 
     <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
-      <LearningUnit
-        to="/content/1"
-        tags={[
-          { variant: 'purple', content: 'Special Educational Needs' },
-          { variant: 'slate', content: 'Podcast' },
-        ]}
-        title="Navigating Special Educational Needs in Singapore: A Path to Inclusion"
-      />
-
-      <LearningUnit
-        to="/content/1"
-        tags={[
-          { variant: 'purple', content: 'Special Educational Needs' },
-          { variant: 'slate', content: 'Podcast' },
-        ]}
-        title="Navigating Special Educational Needs in Singapore: A Path to Inclusion"
-      />
-
-      <LearningUnit
-        to="/content/1"
-        tags={[
-          { variant: 'purple', content: 'Special Educational Needs' },
-          { variant: 'slate', content: 'Podcast' },
-        ]}
-        title="Navigating Special Educational Needs in Singapore: A Path to Inclusion"
-      />
+      {#each data.learningUnits as learningUnit (learningUnit.id)}
+        <LearningUnit
+          to={learningUnit.to}
+          tags={learningUnit.tags as LearningUnitProps['tags']}
+          title={learningUnit.title}
+        />
+      {/each}
     </div>
   </div>
 </main>
