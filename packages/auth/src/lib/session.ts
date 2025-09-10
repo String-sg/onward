@@ -78,7 +78,7 @@ export default class Session {
    * the session does not exist or the session data is invalid.
    *
    * @param valkey - The Valkey client.
-   * @param key - An unique key used to retrieve the session from Valkey.
+   * @param key - A unique key used to retrieve the session from Valkey.
    * @param options.namespace - An optional namespace to prefix the key with.
    * @returns A {@link Session} with the data retrieved from Valkey, or `null` if the session does not exist or the session data is invalid.
    */
@@ -186,7 +186,7 @@ export default class Session {
    * Destroys the {@link Session} from Valkey using the provided key.
    *
    * @param valkey - The Valkey client.
-   * @param key - An unique key used to destroy the {@link Session} data from Valkey.
+   * @param key - A unique key used to destroy the {@link Session} data from Valkey.
    * @param options.namespace - An optional namespace to prefix the key with.
    */
   static async destroy(
@@ -204,27 +204,20 @@ export default class Session {
 
   /**
    * Returns the unique identifier for the session.
-   *
-   * @returns The unique identifier for the session.
    */
   get id(): string {
     return this.#id;
   }
 
   /**
-   * Returns `true` if the session is authenticated, meaning an user is associated with it.
-   * Otherwise, returns `false`.
-   *
-   * @returns `true` if the session is authenticated. Otherwise, returns `false`.
+   * Returns `true` if the session is authenticated. Otherwise, returns `false`.
    */
   get isAuthenticated(): boolean {
     return !!this.#user;
   }
 
   /**
-   * Returns a masked CSRF token.
-   *
-   * @returns A masked version of the current CSRF token.
+   * Returns a masked version of the CSRF token.
    */
   csrfToken(): string {
     return mask(this.#csrfToken);
@@ -232,8 +225,6 @@ export default class Session {
 
   /**
    * Returns the user associated with the session, or `null` if the session is unauthenticated.
-   *
-   * @returns The user associated with the session, or `null` if the session is unauthenticated.
    */
   get user(): User | null {
     return this.#user ? { ...this.#user } : null;

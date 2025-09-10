@@ -23,7 +23,7 @@ export const auth = Auth(valkey, {
 
 export interface GoogleProfile {
   /**
-   * An unique identifier of the Google profile.
+   * A unique identifier of the Google profile.
    */
   id: string;
   /**
