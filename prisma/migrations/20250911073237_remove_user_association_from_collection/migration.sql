@@ -6,8 +6,8 @@
 
 */
 -- DropForeignKey
-ALTER TABLE "collections" DROP CONSTRAINT "collections_user_id_fkey";
+ALTER TABLE "public"."collections" DROP CONSTRAINT "collections_user_id_fkey";
 
 -- AlterTable
-ALTER TABLE "collections" DROP COLUMN "kind",
+ALTER TABLE "public"."collections" DROP COLUMN "kind",
 DROP COLUMN "user_id";
