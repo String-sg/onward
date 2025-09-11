@@ -78,8 +78,6 @@ const learningUnits = [
 ];
 
 async function main() {
-  await createUser();
-
   for (const collection of collections) {
     await createCollection(collection);
   }
@@ -97,20 +95,6 @@ main()
   .finally(async () => {
     await db.$disconnect();
   });
-
-async function createUser() {
-  return db.user.upsert({
-    where: {
-      id: 1,
-    },
-    update: {},
-    create: {
-      email: 'test@example.com',
-      name: 'Test User',
-      googleProviderId: '1234567890',
-    },
-  });
-}
 
 async function createCollection(collection: { id: number; data: Prisma.CollectionCreateInput }) {
   return db.collection.upsert({
