@@ -1,11 +1,11 @@
-import type { Handle } from '@sveltejs/kit';
+import type { Handle, RequestEvent } from '@sveltejs/kit';
 import type { GlideClient } from '@valkey/valkey-glide';
 import { nanoid } from 'nanoid';
 
 import { env } from '$env/dynamic/private';
 
-import Session from './session';
-import parseDuration from './utils/duration';
+import Session, { type User } from './session.js';
+import { parseDuration } from './utils/duration.js';
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -138,6 +138,23 @@ export interface AuthOptions {
 
 export interface AuthResult {
   handle: Handle;
+  /**
+   * Signs in the provided user by destroying the current session and creating a new one. The new
+   * session will be associated with the provided user, replacing `event.locals.session` and
+   * updating the session cookies accordingly.
+   *
+   * @param event - The SvelteKit request event.
+   * @param user - The user to associate with the new session.
+   */
+  signIn: (event: RequestEvent, user: User) => Promise<void>;
+  /**
+   * Signs out the user by destroying the current session and creating a new one. The new session
+   * will be unauthenticated, replacing `event.locals.session` and updating the session cookies
+   * accordingly.
+   *
+   * @param event - The SvelteKit request event.
+   */
+  signOut: (event: RequestEvent) => Promise<void>;
 }
 
 /**
@@ -224,9 +241,10 @@ export default function Auth(valkey: GlideClient, options?: PartialDeep<AuthOpti
       ? options.session.defaultTimeout
       : parseDuration(options.session.defaultTimeout)
     : parseDuration(DEFAULT_SESSION_DEFAULT_TIMEOUT);
+
   if (!defaultTimeout) {
     throw new InvalidAuthOptionsError(
-      `Failed to parse "session.defaultTimeout": ${options?.session?.defaultTimeout}. Expected a duration string like "3h".`,
+      `Invalid "session.defaultTimeout" value: "${options?.session?.defaultTimeout}". Expected a positive number (seconds) or duration string (e.g., "3h", "30m", "1d")`,
     );
   }
 
@@ -235,9 +253,10 @@ export default function Auth(valkey: GlideClient, options?: PartialDeep<AuthOpti
       ? options.session.authenticatedTimeout
       : parseDuration(options.session.authenticatedTimeout)
     : parseDuration(DEFAULT_SESSION_AUTHENTICATED_TIMEOUT);
+
   if (!authenticatedTimeout) {
     throw new InvalidAuthOptionsError(
-      `Failed to parse "session.authenticatedTimeout": ${options?.session?.authenticatedTimeout}. Expected a duration string like "7d".`,
+      `Invalid "session.authenticatedTimeout" value: "${options?.session?.authenticatedTimeout}". Expected a positive number (seconds) or duration string (e.g., "7d", "24h", "1440m")`,
     );
   }
 
@@ -271,49 +290,106 @@ export default function Auth(valkey: GlideClient, options?: PartialDeep<AuthOpti
     handle: async ({ event, resolve }) => {
       const sid = event.cookies.get(opts.cookies.session.name);
 
-      const session =
-        (sid ? await Session.prepare(valkey, sid, { namespace: opts.namespace }) : null) ??
-        Session.create({
+      let session: Session | null = null;
+      if (sid) {
+        session = await Session.prepare(valkey, sid, { namespace: opts.namespace });
+      }
+      if (!session) {
+        session = Session.create(null, {
           generateId: opts.generateId,
           generateCSRFToken: opts.generateCSRFToken,
         });
+      }
 
       event.locals.session = session;
 
       // Set the session cookie.
-      event.cookies.set(opts.cookies.session.name, session.id, {
+      event.cookies.set(opts.cookies.session.name, event.locals.session.id, {
         ...opts.cookies.session.options,
-        maxAge: session.isAuthenticated
+        maxAge: event.locals.session.isAuthenticated
           ? opts.session.authenticatedTimeout
           : opts.session.defaultTimeout,
       });
 
       // Set the CSRF cookie.
-      event.cookies.set(opts.cookies.csrf.name, session.csrfToken(), {
+      event.cookies.set(opts.cookies.csrf.name, event.locals.session.csrfToken(), {
         ...opts.cookies.csrf.options,
       });
 
       const response = await resolve(event);
 
-      await Session.commit(valkey, session, {
+      await Session.commit(valkey, event.locals.session, {
         namespace: opts.namespace,
-        ttl: session.isAuthenticated
+        ttl: event.locals.session.isAuthenticated
           ? opts.session.authenticatedTimeout
           : opts.session.defaultTimeout,
       });
 
       return response;
     },
+    signIn: async (event, user) => {
+      await Session.destroy(valkey, event.locals.session.id, { namespace: opts.namespace });
+
+      event.locals.session = Session.create(user, {
+        generateId: opts.generateId,
+        generateCSRFToken: opts.generateCSRFToken,
+      });
+
+      // Set the session cookie.
+      event.cookies.set(opts.cookies.session.name, event.locals.session.id, {
+        ...opts.cookies.session.options,
+        maxAge: event.locals.session.isAuthenticated
+          ? opts.session.authenticatedTimeout
+          : opts.session.defaultTimeout,
+      });
+
+      // Set the CSRF cookie.
+      event.cookies.set(opts.cookies.csrf.name, event.locals.session.csrfToken(), {
+        ...opts.cookies.csrf.options,
+      });
+    },
+    signOut: async (event: RequestEvent) => {
+      await Session.destroy(valkey, event.locals.session.id, { namespace: opts.namespace });
+
+      event.locals.session = Session.create(null, {
+        generateId: opts.generateId,
+        generateCSRFToken: opts.generateCSRFToken,
+      });
+
+      // Set the session cookie.
+      event.cookies.set(opts.cookies.session.name, event.locals.session.id, {
+        ...opts.cookies.session.options,
+        maxAge: event.locals.session.isAuthenticated
+          ? opts.session.authenticatedTimeout
+          : opts.session.defaultTimeout,
+      });
+
+      // Set the CSRF cookie.
+      event.cookies.set(opts.cookies.csrf.name, event.locals.session.csrfToken(), {
+        ...opts.cookies.csrf.options,
+      });
+    },
   };
 }
 
 /**
- * An error thrown when the options to configure {@link Auth} are invalid.
+ * The base class for all authentication errors.
  */
-export class InvalidAuthOptionsError extends Error {
+export class AuthError extends Error {
   constructor(message: string) {
     super(message);
 
     this.name = this.constructor.name;
+  }
+}
+
+/**
+ * Thrown when the options to configure {@link Auth} are invalid.
+ */
+export class InvalidAuthOptionsError extends AuthError {
+  readonly type = 'INVALID_AUTH_OPTIONS';
+
+  constructor(message: string) {
+    super(message);
   }
 }

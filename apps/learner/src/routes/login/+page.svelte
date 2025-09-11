@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { page } from '$app/state';
   import { LinkButton } from '$lib/components/Button/index.js';
   import { Starfield } from '$lib/components/Starfield/index.js';
 </script>
@@ -16,7 +17,12 @@
   </div>
 
   <div class="flex flex-col items-center justify-center gap-y-4 py-5">
-    <LinkButton href="/" variant="primary" width="full" class="max-w-sm gap-x-2">
+    <LinkButton
+      href={`/auth/google?return_to=${encodeURIComponent(page.url.searchParams.get('return_to') || '/')}`}
+      variant="primary"
+      width="full"
+      class="max-w-sm gap-x-2"
+    >
       {@render googleIcon()}
       <span class="font-medium">Continue with Google</span>
     </LinkButton>
