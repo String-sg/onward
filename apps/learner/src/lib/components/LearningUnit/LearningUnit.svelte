@@ -1,5 +1,6 @@
 <script lang="ts">
   import { Pause, Play } from '@lucide/svelte';
+  import { formatDistanceToNow } from 'date-fns';
   import type { MouseEventHandler } from 'svelte/elements';
 
   import { Badge, type BadgeProps } from '$lib/components/Badge/index.js';
@@ -18,6 +19,10 @@
      * The title of the card.
      */
     title: string;
+    /**
+     * Time at which the card is created.
+     */
+    createdAt: Date;
     /**
      * The creator of the card.
      */
@@ -50,7 +55,7 @@
     } | null;
   }
 
-  let { to, title, tags, createdBy, player = null }: Props = $props();
+  let { to, title, tags, createdAt, createdBy, player = null }: Props = $props();
 
   const handlePlay: MouseEventHandler<HTMLButtonElement> = (event) => {
     // Prevent default anchor navigation.
@@ -93,7 +98,9 @@
       <div class="flex gap-x-1">
         <span class="text-sm text-slate-600">{createdBy}</span>
         <span class="text-sm text-slate-600">•</span>
-        <span class="text-sm text-slate-600">2 days ago</span>
+        <span class="text-sm text-slate-600">
+          {formatDistanceToNow(createdAt, { addSuffix: true })}</span
+        >
       </div>
     </div>
   </div>

@@ -39,6 +39,7 @@
           content: tag.label,
         }))}
         title={learningUnit.title}
+        createdAt={learningUnit.createdAt}
         createdBy={learningUnit.createdBy}
         player={{
           isactive: player.currentTrack?.id === learningUnit.id,
