@@ -41,13 +41,15 @@
     </div>
     <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
       {#each data.collections as collection (collection.id)}
-        <Collection
-          to="/collection/{collection.id}"
-          tag={collection.tag}
-          title={collection.title}
-          numberofpodcasts={collection.numberOfPodcasts}
-          type={collection.type as CollectionProps['type']}
-        />
+        {#if collection.numberOfPodcasts > 0}
+          <Collection
+            to="/collection/{collection.id}"
+            tag={collection.tag}
+            title={collection.title}
+            numberofpodcasts={collection.numberOfPodcasts}
+            type={collection.type as CollectionProps['type']}
+          />
+        {/if}
       {/each}
     </div>
   </div>
