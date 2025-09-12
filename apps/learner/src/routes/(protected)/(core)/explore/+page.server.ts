@@ -26,6 +26,7 @@ export const load: PageServerLoad = async () => {
       summary: true,
       contentURL: true,
       createdAt: true,
+      createdBy: true,
     },
     take: 3,
   });

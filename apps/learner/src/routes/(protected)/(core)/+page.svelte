@@ -35,6 +35,7 @@
         to={`/content/${learningUnit.id}`}
         tags={learningUnit.tags.map((tag) => ({ variant: 'purple', content: tag }))}
         title={learningUnit.title}
+        createdBy={learningUnit.createdBy}
         player={{
           isactive: player.currentTrack?.id === learningUnit.id,
           isplaying: player.isPlaying,

@@ -22,6 +22,7 @@
           to="/content/{learningUnit.id}"
           tags={learningUnit.tags as LearningUnitProps['tags']}
           title={learningUnit.title}
+          createdBy={learningUnit.createdBy}
         />
       {/each}
     </div>
