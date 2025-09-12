@@ -11,6 +11,7 @@ export const load: PageServerLoad = async () => {
           { variant: 'slate', content: 'Podcast' },
         ],
         title: 'Navigating Special Educational Needs in Singapore: A Path to Inclusion',
+        createdBy: 'DXD Product Team',
       },
       {
         id: 2,
@@ -20,6 +21,7 @@ export const load: PageServerLoad = async () => {
           { variant: 'slate', content: 'Podcast' },
         ],
         title: 'Navigating Special Educational Needs in Singapore: A Path to Inclusion',
+        createdBy: 'DXD Product Team',
       },
       {
         id: 3,
@@ -29,6 +31,7 @@ export const load: PageServerLoad = async () => {
           { variant: 'slate', content: 'Podcast' },
         ],
         title: 'Navigating Special Educational Needs in Singapore: A Path to Inclusion',
+        createdBy: 'DXD Product Team',
       },
     ],
   };

@@ -19,6 +19,10 @@
      */
     title: string;
     /**
+     * The creator of the card.
+     */
+    createdBy: string;
+    /**
      * An optional player object for showing playback controls and progress.
      * If provided, displays the controls and progress.
      */
@@ -46,7 +50,7 @@
     } | null;
   }
 
-  let { to, title, tags, player = null }: Props = $props();
+  let { to, title, tags, createdBy, player = null }: Props = $props();
 
   const handlePlay: MouseEventHandler<HTMLButtonElement> = (event) => {
     // Prevent default anchor navigation.
@@ -87,7 +91,7 @@
       </span>
 
       <div class="flex gap-x-1">
-        <span class="text-sm text-slate-600">Guidance Branch</span>
+        <span class="text-sm text-slate-600">{createdBy}</span>
         <span class="text-sm text-slate-600">•</span>
         <span class="text-sm text-slate-600">2 days ago</span>
       </div>

@@ -6,10 +6,11 @@ export const load: PageServerLoad = async () => {
   const learningUnits = await db.learningUnit.findMany({
     select: {
       id: true,
+      createdAt: true,
       title: true,
       summary: true,
       contentURL: true,
-      createdAt: true,
+      createdBy: true,
       tags: {
         select: {
           tag: {

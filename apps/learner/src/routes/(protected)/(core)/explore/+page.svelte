@@ -26,6 +26,7 @@
             content: t.label,
           }))}
           title={learningUnit.title}
+          createdBy={learningUnit.createdBy}
         />
       {/each}
     </div>
