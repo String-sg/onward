@@ -2,7 +2,12 @@ import 'dotenv/config';
 
 import { PrismaPg } from '@prisma/adapter-pg';
 
-import { ContentType, type Prisma, PrismaClient } from '../src/generated/prisma/client.js';
+import {
+  CollectionType,
+  ContentType,
+  type Prisma,
+  PrismaClient,
+} from '../src/generated/prisma/client.js';
 
 const db = new PrismaClient({
   adapter: new PrismaPg({
@@ -28,6 +33,7 @@ const collections: Prisma.CollectionCreateInput[] = [
   {
     id: 1,
     title: 'SEN Peer Support',
+    type: CollectionType.SEN,
     tags: {
       create: [
         {
@@ -43,6 +49,7 @@ const collections: Prisma.CollectionCreateInput[] = [
   {
     id: 2,
     title: 'Learn to use AI',
+    type: CollectionType.AI,
     tags: {
       create: [
         {
