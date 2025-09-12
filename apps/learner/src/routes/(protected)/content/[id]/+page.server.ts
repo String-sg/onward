@@ -14,6 +14,7 @@ export const load: PageServerLoad = async ({ params }) => {
       summary: true,
       contentURL: true,
       createdAt: true,
+      createdBy: true,
     },
   });
 
@@ -28,5 +29,6 @@ export const load: PageServerLoad = async ({ params }) => {
     summary: learningUnit.summary,
     url: learningUnit.contentURL,
     createdAt: learningUnit.createdAt,
+    createdBy: learningUnit.createdBy,
   };
 };

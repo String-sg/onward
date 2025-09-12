@@ -49,6 +49,8 @@
           to={learningUnit.to}
           tags={learningUnit.tags as LearningUnitProps['tags']}
           title={learningUnit.title}
+          createdAt={learningUnit.createdAt}
+          createdBy={learningUnit.createdBy}
         />
       {/each}
     </div>
@@ -65,6 +67,8 @@
           to={learningUnit.to}
           tags={learningUnit.tags as LearningUnitProps['tags']}
           title={learningUnit.title}
+          createdAt={learningUnit.createdAt}
+          createdBy={learningUnit.createdBy}
         />
       {/each}
     </div>

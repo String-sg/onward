@@ -1,91 +1,68 @@
+import { error } from '@sveltejs/kit';
+
+import { db } from '$lib/server/db';
+
 import type { PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async () => {
-  const learningUnits = [
-    {
-      id: 1,
-      to: '/content/1',
-      tags: [
-        { variant: 'purple', content: 'Special Educational Needs' },
-        { variant: 'slate', content: 'Podcast' },
-      ],
-      title: 'Navigating Special Educational Needs in Singapore: A Path to Inclusion',
-    },
-    {
-      id: 2,
-      to: '/content/1',
-      tags: [
-        { variant: 'purple', content: 'Special Educational Needs' },
-        { variant: 'slate', content: 'Podcast' },
-      ],
-      title: 'Navigating Special Educational Needs in Singapore: A Path to Inclusion',
-    },
-    {
-      id: 3,
-      to: '/content/1',
-      tags: [
-        { variant: 'purple', content: 'Special Educational Needs' },
-        { variant: 'slate', content: 'Podcast' },
-      ],
-      title: 'Navigating Special Educational Needs in Singapore: A Path to Inclusion',
-    },
-    {
-      id: 4,
-      to: '/content/1',
-      tags: [
-        { variant: 'purple', content: 'Special Educational Needs' },
-        { variant: 'slate', content: 'Podcast' },
-      ],
-      title: 'Navigating Special Educational Needs in Singapore: A Path to Inclusion',
-    },
-    {
-      id: 5,
-      to: '/content/1',
-      tags: [
-        { variant: 'purple', content: 'Special Educational Needs' },
-        { variant: 'slate', content: 'Podcast' },
-      ],
-      title: 'Navigating Special Educational Needs in Singapore: A Path to Inclusion',
-    },
-  ];
+const colorMapping: Record<string, string> = {
+  'Special Educational Needs': 'purple',
+  'Artificial Intelligence': 'amber',
+  'Teacher mental health literacy': 'teal',
+  Podcast: 'slate',
+};
 
-  const collections = [
-    {
-      id: 1,
-      tag: 'Artificial Intelligence',
-      title: 'Learn to use AI',
-      numberofpodcasts: 8,
-      to: '/collection/1',
-      type: 'AI',
+const typeMapping: Record<string, string> = {
+  'Artificial Intelligence': 'AI',
+  'Special Educational Needs': 'SEN',
+  'Teacher mental health literacy': 'MENTAL_HEALTH',
+};
+
+export const load: PageServerLoad = async () => {
+  const learningUnits = await db.learningUnit.findMany({
+    select: {
+      id: true,
+      tags: true,
+      title: true,
+      summary: true,
+      contentURL: true,
+      createdAt: true,
+      createdBy: true,
     },
-    {
-      id: 2,
-      tag: 'Special Educational Needs',
-      title: 'SEN peer support',
-      numberofpodcasts: 12,
-      to: '/collection/2',
-      type: 'SEN',
+    take: 3,
+  });
+
+  const collections = await db.collection.findMany({
+    select: {
+      id: true,
+      tag: true,
+      title: true,
     },
-    {
-      id: 3,
-      tag: 'Teacher mental health literacy',
-      title: 'Understanding Mental Health',
-      numberofpodcasts: 10,
-      to: '/collection/3',
-      type: 'MENTAL_HEALTH',
-    },
-    {
-      id: 4,
-      tag: 'Teacher mental health literacy',
-      title: 'Understanding Mental Health',
-      numberofpodcasts: 10,
-      to: '/collection/3',
-      type: 'MENTAL_HEALTH',
-    },
-  ];
+    take: 3,
+  });
+
+  if (!learningUnits || !collections) {
+    throw error(404);
+  }
 
   return {
-    learningUnits: learningUnits.slice(0, 3),
-    collections: collections.slice(0, 3),
+    learningUnits: learningUnits.map((unit) => {
+      return {
+        ...unit,
+        tags: unit.tags.map((tag) => ({ variant: colorMapping[tag], content: tag })),
+      };
+    }),
+    collections: await Promise.all(
+      collections.map(async (collection) => {
+        return {
+          ...collection,
+          type: typeMapping[collection.tag],
+          numberOfPodcasts: await db.learningUnit.count({
+            where: {
+              collectionId: collection.id,
+            },
+          }),
+        };
+      }),
+    ),
   };
 };

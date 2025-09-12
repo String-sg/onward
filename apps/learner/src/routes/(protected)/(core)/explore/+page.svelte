@@ -19,9 +19,11 @@
     <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
       {#each data.learningUnits as learningUnit (learningUnit.id)}
         <LearningUnit
-          to={learningUnit.to}
+          to="/content/{learningUnit.id}"
           tags={learningUnit.tags as LearningUnitProps['tags']}
           title={learningUnit.title}
+          createdAt={learningUnit.createdAt}
+          createdBy={learningUnit.createdBy}
         />
       {/each}
     </div>
@@ -39,13 +41,15 @@
     </div>
     <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
       {#each data.collections as collection (collection.id)}
-        <Collection
-          to={collection.to}
-          tag={collection.tag}
-          title={collection.title}
-          numberofpodcasts={collection.numberofpodcasts}
-          type={collection.type as CollectionProps['type']}
-        />
+        {#if collection.numberOfPodcasts > 0}
+          <Collection
+            to="/collection/{collection.id}"
+            tag={collection.tag}
+            title={collection.title}
+            numberofpodcasts={collection.numberOfPodcasts}
+            type={collection.type as CollectionProps['type']}
+          />
+        {/if}
       {/each}
     </div>
   </div>

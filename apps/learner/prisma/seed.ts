@@ -51,6 +51,7 @@ const learningUnits = [
       contentURL: 'https://example.com',
       collectionId: 1,
       summary: 'This is a summary',
+      createdBy: 'DXD Product Team',
     },
   },
   {
@@ -62,6 +63,7 @@ const learningUnits = [
       contentURL: 'https://example.com',
       collectionId: 1,
       summary: 'This is a summary',
+      createdBy: 'DXD Product Team',
     },
   },
   {
@@ -73,6 +75,7 @@ const learningUnits = [
       contentURL: 'https://example.com',
       collectionId: 2,
       summary: 'This is a summary',
+      createdBy: 'DXD Product Team',
     },
   },
   {
@@ -84,6 +87,7 @@ const learningUnits = [
       contentURL: 'https://example.com',
       collectionId: 2,
       summary: 'This is a summary',
+      createdBy: 'DXD Product Team',
     },
   },
 ];
