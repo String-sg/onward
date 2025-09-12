@@ -7,8 +7,10 @@
   import { Portal } from '$lib/components/Portal/index.js';
   import { IsWithinViewport } from '$lib/helpers/index.js';
 
+  import type { Role } from '../../../generated/enums';
+
   interface ChatMessage {
-    role: 'user' | 'assistant';
+    role: Role;
     content: string;
   }
 
@@ -23,7 +25,7 @@
     onclose: () => void;
   }
 
-  const { isopen, onclose }: Props = $props();
+  let { isopen, onclose }: Props = $props();
 
   let target = $state<HTMLElement | null>(null);
   let query = $state('');
@@ -32,6 +34,8 @@
   let textareaElement = $state<HTMLTextAreaElement | null>(null);
 
   let isUserTyping = $derived(query.trim());
+
+  let isMessagesFetched = false;
 
   const isWithinViewport = new IsWithinViewport(() => target);
 
@@ -53,25 +57,69 @@
     textareaElement.style.height = query ? `${Math.min(textareaElement.scrollHeight, 96)}px` : '';
   });
 
+  $effect(() => {
+    if (isopen && !isMessagesFetched) {
+      isMessagesFetched = true;
+
+      fetch('/api/messages', {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+        },
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error();
+          }
+          return response.json();
+        })
+        .then((data) => {
+          thread = data.messages;
+        })
+        .catch(() => {
+          thread.push({
+            role: 'ASSISTANT',
+            content: 'Sorry, I encountered an error while getting your messages. Please try again.',
+          });
+        });
+    }
+  });
+
   const handleClose: MouseEventHandler<HTMLButtonElement> = () => {
     onclose();
   };
 
-  const handleSendQuery = () => {
+  const handleSendQuery = async () => {
     if (!query.trim()) return;
 
-    thread.push({ role: 'user', content: query });
-    query = '';
-
+    thread.push({ role: 'USER', content: query });
     isAiTyping = true;
 
-    setTimeout(() => {
-      thread.push({
-        role: 'assistant',
-        content: 'Chat is currently under development, please try again later.',
+    try {
+      const response = await fetch('/api/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({ role: 'USER', content: query }),
       });
+
+      if (!response.ok) {
+        throw new Error();
+      }
+
+      const result = await response.json();
+      thread.push(result);
+    } catch {
+      thread.push({
+        role: 'ASSISTANT',
+        content: 'Sorry, I encountered an error while processing your message. Please try again.',
+      });
+    } finally {
+      query = '';
       isAiTyping = false;
-    }, 3000);
+    }
   };
 
   const handleRecommendedQuery = (recommendedQuery: string) => {
@@ -160,11 +208,11 @@
               {/if}
 
               {#each thread as { role, content }, index (index)}
-                <div class={['flex flex-col', role === 'user' && 'items-end']}>
+                <div class={['flex flex-col', role === 'USER' && 'items-end']}>
                   <span
                     class={[
                       'break-words rounded-3xl p-4 text-left',
-                      role === 'user' && 'max-w-4/5 bg-white',
+                      role === 'USER' && 'max-w-4/5 bg-white',
                     ]}
                   >
                     {content}
