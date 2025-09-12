@@ -12,7 +12,8 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.879.0",
-    "@prisma/client": "^6.15.0",
+    "@prisma/adapter-pg": "^6.16.1",
+    "@prisma/client": "^6.16.1",
     "@valkey/valkey-glide": "2.0.1",
     "weaviate-client": "^3.8.1"
   },

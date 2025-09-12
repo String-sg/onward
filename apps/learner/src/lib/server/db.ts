@@ -1,18 +1,18 @@
 import process from 'node:process';
 
+import { PrismaPg } from '@prisma/adapter-pg';
+
 import { building } from '$app/environment';
 import { env } from '$env/dynamic/private';
 
-import { Prisma, PrismaClient } from '../../generated/client.js';
+import { Prisma, PrismaClient } from '../../generated/prisma/client.js';
 
 export const { PrismaClientKnownRequestError } = Prisma;
 
 export const db = new PrismaClient({
-  datasources: {
-    db: {
-      url: env.POSTGRES_URL || 'postgresql://root:secret@localhost:5432/onward-dev',
-    },
-  },
+  adapter: new PrismaPg({
+    connectionString: env.POSTGRES_URL || 'postgresql://root:secret@localhost:5432/onward-dev',
+  }),
 });
 
 if (!building) {

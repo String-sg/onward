@@ -22,7 +22,7 @@
     "prettier": "^3.6.2",
     "prettier-plugin-svelte": "^3.4.0",
     "prettier-plugin-tailwindcss": "^0.6.13",
-    "prisma": "^6.15.0",
+    "prisma": "^6.16.1",
     "typescript-eslint": "^8.39.0"
   }
 }
