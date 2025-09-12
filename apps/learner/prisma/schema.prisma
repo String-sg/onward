@@ -52,6 +52,7 @@ model LearningUnit {
   contentType ContentType @map("content_type")
   contentURL  String      @map("content_url")
   summary     String      @map("summary")
+  createdBy   String      @map("created_by")
 
   // Relations.
   collectionId BigInt @map("collection_id")
