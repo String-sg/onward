@@ -45,16 +45,18 @@
     </div>
     <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
       {#each data.collections as collection (collection.id)}
-        <Collection
-          to="/collection/{collection.id}"
-          title={collection.title}
-          type={collection.type}
-          tags={collection.tags.map((t) => ({
-            variant: tagCodeToBadgeVariant(t.code),
-            content: t.label,
-          }))}
-          numberofpodcasts={collection.numberOfPodcasts}
-        />
+        {#if collection.numberOfPodcasts > 0}
+          <Collection
+            to="/collection/{collection.id}"
+            title={collection.title}
+            type={collection.type}
+            tags={collection.tags.map((t) => ({
+              variant: tagCodeToBadgeVariant(t.code),
+              content: t.label,
+            }))}
+            numberofpodcasts={collection.numberOfPodcasts}
+          />
+        {/if}
       {/each}
     </div>
   </div>
