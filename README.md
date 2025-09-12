@@ -6,12 +6,6 @@ A professional development platform that empowers teachers with flexible, person
 
 Please ensure that you have completed the required [development setup](./CONTRIBUTING.md#development-setup) before proceeding.
 
-### Creator
-
-```sh
-pnpm --filter="@onward/creator" dev
-```
-
 ### Learner
 
 ```sh

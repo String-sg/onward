@@ -125,8 +125,6 @@ jobs:
         include:
           - app: learner
             ecr-repository: ${{ vars.ECR_LEARNER_REPOSITORY }}
-          - app: creator
-            ecr-repository: ${{ vars.ECR_CREATOR_REPOSITORY }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
