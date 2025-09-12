@@ -35,6 +35,8 @@
 
   let isUserTyping = $derived(query.trim());
 
+  let isMessagesFetched = false;
+
   const isWithinViewport = new IsWithinViewport(() => target);
 
   const recommendedQueries = [
@@ -55,6 +57,34 @@
     textareaElement.style.height = query ? `${Math.min(textareaElement.scrollHeight, 96)}px` : '';
   });
 
+  $effect(() => {
+    if (isopen && !isMessagesFetched) {
+      isMessagesFetched = true;
+
+      fetch('/api/messages', {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+        },
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error();
+          }
+          return response.json();
+        })
+        .then((data) => {
+          thread = data.messages;
+        })
+        .catch(() => {
+          thread.push({
+            role: 'ASSISTANT',
+            content: 'Sorry, I encountered an error while getting your messages. Please try again.',
+          });
+        });
+    }
+  });
+
   const handleClose: MouseEventHandler<HTMLButtonElement> = () => {
     onclose();
   };
@@ -70,12 +100,13 @@
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Accept: 'application/json',
         },
         body: JSON.stringify({ role: 'USER', content: query }),
       });
 
       if (!response.ok) {
-        throw new Error(`[FETCH ERROR] status=${response.status}`);
+        throw new Error();
       }
 
       const result = await response.json();
