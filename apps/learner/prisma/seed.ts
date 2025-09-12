@@ -46,7 +46,7 @@ const learningUnits = [
     id: 1,
     data: {
       title: 'SEN Learning Unit 1',
-      tags: ['Special Education Needs', 'Podcast'],
+      tags: ['Special Educational Needs', 'Podcast'],
       contentType: ContentType.Podcast,
       contentURL: 'https://example.com',
       collectionId: 1,
@@ -57,7 +57,7 @@ const learningUnits = [
     id: 2,
     data: {
       title: 'SEN Learning Unit 2',
-      tags: ['Special Education Needs', 'Podcast'],
+      tags: ['Special Educational Needs', 'Podcast'],
       contentType: ContentType.Podcast,
       contentURL: 'https://example.com',
       collectionId: 1,
@@ -68,6 +68,17 @@ const learningUnits = [
     id: 3,
     data: {
       title: 'AI Learning Unit 1',
+      tags: ['Artificial Intelligence', 'Podcast'],
+      contentType: ContentType.Podcast,
+      contentURL: 'https://example.com',
+      collectionId: 2,
+      summary: 'This is a summary',
+    },
+  },
+  {
+    id: 4,
+    data: {
+      title: 'AI Learning Unit 2',
       tags: ['Artificial Intelligence', 'Podcast'],
       contentType: ContentType.Podcast,
       contentURL: 'https://example.com',
