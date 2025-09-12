@@ -1,6 +1,7 @@
 generator learner {
-  provider = "prisma-client"
-  output   = "../apps/learner/src/generated"
+  provider   = "prisma-client"
+  output     = "../apps/learner/src/generated/prisma"
+  engineType = "client"
 }
 
 datasource db {
