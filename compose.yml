@@ -62,15 +62,6 @@ services:
     ports:
       - 3000:3000
 
-  creator:
-    image: onward/creator:latest
-    container_name: onward-creator
-    build:
-      context: .
-      dockerfile: apps/creator/Dockerfile
-    ports:
-      - 3000:3000
-
 volumes:
   valkey:
   postgres:
