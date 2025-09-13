@@ -20,16 +20,16 @@
       <span class="font-mono text-2xl font-bold">Get started.</span>
     </div>
 
-  <div class="flex flex-col items-center justify-center gap-y-4 py-5">
-    <LinkButton
-      href={`/auth/google?return_to=${encodeURIComponent(page.url.searchParams.get('return_to') || '/')}`}
-      variant="primary"
-      width="full"
-      class="max-w-sm gap-x-2"
-    >
-      {@render googleIcon()}
-      <span class="font-medium">Continue with Google</span>
-    </LinkButton>
+    <div class="flex flex-col items-center justify-center gap-y-4 py-5">
+      <LinkButton
+        href={`/auth/google?return_to=${encodeURIComponent(page.url.searchParams.get('return_to') || '/')}`}
+        variant="primary"
+        width="full"
+        class="max-w-sm gap-x-2"
+      >
+        {@render googleIcon()}
+        <span class="font-medium">Continue with Google</span>
+      </LinkButton>
 
       <div class="flex flex-col items-center justify-center text-xs">
         <span>By continuing, you agree to our</span>
