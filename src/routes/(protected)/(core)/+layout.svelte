@@ -3,6 +3,7 @@
 
   import { page } from '$app/state';
   import { IsWithinViewport } from '$lib/helpers/index.js';
+  import { mastheadState } from '$lib/states/index.js';
 
   const { data, children } = $props();
 
@@ -15,7 +16,10 @@
   const isWithinViewport = new IsWithinViewport(() => target);
 </script>
 
-<header class="fixed inset-x-0 top-0 z-50 bg-slate-100/90 backdrop-blur-sm">
+<header
+  class="fixed inset-x-0 z-40 bg-slate-100/90 backdrop-blur-sm"
+  style="padding-top: {mastheadState.height}px;"
+>
   <div
     class={[
       'absolute inset-x-0 top-full h-px bg-transparent transition-colors duration-300',
@@ -110,9 +114,11 @@
   </div>
 </header>
 
-<div bind:this={target} class="absolute inset-x-0 top-0 h-px"></div>
+<div bind:this={target} class="absolute inset-x-0 h-px"></div>
 
-{@render children()}
+<main style="padding-top: {mastheadState.height + 172}px;">
+  {@render children()}
+</main>
 
 {#snippet logo()}
   <svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">

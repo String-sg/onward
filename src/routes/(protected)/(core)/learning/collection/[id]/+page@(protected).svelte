@@ -3,6 +3,7 @@
 
   import { LearningUnit } from '$lib/components/LearningUnit/index.js';
   import { IsWithinViewport, tagCodeToBadgeVariant } from '$lib/helpers/index.js';
+  import { mastheadState } from '$lib/states/index.js';
 
   let target = $state<HTMLElement | null>(null);
 
@@ -11,7 +12,10 @@
   const { data } = $props();
 </script>
 
-<header class="fixed inset-x-0 top-0 z-50 bg-slate-100/90 backdrop-blur-sm">
+<header
+  class="fixed inset-x-0 z-50 bg-slate-100/90 backdrop-blur-sm"
+  style="padding-top: {mastheadState.height}px;"
+>
   <div
     class={[
       'absolute inset-x-0 top-full h-px bg-transparent transition-colors duration-300',
@@ -37,7 +41,10 @@
 
 <div bind:this={target} class="absolute inset-x-0 top-0 h-px"></div>
 
-<main class="relative mx-auto flex min-h-svh max-w-5xl flex-col gap-y-6 px-4 pt-23 pb-28">
+<main
+  class="relative mx-auto flex min-h-svh max-w-5xl flex-col gap-y-6 px-4 pb-28"
+  style="padding-top: {mastheadState.height + 92}px;"
+>
   <div class="flex flex-col gap-y-3">
     <div class="px-2">
       <span class="text-xl font-semibold">In Progress</span>

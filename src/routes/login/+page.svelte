@@ -2,10 +2,15 @@
   import { page } from '$app/state';
   import { LinkButton } from '$lib/components/Button/index.js';
   import { Starfield } from '$lib/components/Starfield/index.js';
+  import { mastheadState } from '$lib/states/index.js';
 </script>
 
-<main class="mx-auto flex min-h-svh w-full max-w-5xl flex-col px-4 py-3">
-  <Starfield />
+<div class="flex min-h-svh flex-col">
+  <main
+    class="mx-auto flex h-full w-full max-w-5xl flex-1 flex-col px-4 py-3"
+    style="padding-top: {mastheadState.height}px;"
+  >
+    <Starfield />
 
   <div class="flex flex-col items-center justify-center gap-y-3 py-5">
     {@render logo()}
