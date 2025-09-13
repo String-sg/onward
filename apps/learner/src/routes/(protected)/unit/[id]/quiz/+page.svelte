@@ -8,6 +8,7 @@
   import { Starfield } from '$lib/components/Starfield/index.js';
   import { IsWithinViewport, noop } from '$lib/helpers/index.js';
   import { Player } from '$lib/states/index.js';
+  import { mastheadState } from '$lib/states/index.js';
 
   const { data, params } = $props();
 
@@ -47,7 +48,10 @@
   };
 </script>
 
-<header class="fixed inset-x-0 top-0 z-50 bg-slate-100/90 backdrop-blur-sm">
+<header
+  class="fixed inset-x-0 top-0 z-50 bg-slate-100/90 backdrop-blur-sm"
+  style="top: {mastheadState.height}px;"
+>
   <div
     class={[
       'absolute inset-x-0 top-full h-px bg-transparent transition-colors duration-300',
@@ -73,7 +77,10 @@
 
 <div bind:this={target} class="absolute inset-x-0 top-0 h-px"></div>
 
-<main class="pt-23 relative mx-auto flex min-h-svh max-w-5xl flex-col gap-y-10 px-4 pb-3">
+<main
+  class="relative mx-auto flex min-h-svh max-w-5xl flex-col gap-y-10 px-4 pb-3"
+  style="padding-top: {mastheadState.height + 92}px;"
+>
   <div class="flex flex-1 flex-col gap-y-2">
     {#each data.questions as q, qi (q.id)}
       <div class={['flex flex-col gap-y-4', currentQuestionIndex !== qi && 'hidden']}>
