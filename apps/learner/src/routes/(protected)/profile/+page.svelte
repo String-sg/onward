@@ -3,6 +3,7 @@
 
   import { afterNavigate } from '$app/navigation';
   import { Button, LinkButton } from '$lib/components/Button';
+  import { Masthead } from '$lib/components/Masthead/index.js';
   import { IsWithinViewport } from '$lib/helpers/index.js';
 
   const { data } = $props();
@@ -28,6 +29,8 @@
 </script>
 
 <header class="fixed inset-x-0 top-0 z-50 bg-slate-100/90 backdrop-blur-sm">
+  <Masthead />
+
   <div
     class={[
       'absolute inset-x-0 top-full h-px bg-transparent transition-colors duration-300',
@@ -51,7 +54,7 @@
 
 <div bind:this={target} class="absolute inset-x-0 top-0 h-px"></div>
 
-<main class="pt-23 relative mx-auto flex min-h-svh max-w-5xl flex-col gap-y-4 px-4 py-3">
+<main class="relative mx-auto flex min-h-svh max-w-5xl flex-col gap-y-4 px-4 py-3 pt-28">
   <div class="flex items-center gap-x-6 rounded-3xl bg-white p-4">
     <!-- Placeholder for profile picture -->
     <div class="h-10 w-10 rounded-full bg-slate-200"></div>

@@ -5,7 +5,7 @@
   const { data } = $props();
 </script>
 
-<main class="pt-43 relative mx-auto flex min-h-svh max-w-5xl flex-col gap-y-6 px-4 pb-28">
+<main class="relative mx-auto flex min-h-svh max-w-5xl flex-col gap-y-6 px-4 pb-28 pt-48">
   <div class="flex flex-col gap-y-3">
     <div class="flex flex-row justify-between px-2">
       <span class="text-xl font-semibold">Learning units</span>
