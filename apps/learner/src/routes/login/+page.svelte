@@ -1,38 +1,43 @@
 <script lang="ts">
   import { page } from '$app/state';
   import { LinkButton } from '$lib/components/Button/index.js';
+  import { Masthead } from '$lib/components/Masthead/index.js';
   import { Starfield } from '$lib/components/Starfield/index.js';
 </script>
 
-<main class="mx-auto flex min-h-svh w-full max-w-5xl flex-col px-4 py-3">
-  <Starfield />
+<div class="flex min-h-svh flex-col">
+  <Masthead />
 
-  <div class="flex flex-col items-center justify-center gap-y-3 py-5">
-    {@render logo()}
-    <span class="font-mono font-bold">Onward</span>
-  </div>
+  <main class="mx-auto flex h-full w-full max-w-5xl flex-1 flex-col px-4 py-3">
+    <Starfield />
 
-  <div class="flex flex-1 flex-col items-center justify-center">
-    <span class="font-mono text-2xl font-bold">Get started.</span>
-  </div>
-
-  <div class="flex flex-col items-center justify-center gap-y-4 py-5">
-    <LinkButton
-      href={`/auth/google?return_to=${encodeURIComponent(page.url.searchParams.get('return_to') || '/')}`}
-      variant="primary"
-      width="full"
-      class="max-w-sm gap-x-2"
-    >
-      {@render googleIcon()}
-      <span class="font-medium">Continue with Google</span>
-    </LinkButton>
-
-    <div class="flex flex-col items-center justify-center text-xs">
-      <span>By continuing, you agree to our</span>
-      <span>Terms and Privacy Policy.</span>
+    <div class="flex flex-col items-center justify-center gap-y-3 py-5">
+      {@render logo()}
+      <span class="font-mono font-bold">Onward</span>
     </div>
-  </div>
-</main>
+
+    <div class="flex flex-1 flex-col items-center justify-center">
+      <span class="font-mono text-2xl font-bold">Get started.</span>
+    </div>
+
+    <div class="flex flex-col items-center justify-center gap-y-4 py-5">
+      <LinkButton
+        href={`/auth/google?return_to=${encodeURIComponent(page.url.searchParams.get('return_to') || '/')}`}
+        variant="primary"
+        width="full"
+        class="max-w-sm gap-x-2"
+      >
+        {@render googleIcon()}
+        <span class="font-medium">Continue with Google</span>
+      </LinkButton>
+
+      <div class="flex flex-col items-center justify-center text-xs">
+        <span>By continuing, you agree to our</span>
+        <span>Terms and Privacy Policy.</span>
+      </div>
+    </div>
+  </main>
+</div>
 
 {#snippet logo()}
   <svg width="48" height="48" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">

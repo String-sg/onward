@@ -2,6 +2,7 @@
   import { BookHeart, Compass, Home } from '@lucide/svelte';
 
   import { page } from '$app/state';
+  import { Masthead } from '$lib/components/Masthead/index.js';
   import { IsWithinViewport } from '$lib/helpers/index.js';
 
   const { children } = $props();
@@ -16,6 +17,8 @@
 </script>
 
 <header class="fixed inset-x-0 top-0 z-50 bg-slate-100/90 backdrop-blur-sm">
+  <Masthead />
+
   <div
     class={[
       'absolute inset-x-0 top-full h-px bg-transparent transition-colors duration-300',
