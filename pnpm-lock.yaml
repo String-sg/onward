@@ -102,6 +102,9 @@ importers:
       pino-pretty:
         specifier: ^13.1.1
         version: 13.1.1
+      prisma:
+        specifier: ^6.16.1
+        version: 6.16.1(typescript@5.9.2)
       svelte:
         specifier: ^5.38.0
         version: 5.38.0

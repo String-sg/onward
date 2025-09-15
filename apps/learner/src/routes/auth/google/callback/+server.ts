@@ -66,6 +66,11 @@ export const GET: RequestHandler = async (event) => {
     where: {
       email: profile.email,
     },
+    select: {
+      id: true,
+      email: true,
+      name: true,
+    },
   });
 
   if (!user) {
