@@ -64,11 +64,11 @@ USER zero
 
 COPY --from=build --chown=zero:zero /app/package.json ./package.json
 COPY --from=build --chown=zero:zero /app/node_modules ./node_modules
-COPY --from=build --chown=zero:zero /app/prisma ./prisma
 
 COPY --from=build --chown=zero:zero /app/apps/learner/package.json ./apps/learner/package.json
 COPY --from=build --chown=zero:zero /app/apps/learner/node_modules ./apps/learner/node_modules
 COPY --from=build --chown=zero:zero /app/apps/learner/build ./apps/learner/build
+COPY --from=build --chown=zero:zero /app/apps/learner/prisma ./prisma
 
 EXPOSE 3000
 

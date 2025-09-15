@@ -9,7 +9,15 @@ export const load: PageServerLoad = async ({ params }) => {
     where: { id: BigInt(params.id) },
     select: {
       id: true,
-      tags: true,
+      tags: {
+        select: {
+          tag: {
+            select: {
+              name: true,
+            },
+          },
+        },
+      },
       title: true,
       summary: true,
       contentURL: true,
@@ -23,7 +31,7 @@ export const load: PageServerLoad = async ({ params }) => {
 
   return {
     id: learningUnit.id,
-    tags: learningUnit.tags,
+    tags: learningUnit.tags.map((t) => t.tag.name),
     title: learningUnit.title,
     summary: learningUnit.summary,
     url: learningUnit.contentURL,

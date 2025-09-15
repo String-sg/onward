@@ -1,6 +1,6 @@
-generator learner {
+generator client {
   provider   = "prisma-client"
-  output     = "../apps/learner/src/generated/prisma"
+  output     = "../src/generated/prisma"
   engineType = "client"
 }
 
@@ -21,7 +21,6 @@ model User {
   avatarURL        String @map("avatar_url")
 
   // Relations.
-  collections      Collection[]
   learningJourneys LearningJourney[]
   threads          Thread[]
 
@@ -34,15 +33,11 @@ model Collection {
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   // Domain-Specific Fields.
-  kind  String @map("kind") @db.VarChar(255)
   title String @map("title")
-  tag   String @map("tag") @db.VarChar(255)
 
   // Relations.
-  userId BigInt @map("user_id")
-
-  user         User           @relation(fields: [userId], references: [id])
   learningUnit LearningUnit[]
+  tags         CollectionTag[]
 
   @@map("collections")
 }
@@ -53,20 +48,24 @@ model LearningUnit {
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   // Domain-Specific Fields.
-  title       String   @map("title")
-  tags        String[] @default([]) @map("tags") @db.VarChar(255)
-  contentType String   @map("content_type") @db.VarChar(255)
-  contentURL  String   @map("content_url")
-  summary     String   @map("summary")
+  title       String      @map("title")
+  contentType ContentType @map("content_type")
+  contentURL  String      @map("content_url")
+  summary     String      @map("summary")
 
   // Relations.
   collectionId BigInt @map("collection_id")
 
   collection       Collection        @relation(fields: [collectionId], references: [id])
+  tags             LearningUnitTag[]
   learningJourneys LearningJourney[]
   questionAnswers  QuestionAnswer[]
 
   @@map("learning_units")
+}
+
+enum ContentType {
+  PODCAST
 }
 
 model LearningJourney {
@@ -86,6 +85,45 @@ model LearningJourney {
   learningUnit LearningUnit @relation(fields: [learningUnitId], references: [id])
 
   @@map("learning_journeys")
+}
+
+model Tag {
+  id        BigInt   @id @default(autoincrement()) @map("id")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  // Domain-Specific Fields.
+  name String @unique @map("name") @db.VarChar(100)
+
+  // Relations.
+  collections   CollectionTag[]
+  learningUnits LearningUnitTag[]
+
+  @@map("tags")
+}
+
+model CollectionTag {
+  // Relations.
+  collectionId BigInt @map("collection_id")
+  tagId        BigInt @map("tag_id")
+
+  collection Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  tag        Tag        @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([collectionId, tagId])
+  @@map("collection_tags")
+}
+
+model LearningUnitTag {
+  // Relations.
+  learningUnitId BigInt @map("learning_unit_id")
+  tagId          BigInt @map("tag_id")
+
+  learningUnit LearningUnit @relation(fields: [learningUnitId], references: [id], onDelete: Cascade)
+  tag          Tag          @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([learningUnitId, tagId])
+  @@map("learning_unit_tags")
 }
 
 model Thread {
