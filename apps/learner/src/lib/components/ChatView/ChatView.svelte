@@ -3,14 +3,13 @@
   import type { MouseEventHandler } from 'svelte/elements';
   import { fade, fly } from 'svelte/transition';
 
+  import { goto } from '$app/navigation';
   import { Badge } from '$lib/components/Badge/index.js';
   import { Portal } from '$lib/components/Portal/index.js';
   import { IsWithinViewport } from '$lib/helpers/index.js';
 
-  import type { Role } from '../../../generated/enums';
-
   interface ChatMessage {
-    role: Role;
+    role: 'USER' | 'ASSISTANT';
     content: string;
   }
 
@@ -35,6 +34,11 @@
 
   let isUserTyping = $derived(query.trim());
 
+  const chatErrorMessage: ChatMessage = {
+    role: 'ASSISTANT',
+    content: 'Sorry, I encountered an error while processing your message. Please try again.',
+  };
+
   let isMessagesFetched = false;
 
   const isWithinViewport = new IsWithinViewport(() => target);
@@ -57,31 +61,36 @@
     textareaElement.style.height = query ? `${Math.min(textareaElement.scrollHeight, 96)}px` : '';
   });
 
+  // Fetch messages when view is opened for the first time.
   $effect(() => {
     if (isopen && !isMessagesFetched) {
-      isMessagesFetched = true;
-
-      fetch('/api/messages', {
-        method: 'GET',
-        headers: {
-          Accept: 'application/json',
-        },
-      })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error();
-          }
-          return response.json();
-        })
-        .then((data) => {
-          thread = data.messages;
-        })
-        .catch(() => {
-          thread.push({
-            role: 'ASSISTANT',
-            content: 'Sorry, I encountered an error while getting your messages. Please try again.',
+      const fetchMessages = async () => {
+        try {
+          const response = await fetch('/api/messages', {
+            method: 'GET',
+            headers: {
+              Accept: 'application/json',
+            },
           });
-        });
+
+          if (response.status === 303) {
+            return goto('/login');
+          }
+
+          if (!response.ok) {
+            thread.push(chatErrorMessage);
+            return;
+          }
+
+          const data = await response.json();
+          thread = data.messages;
+        } catch {
+          thread.push(chatErrorMessage);
+        }
+      };
+
+      fetchMessages();
+      isMessagesFetched = true;
     }
   });
 
@@ -105,17 +114,18 @@
         body: JSON.stringify({ role: 'USER', content: query }),
       });
 
+      if (response.status === 303) {
+        return goto('/login');
+      }
+
       if (!response.ok) {
-        throw new Error();
+        throw new Error('Failed to fetch AI response');
       }
 
       const result = await response.json();
       thread.push(result);
     } catch {
-      thread.push({
-        role: 'ASSISTANT',
-        content: 'Sorry, I encountered an error while processing your message. Please try again.',
-      });
+      thread.push(chatErrorMessage);
     } finally {
       query = '';
       isAiTyping = false;
@@ -136,8 +146,27 @@
     }
   };
 
-  const handleClear = () => {
-    thread = [];
+  const handleClear = async () => {
+    try {
+      const response = await fetch('/api/messages', {
+        method: 'DELETE',
+        headers: {
+          Accept: 'application/json',
+        },
+      });
+
+      if (response.status === 303) {
+        return goto('/login');
+      }
+
+      if (!response.ok) {
+        throw new Error('Failed to clear messages');
+      }
+
+      thread = [];
+    } catch {
+      thread.push(chatErrorMessage);
+    }
   };
 </script>
 

@@ -2,10 +2,10 @@ import { json, type RequestHandler } from '@sveltejs/kit';
 
 import { db } from '$lib/server/db.js';
 
-import { Role } from '../../../../generated/enums';
+import type { Role } from '../../../../generated/prisma/client';
 
 interface MessageParams {
-  role: 'USER';
+  role: Role;
   content: string;
 }
 
@@ -20,16 +20,16 @@ interface MessagesResponse {
 
 export const GET: RequestHandler = async (event) => {
   const logger = event.locals.logger.child({ handler: 'get_messages' });
-  const userIdRaw = event.locals.session?.user?.id;
-  const userId = typeof userIdRaw === 'string' ? BigInt(userIdRaw) : userIdRaw;
-  if (!userId) {
-    return json({ error: 'Unauthorized' }, { status: 401 });
+  const { user } = event.locals.session;
+  if (!user) {
+    logger.warn('User is not authenticated.');
+    return json({ message: 'Redirect to /login' }, { status: 303 });
   }
 
   try {
     const thread = await db.thread.findFirst({
       where: {
-        userId: userId,
+        userId: BigInt(user.id),
         isActive: true,
       },
       select: {
@@ -43,29 +43,31 @@ export const GET: RequestHandler = async (event) => {
     const response: MessagesResponse = { messages: thread?.messages || [] };
 
     return json(response, { status: 200 });
-  } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-    const errorName = error instanceof Error ? error.constructor.name : 'UnknownError';
+  } catch (err) {
+    logger
+      .child({ userId: user.id })
+      .error(err, 'Unknown error occurred while retrieving messages.');
 
-    logger.error(`${errorName} - ${errorMessage}`);
     return json({ error: 'Internal server error' }, { status: 500 });
   }
 };
 
 export const POST: RequestHandler = async (event) => {
-  const logger = event.locals.logger.child({ handler: 'post_messages' });
-  const userIdRaw = event.locals.session?.user?.id;
-  const userId = typeof userIdRaw === 'string' ? BigInt(userIdRaw) : userIdRaw;
-  if (!userId) {
-    return json({ error: 'Unauthorized' }, { status: 401 });
+  const logger = event.locals.logger.child({ handler: 'create_message' });
+  const { user } = event.locals.session;
+  if (!user) {
+    logger.warn('User is not authenticated.');
+    return json({ message: 'Redirect to /login' }, { status: 303 });
   }
 
+  const userId = BigInt(user.id);
   const params: MessageParams = await event.request.json();
   if (
     !params ||
     typeof params !== 'object' ||
-    params.role !== Role.USER ||
-    typeof params.content !== 'string'
+    params.role !== 'USER' ||
+    typeof params.content !== 'string' ||
+    params.content.trim().length === 0
   ) {
     return json({ error: 'Invalid request body' }, { status: 400 });
   }
@@ -91,7 +93,7 @@ export const POST: RequestHandler = async (event) => {
       await tx.message.create({
         data: {
           threadId: thread.id,
-          role: Role.USER,
+          role: 'USER',
           content: params.content,
         },
       });
@@ -102,18 +104,40 @@ export const POST: RequestHandler = async (event) => {
     const dummyAssistantMessage: MessageResponse = await db.message.create({
       data: {
         threadId: thread.id,
-        role: Role.ASSISTANT,
+        role: 'ASSISTANT',
         content: "Hello! I'm an AI assistant. How can I help you today?",
       },
       select: { role: true, content: true },
     });
 
     return json(dummyAssistantMessage, { status: 201 });
-  } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-    const errorName = error instanceof Error ? error.constructor.name : 'UnknownError';
+  } catch (err) {
+    logger
+      .child({ userId: user.id })
+      .error(err, 'Unknown error occurred while creating a message.');
 
-    logger.error(`${errorName} - ${errorMessage}`);
+    return json({ err: 'Internal server error' }, { status: 500 });
+  }
+};
+
+export const DELETE: RequestHandler = async (event) => {
+  const logger = event.locals.logger.child({ handler: 'delete_thread' });
+  const { user } = event.locals.session;
+  if (!user) {
+    logger.warn('User is not authenticated.');
+    return json({ message: 'Redirect to /login' }, { status: 303 });
+  }
+
+  try {
+    await db.thread.updateMany({
+      where: { userId: BigInt(user.id), isActive: true },
+      data: { isActive: false },
+    });
+
+    return new Response(null, { status: 204 });
+  } catch (err) {
+    logger.child({ userId: user.id }).error(err, 'Unknown error occurred while deleting thread.');
+
     return json({ error: 'Internal server error' }, { status: 500 });
   }
 };
