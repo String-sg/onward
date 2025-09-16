@@ -49,7 +49,7 @@ export class Player {
   #audio: HTMLAudioElement | null = null;
 
   constructor() {
-    $effect(() => {
+    $effect.pre(() => {
       this.#audio = new Audio();
 
       this.#audio.onloadedmetadata = () => {
