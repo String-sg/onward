@@ -6,12 +6,13 @@ import { db } from '$lib/server/db';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async (event) => {
+  const logger = event.locals.logger.child({ handler: 'user_profile' });
+
   const { user } = event.locals.session;
   if (!user) {
+    logger.warn('User is not authenticated. Redirecting to /login.');
     return redirect(303, '/login');
   }
-
-  const logger = event.locals.logger.child({ handler: 'user_profile', user_id: user.id });
 
   const now = new Date();
   const firstOfMonth = startOfMonth(now);
@@ -50,7 +51,9 @@ export const load: PageServerLoad = async (event) => {
       learningUnitsCompletedByWeek: learningUnitsCompletedByWeek,
     };
   } catch (err) {
-    logger.error(err, 'Unknown error occurred while retrieving learning journey counts');
+    logger
+      .child({ userId })
+      .error(err, 'Unknown error occurred while retrieving learning journey counts');
     throw error(500);
   }
 };
