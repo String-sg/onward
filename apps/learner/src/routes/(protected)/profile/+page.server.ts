@@ -10,7 +10,7 @@ export const load: PageServerLoad = async (event) => {
 
   const { user } = event.locals.session;
   if (!user) {
-    logger.warn('User is not authenticated.');
+    logger.warn('User is not authenticated');
     return redirect(303, '/login');
   }
 
