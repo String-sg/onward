@@ -51,9 +51,10 @@ export const load: PageServerLoad = async (event) => {
       learningUnitsCompletedByWeek: learningUnitsCompletedByWeek,
     };
   } catch (err) {
-    logger
-      .child({ userId })
-      .error(err, 'Unknown error occurred while retrieving learning journey counts');
+    logger.error(
+      { err, userId },
+      'Unknown error occurred while retrieving learning journey counts',
+    );
     throw error(500);
   }
 };
