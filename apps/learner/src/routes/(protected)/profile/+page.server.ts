@@ -32,23 +32,13 @@ export const load: PageServerLoad = async (event) => {
       }),
     ]);
 
-    const [learningUnitsConsumedByWeek, learningUnitsCompletedByWeek] = [
-      learningUnitsByWeek.length,
-      learningUnitsByWeek.filter((unit) => unit.isCompleted).length,
-    ];
-
-    const [learningUnitsConsumedByMonth, learningUnitsCompletedByMonth] = [
-      learningUnitsByMonth.length,
-      learningUnitsByMonth.filter((unit) => unit.isCompleted).length,
-    ];
-
     return {
       name: user.name,
       email: user.email,
-      learningUnitsConsumedByMonth: learningUnitsConsumedByMonth,
-      learningUnitsConsumedByWeek: learningUnitsConsumedByWeek,
-      learningUnitsCompletedByMonth: learningUnitsCompletedByMonth,
-      learningUnitsCompletedByWeek: learningUnitsCompletedByWeek,
+      learningUnitsConsumedByMonth: learningUnitsByMonth.length,
+      learningUnitsConsumedByWeek: learningUnitsByWeek.length,
+      learningUnitsCompletedByMonth: learningUnitsByMonth.filter((unit) => unit.isCompleted).length,
+      learningUnitsCompletedByWeek: learningUnitsByWeek.filter((unit) => unit.isCompleted).length,
     };
   } catch (err) {
     logger.error(
