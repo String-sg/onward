@@ -28,16 +28,11 @@
 
   let target = $state<HTMLElement | null>(null);
   let query = $state('');
-  let thread = $state<ChatMessage[]>([]);
+  let messages = $state<ChatMessage[]>([]);
   let isAiTyping = $state(false);
   let textareaElement = $state<HTMLTextAreaElement | null>(null);
 
   let isUserTyping = $derived(query.trim());
-
-  const chatErrorMessage: ChatMessage = {
-    role: 'ASSISTANT',
-    content: 'Sorry, I encountered an error while processing your message. Please try again.',
-  };
 
   let isMessagesFetched = false;
 
@@ -73,19 +68,19 @@
             },
           });
 
-          if (response.status === 401) {
-            return goto('/login');
-          }
-
           if (!response.ok) {
-            thread.push(chatErrorMessage);
+            if (response.status === 401) {
+              return goto('/login');
+            }
+
+            console.error('Failed to fetch messages');
             return;
           }
 
           const data = await response.json();
-          thread = data.messages;
-        } catch {
-          thread.push(chatErrorMessage);
+          messages = data.messages;
+        } catch (err) {
+          console.error(err);
         }
       };
 
@@ -101,7 +96,7 @@
   const handleSendQuery = async () => {
     if (!query.trim()) return;
 
-    thread.push({ role: 'USER', content: query });
+    messages.push({ role: 'USER', content: query });
     isAiTyping = true;
 
     try {
@@ -114,18 +109,19 @@
         body: JSON.stringify({ content: query }),
       });
 
-      if (response.status === 401) {
-        return goto('/login');
-      }
-
       if (!response.ok) {
-        throw new Error('Failed to fetch AI response');
+        if (response.status === 401) {
+          return goto('/login');
+        }
+
+        console.error('Failed to send query');
+        return;
       }
 
       const result = await response.json();
-      thread.push(result);
-    } catch {
-      thread.push(chatErrorMessage);
+      messages.push(result);
+    } catch (err) {
+      console.error(err);
     } finally {
       query = '';
       isAiTyping = false;
@@ -155,17 +151,18 @@
         },
       });
 
-      if (response.status === 401) {
-        return goto('/login');
-      }
-
       if (!response.ok) {
-        throw new Error('Failed to clear messages');
+        if (response.status === 401) {
+          return goto('/login');
+        }
+
+        console.error('Failed to clear messages');
+        return;
       }
 
-      thread = [];
-    } catch {
-      thread.push(chatErrorMessage);
+      messages = [];
+    } catch (err) {
+      console.error(err);
     }
   };
 </script>
@@ -200,7 +197,7 @@
             <Badge variant="slate-dark">Ask AI</Badge>
           </div>
 
-          {#if thread.length > 0}
+          {#if messages.length > 0}
             <button
               onclick={handleClear}
               class="cursor-pointer rounded-full p-4 font-bold transition-colors hover:bg-slate-200 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950"
@@ -217,7 +214,7 @@
         <!-- TODO: temporary hardcode height for now. To relook at how to set this height without hardcoding an arbitrary height -->
         <div class="h-[calc(100vh-180px)] overflow-y-auto px-4 pt-3">
           <div class="flex flex-col gap-y-4">
-            {#if thread.length === 0}
+            {#if messages.length === 0}
               <span class="text-xl font-medium">
                 Hi Mr. Tan, here are some of the example questions relevant to Special Educational
                 Needs topic.
@@ -225,7 +222,7 @@
             {/if}
 
             <div class="flex flex-col gap-y-2.5">
-              {#if thread.length === 0}
+              {#if messages.length === 0}
                 {#each recommendedQueries as recommendedQuery, index (index)}
                   <button
                     class="cursor-pointer rounded-3xl bg-white p-4 text-left hover:bg-slate-50 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950"
@@ -236,7 +233,7 @@
                 {/each}
               {/if}
 
-              {#each thread as { role, content }, index (index)}
+              {#each messages as { role, content }, index (index)}
                 <div class={['flex flex-col', role === 'USER' && 'items-end']}>
                   <span
                     class={[
