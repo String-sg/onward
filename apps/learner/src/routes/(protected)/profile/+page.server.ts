@@ -37,8 +37,8 @@ export const load: PageServerLoad = async (event) => {
       email: user.email,
       learningUnitsConsumedByMonth: byMonth.reduce((total, group) => total + group._count._all, 0),
       learningUnitsConsumedByWeek: byWeek.reduce((total, group) => total + group._count._all, 0),
-      learningUnitsCompletedByMonth: byMonth.find((group) => group.isCompleted)?._count._all || 0,
-      learningUnitsCompletedByWeek: byWeek.find((group) => group.isCompleted)?._count._all || 0,
+      learningUnitsCompletedByMonth: byMonth.find((group) => group.isCompleted)?._count._all ?? 0,
+      learningUnitsCompletedByWeek: byWeek.find((group) => group.isCompleted)?._count._all ?? 0,
     };
   } catch (err) {
     logger.error(
