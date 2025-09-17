@@ -1,8 +1,6 @@
 import { json, type RequestHandler } from '@sveltejs/kit';
 
-import { db } from '$lib/server/db.js';
-
-import type { Role } from '../../../../generated/prisma/client';
+import { db, Role } from '$lib/server/db.js';
 
 interface MessageParams {
   role: Role;
@@ -73,12 +71,19 @@ export const POST: RequestHandler = async (event) => {
         });
       }
 
-      await tx.message.create({
-        data: {
-          threadId: thread.id,
-          role: 'USER',
-          content: params.content,
-        },
+      await tx.message.createMany({
+        data: [
+          {
+            threadId: thread.id,
+            role: Role.USER,
+            content: params.content.trim(),
+          },
+          {
+            threadId: thread.id,
+            role: Role.ASSISTANT,
+            content: "Hello! I'm an AI assistant. How can I help you today?",
+          },
+        ],
       });
 
       return thread;

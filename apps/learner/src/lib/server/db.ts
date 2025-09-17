@@ -8,6 +8,7 @@ import { env } from '$env/dynamic/private';
 import { Prisma, PrismaClient } from '../../generated/prisma/client.js';
 
 export const { PrismaClientKnownRequestError } = Prisma;
+export * from '../../generated/prisma/enums.js';
 
 export const db = new PrismaClient({
   adapter: new PrismaPg({
