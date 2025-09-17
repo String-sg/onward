@@ -45,6 +45,7 @@ export const load: PageServerLoad = async (event) => {
       { err, userId },
       'Unknown error occurred while retrieving learning journey counts',
     );
+
     throw error(500);
   }
 };
