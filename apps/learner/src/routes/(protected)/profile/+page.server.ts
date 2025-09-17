@@ -42,7 +42,7 @@ export const load: PageServerLoad = async (event) => {
     };
   } catch (err) {
     logger.error(
-      { err, userId: BigInt(user.id) },
+      { err, userId: user.id },
       'Unknown error occurred while retrieving learning journey counts',
     );
 
