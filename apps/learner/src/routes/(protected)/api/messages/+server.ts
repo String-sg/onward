@@ -29,7 +29,7 @@ export const GET: RequestHandler = async (event) => {
 
     return json({ messages }, { status: 200 });
   } catch (err) {
-    logger.error({ userId: user.id, err }, 'Unknown error occurred while retrieving messages');
+    logger.error({ err, userId: user.id }, 'Unknown error occurred while retrieving messages');
     return json(null, { status: 500 });
   }
 };
@@ -59,7 +59,7 @@ export const POST: RequestHandler = async (event) => {
       return json(null, { status: 422 });
     }
   } catch (err) {
-    logger.error({ userId: user.id, err }, 'Unknown error occurred while parsing request body');
+    logger.error({ err, userId: user.id }, 'Unknown error occurred while parsing request body');
     return json(null, { status: 400 });
   }
 
@@ -103,13 +103,13 @@ export const POST: RequestHandler = async (event) => {
       { status: 201 },
     );
   } catch (err) {
-    logger.error({ userId: user.id, err }, 'Unknown error occurred while creating a message');
+    logger.error({ err, userId: user.id }, 'Unknown error occurred while creating a message');
     return json(null, { status: 500 });
   }
 };
 
 export const DELETE: RequestHandler = async (event) => {
-  const logger = event.locals.logger.child({ handler: 'api_delete_thread' });
+  const logger = event.locals.logger.child({ handler: 'api_delete_messages' });
 
   const { user } = event.locals.session;
   if (!user) {
@@ -125,7 +125,7 @@ export const DELETE: RequestHandler = async (event) => {
 
     return new Response(null, { status: 204 });
   } catch (err) {
-    logger.error({ userId: user.id, err }, 'Unknown error occurred while deleting thread');
+    logger.error({ err, userId: user.id }, 'Unknown error occurred while updating threads');
     return json(null, { status: 500 });
   }
 };
