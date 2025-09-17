@@ -18,18 +18,16 @@ export const load: PageServerLoad = async (event) => {
   const firstOfMonth = startOfMonth(now);
   const startOfWeekMonday = startOfWeek(now, { weekStartsOn: 1 });
 
-  const userId = BigInt(user.id);
-
   try {
     const [byWeek, byMonth] = await Promise.all([
       db.learningJourney.groupBy({
         by: ['isCompleted'],
-        where: { userId, updatedAt: { gte: startOfWeekMonday } },
+        where: { userId: BigInt(user.id), updatedAt: { gte: startOfWeekMonday } },
         _count: { _all: true },
       }),
       db.learningJourney.groupBy({
         by: ['isCompleted'],
-        where: { userId, updatedAt: { gte: firstOfMonth } },
+        where: { userId: BigInt(user.id), updatedAt: { gte: firstOfMonth } },
         _count: { _all: true },
       }),
     ]);
@@ -44,7 +42,7 @@ export const load: PageServerLoad = async (event) => {
     };
   } catch (err) {
     logger.error(
-      { err, userId },
+      { err, userId: BigInt(user.id) },
       'Unknown error occurred while retrieving learning journey counts',
     );
 
