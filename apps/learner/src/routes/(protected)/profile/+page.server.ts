@@ -21,24 +21,26 @@ export const load: PageServerLoad = async (event) => {
   const userId = BigInt(user.id);
 
   try {
-    const [learningUnitsByWeek, learningUnitsByMonth] = await Promise.all([
-      db.learningJourney.findMany({
-        where: { userId: userId, updatedAt: { gte: startOfWeekMonday } },
-        select: { isCompleted: true },
+    const [byWeek, byMonth] = await Promise.all([
+      db.learningJourney.groupBy({
+        by: ['isCompleted'],
+        where: { userId, updatedAt: { gte: startOfWeekMonday } },
+        _count: { _all: true },
       }),
-      db.learningJourney.findMany({
-        where: { userId: userId, updatedAt: { gte: firstOfMonth } },
-        select: { isCompleted: true },
+      db.learningJourney.groupBy({
+        by: ['isCompleted'],
+        where: { userId, updatedAt: { gte: firstOfMonth } },
+        _count: { _all: true },
       }),
     ]);
 
     return {
       name: user.name,
       email: user.email,
-      learningUnitsConsumedByMonth: learningUnitsByMonth.length,
-      learningUnitsConsumedByWeek: learningUnitsByWeek.length,
-      learningUnitsCompletedByMonth: learningUnitsByMonth.filter((unit) => unit.isCompleted).length,
-      learningUnitsCompletedByWeek: learningUnitsByWeek.filter((unit) => unit.isCompleted).length,
+      learningUnitsConsumedByMonth: byMonth.reduce((total, group) => total + group._count._all, 0),
+      learningUnitsConsumedByWeek: byWeek.reduce((total, group) => total + group._count._all, 0),
+      learningUnitsCompletedByMonth: byMonth.find((group) => group.isCompleted)?._count._all || 0,
+      learningUnitsCompletedByWeek: byWeek.find((group) => group.isCompleted)?._count._all || 0,
     };
   } catch (err) {
     logger.error(
