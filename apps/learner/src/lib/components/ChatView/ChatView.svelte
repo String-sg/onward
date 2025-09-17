@@ -111,7 +111,7 @@
           'Content-Type': 'application/json',
           Accept: 'application/json',
         },
-        body: JSON.stringify({ role: 'USER', content: query }),
+        body: JSON.stringify({ content: query }),
       });
 
       if (response.status === 401) {
