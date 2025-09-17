@@ -28,6 +28,10 @@ const requestLoggingHandle: Handle = async ({ event, resolve }) => {
  * - Redirects `/login` to root path `/`
  */
 const authenticationHandle: Handle = async ({ event, resolve }) => {
+  if (event.url.pathname.startsWith('/api')) {
+    return await resolve(event);
+  }
+
   if (!event.locals.session.isAuthenticated) {
     if (event.url.pathname === '/') {
       return redirect(303, '/login');

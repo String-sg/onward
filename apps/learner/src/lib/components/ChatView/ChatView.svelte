@@ -73,7 +73,7 @@
             },
           });
 
-          if (response.status === 303) {
+          if (response.status === 401) {
             return goto('/login');
           }
 
@@ -114,7 +114,7 @@
         body: JSON.stringify({ role: 'USER', content: query }),
       });
 
-      if (response.status === 303) {
+      if (response.status === 401) {
         return goto('/login');
       }
 
@@ -155,7 +155,7 @@
         },
       });
 
-      if (response.status === 303) {
+      if (response.status === 401) {
         return goto('/login');
       }
 
