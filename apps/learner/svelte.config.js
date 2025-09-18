@@ -8,7 +8,7 @@ export default {
     adapter: adapter(),
     typescript: {
       config: (cfg) => {
-        cfg.include.push('prisma/seed.ts');
+        cfg.include.push('../prisma/seed.ts');
       },
     },
   },
