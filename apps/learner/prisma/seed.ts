@@ -178,6 +178,46 @@ async function main() {
       create: learningUnit,
     });
   }
+
+  const firstUser = await db.user.findFirst();
+
+  if (!firstUser) {
+    console.error('No users found in the database. Please ensure at least one user exists.');
+    return;
+  }
+
+  const learningJourneys: Prisma.LearningJourneyCreateInput[] = [
+    {
+      id: 1,
+      isCompleted: false,
+      lastCheckpoint: 0,
+      user: {
+        connect: { id: firstUser.id },
+      },
+      learningUnit: {
+        connect: { id: 1 },
+      },
+    },
+    {
+      id: 2,
+      isCompleted: true,
+      lastCheckpoint: 100,
+      user: {
+        connect: { id: firstUser.id },
+      },
+      learningUnit: {
+        connect: { id: 2 },
+      },
+    },
+  ];
+
+  for (const learningJourney of learningJourneys) {
+    await db.learningJourney.upsert({
+      where: { id: learningJourney.id },
+      update: {},
+      create: learningJourney,
+    });
+  }
 }
 
 main()
