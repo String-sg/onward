@@ -8,7 +8,7 @@ const PLAYBACK_SPEED_OPTIONS = [0.5, 1.0, 1.5, 2.0];
 
 export interface Track {
   id: number | string | bigint;
-  tags: string[];
+  tags: { code: string; label: string }[];
   title: string;
   url: string;
 }

@@ -5,7 +5,7 @@
   import { afterNavigate } from '$app/navigation';
   import { Badge } from '$lib/components/Badge/index.js';
   import { Button, LinkButton } from '$lib/components/Button/index.js';
-  import { IsWithinViewport } from '$lib/helpers/index.js';
+  import { IsWithinViewport, tagCodeToBadgeVariant } from '$lib/helpers/index.js';
   import { Player } from '$lib/states/index.js';
 
   const { data } = $props();
@@ -80,7 +80,7 @@
   <div class="shadow-xs flex flex-col gap-y-2 rounded-3xl bg-white p-4">
     <div class="flex flex-wrap gap-1">
       {#each data.tags as tag (tag)}
-        <Badge variant="purple">{tag}</Badge>
+        <Badge variant={tagCodeToBadgeVariant(tag.code)}>{tag.label}</Badge>
       {/each}
     </div>
 

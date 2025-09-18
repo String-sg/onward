@@ -1,5 +1,6 @@
 <script lang="ts">
   import { LearningUnit } from '$lib/components/LearningUnit/index.js';
+  import { tagCodeToBadgeVariant } from '$lib/helpers/index.js';
   import { Player } from '$lib/states/index.js';
 
   const { data } = $props();
@@ -33,7 +34,10 @@
     {#each data.learningUnits as learningUnit (learningUnit.id)}
       <LearningUnit
         to={`/content/${learningUnit.id}`}
-        tags={learningUnit.tags.map((tag) => ({ variant: 'purple', content: tag }))}
+        tags={learningUnit.tags.map((tag) => ({
+          variant: tagCodeToBadgeVariant(tag.code),
+          content: tag.label,
+        }))}
         title={learningUnit.title}
         player={{
           isactive: player.currentTrack?.id === learningUnit.id,

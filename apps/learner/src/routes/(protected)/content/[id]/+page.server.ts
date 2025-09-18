@@ -13,7 +13,8 @@ export const load: PageServerLoad = async ({ params }) => {
         select: {
           tag: {
             select: {
-              name: true,
+              code: true,
+              label: true,
             },
           },
         },
@@ -31,7 +32,7 @@ export const load: PageServerLoad = async ({ params }) => {
 
   return {
     id: learningUnit.id,
-    tags: learningUnit.tags.map((t) => t.tag.name),
+    tags: learningUnit.tags.map((t) => t.tag),
     title: learningUnit.title,
     summary: learningUnit.summary,
     url: learningUnit.contentURL,
