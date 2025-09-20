@@ -91,7 +91,7 @@
         </span>
 
         <div class="flex gap-x-1">
-          <span class="text-sm text-slate-600">By Guidance Branch</span>
+          <span class="text-sm text-slate-600">By {data.createdBy}</span>
           <span class="text-sm text-slate-600">•</span>
           <span class="text-sm text-slate-600">
             {formatDistanceToNow(data.createdAt, { addSuffix: true })}

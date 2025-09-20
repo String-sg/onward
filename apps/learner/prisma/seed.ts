@@ -2,7 +2,12 @@ import 'dotenv/config';
 
 import { PrismaPg } from '@prisma/adapter-pg';
 
-import { ContentType, type Prisma, PrismaClient } from '../src/generated/prisma/client.js';
+import {
+  CollectionType,
+  ContentType,
+  type Prisma,
+  PrismaClient,
+} from '../src/generated/prisma/client.js';
 
 const db = new PrismaClient({
   adapter: new PrismaPg({
@@ -28,6 +33,7 @@ const collections: Prisma.CollectionCreateInput[] = [
   {
     id: 1,
     title: 'SEN Peer Support',
+    type: CollectionType.SEN,
     tags: {
       create: [
         {
@@ -43,6 +49,7 @@ const collections: Prisma.CollectionCreateInput[] = [
   {
     id: 2,
     title: 'Learn to use AI',
+    type: CollectionType.AI,
     tags: {
       create: [
         {
@@ -65,6 +72,7 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     contentURL: 'http://localhost:5173',
     summary:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+    createdBy: 'DXD Product Team',
     collection: {
       connect: {
         id: collections[0].id,
@@ -89,6 +97,7 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     contentURL: 'http://localhost:5173',
     summary:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+    createdBy: 'DXD Product Team',
     collection: {
       connect: {
         id: collections[0].id,
@@ -113,6 +122,7 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     contentURL: 'http://localhost:5173',
     summary:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+    createdBy: 'DXD Product Team',
     collection: {
       connect: {
         id: collections[1].id,
@@ -137,6 +147,7 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     contentURL: 'http://localhost:5173',
     summary:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+    createdBy: 'DXD Product Team',
     collection: {
       connect: {
         id: collections[1].id,
