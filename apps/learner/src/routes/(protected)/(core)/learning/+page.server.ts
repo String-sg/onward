@@ -1,22 +1,40 @@
+import { db } from '$lib/server/db';
+
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async () => {
+  const collections = await db.collection.findMany({
+    select: {
+      id: true,
+      title: true,
+      type: true,
+      tags: {
+        select: {
+          tag: {
+            select: {
+              code: true,
+              label: true,
+            },
+          },
+        },
+      },
+      _count: {
+        select: {
+          learningUnit: {
+            where: {
+              contentType: 'PODCAST',
+            },
+          },
+        },
+      },
+    },
+  });
+
   return {
-    collections: [
-      {
-        id: 1,
-        title: 'Learn to use AI',
-        type: 'AI',
-        tags: [{ code: 'AI', label: 'Artificial Intelligence' }],
-        numberofpodcasts: 8,
-      },
-      {
-        id: 2,
-        title: 'SEN peer support',
-        type: 'SEN',
-        tags: [{ code: 'SEN', label: 'Special Educational Needs' }],
-        numberofpodcasts: 12,
-      },
-    ],
+    collections: collections.map((collection) => ({
+      ...collection,
+      tags: collection.tags.map((t) => t.tag),
+      numberOfPodcasts: collection._count.learningUnit,
+    })),
   };
 };
