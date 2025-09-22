@@ -23,6 +23,7 @@ export const load: PageServerLoad = async () => {
       },
     },
   });
+
   return {
     learningUnits: learningUnits.map((unit) => ({
       ...unit,
