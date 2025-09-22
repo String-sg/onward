@@ -1,5 +1,3 @@
-import { error } from '@sveltejs/kit';
-
 import { ContentType, db } from '$lib/server/db';
 
 import type { PageServerLoad } from './$types';
@@ -31,10 +29,6 @@ export const load: PageServerLoad = async () => {
       },
     },
   });
-
-  if (collections.length === 0) {
-    throw error(404);
-  }
 
   return {
     collections: collections.map((collection) => ({
