@@ -1,5 +1,6 @@
 <script lang="ts">
   import { Collection, type CollectionProps } from '$lib/components/Collection/index.js';
+  import { tagCodeToBadgeVariant } from '$lib/helpers/index.js';
 
   const { data } = $props();
 </script>
@@ -12,11 +13,14 @@
   <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
     {#each data.collections as collection (collection.id)}
       <Collection
-        to={collection.to}
-        tag={collection.tag}
+        to={`/usercollection/${collection.id}`}
         title={collection.title}
-        numberofpodcasts={collection.numberofpodcasts}
         type={collection.type as CollectionProps['type']}
+        tags={collection.tags.map((t) => ({
+          variant: tagCodeToBadgeVariant(t.code),
+          content: t.label,
+        }))}
+        numberofpodcasts={collection.numberofpodcasts}
       />
     {/each}
   </div>

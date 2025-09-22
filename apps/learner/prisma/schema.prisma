@@ -33,13 +33,19 @@ model Collection {
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   // Domain-Specific Fields.
-  title String @map("title")
+  title String         @map("title")
+  type  CollectionType @map("type")
 
   // Relations.
   learningUnit LearningUnit[]
   tags         CollectionTag[]
 
   @@map("collections")
+}
+
+enum CollectionType {
+  SEN
+  AI
 }
 
 model LearningUnit {
@@ -52,6 +58,7 @@ model LearningUnit {
   contentType ContentType @map("content_type")
   contentURL  String      @map("content_url")
   summary     String      @map("summary")
+  createdBy   String      @map("created_by")
 
   // Relations.
   collectionId BigInt @map("collection_id")

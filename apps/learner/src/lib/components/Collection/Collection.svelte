@@ -1,23 +1,15 @@
 <script lang="ts">
   import { Badge, type BadgeProps } from '$lib/components/Badge/index.js';
 
-  type Type = 'AI' | 'SEN' | 'MENTAL_HEALTH';
-
-  const colors: Record<Type, BadgeProps['variant']> = {
-    AI: 'amber',
-    SEN: 'purple',
-    MENTAL_HEALTH: 'teal',
-  };
-
   export interface Props {
     /**
      * The URL to navigate to when clicking the collection.
      */
     to: string;
     /**
-     * The tag to display on the collection.
+     * The tags to display on the collection.
      */
-    tag: string;
+    tags: { variant: BadgeProps['variant']; content: string }[];
     /**
      * The title of the collection.
      */
@@ -29,10 +21,10 @@
     /**
      * Defines the visual theme and icon for the collection.
      */
-    type: Type;
+    type: 'SEN' | 'AI';
   }
 
-  let { to, tag, title, numberofpodcasts, type }: Props = $props();
+  let { to, tags, title, numberofpodcasts, type }: Props = $props();
 </script>
 
 <a
@@ -45,14 +37,14 @@
         <enhanced:img src="$lib/assets/jupiter.png?w=200" alt={title} />
       {:else if type === 'AI'}
         <enhanced:img src="$lib/assets/stars.png?w=200" alt={title} />
-      {:else if type === 'MENTAL_HEALTH'}
-        <enhanced:img src="$lib/assets/saturn.png?w=200" alt={title} />
       {/if}
     </div>
 
     <div class="flex flex-col gap-y-2">
       <div class="flex flex-col gap-y-1">
-        <Badge variant={colors[type]}>{tag}</Badge>
+        {#each tags as tag (tag.content)}
+          <Badge variant={tag.variant}>{tag.content}</Badge>
+        {/each}
 
         <span class="text-xl font-semibold">
           {title}
