@@ -99,8 +99,8 @@
         <span class="text-sm text-slate-600">{createdBy}</span>
         <span class="text-sm text-slate-600">•</span>
         <span class="text-sm text-slate-600">
-          {formatDistanceToNow(createdAt, { addSuffix: true })}</span
-        >
+          {formatDistanceToNow(createdAt, { addSuffix: true })}
+        </span>
       </div>
     </div>
   </div>
