@@ -33,8 +33,9 @@ model Collection {
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   // Domain-Specific Fields.
-  title String         @map("title")
-  type  CollectionType @map("type")
+  title       String         @map("title")
+  type        CollectionType @map("type")
+  description String         @map("description")
 
   // Relations.
   learningUnit LearningUnit[]
