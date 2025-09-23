@@ -117,7 +117,7 @@
           </Button>
         {/if}
 
-        <LinkButton variant="secondary" width="full" href={`/content/${data.id}/quiz`}>
+        <LinkButton variant="secondary" width="full" href={`/unit/${data.id}/quiz`}>
           <Lightbulb class="h-4 w-4" />
           <span class="font-medium">Take the quiz</span>
         </LinkButton>
