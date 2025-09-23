@@ -1,14 +1,14 @@
 <script lang="ts">
   import { ArrowLeft } from '@lucide/svelte';
 
-  import { LearningUnit, type LearningUnitProps } from '$lib/components/LearningUnit';
-  import { IsWithinViewport } from '$lib/helpers';
+  import { LearningUnit } from '$lib/components/LearningUnit';
+  import { IsWithinViewport, tagCodeToBadgeVariant } from '$lib/helpers';
+
+  const { data } = $props();
 
   let target = $state<HTMLElement | null>(null);
 
   const isWithinViewport = new IsWithinViewport(() => target);
-
-  const { data } = $props();
 </script>
 
 <header class="fixed inset-x-0 top-0 z-50 bg-slate-100/90 backdrop-blur-sm">
@@ -29,7 +29,7 @@
           <ArrowLeft />
         </a>
 
-        <span class="text-xl font-medium">SEN peer support</span>
+        <span class="text-xl font-medium">{data.collection.title}</span>
       </div>
     </div>
   </div>
@@ -41,22 +41,23 @@
   <div class="shadow-xs flex flex-col gap-y-2 rounded-3xl bg-slate-200 p-4">
     <span class="text-lg font-medium">About this topic</span>
     <span>
-      Explore the world of Special Educational Needs (SEN) peer support that indicates Singapore
-      specific peer support knowledges, case studies and more to gain knowledge about SEN. This
-      topic encompasses a variety of bite-sized.
+      {data.collection.description}
     </span>
   </div>
 
   <div class="flex flex-col gap-y-3">
     <div class="px-2">
-      <span class="text-xl font-semibold">12 Podcasts</span>
+      <span class="text-xl font-semibold">{data.learningUnits.length} Podcasts</span>
     </div>
 
     <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
       {#each data.learningUnits as learningUnit (learningUnit.id)}
         <LearningUnit
-          to={learningUnit.to}
-          tags={learningUnit.tags as LearningUnitProps['tags']}
+          to="/unit/{learningUnit.id}"
+          tags={learningUnit.tags.map((t) => ({
+            variant: tagCodeToBadgeVariant(t.code),
+            content: t.label,
+          }))}
           title={learningUnit.title}
           createdat={learningUnit.createdAt}
           createdby={learningUnit.createdBy}
