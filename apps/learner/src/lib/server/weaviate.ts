@@ -21,6 +21,17 @@ export const weaviate = await Weaviate.connectToCustom({
   skipInitChecks: true,
 });
 
+export async function weaviateSearch(query: string) {
+  const response = await weaviate.collections.use('LearningUnit').query.hybrid(query, {
+    queryProperties: ['content'],
+    targetVector: ['content_vector'],
+    maxVectorDistance: 0.6,
+    limit: 5,
+  });
+
+  return response;
+}
+
 if (!building) {
   const [isLive, isReady] = await Promise.all([weaviate.isLive(), weaviate.isReady()]);
   if (!isLive || !isReady) {
