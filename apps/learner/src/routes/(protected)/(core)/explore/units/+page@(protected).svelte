@@ -1,13 +1,14 @@
 <script lang="ts">
   import { ArrowLeft } from '@lucide/svelte';
 
-  import { LearningUnit } from '$lib/components/LearningUnit';
-  import { IsWithinViewport, tagCodeToBadgeVariant } from '$lib/helpers';
+  import { LearningUnit } from '$lib/components/LearningUnit/index.js';
+  import { IsWithinViewport, tagCodeToBadgeVariant } from '$lib/helpers/index.js';
+
+  const { data } = $props();
 
   let target = $state<HTMLElement | null>(null);
 
   const isWithinViewport = new IsWithinViewport(() => target);
-  const { data } = $props();
 </script>
 
 <header class="fixed inset-x-0 top-0 z-50 bg-slate-100/90 backdrop-blur-sm">
@@ -39,6 +40,7 @@
     <div class="px-2">
       <span class="text-xl font-semibold">Learning Units</span>
     </div>
+
     <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
       {#each data.learningUnits as learningUnit (learningUnit.id)}
         <LearningUnit
