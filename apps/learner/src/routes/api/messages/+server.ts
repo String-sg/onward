@@ -13,7 +13,7 @@ export const GET: RequestHandler = async (event) => {
 
   const { user } = event.locals.session;
   if (!user) {
-    logger.warn('User is not authenticated');
+    logger.warn('User not authenticated');
     return json(null, { status: 401 });
   }
 
@@ -31,7 +31,7 @@ export const GET: RequestHandler = async (event) => {
 
     return json({ messages }, { status: 200 });
   } catch (err) {
-    logger.error({ err, userId: user.id }, 'Unknown error occurred while retrieving messages');
+    logger.error({ err, userId: user.id }, 'Failed to retrieve messages');
     return json(null, { status: 500 });
   }
 };
@@ -41,7 +41,7 @@ export const POST: RequestHandler = async (event) => {
 
   const { user } = event.locals.session;
   if (!user) {
-    logger.warn('User is not authenticated');
+    logger.warn('User not authenticated');
     return json(null, { status: 401 });
   }
 
@@ -62,7 +62,7 @@ export const POST: RequestHandler = async (event) => {
       return json(null, { status: 422 });
     }
   } catch (err) {
-    logger.error({ err, userId: user.id }, 'Unknown error occurred while parsing request body');
+    logger.error({ err, userId: user.id }, 'Failed to parse request body');
     return json(null, { status: 400 });
   }
 
@@ -153,7 +153,7 @@ export const POST: RequestHandler = async (event) => {
       { status: 201 },
     );
   } catch (err) {
-    logger.error({ err, userId: user.id }, 'Unknown error occurred while creating a message');
+    logger.error({ err, userId: user.id }, 'Failed to create a message');
     return json(null, { status: 500 });
   }
 };
@@ -163,7 +163,7 @@ export const DELETE: RequestHandler = async (event) => {
 
   const { user } = event.locals.session;
   if (!user) {
-    logger.warn('User is not authenticated');
+    logger.warn('User not authenticated');
     return json(null, { status: 401 });
   }
 
@@ -175,7 +175,7 @@ export const DELETE: RequestHandler = async (event) => {
 
     return new Response(null, { status: 204 });
   } catch (err) {
-    logger.error({ err, userId: user.id }, 'Unknown error occurred while updating threads');
+    logger.error({ err, userId: user.id }, 'Failed to update threads');
     return json(null, { status: 500 });
   }
 };

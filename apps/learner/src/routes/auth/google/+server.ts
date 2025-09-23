@@ -1,7 +1,7 @@
 import { redirect } from '@sveltejs/kit';
 
 import { nanoid } from '$lib/helpers/index.js';
-import { generateGoogleAuthURL } from '$lib/server/auth.js';
+import { GoogleOAuth2 } from '$lib/server/auth.js';
 
 import type { RequestHandler } from './$types';
 
@@ -16,7 +16,7 @@ export const GET: RequestHandler = async (event) => {
   ).toString('base64url');
 
   const codeVerifier = nanoid(64);
-  const authURL = generateGoogleAuthURL({
+  const authURL = GoogleOAuth2.generateAuthURL({
     origin: event.url.origin,
     state,
     codeVerifier,

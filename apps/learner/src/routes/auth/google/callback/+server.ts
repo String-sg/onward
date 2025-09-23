@@ -1,7 +1,7 @@
 import { redirect } from '@sveltejs/kit';
 
-import { auth, exchangeGoogleCodeForIdToken, verifyGoogleIdToken } from '$lib/server/auth.js';
-import { db, PrismaClientKnownRequestError } from '$lib/server/db.js';
+import { auth, GoogleOAuth2, type GoogleProfile } from '$lib/server/auth.js';
+import { db, PrismaClientKnownRequestError, type UserModel } from '$lib/server/db.js';
 
 import type { RequestHandler } from './$types';
 
@@ -16,7 +16,7 @@ export const GET: RequestHandler = async (event) => {
         hasCode: !!code,
         hasState: !!state,
       },
-      'Missing required parameters from URL',
+      'Missing required OAuth2 parameters from URL',
     );
     return redirect(302, '/login?error=oauth2_callback_failed');
   }
@@ -29,49 +29,63 @@ export const GET: RequestHandler = async (event) => {
         hasCodeVerifier: !!codeVerifier,
         hasAuthURL: !!authURL,
       },
-      'Missing required parameters from session',
+      'Missing required values from session',
     );
     return redirect(302, '/login?error=oauth2_callback_failed');
   }
 
   const originalState = new URL(authURL).searchParams.get('state');
   if (!originalState || originalState !== state) {
-    logger.error(
-      {
-        originalState,
-        callbackState: state,
+    logger.error('State mismatch between original and callback');
+    return redirect(302, '/login?error=oauth2_callback_failed');
+  }
+
+  let idToken: string | null = null;
+  try {
+    idToken = await GoogleOAuth2.exchangeCodeForIdToken({
+      origin: event.url.origin,
+      code,
+      codeVerifier,
+    });
+
+    if (!idToken) {
+      logger.error('Missing ID token');
+      return redirect(302, '/login?error=oauth2_callback_failed');
+    }
+  } catch (err) {
+    logger.error(err, 'Failed to exchange code for ID token');
+    return redirect(302, '/login?error=oauth2_callback_failed');
+  }
+
+  let profile: GoogleProfile | null = null;
+  try {
+    profile = await GoogleOAuth2.verifyIdToken(idToken);
+
+    if (!profile) {
+      logger.error('Invalid Google profile');
+      return redirect(302, '/login?error=oauth2_callback_failed');
+    }
+  } catch (err) {
+    logger.error(err, 'Failed to verify ID token');
+    return redirect(302, '/login?error=oauth2_callback_failed');
+  }
+
+  let user: Pick<UserModel, 'id' | 'email' | 'name'> | null = null;
+  try {
+    user = await db.user.findUnique({
+      where: {
+        email: profile.email,
       },
-      'Mismatch between original and callback state',
-    );
+      select: {
+        id: true,
+        email: true,
+        name: true,
+      },
+    });
+  } catch (err) {
+    logger.error({ err, email: profile.email }, 'Failed to find user');
     return redirect(302, '/login?error=oauth2_callback_failed');
   }
-
-  const idToken = await exchangeGoogleCodeForIdToken({
-    origin: event.url.origin,
-    code,
-    codeVerifier,
-  });
-  if (!idToken) {
-    logger.error('Missing ID token');
-    return redirect(302, '/login?error=oauth2_callback_failed');
-  }
-
-  const profile = await verifyGoogleIdToken(idToken);
-  if (!profile) {
-    logger.error('Invalid ID token');
-    return redirect(302, '/login?error=oauth2_callback_failed');
-  }
-
-  let user = await db.user.findUnique({
-    where: {
-      email: profile.email,
-    },
-    select: {
-      id: true,
-      email: true,
-      name: true,
-    },
-  });
 
   if (!user) {
     try {
@@ -82,14 +96,22 @@ export const GET: RequestHandler = async (event) => {
           googleProviderId: profile.id,
           avatarURL: profile.picture,
         },
+        select: {
+          id: true,
+          email: true,
+          name: true,
+        },
       });
     } catch (err) {
       if (err instanceof PrismaClientKnownRequestError && err.code === 'P2002') {
-        logger.error({ email: profile.email }, 'User creation failed due to duplicate constraint');
+        logger.error(
+          { err, email: profile.email },
+          'Failed to create user due to duplicate constraint',
+        );
         return redirect(302, '/login?error=oauth2_callback_failed');
       }
 
-      logger.error(err, 'Unknown error occurred while creating user');
+      logger.error({ err, email: profile.email }, 'Failed to create user');
       return redirect(302, '/login?error=oauth2_callback_failed');
     }
   }
@@ -101,7 +123,7 @@ export const GET: RequestHandler = async (event) => {
       name: user.name,
     });
   } catch (err) {
-    logger.error(err, 'Unknown error occurred while signing in user');
+    logger.error({ err, email: user.email }, 'Failed to sign in user');
     return redirect(302, '/login?error=oauth2_callback_failed');
   }
 
