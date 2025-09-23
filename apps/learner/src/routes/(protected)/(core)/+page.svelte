@@ -33,7 +33,7 @@
   <div class="flex flex-col gap-y-4">
     {#each data.learningUnits as learningUnit (learningUnit.id)}
       <LearningUnit
-        to={`/content/${learningUnit.id}`}
+        to={`/unit/${learningUnit.id}`}
         tags={learningUnit.tags.map((tag) => ({
           variant: tagCodeToBadgeVariant(tag.code),
           content: tag.label,

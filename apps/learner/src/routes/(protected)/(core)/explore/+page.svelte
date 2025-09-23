@@ -20,7 +20,7 @@
     <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
       {#each data.learningUnits as learningUnit (learningUnit.id)}
         <LearningUnit
-          to="/content/{learningUnit.id}"
+          to="/unit/{learningUnit.id}"
           tags={learningUnit.tags.map((t) => ({
             variant: tagCodeToBadgeVariant(t.code),
             content: t.label,
