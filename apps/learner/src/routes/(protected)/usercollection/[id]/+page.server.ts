@@ -5,7 +5,7 @@ export const load: PageServerLoad = async () => {
     learningUnits: [
       {
         id: 1,
-        to: '/content/1',
+        to: '/unit/1',
         tags: [
           { variant: 'purple', content: 'Special Educational Needs' },
           { variant: 'slate', content: 'Podcast' },
@@ -16,7 +16,7 @@ export const load: PageServerLoad = async () => {
       },
       {
         id: 2,
-        to: '/content/1',
+        to: '/unit/1',
         tags: [
           { variant: 'purple', content: 'Special Educational Needs' },
           { variant: 'slate', content: 'Podcast' },
@@ -27,7 +27,7 @@ export const load: PageServerLoad = async () => {
       },
       {
         id: 3,
-        to: '/content/1',
+        to: '/unit/1',
         tags: [
           { variant: 'purple', content: 'Special Educational Needs' },
           { variant: 'slate', content: 'Podcast' },
