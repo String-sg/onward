@@ -217,12 +217,7 @@
       </div>
 
       <div class="flex flex-col items-center py-5">
-        <LinkButton
-          href={`/content/${params.id}`}
-          variant="secondary"
-          width="full"
-          class="max-w-sm"
-        >
+        <LinkButton href={`/unit/${params.id}`} variant="secondary" width="full" class="max-w-sm">
           Done
         </LinkButton>
       </div>
