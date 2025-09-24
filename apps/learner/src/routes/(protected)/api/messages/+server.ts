@@ -1,8 +1,8 @@
 import { json, type RequestHandler } from '@sveltejs/kit';
 
-import { db, Role } from '$lib/server/db.js';
-import { getOpenAIResponse } from '$lib/server/openai.js';
-import { weaviateSearch } from '$lib/server/weaviate';
+import { db, type MessageModel, Role } from '$lib/server/db.js';
+import { completions } from '$lib/server/openai.js';
+import { search } from '$lib/server/weaviate';
 
 type JSONPrimitive = string | number | boolean | null;
 type JSONValue = JSONPrimitive | JSONValue[] | JSONObject;
@@ -55,8 +55,9 @@ export const POST: RequestHandler = async (event) => {
     if (
       !params ||
       typeof params !== 'object' ||
-      !('content' in params) ||
-      typeof params.content !== 'string'
+      !('query' in params) ||
+      typeof params['query'] !== 'string' ||
+      params['query'].trim().length === 0
     ) {
       return json(null, { status: 422 });
     }
@@ -65,19 +66,19 @@ export const POST: RequestHandler = async (event) => {
     return json(null, { status: 400 });
   }
 
-  const content = params['content'];
+  const query = params['query'];
 
-  let weaviateSearchResponse;
+  let result: string[];
   try {
-    weaviateSearchResponse = await weaviateSearch(content);
+    result = await search(query);
   } catch (err) {
     logger.error({ err, userId: user.id }, 'Unknown error occurred while searching Weaviate');
     return json(null, { status: 500 });
   }
 
-  let chatHistory: { role: string; content: string }[];
+  let history: Pick<MessageModel, 'role' | 'content'>[];
   try {
-    chatHistory = await db.message.findMany({
+    history = await db.message.findMany({
       where: {
         thread: {
           userId: BigInt(user.id),
@@ -92,18 +93,21 @@ export const POST: RequestHandler = async (event) => {
     return json(null, { status: 500 });
   }
 
-  let chatResponseContent: string | null;
+  let answer: string;
   try {
-    chatResponseContent = await getOpenAIResponse(
-      content,
-      chatHistory,
-      weaviateSearchResponse.objects,
+    answer = await completions(
+      query,
+      history.map((msg) => ({
+        role: msg.role.toLowerCase() as 'user' | 'assistant',
+        content: msg.content,
+      })),
+      result,
     );
   } catch (err) {
     logger.error({ err, userId: user.id }, 'Unknown error occurred while chatting with OpenAI');
     return json(null, { status: 500 });
   }
-  if (!chatResponseContent) {
+  if (!answer) {
     logger.error({ userId: user.id }, 'OpenAI response is missing content');
     return json(null, { status: 500 });
   }
@@ -127,12 +131,12 @@ export const POST: RequestHandler = async (event) => {
           {
             threadId: thread.id,
             role: Role.USER,
-            content: content,
+            content: query,
           },
           {
             threadId: thread.id,
             role: Role.ASSISTANT,
-            content: chatResponseContent,
+            content: answer,
           },
         ],
       });
@@ -141,7 +145,7 @@ export const POST: RequestHandler = async (event) => {
     return json(
       {
         role: Role.ASSISTANT,
-        content: chatResponseContent,
+        content: answer,
       },
       { status: 201 },
     );

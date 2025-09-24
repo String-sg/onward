@@ -99,7 +99,7 @@
 
     messages.push({ role: 'USER', content: query });
     isAiTyping = true;
-    
+
     try {
       const response = await fetch('/api/messages', {
         method: 'POST',
