@@ -1,8 +1,8 @@
-import type { Collection, LearningUnit, Tag } from '@prisma/client';
 import { error, redirect } from '@sveltejs/kit';
 
 import { db } from '$lib/server/db';
 
+import type { Collection, LearningUnit, Tag } from '../../../../../../generated/prisma/client.js';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async (event) => {
@@ -19,7 +19,9 @@ export const load: PageServerLoad = async (event) => {
     LearningUnit,
     'id' | 'title' | 'summary' | 'contentURL' | 'createdAt' | 'createdBy'
   > & {
-    tags: Pick<Tag, 'code' | 'label'>[];
+    tags: {
+      tag: Pick<Tag, 'code' | 'label'>;
+    }[];
   })[];
 
   try {
