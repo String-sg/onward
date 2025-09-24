@@ -9,6 +9,7 @@ import { Prisma, PrismaClient } from '../../generated/prisma/client.js';
 
 export const { PrismaClientKnownRequestError } = Prisma;
 export * from '../../generated/prisma/enums.js';
+export * from '../../generated/prisma/models.js';
 
 export const db = new PrismaClient({
   adapter: new PrismaPg({
