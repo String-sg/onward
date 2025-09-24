@@ -48,8 +48,7 @@
   <div class="flex flex-col gap-y-3">
     <div class="px-2">
       <span class="text-xl font-semibold">
-        {data.learningUnits.length}
-        {data.learningUnits.length === 1 ? 'Podcast' : 'Podcasts'}
+        {data.learningUnits.length}&nbsp{data.learningUnits.length === 1 ? 'podcast' : 'podcasts'}
       </span>
     </div>
 

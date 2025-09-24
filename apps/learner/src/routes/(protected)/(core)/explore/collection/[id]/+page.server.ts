@@ -25,7 +25,7 @@ export const load: PageServerLoad = async (event) => {
   try {
     collection = await db.collection.findUnique(collectionArgs);
   } catch (err) {
-    logger.error({ err }, 'Unknown error occurred while retrieving collection records');
+    logger.error({ err }, 'Failed to retrieve collection records');
     throw error(500);
   }
 
@@ -64,7 +64,7 @@ export const load: PageServerLoad = async (event) => {
   try {
     learningUnits = await db.learningUnit.findMany(learningUnitsArgs);
   } catch (err) {
-    logger.error({ err }, 'Unknown error occurred while retrieving learning unit records');
+    logger.error({ err }, 'Failed to retrieve learning unit records');
     throw error(500);
   }
 
