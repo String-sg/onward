@@ -1,6 +1,6 @@
 import { json, type RequestHandler } from '@sveltejs/kit';
 
-import { db, type MessageModel, Role } from '$lib/server/db.js';
+import { db, type MessageFindManyArgs, type MessageGetPayload, Role } from '$lib/server/db.js';
 import { completions } from '$lib/server/openai.js';
 import { search } from '$lib/server/weaviate';
 
@@ -72,24 +72,26 @@ export const POST: RequestHandler = async (event) => {
   try {
     result = await search(query);
   } catch (err) {
-    logger.error({ err, userId: user.id }, 'Unknown error occurred while searching Weaviate');
+    logger.error({ err, userId: user.id }, 'Failed to search for relevant content');
     return json(null, { status: 500 });
   }
 
-  let history: Pick<MessageModel, 'role' | 'content'>[];
-  try {
-    history = await db.message.findMany({
-      where: {
-        thread: {
-          userId: BigInt(user.id),
-          isActive: true,
-        },
+  const messagesArgs = {
+    select: { role: true, content: true },
+    where: {
+      thread: {
+        userId: BigInt(user.id),
+        isActive: true,
       },
-      orderBy: { createdAt: 'asc' },
-      select: { role: true, content: true },
-    });
+    },
+    orderBy: { createdAt: 'asc' },
+  } satisfies MessageFindManyArgs;
+
+  let history: MessageGetPayload<typeof messagesArgs>[] | null;
+  try {
+    history = await db.message.findMany(messagesArgs);
   } catch (err) {
-    logger.error({ err, userId: user.id }, 'Unknown error occurred while gettng chat history');
+    logger.error({ err, userId: user.id }, 'Failed to get chat history');
     return json(null, { status: 500 });
   }
 
@@ -104,11 +106,11 @@ export const POST: RequestHandler = async (event) => {
       result,
     );
   } catch (err) {
-    logger.error({ err, userId: user.id }, 'Unknown error occurred while chatting with OpenAI');
+    logger.error({ err, userId: user.id }, 'Failed to complete chat');
     return json(null, { status: 500 });
   }
   if (!answer) {
-    logger.error({ userId: user.id }, 'OpenAI response is missing content');
+    logger.error({ userId: user.id }, 'Chat completion answer is missing');
     return json(null, { status: 500 });
   }
 
