@@ -34,8 +34,8 @@ model Collection {
 
   // Domain-Specific Fields.
   title       String         @map("title")
-  type        CollectionType @map("type")
   description String         @map("description")
+  type        CollectionType @map("type")
 
   // Relations.
   learningUnit LearningUnit[]
