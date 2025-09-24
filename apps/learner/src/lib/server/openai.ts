@@ -52,13 +52,6 @@ export async function completions({
   }[];
   context: string[];
 }): Promise<string> {
-  let contextPrompt = '# Context: \n\n';
-  if (context.length === 0) {
-    contextPrompt += 'No relevant context found.';
-  } else {
-    contextPrompt += `${context.map((cont) => `- ${cont}`).join('\n\n')}`;
-  }
-
   const response = await client.chat.completions.create({
     model: 'gpt-5-nano',
     messages: [
@@ -68,7 +61,11 @@ export async function completions({
       },
       {
         role: 'developer',
-        content: contextPrompt,
+        content:
+          '# Context: \n\n' +
+          (context.length === 0
+            ? 'No relevant context found.'
+            : `${context.map((cont) => `- ${cont}`).join('\n\n')}`),
       },
       ...history,
       {
