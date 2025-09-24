@@ -66,7 +66,6 @@ export const load: PageServerLoad = async (event) => {
   } satisfies LearningUnitFindManyArgs;
 
   let learningUnits: LearningUnitGetPayload<typeof learningUnitsArgs>[];
-
   try {
     learningUnits = await db.learningUnit.findMany(learningUnitsArgs);
   } catch (err) {

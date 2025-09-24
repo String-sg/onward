@@ -2,7 +2,7 @@
   import { ArrowLeft } from '@lucide/svelte';
 
   import { LearningUnit } from '$lib/components/LearningUnit/index.js';
-  import { IsWithinViewport, tagCodeToBadgeVariant } from '$lib/helpers';
+  import { IsWithinViewport, tagCodeToBadgeVariant } from '$lib/helpers/index.js';
 
   const { data } = $props();
 
