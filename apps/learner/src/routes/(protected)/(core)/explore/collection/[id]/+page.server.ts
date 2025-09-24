@@ -1,8 +1,7 @@
 import { error, redirect } from '@sveltejs/kit';
 
-import { db } from '$lib/server/db';
+import { type CollectionFindUniqueArgs, db, type LearningUnitFindManyArgs } from '$lib/server/db';
 
-import type { Collection, LearningUnit, Tag } from '../../../../../../generated/prisma/client.js';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async (event) => {
@@ -10,28 +9,21 @@ export const load: PageServerLoad = async (event) => {
 
   const { user } = event.locals.session;
   if (!user) {
-    logger.warn('User is not authenticated');
+    logger.warn('User not authenticated');
     return redirect(303, '/login');
   }
 
-  let collection: Pick<Collection, 'title' | 'description'> | null;
-  let learningUnits: (Pick<
-    LearningUnit,
-    'id' | 'title' | 'summary' | 'contentURL' | 'createdAt' | 'createdBy'
-  > & {
-    tags: {
-      tag: Pick<Tag, 'code' | 'label'>;
-    }[];
-  })[];
+  const collectionArgs = {
+    select: {
+      title: true,
+      description: true,
+    },
+    where: { id: BigInt(event.params.id) },
+  } satisfies CollectionFindUniqueArgs;
 
+  let collection: CollectionGetPayload<typeof collectionArgs> | null;
   try {
-    collection = await db.collection.findUnique({
-      select: {
-        title: true,
-        description: true,
-      },
-      where: { id: BigInt(event.params.id) },
-    });
+    collection = await db.collection.findUnique(collectionArgs);
   } catch (err) {
     logger.error({ err }, 'Unknown error occurred while retrieving collection records');
     throw error(500);
@@ -42,31 +34,35 @@ export const load: PageServerLoad = async (event) => {
     throw error(404);
   }
 
-  try {
-    learningUnits = await db.learningUnit.findMany({
-      select: {
-        id: true,
-        tags: {
-          select: {
-            tag: {
-              select: {
-                code: true,
-                label: true,
-              },
+  const learningUnitsArgs = {
+    select: {
+      id: true,
+      tags: {
+        select: {
+          tag: {
+            select: {
+              code: true,
+              label: true,
             },
           },
         },
-        title: true,
-        summary: true,
-        contentURL: true,
-        createdAt: true,
-        createdBy: true,
       },
-      where: { collectionId: BigInt(event.params.id) },
-      orderBy: {
-        createdAt: 'desc',
-      },
-    });
+      title: true,
+      summary: true,
+      contentURL: true,
+      createdAt: true,
+      createdBy: true,
+    },
+    where: { collectionId: BigInt(event.params.id) },
+    orderBy: {
+      createdAt: 'desc',
+    },
+  } satisfies LearningUnitFindManyArgs;
+
+  let learningUnits: LearningUnitGetPayload<typeof learningUnitsArgs>[];
+
+  try {
+    learningUnits = await db.learningUnit.findMany(learningUnitsArgs);
   } catch (err) {
     logger.error({ err }, 'Unknown error occurred while retrieving learning unit records');
     throw error(500);
