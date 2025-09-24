@@ -25,50 +25,51 @@ export const load: PageServerLoad = async (event) => {
   })[];
 
   try {
-    [collection, learningUnits] = await Promise.all([
-      db.collection.findUnique({
-        select: {
-          title: true,
-          description: true,
-        },
-        where: { id: BigInt(event.params.id) },
-      }),
-      db.learningUnit.findMany({
-        select: {
-          id: true,
-          tags: {
-            select: {
-              tag: {
-                select: {
-                  code: true,
-                  label: true,
-                },
-              },
-            },
-          },
-          title: true,
-          summary: true,
-          contentURL: true,
-          createdAt: true,
-          createdBy: true,
-        },
-        where: { collectionId: BigInt(event.params.id) },
-        orderBy: {
-          createdAt: 'desc',
-        },
-      }),
-    ]);
+    collection = await db.collection.findUnique({
+      select: {
+        title: true,
+        description: true,
+      },
+      where: { id: BigInt(event.params.id) },
+    });
   } catch (err) {
-    logger.error(
-      { err },
-      'Unknown error occurred while retrieving collection/learning unit records',
-    );
+    logger.error({ err }, 'Unknown error occurred while retrieving collection records');
     throw error(500);
   }
 
   if (!collection) {
     logger.error('Collection not found');
     throw error(404);
+  }
+
+  try {
+    learningUnits = await db.learningUnit.findMany({
+      select: {
+        id: true,
+        tags: {
+          select: {
+            tag: {
+              select: {
+                code: true,
+                label: true,
+              },
+            },
+          },
+        },
+        title: true,
+        summary: true,
+        contentURL: true,
+        createdAt: true,
+        createdBy: true,
+      },
+      where: { collectionId: BigInt(event.params.id) },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+  } catch (err) {
+    logger.error({ err }, 'Unknown error occurred while retrieving learning unit records');
+    throw error(500);
   }
 
   return {
