@@ -1,6 +1,12 @@
 import { error, redirect } from '@sveltejs/kit';
 
-import { type CollectionFindUniqueArgs, db, type LearningUnitFindManyArgs } from '$lib/server/db';
+import {
+  type CollectionFindUniqueArgs,
+  type CollectionGetPayload,
+  db,
+  type LearningUnitFindManyArgs,
+  type LearningUnitGetPayload,
+} from '$lib/server/db';
 
 import type { PageServerLoad } from './$types';
 
