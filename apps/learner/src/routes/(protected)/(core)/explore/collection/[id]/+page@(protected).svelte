@@ -40,14 +40,17 @@
 <main class="pt-23 relative mx-auto flex min-h-svh max-w-5xl flex-col gap-y-6 px-4 pb-28">
   <div class="shadow-xs flex flex-col gap-y-2 rounded-3xl bg-slate-200 p-4">
     <span class="text-lg font-medium">About this topic</span>
-    <span>
+    <p>
       {data.description}
-    </span>
+    </p>
   </div>
 
   <div class="flex flex-col gap-y-3">
     <div class="px-2">
-      <span class="text-xl font-semibold">{data.learningUnits.length} Podcasts</span>
+      <span class="text-xl font-semibold">
+        {data.learningUnits.length}
+        {data.learningUnits.length === 1 ? 'Podcast' : 'Podcasts'}
+      </span>
     </div>
 
     <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
