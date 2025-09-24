@@ -97,14 +97,14 @@ export const POST: RequestHandler = async (event) => {
 
   let answer: string;
   try {
-    answer = await completions(
+    answer = await completions({
       query,
-      history.map((msg) => ({
+      history: history.map((msg) => ({
         role: msg.role.toLowerCase() as 'user' | 'assistant',
         content: msg.content,
       })),
-      result,
-    );
+      context: result,
+    });
   } catch (err) {
     logger.error({ err, userId: user.id }, 'Failed to complete chat');
     return json(null, { status: 500 });

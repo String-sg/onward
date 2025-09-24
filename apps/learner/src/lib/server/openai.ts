@@ -38,16 +38,20 @@ const client = new OpenAI({
  * );
  * ```
  */
-export async function completions(
-  query: string,
+export async function completions({
+  query,
+  history,
+  context,
+}: {
+  query: string;
   history: {
     role:
       | OpenAI.ChatCompletionUserMessageParam['role']
       | OpenAI.ChatCompletionAssistantMessageParam['role'];
     content: string;
-  }[],
-  context: string[],
-): Promise<string> {
+  }[];
+  context: string[];
+}): Promise<string> {
   let contextPrompt = '# Context: \n\n';
   if (context.length === 0) {
     contextPrompt += 'No relevant context found.';
