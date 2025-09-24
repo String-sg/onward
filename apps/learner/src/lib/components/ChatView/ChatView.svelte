@@ -6,7 +6,7 @@
   import { goto } from '$app/navigation';
   import { Badge } from '$lib/components/Badge/index.js';
   import { Portal } from '$lib/components/Portal/index.js';
-  import { IsWithinViewport } from '$lib/helpers/index.js';
+  import { IsWithinViewport, safeMarkdown } from '$lib/helpers/index.js';
 
   interface ChatMessage {
     role: 'USER' | 'ASSISTANT';
@@ -241,7 +241,8 @@
                       role === 'USER' && 'max-w-4/5 bg-white',
                     ]}
                   >
-                    {content}
+                    <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+                    {@html safeMarkdown(content)}
                   </span>
                 </div>
               {/each}
