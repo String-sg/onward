@@ -22,19 +22,19 @@ const client = new OpenAI({
 });
 
 /**
- * Generates an AI response using OpenAI's chat completions API.
+ * Calls LLM to complete a chat.
  *
- * @param query - The user's current question or message
- * @param history - Array of previous conversation messages with role and content
- * @param context - Array of relevant context strings to provide additional information
- * @returns Promise that resolves to the AI's response as a string
+ * @param query - The query to complete.
+ * @param history - A list of previous messages.
+ * @param context - A list of relevant context.
+ * @returns The response from the LLM.
  *
  * @example
- * ```typescript
+ * ```ts
  * const response = await completions(
- *   "What is photosynthesis?",
+ *   "What is AI?",
  *   [{ role: "user", content: "Hello" }, { role: "assistant", content: "Hi there!" }],
- *   ["Plants convert sunlight into energy", "Chlorophyll is involved in the process"]
+ *   ["Artificial Intelligence", "Machine Learning"]
  * );
  * ```
  */
