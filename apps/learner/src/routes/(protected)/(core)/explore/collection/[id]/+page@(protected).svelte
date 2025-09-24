@@ -1,7 +1,7 @@
 <script lang="ts">
   import { ArrowLeft } from '@lucide/svelte';
 
-  import { LearningUnit } from '$lib/components/LearningUnit';
+  import { LearningUnit } from '$lib/components/LearningUnit/index.js';
   import { IsWithinViewport, tagCodeToBadgeVariant } from '$lib/helpers';
 
   const { data } = $props();
@@ -29,7 +29,7 @@
           <ArrowLeft />
         </a>
 
-        <span class="text-xl font-medium">{data.collection.title}</span>
+        <span class="text-xl font-medium">{data.title}</span>
       </div>
     </div>
   </div>
@@ -41,7 +41,7 @@
   <div class="shadow-xs flex flex-col gap-y-2 rounded-3xl bg-slate-200 p-4">
     <span class="text-lg font-medium">About this topic</span>
     <span>
-      {data.collection.description}
+      {data.description}
     </span>
   </div>
 
