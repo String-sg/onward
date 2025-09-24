@@ -22,19 +22,15 @@ const client = await Weaviate.connectToCustom({
 });
 
 /**
- * Performs hybrid search on the LearningUnit collection.
+ * Search for relevant learning content by using both keyword and vector similarity.
  *
- * Uses both keyword and vector similarity search to find relevant learning content.
- * The search targets the 'content' property and uses the 'content_vector' for
- * semantic similarity matching.
- *
- * @param query - The search query string
- * @returns Promise<string[]> - Array of content strings from matching learning units
+ * @param query - The query to search for.
+ * @returns A list of relevant learning content.
  *
  * @example
- * ```typescript
- * const results = await search("machine learning algorithms");
- * console.log(results); // ["Content about ML algorithms...", "Another related content..."]
+ * ```ts
+ * const results = await search("What is artificial intelligence?");
+ * console.log(results); // ["Content about AI...", "Another related content..."]
  * ```
  */
 export async function search(query: string): Promise<string[]> {
