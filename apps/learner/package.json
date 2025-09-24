@@ -33,6 +33,7 @@
     "date-fns": "^4.1.0",
     "dotenv": "^17.2.2",
     "google-auth-library": "^10.3.0",
+    "marked": "^16.3.0",
     "nanoid": "^5.1.5",
     "pino": "^9.9.0",
     "pino-pretty": "^13.1.1",
