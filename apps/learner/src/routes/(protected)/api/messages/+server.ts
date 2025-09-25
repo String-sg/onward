@@ -1,6 +1,8 @@
 import { json, type RequestHandler } from '@sveltejs/kit';
 
-import { db, Role } from '$lib/server/db.js';
+import { db, type MessageFindManyArgs, type MessageGetPayload, Role } from '$lib/server/db.js';
+import { completions } from '$lib/server/openai.js';
+import { search } from '$lib/server/weaviate';
 
 type JSONPrimitive = string | number | boolean | null;
 type JSONValue = JSONPrimitive | JSONValue[] | JSONObject;
@@ -53,8 +55,9 @@ export const POST: RequestHandler = async (event) => {
     if (
       !params ||
       typeof params !== 'object' ||
-      !('content' in params) ||
-      typeof params.content !== 'string'
+      !('query' in params) ||
+      typeof params['query'] !== 'string' ||
+      params['query'].trim().length === 0
     ) {
       return json(null, { status: 422 });
     }
@@ -63,7 +66,54 @@ export const POST: RequestHandler = async (event) => {
     return json(null, { status: 400 });
   }
 
-  const content = params['content'];
+  const query = params['query'];
+
+  let result: string[];
+  try {
+    result = await search(query);
+  } catch (err) {
+    logger.error({ err, userId: user.id }, 'Failed to search for relevant content');
+    return json(null, { status: 500 });
+  }
+
+  const messagesArgs = {
+    select: { role: true, content: true },
+    where: {
+      thread: {
+        userId: BigInt(user.id),
+        isActive: true,
+      },
+    },
+    orderBy: { createdAt: 'asc' },
+  } satisfies MessageFindManyArgs;
+
+  let history: MessageGetPayload<typeof messagesArgs>[] | null;
+  try {
+    history = await db.message.findMany(messagesArgs);
+  } catch (err) {
+    logger.error({ err, userId: user.id }, 'Failed to get chat history');
+    return json(null, { status: 500 });
+  }
+
+  let answer: string;
+  try {
+    answer = await completions({
+      query,
+      history: history.map((msg) => ({
+        role: msg.role.toLowerCase() as 'user' | 'assistant',
+        content: msg.content,
+      })),
+      context: result,
+    });
+
+    if (!answer) {
+      logger.error({ userId: user.id }, 'Chat completion answer is missing');
+      return json(null, { status: 500 });
+    }
+  } catch (err) {
+    logger.error({ err, userId: user.id }, 'Failed to complete chat');
+    return json(null, { status: 500 });
+  }
 
   try {
     await db.$transaction(async (tx) => {
@@ -84,12 +134,12 @@ export const POST: RequestHandler = async (event) => {
           {
             threadId: thread.id,
             role: Role.USER,
-            content: content,
+            content: query,
           },
           {
             threadId: thread.id,
             role: Role.ASSISTANT,
-            content: "Hello! I'm an AI assistant. How can I help you today?",
+            content: answer,
           },
         ],
       });
@@ -98,7 +148,7 @@ export const POST: RequestHandler = async (event) => {
     return json(
       {
         role: Role.ASSISTANT,
-        content: "Hello! I'm an AI assistant. How can I help you today?",
+        content: answer,
       },
       { status: 201 },
     );

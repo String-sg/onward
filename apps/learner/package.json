@@ -20,6 +20,7 @@
     "@prisma/adapter-pg": "^6.16.1",
     "@prisma/client": "^6.16.1",
     "@valkey/valkey-glide": "2.0.1",
+    "openai": "^5.22.0",
     "weaviate-client": "^3.8.1"
   },
   "devDependencies": {
@@ -29,10 +30,12 @@
     "@sveltejs/enhanced-img": "^0.8.1",
     "@sveltejs/kit": "^2.27.3",
     "@sveltejs/vite-plugin-svelte": "^6.1.0",
+    "@tailwindcss/typography": "^0.5.18",
     "@tailwindcss/vite": "^4.1.11",
     "date-fns": "^4.1.0",
     "dotenv": "^17.2.2",
     "google-auth-library": "^10.3.0",
+    "marked": "^16.3.0",
     "nanoid": "^5.1.5",
     "pino": "^9.9.0",
     "pino-pretty": "^13.1.1",

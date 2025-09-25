@@ -1,5 +1,6 @@
 <script lang="ts">
   import { ChevronDown, SendHorizontal } from '@lucide/svelte';
+  import { marked } from 'marked';
   import type { MouseEventHandler } from 'svelte/elements';
   import { fade, fly } from 'svelte/transition';
 
@@ -106,7 +107,7 @@
           'Content-Type': 'application/json',
           Accept: 'application/json',
         },
-        body: JSON.stringify({ content: query }),
+        body: JSON.stringify({ query }),
       });
 
       if (!response.ok) {
@@ -237,11 +238,12 @@
                 <div class={['flex flex-col', role === 'USER' && 'items-end']}>
                   <span
                     class={[
-                      'break-words rounded-3xl p-4 text-left',
+                      'prose prose-slate break-words rounded-3xl p-4 text-left',
                       role === 'USER' && 'max-w-4/5 bg-white',
                     ]}
                   >
-                    {content}
+                    <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+                    {@html marked(content)}
                   </span>
                 </div>
               {/each}
