@@ -21,11 +21,6 @@ const client = await Weaviate.connectToCustom({
   skipInitChecks: true,
 });
 
-// Close the connection to the Weaviate instance when the server shuts down.
-process.on('sveltekit:shutdown', async () => {
-  await client.close();
-});
-
 if (!building) {
   const [isLive, isReady] = await Promise.all([client.isLive(), client.isReady()]);
   if (!isLive || !isReady) {
@@ -33,6 +28,11 @@ if (!building) {
     throw new Error('Weaviate connection failed: Instance is not live or ready.');
   }
 }
+
+// Close the connection to the Weaviate instance when the server shuts down.
+process.on('sveltekit:shutdown', async () => {
+  await client.close();
+});
 
 /**
  * Search for relevant learning content by using both keyword and vector similarity.
