@@ -6,7 +6,7 @@
   import { Button, LinkButton } from '$lib/components/Button/index.js';
   import { Modal } from '$lib/components/Modal/index.js';
   import { Starfield } from '$lib/components/Starfield/index.js';
-  import { IsWithinViewport, noop } from '$lib/helpers/index.js';
+  import { IsWithinViewport, noop, tagCodeToBadgeVariant } from '$lib/helpers/index.js';
   import { Player } from '$lib/states/index.js';
 
   const { data, params } = $props();
@@ -210,7 +210,7 @@
         <div class="flex flex-col items-center gap-y-2">
           <span>You have earned completion status for</span>
 
-          <Badge variant="purple">Special Educational Needs</Badge>
+          <Badge variant={tagCodeToBadgeVariant(data.type)}>{data.label}</Badge>
 
           <span>Track completed topics on your profile.</span>
         </div>
