@@ -105,12 +105,13 @@ export const POST: RequestHandler = async (event) => {
       })),
       context: result,
     });
+
+    if (!answer) {
+      logger.error({ userId: user.id }, 'Chat completion answer is missing');
+      return json(null, { status: 500 });
+    }
   } catch (err) {
     logger.error({ err, userId: user.id }, 'Failed to complete chat');
-    return json(null, { status: 500 });
-  }
-  if (!answer) {
-    logger.error({ userId: user.id }, 'Chat completion answer is missing');
     return json(null, { status: 500 });
   }
 
