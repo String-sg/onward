@@ -2,7 +2,7 @@
   import '../app.css';
 
   import { Masthead } from '$lib/components/Masthead/index.js';
-  import { mastheadState } from '$lib/states/masthead.svelte.js';
+  import { mastheadState } from '$lib/states/index.js';
 
   const { children } = $props();
 
