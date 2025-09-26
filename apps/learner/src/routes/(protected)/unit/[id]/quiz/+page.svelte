@@ -6,7 +6,7 @@
   import { Button, LinkButton } from '$lib/components/Button/index.js';
   import { Modal } from '$lib/components/Modal/index.js';
   import { Starfield } from '$lib/components/Starfield/index.js';
-  import { IsWithinViewport, noop } from '$lib/helpers/index.js';
+  import { IsWithinViewport, noop, tagCodeToBadgeVariant } from '$lib/helpers/index.js';
   import { Player } from '$lib/states/index.js';
 
   const { data, params } = $props();
@@ -17,8 +17,8 @@
   let isFeedbackModalOpen = $state(false);
   let isCompletionModalOpen = $state(false);
 
-  const currentQuestion = $derived(data.questions[currentQuestionIndex]);
-  const isCorrectAnswer = $derived(selectedOptionIndex === currentQuestion.answerIndex);
+  const currentQuestion = $derived(data.questionAnswers[currentQuestionIndex]);
+  const isCorrectAnswer = $derived(selectedOptionIndex === currentQuestion.answer);
 
   const player = Player.get();
   const isWithinViewport = new IsWithinViewport(() => target);
@@ -32,7 +32,7 @@
   };
 
   const handleContinueClick = () => {
-    const isLastQuestion = currentQuestionIndex === data.questions.length - 1;
+    const isLastQuestion = currentQuestionIndex === data.questionAnswers.length - 1;
 
     isFeedbackModalOpen = false;
 
@@ -58,14 +58,14 @@
   <div class="mx-auto flex max-w-5xl items-center justify-between gap-x-3 px-4 py-3">
     <div class="flex items-center gap-x-3">
       <a
-        href="/content/{params.id}"
+        href="/unit/{params.id}"
         class="rounded-full p-4 transition-colors hover:bg-slate-200 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950"
       >
         <ArrowLeft />
       </a>
 
       <Badge variant="slate">
-        Question {currentQuestionIndex + 1} of {data.questions.length}
+        Question {currentQuestionIndex + 1} of {data.questionAnswers.length}
       </Badge>
     </div>
   </div>
@@ -75,7 +75,7 @@
 
 <main class="pt-23 relative mx-auto flex min-h-svh max-w-5xl flex-col gap-y-10 px-4 pb-3">
   <div class="flex flex-1 flex-col gap-y-2">
-    {#each data.questions as q, qi (q.id)}
+    {#each data.questionAnswers as q, qi (q.id)}
       <div class={['flex flex-col gap-y-4', currentQuestionIndex !== qi && 'hidden']}>
         <span id="question-{qi}" class="text-xl font-medium">{q.question}</span>
 
@@ -170,11 +170,11 @@
             class="shadow-xs flex items-center gap-x-3 rounded-2xl border-2 border-transparent bg-lime-200 px-2.5 py-3.5"
           >
             <span class="rounded-lg bg-lime-400 px-2.5 py-1 font-semibold">
-              {String.fromCharCode(65 + currentQuestion.answerIndex)}
+              {String.fromCharCode(65 + currentQuestion.answer)}
             </span>
 
             <span class="text-left">
-              {currentQuestion.options[currentQuestion.answerIndex]}
+              {currentQuestion.options[currentQuestion.answer]}
             </span>
           </div>
         </div>
@@ -210,19 +210,14 @@
         <div class="flex flex-col items-center gap-y-2">
           <span>You have earned completion status for</span>
 
-          <Badge variant="purple">Special Educational Needs</Badge>
+          <Badge variant={tagCodeToBadgeVariant(data.type)}>{data.label}</Badge>
 
           <span>Track completed topics on your profile.</span>
         </div>
       </div>
 
       <div class="flex flex-col items-center py-5">
-        <LinkButton
-          href={`/content/${params.id}`}
-          variant="secondary"
-          width="full"
-          class="max-w-sm"
-        >
+        <LinkButton href={`/unit/${params.id}`} variant="secondary" width="full" class="max-w-sm">
           Done
         </LinkButton>
       </div>
