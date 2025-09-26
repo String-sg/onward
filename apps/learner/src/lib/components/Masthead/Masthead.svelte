@@ -10,10 +10,10 @@
 </script>
 
 <div class="bg-gray-100">
-  <div class="mx-auto flex w-full max-w-5xl flex-col text-xs">
+  <div class="mx-auto flex w-full max-w-5xl flex-col">
     <div class="flex items-center justify-start gap-1 bg-gray-100 px-4 py-1">
       {@render sgCrest()}
-      <div class="flex flex-wrap items-center gap-1">
+      <div class="flex flex-wrap items-center gap-1 text-[0.625rem] sm:text-xs">
         <span>A Singapore Government Agency Website</span>
         <button
           class="flex cursor-pointer items-center text-[#1a56e5] focus:outline-[#1a56e5]"
@@ -28,7 +28,7 @@
       </div>
     </div>
     {#if isMastheadOpen}
-      <div id="masthead-content" class="bg-gray-100">
+      <div id="masthead-content" class="bg-gray-100 text-xs">
         <div
           class="grid max-w-[1440px] grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-6 px-8 py-4"
         >
@@ -141,12 +141,7 @@
 {/snippet}
 
 {#snippet lockIcon()}
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    class="inline h-5 w-5 shrink-0"
-    viewBox="0 0 20 20"
-    fill="none"
-  >
+  <svg xmlns="http://www.w3.org/2000/svg" class="inline h-5 w-5 shrink-0" viewBox="0 0 20 20">
     <path
       fill-rule="evenodd"
       clip-rule="evenodd"
@@ -162,7 +157,6 @@
     width="16"
     height="16"
     viewBox="0 0 20 20"
-    fill="none"
     class="inline text-black"
   >
     <path
