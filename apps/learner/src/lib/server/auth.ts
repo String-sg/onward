@@ -45,12 +45,7 @@ export interface GoogleProfile {
  */
 const GOOGLE_REDIRECT_URL_PATH = '/auth/google/callback';
 
-/**
- * Returns a Google OAuth2 client.
- *
- * @returns A Google OAuth2 client.
- */
-function getGoogleOAuth2Client(): OAuth2Client {
+function getOAuth2Client() {
   return new OAuth2Client({
     client_id: env.GOOGLE_CLIENT_ID,
     client_secret: env.GOOGLE_CLIENT_SECRET,
@@ -67,7 +62,7 @@ function getGoogleOAuth2Client(): OAuth2Client {
  *
  * @example
  * ```ts
- * const authURL = generateGoogleAuthURL({
+ * const authURL = generateAuthURL({
  *   origin: "https://myapp.com",
  *   state: "random-state-string",
  *   codeVerifier: "random-code-verifier"
@@ -75,7 +70,7 @@ function getGoogleOAuth2Client(): OAuth2Client {
  * // Returns: "https://accounts.google.com/oauth/authorize?..."
  * ```
  */
-export function generateGoogleAuthURL({
+export function generateAuthURL({
   origin,
   state,
   codeVerifier,
@@ -84,7 +79,7 @@ export function generateGoogleAuthURL({
   state: string;
   codeVerifier: string;
 }): string {
-  const client = getGoogleOAuth2Client();
+  const client = getOAuth2Client();
 
   return client.generateAuthUrl({
     redirect_uri: origin + GOOGLE_REDIRECT_URL_PATH,
@@ -109,14 +104,14 @@ export function generateGoogleAuthURL({
  *
  * @example
  * ```ts
- * const idToken = await exchangeGoogleCodeForIdToken({
+ * const idToken = await exchangeCodeForIdToken({
  *   origin: "https://myapp.com",
  *   code: "authorization-code-from-google",
  *   codeVerifier: "code-verifier"
  * });
  * ```
  */
-export async function exchangeGoogleCodeForIdToken({
+export async function exchangeCodeForIdToken({
   origin,
   code,
   codeVerifier,
@@ -125,7 +120,7 @@ export async function exchangeGoogleCodeForIdToken({
   code: string;
   codeVerifier: string;
 }): Promise<string | null> {
-  const client = getGoogleOAuth2Client();
+  const client = getOAuth2Client();
 
   const { tokens } = await client.getToken({
     redirect_uri: origin + GOOGLE_REDIRECT_URL_PATH,
@@ -150,11 +145,11 @@ export async function exchangeGoogleCodeForIdToken({
  *
  * @example
  * ```ts
- * const profile = await verifyGoogleIdToken(idToken);
+ * const profile = await verifyIdToken(idToken);
  * ```
  */
-export async function verifyGoogleIdToken(idToken: string): Promise<GoogleProfile | null> {
-  const client = getGoogleOAuth2Client();
+export async function verifyIdToken(idToken: string): Promise<GoogleProfile | null> {
+  const client = getOAuth2Client();
 
   const ticket = await client.verifyIdToken({ idToken });
 
