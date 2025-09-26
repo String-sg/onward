@@ -51,27 +51,13 @@ export const load: PageServerLoad = async (event) => {
     },
   });
 
-  const output = collections.map((collection) => {
-    const result: {
-      id: bigint;
-      title: string;
-      type: CollectionType;
-      numberOfPodcasts: number;
-      tags: { code: string; label: string }[];
-    } = {
-      id: collection.id,
-      title: collection.title,
-      type: collection.type,
-      numberOfPodcasts: collection.numberOfPodcasts,
-      tags: [],
-    };
-
-    for (const collectionTag of collectionTags) {
-      if (collection['id'] === collectionTag['id']) {
-        result['tags'] = collectionTag.tags.map((t) => t.tag);
-      }
-    }
-    return result;
-  });
-  return { collections: output };
+  return {
+    collections: collections.map((collection) => ({
+      ...collection,
+      tags:
+        collectionTags
+          .find((collectionTag) => collection.id === collectionTag.id)
+          ?.tags.map((t) => t.tag) || [],
+    })),
+  };
 };
