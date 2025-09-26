@@ -53,8 +53,7 @@
 
       <div class="flex flex-col">
         <span class="text-sm">
-          {numberofpodcasts}
-          {numberofpodcasts === 1 ? 'podcast' : 'podcasts'}
+          {numberofpodcasts}&nbsp;{numberofpodcasts === 1 ? 'podcast' : 'podcasts'}
         </span>
       </div>
     </div>
