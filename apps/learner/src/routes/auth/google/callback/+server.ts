@@ -1,7 +1,17 @@
 import { redirect } from '@sveltejs/kit';
 
-import { auth, GoogleOAuth2, type GoogleProfile } from '$lib/server/auth.js';
-import { db, PrismaClientKnownRequestError, type UserModel } from '$lib/server/db.js';
+import {
+  auth,
+  exchangeCodeForIdToken,
+  type GoogleProfile,
+  verifyIdToken,
+} from '$lib/server/auth.js';
+import {
+  db,
+  PrismaClientKnownRequestError,
+  type UserFindUniqueArgs,
+  type UserGetPayload,
+} from '$lib/server/db.js';
 
 import type { RequestHandler } from './$types';
 
@@ -42,7 +52,7 @@ export const GET: RequestHandler = async (event) => {
 
   let idToken: string | null = null;
   try {
-    idToken = await GoogleOAuth2.exchangeCodeForIdToken({
+    idToken = await exchangeCodeForIdToken({
       origin: event.url.origin,
       code,
       codeVerifier,
@@ -59,7 +69,7 @@ export const GET: RequestHandler = async (event) => {
 
   let profile: GoogleProfile | null = null;
   try {
-    profile = await GoogleOAuth2.verifyIdToken(idToken);
+    profile = await verifyIdToken(idToken);
 
     if (!profile) {
       logger.error('Invalid Google profile');
@@ -70,18 +80,20 @@ export const GET: RequestHandler = async (event) => {
     return redirect(302, '/login?error=oauth2_callback_failed');
   }
 
-  let user: Pick<UserModel, 'id' | 'email' | 'name'> | null = null;
+  const userArgs = {
+    select: {
+      id: true,
+      email: true,
+      name: true,
+    },
+    where: {
+      email: profile.email,
+    },
+  } satisfies UserFindUniqueArgs;
+
+  let user: UserGetPayload<typeof userArgs> | null = null;
   try {
-    user = await db.user.findUnique({
-      where: {
-        email: profile.email,
-      },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-      },
-    });
+    user = await db.user.findUnique(userArgs);
   } catch (err) {
     logger.error({ err, email: profile.email }, 'Failed to find user');
     return redirect(302, '/login?error=oauth2_callback_failed');

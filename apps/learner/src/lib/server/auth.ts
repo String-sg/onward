@@ -52,123 +52,121 @@ function getOAuth2Client() {
   });
 }
 
-export const GoogleOAuth2 = {
-  /**
-   * Generates a Google OAuth2 authorization URL for initiating the authentication flow.
-   *
-   * @param options.origin - The origin of the application. It is used to construct the redirect URI.
-   * @param options.state - A random string to prevent CSRF attacks.
-   * @param options.codeVerifier - A cryptographically random string used for PKCE verification.
-   * @returns The complete Google OAuth2 authorization URL.
-   *
-   * @example
-   * ```ts
-   * const authURL = GoogleOAuth2.generateAuthURL({
-   *   origin: "https://myapp.com",
-   *   state: "random-state-string",
-   *   codeVerifier: "random-code-verifier"
-   * });
-   * // Returns: "https://accounts.google.com/oauth/authorize?..."
-   * ```
-   */
-  generateAuthURL({
-    origin,
+/**
+ * Generates a Google OAuth2 authorization URL for initiating the authentication flow.
+ *
+ * @param options.origin - The origin of the application. It is used to construct the redirect URI.
+ * @param options.state - A random string to prevent CSRF attacks.
+ * @param options.codeVerifier - A cryptographically random string used for PKCE verification.
+ * @returns The complete Google OAuth2 authorization URL.
+ *
+ * @example
+ * ```ts
+ * const authURL = generateAuthURL({
+ *   origin: "https://myapp.com",
+ *   state: "random-state-string",
+ *   codeVerifier: "random-code-verifier"
+ * });
+ * // Returns: "https://accounts.google.com/oauth/authorize?..."
+ * ```
+ */
+export function generateAuthURL({
+  origin,
+  state,
+  codeVerifier,
+}: {
+  origin: string;
+  state: string;
+  codeVerifier: string;
+}): string {
+  const client = getOAuth2Client();
+
+  return client.generateAuthUrl({
+    redirect_uri: origin + GOOGLE_REDIRECT_URL_PATH,
+    scope: [
+      'https://www.googleapis.com/auth/userinfo.email',
+      'https://www.googleapis.com/auth/userinfo.profile',
+    ],
     state,
-    codeVerifier,
-  }: {
-    origin: string;
-    state: string;
-    codeVerifier: string;
-  }): string {
-    const client = getOAuth2Client();
+    code_challenge: createHash('sha256').update(codeVerifier).digest('base64url'),
+    code_challenge_method: CodeChallengeMethod.S256,
+    hd: env.GOOGLE_HOSTED_DOMAIN,
+  });
+}
 
-    return client.generateAuthUrl({
-      redirect_uri: origin + GOOGLE_REDIRECT_URL_PATH,
-      scope: [
-        'https://www.googleapis.com/auth/userinfo.email',
-        'https://www.googleapis.com/auth/userinfo.profile',
-      ],
-      state,
-      code_challenge: createHash('sha256').update(codeVerifier).digest('base64url'),
-      code_challenge_method: CodeChallengeMethod.S256,
-      hd: env.GOOGLE_HOSTED_DOMAIN,
-    });
-  },
+/**
+ * Exchanges the Google OAuth2 authorization code for a Google ID token.
+ *
+ * @param options.origin - The origin of the application. It is used to construct the redirect URI.
+ * @param options.code - The authorization code received from Google's callback.
+ * @param options.codeVerifier - The same code verifier used in `generateGoogleAuthURL` for PKCE verification.
+ * @returns The Google ID token or `null` if ID token is missing.
+ *
+ * @example
+ * ```ts
+ * const idToken = await exchangeCodeForIdToken({
+ *   origin: "https://myapp.com",
+ *   code: "authorization-code-from-google",
+ *   codeVerifier: "code-verifier"
+ * });
+ * ```
+ */
+export async function exchangeCodeForIdToken({
+  origin,
+  code,
+  codeVerifier,
+}: {
+  origin: string;
+  code: string;
+  codeVerifier: string;
+}): Promise<string | null> {
+  const client = getOAuth2Client();
 
-  /**
-   * Exchanges the Google OAuth2 authorization code for a Google ID token.
-   *
-   * @param options.origin - The origin of the application. It is used to construct the redirect URI.
-   * @param options.code - The authorization code received from Google's callback.
-   * @param options.codeVerifier - The same code verifier used in `generateGoogleAuthURL` for PKCE verification.
-   * @returns The Google ID token or `null` if ID token is missing.
-   *
-   * @example
-   * ```ts
-   * const idToken = await GoogleOAuth2.exchangeCodeForIdToken({
-   *   origin: "https://myapp.com",
-   *   code: "authorization-code-from-google",
-   *   codeVerifier: "code-verifier"
-   * });
-   * ```
-   */
-  async exchangeCodeForIdToken({
-    origin,
+  const { tokens } = await client.getToken({
+    redirect_uri: origin + GOOGLE_REDIRECT_URL_PATH,
     code,
     codeVerifier,
-  }: {
-    origin: string;
-    code: string;
-    codeVerifier: string;
-  }): Promise<string | null> {
-    const client = getOAuth2Client();
+  });
 
-    const { tokens } = await client.getToken({
-      redirect_uri: origin + GOOGLE_REDIRECT_URL_PATH,
-      code,
-      codeVerifier,
-    });
+  const idToken = tokens.id_token;
+  if (!idToken) {
+    return null;
+  }
 
-    const idToken = tokens.id_token;
-    if (!idToken) {
-      return null;
-    }
+  return idToken;
+}
 
-    return idToken;
-  },
+/**
+ * Verifies the Google ID token and extracts the profile information from the
+ * Google OAuth2 ID token.
+ *
+ * @param idToken - The Google ID token to verify.
+ * @returns The Google profile or `null` if the ID token is invalid.
+ *
+ * @example
+ * ```ts
+ * const profile = await verifyIdToken(idToken);
+ * ```
+ */
+export async function verifyIdToken(idToken: string): Promise<GoogleProfile | null> {
+  const client = getOAuth2Client();
 
-  /**
-   * Verifies the Google ID token and extracts the profile information from the
-   * Google OAuth2 ID token.
-   *
-   * @param idToken - The Google ID token to verify.
-   * @returns The Google profile or `null` if the ID token is invalid.
-   *
-   * @example
-   * ```ts
-   * const profile = await GoogleOAuth2.verifyIdToken(idToken);
-   * ```
-   */
-  async verifyIdToken(idToken: string): Promise<GoogleProfile | null> {
-    const client = getOAuth2Client();
+  const ticket = await client.verifyIdToken({ idToken });
 
-    const ticket = await client.verifyIdToken({ idToken });
+  const payload = ticket.getPayload();
+  if (!payload || !payload.sub || !payload.email || !payload.name || !payload.picture) {
+    return null;
+  }
 
-    const payload = ticket.getPayload();
-    if (!payload || !payload.sub || !payload.email || !payload.name || !payload.picture) {
-      return null;
-    }
+  // If the Google hosted domain is set, make sure the `hd` claim matches the hosted domain.
+  if (env.GOOGLE_HOSTED_DOMAIN && payload.hd !== env.GOOGLE_HOSTED_DOMAIN) {
+    return null;
+  }
 
-    // If the Google hosted domain is set, make sure the `hd` claim matches the hosted domain.
-    if (env.GOOGLE_HOSTED_DOMAIN && payload.hd !== env.GOOGLE_HOSTED_DOMAIN) {
-      return null;
-    }
-
-    return {
-      id: payload.sub,
-      email: payload.email,
-      name: payload.name,
-      picture: payload.picture,
-    };
-  },
-};
+  return {
+    id: payload.sub,
+    email: payload.email,
+    name: payload.name,
+    picture: payload.picture,
+  };
+}
