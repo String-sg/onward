@@ -68,6 +68,32 @@ const collections: Prisma.CollectionCreateInput[] = [
   },
 ];
 
+const questionAnswers: Prisma.QuestionAnswerCreateManyLearningUnitInput[] = [
+  {
+    question: 'What is the color of the sky?',
+    options: ['Blue', 'Red', 'Green', 'Yellow'],
+    answer: 0,
+    explanation: 'Blue is the best colour!',
+    order: 0,
+  },
+  {
+    question:
+      'This is a super long question that is going to wrap around to the next line and then some more text to see how it looks. It should be long enough to wrap around to the next line and then some more text to see how it looks. I want to see how it looks when it wraps around to the next line and then some more text to see how it looks.',
+    options: ['Option 1', 'Option 2', 'Option 3', 'Option 4'],
+    answer: 1,
+    explanation:
+      'This is an explanation. It is a very long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long explanation.',
+    order: 1,
+  },
+  {
+    question: 'How many days are in a week?',
+    options: ['7', '8', '9', '10'],
+    answer: 0,
+    explanation: 'There are 7 days in a week.',
+    order: 2,
+  },
+];
+
 const learningUnits: Prisma.LearningUnitCreateInput[] = [
   {
     id: 1,
@@ -92,6 +118,9 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
           },
         },
       ],
+    },
+    questionAnswers: {
+      create: questionAnswers,
     },
   },
   {
@@ -118,6 +147,9 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
         },
       ],
     },
+    questionAnswers: {
+      create: questionAnswers,
+    },
   },
   {
     id: 3,
@@ -142,6 +174,9 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
           },
         },
       ],
+    },
+    questionAnswers: {
+      create: questionAnswers,
     },
   },
   {
@@ -168,41 +203,9 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
         },
       ],
     },
-  },
-];
-
-const createQuestionAnswers = (
-  learningUnitId: number | bigint,
-  startId = 1,
-): Prisma.QuestionAnswerCreateManyInput[] => [
-  {
-    id: startId,
-    question: 'What is the color of the sky?',
-    options: ['Blue', 'Red', 'Green', 'Yellow'],
-    answer: 0,
-    explanation: 'Blue is the best colour!',
-    order: 0,
-    learningUnitId,
-  },
-  {
-    id: startId + 1,
-    question:
-      'This is a super long question that is going to wrap around to the next line and then some more text to see how it looks. It should be long enough to wrap around to the next line and then some more text to see how it looks. I want to see how it looks when it wraps around to the next line and then some more text to see how it looks.',
-    options: ['Option 1', 'Option 2', 'Option 3', 'Option 4'],
-    answer: 1,
-    explanation:
-      'This is an explanation. It is a very long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long explanation.',
-    order: 1,
-    learningUnitId,
-  },
-  {
-    id: startId + 2,
-    question: 'How many days are in a week?',
-    options: ['7', '8', '9', '10'],
-    answer: 0,
-    explanation: 'There are 7 days in a week.',
-    order: 2,
-    learningUnitId,
+    questionAnswers: {
+      create: questionAnswers,
+    },
   },
 ];
 
@@ -229,15 +232,6 @@ async function main() {
       update: {},
       create: learningUnit,
     });
-
-    const questions = createQuestionAnswers(learningUnit.id!, Number(learningUnit.id!) * 10);
-    for (const question of questions) {
-      await db.questionAnswer.upsert({
-        where: { id: question.id },
-        update: {},
-        create: question,
-      });
-    }
   }
 }
 
