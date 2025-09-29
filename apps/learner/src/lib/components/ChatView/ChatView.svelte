@@ -10,11 +10,6 @@
   import { Portal } from '$lib/components/Portal/index.js';
   import { IsWithinViewport } from '$lib/helpers/index.js';
 
-  interface ChatMessage {
-    role: 'USER' | 'ASSISTANT';
-    content: string;
-  }
-
   export interface Props {
     /**
      * Indicates whether the view is open.
@@ -30,7 +25,7 @@
 
   let target = $state<HTMLElement | null>(null);
   let query = $state('');
-  let messages = $state<ChatMessage[]>([]);
+  let messages = $state<{ role: 'USER' | 'ASSISTANT'; content: string }[]>([]);
   let isAiTyping = $state(false);
   let textareaElement = $state<HTMLTextAreaElement | null>(null);
 
@@ -114,6 +109,11 @@
       if (!response.ok) {
         if (response.status === 401) {
           return goto('/login');
+        }
+
+        if (response.status === 413) {
+          console.error('Content too large');
+          return;
         }
 
         console.error('Failed to send query');

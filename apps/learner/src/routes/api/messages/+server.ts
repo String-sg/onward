@@ -1,7 +1,14 @@
 import { json, type RequestHandler } from '@sveltejs/kit';
 
-import { db, type MessageFindManyArgs, type MessageGetPayload, Role } from '$lib/server/db.js';
-import { completions } from '$lib/server/openai.js';
+import { type CompletionResponse, getAIProvider } from '$lib/server/ai';
+import {
+  db,
+  type MessageFindManyArgs,
+  type MessageGetPayload,
+  Role,
+  type ThreadFindFirstArgs,
+  type ThreadGetPayload,
+} from '$lib/server/db.js';
 import { search } from '$lib/server/weaviate';
 
 type JSONPrimitive = string | number | boolean | null;
@@ -66,89 +73,129 @@ export const POST: RequestHandler = async (event) => {
     return json(null, { status: 400 });
   }
 
-  const query = params['query'];
+  const ai = getAIProvider();
+
+  const userQuery = {
+    content: params['query'],
+    tokenCount: ai.countToken(params['query']),
+  };
+
+  if (!ai.isWithinMaxEmbeddingInputTokens(userQuery.tokenCount)) {
+    return json(null, { status: 413 });
+  }
 
   let result: string[];
   try {
-    result = await search(query);
+    result = await search(userQuery.content);
   } catch (err) {
     logger.error({ err, userId: user.id }, 'Failed to search for relevant content');
     return json(null, { status: 500 });
   }
 
-  const messagesArgs = {
-    select: { role: true, content: true },
+  const threadArgs = {
+    select: {
+      id: true,
+      totalTokens: true,
+      messagesSkipped: true,
+    },
     where: {
-      thread: {
-        userId: BigInt(user.id),
-        isActive: true,
-      },
+      userId: BigInt(user.id),
+      isActive: true,
+    },
+  } satisfies ThreadFindFirstArgs;
+
+  let thread: ThreadGetPayload<typeof threadArgs>;
+  try {
+    thread = await db.$transaction(async (tx) => {
+      const thread = await tx.thread.findFirst(threadArgs);
+
+      if (!thread) {
+        return await tx.thread.create({
+          data: {
+            userId: BigInt(user.id),
+            isActive: true,
+          },
+          select: {
+            id: true,
+            totalTokens: true,
+            messagesSkipped: true,
+          },
+        });
+      }
+
+      return thread;
+    });
+  } catch (err) {
+    logger.error({ err, userId: user.id }, 'Failed to create thread');
+    return json(null, { status: 500 });
+  }
+
+  const messageArgs = {
+    select: {
+      role: true,
+      content: true,
+      tokenCount: true,
+    },
+    where: {
+      threadId: thread.id,
     },
     orderBy: { createdAt: 'asc' },
+    skip: thread.messagesSkipped,
   } satisfies MessageFindManyArgs;
 
-  let history: MessageGetPayload<typeof messagesArgs>[] | null;
+  let history: MessageGetPayload<typeof messageArgs>[];
   try {
-    history = await db.message.findMany(messagesArgs);
+    history = await db.message.findMany(messageArgs);
   } catch (err) {
     logger.error({ err, userId: user.id }, 'Failed to get chat history');
     return json(null, { status: 500 });
   }
 
-  let answer: string;
+  let completions: CompletionResponse;
   try {
-    answer = await completions({
-      query,
-      history: history.map((msg) => ({
-        role: msg.role.toLowerCase() as 'user' | 'assistant',
-        content: msg.content,
-      })),
+    completions = await ai.completions({
+      query: userQuery,
+      history,
       context: result,
+      messagesToSkipped: thread.messagesSkipped,
+      totalHistoryTokens: thread.totalTokens,
     });
-
-    if (!answer) {
-      logger.error({ userId: user.id }, 'Chat completion answer is missing');
-      return json(null, { status: 500 });
-    }
   } catch (err) {
     logger.error({ err, userId: user.id }, 'Failed to complete chat');
     return json(null, { status: 500 });
   }
 
   try {
-    await db.$transaction(async (tx) => {
-      let thread = await tx.thread.findFirst({
-        where: { userId: BigInt(user.id), isActive: true },
-        select: { id: true },
-      });
-
-      if (!thread) {
-        thread = await tx.thread.create({
-          data: { userId: BigInt(user.id), isActive: true },
-          select: { id: true },
-        });
-      }
-
-      await tx.message.createMany({
+    await Promise.all([
+      db.message.createMany({
         data: [
           {
             threadId: thread.id,
             role: Role.USER,
-            content: query,
+            content: userQuery.content,
+            tokenCount: userQuery.tokenCount,
           },
           {
             threadId: thread.id,
             role: Role.ASSISTANT,
-            content: answer,
+            content: completions.answer,
+            tokenCount: completions.tokenCount,
           },
         ],
-      });
-    });
+      }),
+      db.thread.update({
+        where: { id: thread.id },
+        data: {
+          totalTokens: completions.totalHistoryTokens + completions.tokenCount,
+          messagesSkipped: completions.messagesToSkipped,
+        },
+      }),
+    ]);
 
     return json(
       {
         role: Role.ASSISTANT,
-        content: answer,
+        content: completions.answer,
       },
       { status: 201 },
     );
