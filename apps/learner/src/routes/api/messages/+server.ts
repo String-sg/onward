@@ -157,7 +157,7 @@ export const POST: RequestHandler = async (event) => {
       query: userQuery,
       history,
       context: result,
-      messagesToSkipped: thread.messagesSkipped,
+      messagesToSkip: thread.messagesSkipped,
       totalHistoryTokens: thread.totalTokens,
     });
   } catch (err) {
@@ -187,7 +187,7 @@ export const POST: RequestHandler = async (event) => {
         where: { id: thread.id },
         data: {
           totalTokens: completions.totalHistoryTokens + completions.tokenCount,
-          messagesSkipped: completions.messagesToSkipped,
+          messagesSkipped: completions.messagesToSkip,
         },
       }),
     ]);
