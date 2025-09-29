@@ -142,6 +142,8 @@ model Thread {
 
   // Domain-Specific Fields.
   isActive Boolean @default(false) @map("is_active")
+  totalTokens Int @default(0) @map("total_tokens")
+  messagesSkipped Int @default(0) @map("messages_skipped")
 
   // Relations.
   userId BigInt @map("user_id")
