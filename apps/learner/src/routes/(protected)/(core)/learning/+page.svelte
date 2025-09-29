@@ -13,7 +13,7 @@
   <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
     {#each data.collections as collection (collection.id)}
       <Collection
-        to="/collection/{collection.id}"
+        to="/learning/collection/{collection.id}"
         title={collection.title}
         type={collection.type}
         tags={collection.tags.map((t) => ({
