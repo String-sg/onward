@@ -31,6 +31,15 @@ export const load: PageServerLoad = async ({ params }) => {
     throw error(404);
   }
 
+  const isQuizAvailable =
+    (await db.questionAnswer.count({
+      where: {
+        learningUnitId: BigInt(params.id),
+      },
+    })) > 0;
+
+  console.log(isQuizAvailable);
+
   return {
     id: learningUnit.id,
     tags: learningUnit.tags.map((t) => t.tag),
@@ -39,5 +48,6 @@ export const load: PageServerLoad = async ({ params }) => {
     url: learningUnit.contentURL,
     createdAt: learningUnit.createdAt,
     createdBy: learningUnit.createdBy,
+    isQuizAvailable,
   };
 };
