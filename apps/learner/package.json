@@ -36,6 +36,7 @@
     "dompurify": "^3.2.7",
     "dotenv": "^17.2.2",
     "google-auth-library": "^10.3.0",
+    "gpt-tokenizer": "^3.0.1",
     "marked": "^16.3.0",
     "nanoid": "^5.1.5",
     "pino": "^9.9.0",
