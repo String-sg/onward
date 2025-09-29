@@ -1,12 +1,12 @@
 import { redirect } from '@sveltejs/kit';
 
+import type { CollectionModel, TagModel } from '$lib/server/db';
 import { db } from '$lib/server/db';
 
-import type { CollectionModel, TagModel } from '../../../../generated/prisma/models';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async (event) => {
-  const logger = event.locals.logger.child({ handler: 'page_user_profile' });
+  const logger = event.locals.logger.child({ handler: 'page_learning' });
 
   const { user } = event.locals.session;
   if (!user) {
