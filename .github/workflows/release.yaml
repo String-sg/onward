@@ -1,0 +1,49 @@
+name: Release
+
+on:
+  pull_request_target:
+    types: [closed]
+    branches: [main]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Release
+    if: >
+      github.event.pull_request.merged == true &&
+      startsWith(github.event.pull_request.title, 'release: v')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Extract version
+        id: extract_version
+        run: |
+          title="${{ github.event.pull_request.title }}"
+          if [[ $title =~ ^release:[[:space:]]*v([0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
+            echo "version=${BASH_REMATCH[1]}" >> $GITHUB_OUTPUT
+            echo "tag=v${BASH_REMATCH[1]}" >> $GITHUB_OUTPUT
+          else
+            echo "PR title must be like 'release: v1.2.3'"
+            exit 1
+          fi
+
+      - name: Tag and push
+        run: |
+          git fetch --tags --quiet
+          if git rev-parse -q --verify "refs/tags/${{ steps.extract_version.outputs.tag }} > /dev/null"; then
+            echo "Tag ${{ steps.extract_version.outputs.tag }} already exists. Aborting..."
+            exit 1
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "${{ steps.extract_version.outputs.tag }}" -m "Automated release ${{ steps.extract_version.outputs.tag }} (#${{ github.event.pull_request.number }})"
+          git push origin "${{ steps.extract_version.outputs.tag }}"
