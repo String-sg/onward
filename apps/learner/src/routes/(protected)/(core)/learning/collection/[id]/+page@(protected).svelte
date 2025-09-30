@@ -46,7 +46,7 @@
     <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
       {#each data.journeys.inProgress as journey (journey.id)}
         <LearningUnit
-          to="/content/{journey.id}"
+          to="/unit/{journey.unitId}"
           tags={journey.tags.map((t) => ({
             variant: tagCodeToBadgeVariant(t.code),
             content: t.label,
@@ -65,9 +65,9 @@
     </div>
 
     <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
-      {#each data.journeys.completed as journey (journey.id)}
+      {#each data.journeys.isCompleted as journey (journey.id)}
         <LearningUnit
-          to="/content/{journey.id}"
+          to="/unit/{journey.unitId}"
           tags={journey.tags.map((t) => ({
             variant: tagCodeToBadgeVariant(t.code),
             content: t.label,

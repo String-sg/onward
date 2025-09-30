@@ -1,8 +1,23 @@
 import { error, redirect } from '@sveltejs/kit';
 
-import { db } from '$lib/server/db';
+import {
+  db,
+  type LearningJourneyModel,
+  type LearningUnitModel,
+  type TagModel,
+} from '$lib/server/db';
 
 import type { PageServerLoad } from './$types';
+
+interface Result {
+  id: LearningJourneyModel['id'];
+  isCompleted: LearningJourneyModel['isCompleted'];
+  unitId: LearningUnitModel['id'];
+  title: LearningUnitModel['title'];
+  createdAt: LearningUnitModel['createdAt'];
+  createdBy: LearningUnitModel['createdBy'];
+  tags: Pick<TagModel, 'code' | 'label'>[];
+}
 
 export const load: PageServerLoad = async (event) => {
   const logger = event.locals.logger.child({ handler: 'page_learning_collection' });
@@ -28,10 +43,11 @@ export const load: PageServerLoad = async (event) => {
     select: {
       id: true,
       isCompleted: true,
-      createdAt: true,
       learningUnit: {
         select: {
+          id: true,
           title: true,
+          createdAt: true,
           createdBy: true,
           tags: {
             select: {
@@ -54,26 +70,29 @@ export const load: PageServerLoad = async (event) => {
     },
   });
 
-  const mappedJourneys = learningJourneys.map((journey) => ({
-    id: journey.id,
-    title: journey.learningUnit.title,
-    isCompleted: journey.isCompleted,
-    createdAt: journey.createdAt,
-    createdBy: journey.learningUnit.createdBy,
-    tags: journey.learningUnit.tags.map((t) => ({
-      code: t.tag.code,
-      label: t.tag.label,
-    })),
-  }));
-
-  const inProgress = mappedJourneys.filter((journey) => !journey.isCompleted);
-  const completed = mappedJourneys.filter((journey) => journey.isCompleted);
-
   return {
     title: collection.title,
-    journeys: {
-      inProgress,
-      completed,
-    },
+    journeys: learningJourneys.reduce<{
+      inProgress: Result[];
+      isCompleted: Result[];
+    }>(
+      (acc, journey) => {
+        acc[journey.isCompleted ? 'isCompleted' : 'inProgress'].push({
+          id: journey.id,
+          isCompleted: journey.isCompleted,
+          unitId: journey.learningUnit.id,
+          title: journey.learningUnit.title,
+          createdAt: journey.learningUnit.createdAt,
+          createdBy: journey.learningUnit.createdBy,
+          tags: journey.learningUnit.tags.map((t) => ({
+            code: t.tag.code,
+            label: t.tag.label,
+          })),
+        });
+
+        return acc;
+      },
+      { inProgress: [], isCompleted: [] },
+    ),
   };
 };
