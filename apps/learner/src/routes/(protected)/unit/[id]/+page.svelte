@@ -3,6 +3,7 @@
   import { formatDistanceToNow } from 'date-fns';
 
   import { afterNavigate } from '$app/navigation';
+  import { page } from '$app/state';
   import { Badge } from '$lib/components/Badge/index.js';
   import { Button, LinkButton } from '$lib/components/Button/index.js';
   import { IsWithinViewport, tagCodeToBadgeVariant } from '$lib/helpers/index.js';
@@ -21,10 +22,15 @@
 
   afterNavigate(({ from, type }) => {
     if (type === 'enter' || !from) {
-      returnTo = '/';
       return;
     }
 
+    if (from.route.id && page.route.id && from.route.id.startsWith(page.route.id)) {
+      returnTo = sessionStorage.getItem('unit_origin') || '/';
+      return;
+    }
+
+    sessionStorage.setItem('unit_origin', from.url.pathname);
     returnTo = from.url.pathname;
   });
 
@@ -117,7 +123,7 @@
           </Button>
         {/if}
 
-        <LinkButton variant="secondary" width="full" href={`/content/${data.id}/quiz`}>
+        <LinkButton variant="secondary" width="full" href={`/unit/${data.id}/quiz`}>
           <Lightbulb class="h-4 w-4" />
           <span class="font-medium">Take the quiz</span>
         </LinkButton>
