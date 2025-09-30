@@ -1,31 +1,73 @@
+import { error, redirect } from '@sveltejs/kit';
+
+import { db, type LearningUnitFindUniqueArgs, type LearningUnitGetPayload } from '$lib/server/db';
+
 import type { PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async () => {
+export const load: PageServerLoad = async (event) => {
+  const logger = event.locals.logger.child({ handler: 'page_quiz' });
+
+  const { user } = event.locals.session;
+  if (!user) {
+    logger.warn('User not authenticated');
+    return redirect(303, '/login');
+  }
+
+  const learningUnitArgs = {
+    select: {
+      questionAnswers: {
+        select: {
+          id: true,
+          question: true,
+          options: true,
+          answer: true,
+          explanation: true,
+          order: true,
+        },
+        orderBy: {
+          order: 'asc',
+        },
+      },
+      collection: {
+        select: {
+          type: true,
+          tags: {
+            select: {
+              tag: {
+                select: {
+                  label: true,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    where: {
+      id: BigInt(event.params.id),
+    },
+  } satisfies LearningUnitFindUniqueArgs;
+
+  let learningUnit: LearningUnitGetPayload<typeof learningUnitArgs> | null;
+  try {
+    learningUnit = await db.learningUnit.findUnique(learningUnitArgs);
+  } catch (err) {
+    logger.error({ err }, 'Failed to retrieve learning unit with quiz data');
+    throw error(500);
+  }
+
+  if (!learningUnit) {
+    throw error(404);
+  }
+
+  if (!learningUnit.questionAnswers.length) {
+    logger.warn('No quiz records found');
+    return redirect(303, `/unit/${event.params.id}`);
+  }
+
   return {
-    questions: [
-      {
-        id: 123,
-        question: 'What is the color of the sky?',
-        options: ['Blue', 'Red', 'Green', 'Yellow'],
-        answerIndex: 0,
-        explanation: 'This is an explanation.',
-      },
-      {
-        id: 234,
-        question:
-          'This is a super long question that is going to wrap around to the next line and then some more text to see how it looks. It should be long enough to wrap around to the next line and then some more text to see how it looks. I want to see how it looks when it wraps around to the next line and then some more text to see how it looks.',
-        options: ['Option 1', 'Option 2', 'Option 3', 'Option 4'],
-        answerIndex: 0,
-        explanation:
-          'This is an explanation. It is a very long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long long explanation.',
-      },
-      {
-        id: 345,
-        question: 'How many days are in a week?',
-        options: ['7', '8', '9', '10'],
-        answerIndex: 0,
-        explanation: 'This is an explanation.',
-      },
-    ],
+    questionAnswers: learningUnit.questionAnswers,
+    type: learningUnit.collection.type,
+    label: learningUnit.collection.tags[0]?.tag.label,
   };
 };
