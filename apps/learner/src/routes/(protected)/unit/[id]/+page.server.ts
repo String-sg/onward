@@ -36,7 +36,6 @@ export const load: PageServerLoad = async (event) => {
   } satisfies LearningUnitFindUniqueArgs;
 
   let learningUnit: LearningUnitGetPayload<typeof learningUnitArgs> | null;
-
   try {
     learningUnit = await db.learningUnit.findUnique(learningUnitArgs);
   } catch (err) {
@@ -49,7 +48,6 @@ export const load: PageServerLoad = async (event) => {
   }
 
   let isQuizAvailable: boolean;
-
   try {
     isQuizAvailable =
       (await db.questionAnswer.count({
