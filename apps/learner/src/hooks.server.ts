@@ -6,29 +6,26 @@ import { auth } from '$lib/server/auth.js';
 import { logger } from '$lib/server/logger.js';
 
 /**
- * A handle that adds a request ID for tracing and attaches a scoped logger to the event.
+ * A handle that adds a request ID to the response headers and attaches a scoped logger to the
+ * event. Downstream handles are expected to use the scoped logger for logging.
  */
 const requestLoggingHandle: Handle = async ({ event, resolve }) => {
   const requestId = nanoid();
 
-  event.locals.logger = logger.child({ requestId });
   event.setHeaders({ 'X-Request-Id': requestId });
+  event.locals.logger = logger.child({ requestId });
 
   return await resolve(event);
 };
 
 /**
- * A handle that protects routes that requires authentication.
- *
- * For unauthenticated users:
- * - Redirects root path `/` to `/login`
- * - Redirects protected routes to `/login`
- *
- * For authenticated users:
- * - Redirects `/login` to root path `/`
+ * A handle that enforces authentication on protected routes.
+ * - Requests to `/api/*` are always allowed through
+ * - Unauthenticated users are redirected to `/login`
+ * - Authenticated users visiting `/login` are redirected back to `/`
  */
-const authenticationHandle: Handle = async ({ event, resolve }) => {
-  if (event.url.pathname.startsWith('/api')) {
+const routeProtectionHandle: Handle = async ({ event, resolve }) => {
+  if (event.url.pathname.startsWith('/api/')) {
     return await resolve(event);
   }
 
@@ -55,4 +52,4 @@ const authenticationHandle: Handle = async ({ event, resolve }) => {
   return await resolve(event);
 };
 
-export const handle: Handle = sequence(auth.handle, requestLoggingHandle, authenticationHandle);
+export const handle: Handle = sequence(requestLoggingHandle, auth.handle, routeProtectionHandle);

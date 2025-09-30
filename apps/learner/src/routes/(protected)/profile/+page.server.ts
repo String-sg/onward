@@ -10,7 +10,7 @@ export const load: PageServerLoad = async (event) => {
 
   const { user } = event.locals.session;
   if (!user) {
-    logger.warn('User is not authenticated');
+    logger.warn('User not authenticated');
     return redirect(303, '/login');
   }
 
@@ -41,10 +41,7 @@ export const load: PageServerLoad = async (event) => {
       learningUnitsCompletedByWeek: byWeek.find((group) => group.isCompleted)?._count._all ?? 0,
     };
   } catch (err) {
-    logger.error(
-      { err, userId: user.id },
-      'Unknown error occurred while retrieving learning journey counts',
-    );
+    logger.error({ err, userId: user.id }, 'Failed to retrieve learning journey counts');
 
     throw error(500);
   }

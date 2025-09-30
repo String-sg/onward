@@ -116,5 +116,5 @@
     </div>
   </div>
 
-  <LinkButton href="/login" width="full">Log out</LinkButton>
+  <LinkButton href="/logout" width="full">Log out</LinkButton>
 </main>
