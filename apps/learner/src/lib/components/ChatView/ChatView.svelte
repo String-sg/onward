@@ -1,5 +1,6 @@
 <script lang="ts">
   import { ChevronDown, SendHorizontal } from '@lucide/svelte';
+  import DOMPurify from 'dompurify';
   import { marked } from 'marked';
   import type { MouseEventHandler } from 'svelte/elements';
   import { fade, fly } from 'svelte/transition';
@@ -243,7 +244,7 @@
                     ]}
                   >
                     <!-- eslint-disable-next-line svelte/no-at-html-tags -->
-                    {@html marked(content)}
+                    {@html DOMPurify.sanitize(marked.parse(content, { async: false }))}
                   </span>
                 </div>
               {/each}
