@@ -32,11 +32,11 @@
   };
 
   const handleContinueClick = () => {
-    const isLastQuestion = currentQuestionAnswerIndex === data.questionAnswers.length - 1;
+    const isLastQuestionAnswer = currentQuestionAnswerIndex === data.questionAnswers.length - 1;
 
     isFeedbackModalOpen = false;
 
-    if (isLastQuestion) {
+    if (isLastQuestionAnswer) {
       isCompletionModalOpen = true;
       return;
     }
