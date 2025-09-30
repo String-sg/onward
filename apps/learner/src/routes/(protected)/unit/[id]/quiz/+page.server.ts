@@ -56,7 +56,11 @@ export const load: PageServerLoad = async (event) => {
     throw error(500);
   }
 
-  if (!learningUnit?.questionAnswers.length) {
+  if (!learningUnit) {
+    throw error(404);
+  }
+
+  if (!learningUnit.questionAnswers.length) {
     logger.warn('No quiz records found');
     return redirect(303, `/unit/${event.params.id}`);
   }
