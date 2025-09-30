@@ -18,7 +18,7 @@ Your responses should feel like a natural conversation and use Markdown **only w
 
 const client = new OpenAI({
   apiKey: env.OPENAI_API_KEY || '',
-  baseURL: env.OPENAI_BASEURL || '',
+  baseURL: env.OPENAI_BASE_URL || '',
 });
 
 /**
