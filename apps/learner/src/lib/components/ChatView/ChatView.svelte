@@ -1,12 +1,14 @@
 <script lang="ts">
   import { ChevronDown, SendHorizontal } from '@lucide/svelte';
+  import DOMPurify from 'dompurify';
+  import { marked } from 'marked';
   import type { MouseEventHandler } from 'svelte/elements';
   import { fade, fly } from 'svelte/transition';
 
   import { goto } from '$app/navigation';
   import { Badge } from '$lib/components/Badge/index.js';
   import { Portal } from '$lib/components/Portal/index.js';
-  import { IsWithinViewport, safeMarkdown } from '$lib/helpers/index.js';
+  import { IsWithinViewport } from '$lib/helpers/index.js';
 
   interface ChatMessage {
     role: 'USER' | 'ASSISTANT';
@@ -242,7 +244,7 @@
                     ]}
                   >
                     <!-- eslint-disable-next-line svelte/no-at-html-tags -->
-                    {@html safeMarkdown(content)}
+                    {@html DOMPurify.sanitize(marked.parse(content, { async: false }))}
                   </span>
                 </div>
               {/each}
