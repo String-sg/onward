@@ -13,9 +13,6 @@ export const load: PageServerLoad = async (event) => {
     throw redirect(303, '/login');
   }
 
-  const collectionId = BigInt(event.params.id);
-  const userId = BigInt(user.id);
-
   const collection = await db.collection.findUnique({
     where: { id: BigInt(event.params.id) },
     select: {
@@ -23,19 +20,11 @@ export const load: PageServerLoad = async (event) => {
     },
   });
 
-  console.log('Fetched Collection:', collection);
-
   if (!collection) {
     throw error(404);
   }
 
   const learningJourneys = await db.learningJourney.findMany({
-    where: {
-      userId: userId,
-      learningUnit: {
-        collectionId: collectionId,
-      },
-    },
     select: {
       id: true,
       isCompleted: true,
@@ -55,6 +44,12 @@ export const load: PageServerLoad = async (event) => {
             },
           },
         },
+      },
+    },
+    where: {
+      userId: BigInt(user.id),
+      learningUnit: {
+        collectionId: BigInt(event.params.id),
       },
     },
   });
