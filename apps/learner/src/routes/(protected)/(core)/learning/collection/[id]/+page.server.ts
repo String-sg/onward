@@ -1,41 +1,84 @@
+import { error, redirect } from '@sveltejs/kit';
+
+import { db } from '$lib/server/db';
+
 import type { PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async () => {
+export const load: PageServerLoad = async (event) => {
+  const logger = event.locals.logger.child({ handler: 'page_learning_collection' });
+
+  const { user } = event.locals.session;
+  if (!user) {
+    logger.warn('User not authenticated');
+    throw redirect(303, '/login');
+  }
+
+  const collectionId = BigInt(event.params.id);
+  const userId = BigInt(user.id);
+
+  const collection = await db.collection.findUnique({
+    where: { id: BigInt(event.params.id) },
+    select: {
+      title: true,
+    },
+  });
+
+  console.log('Fetched Collection:', collection);
+
+  if (!collection) {
+    throw error(404);
+  }
+
+  const learningJourneys = await db.learningJourney.findMany({
+    where: {
+      userId: userId,
+      learningUnit: {
+        collectionId: collectionId,
+      },
+    },
+    select: {
+      id: true,
+      isCompleted: true,
+      createdAt: true,
+      learningUnit: {
+        select: {
+          title: true,
+          createdBy: true,
+          tags: {
+            select: {
+              tag: {
+                select: {
+                  code: true,
+                  label: true,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+
+  const mappedJourneys = learningJourneys.map((journey) => ({
+    id: journey.id,
+    title: journey.learningUnit.title,
+    isCompleted: journey.isCompleted,
+    createdAt: journey.createdAt,
+    createdBy: journey.learningUnit.createdBy,
+    tags: journey.learningUnit.tags.map((t) => ({
+      code: t.tag.code,
+      label: t.tag.label,
+    })),
+  }));
+
+  const inProgress = mappedJourneys.filter((journey) => !journey.isCompleted);
+  const completed = mappedJourneys.filter((journey) => journey.isCompleted);
+
   return {
-    learningUnits: [
-      {
-        id: 1,
-        to: '/unit/1',
-        tags: [
-          { variant: 'purple', content: 'Special Educational Needs' },
-          { variant: 'slate', content: 'Podcast' },
-        ],
-        title: 'Navigating Special Educational Needs in Singapore: A Path to Inclusion',
-        createdAt: new Date(),
-        createdBy: 'DXD Product Team',
-      },
-      {
-        id: 2,
-        to: '/unit/1',
-        tags: [
-          { variant: 'purple', content: 'Special Educational Needs' },
-          { variant: 'slate', content: 'Podcast' },
-        ],
-        title: 'Navigating Special Educational Needs in Singapore: A Path to Inclusion',
-        createdAt: new Date(),
-        createdBy: 'DXD Product Team',
-      },
-      {
-        id: 3,
-        to: '/unit/1',
-        tags: [
-          { variant: 'purple', content: 'Special Educational Needs' },
-          { variant: 'slate', content: 'Podcast' },
-        ],
-        title: 'Navigating Special Educational Needs in Singapore: A Path to Inclusion',
-        createdAt: new Date(),
-        createdBy: 'DXD Product Team',
-      },
-    ],
+    title: collection.title,
+    journeys: {
+      inProgress,
+      completed,
+    },
   };
 };

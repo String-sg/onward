@@ -29,7 +29,7 @@
           <ArrowLeft />
         </a>
 
-        <span class="text-xl font-medium">{data.collection.title}</span>
+        <span class="text-xl font-medium">{data.title}</span>
       </div>
     </div>
   </div>
@@ -44,16 +44,16 @@
     </div>
 
     <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
-      {#each data.learningUnits as learningUnit (learningUnit.id)}
+      {#each data.journeys.inProgress as journey (journey.id)}
         <LearningUnit
-          to="/content/{learningUnit.id}"
-          tags={learningUnit.tags.map((t) => ({
+          to="/content/{journey.id}"
+          tags={journey.tags.map((t) => ({
             variant: tagCodeToBadgeVariant(t.code),
             content: t.label,
           }))}
-          title={learningUnit.title}
-          createdat={learningUnit.createdAt}
-          createdby={learningUnit.createdBy}
+          title={journey.title}
+          createdat={journey.createdAt}
+          createdby={journey.createdBy}
         />
       {/each}
     </div>
@@ -65,16 +65,16 @@
     </div>
 
     <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
-      {#each data.learningUnits as learningUnit (learningUnit.id)}
+      {#each data.journeys.completed as journey (journey.id)}
         <LearningUnit
-          to="/content/{learningUnit.id}"
-          tags={learningUnit.tags.map((t) => ({
+          to="/content/{journey.id}"
+          tags={journey.tags.map((t) => ({
             variant: tagCodeToBadgeVariant(t.code),
             content: t.label,
           }))}
-          title={learningUnit.title}
-          createdat={learningUnit.createdAt}
-          createdby={learningUnit.createdBy}
+          title={journey.title}
+          createdat={journey.createdAt}
+          createdby={journey.createdBy}
         />
       {/each}
     </div>
