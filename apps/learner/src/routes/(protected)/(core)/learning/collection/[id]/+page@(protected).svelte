@@ -1,8 +1,8 @@
 <script lang="ts">
   import { ArrowLeft } from '@lucide/svelte';
 
-  import { LearningUnit, type LearningUnitProps } from '$lib/components/LearningUnit/index.js';
-  import { IsWithinViewport } from '$lib/helpers/index.js';
+  import { LearningUnit } from '$lib/components/LearningUnit/index.js';
+  import { IsWithinViewport, tagCodeToBadgeVariant } from '$lib/helpers/index.js';
 
   let target = $state<HTMLElement | null>(null);
 
@@ -29,7 +29,7 @@
           <ArrowLeft />
         </a>
 
-        <span class="text-xl font-medium">SEN peer support</span>
+        <span class="text-xl font-medium">{data.title}</span>
       </div>
     </div>
   </div>
@@ -44,13 +44,16 @@
     </div>
 
     <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
-      {#each data.learningUnits as learningUnit (learningUnit.id)}
+      {#each data.journeys.inProgress as journey (journey.id)}
         <LearningUnit
-          to={learningUnit.to}
-          tags={learningUnit.tags as LearningUnitProps['tags']}
-          title={learningUnit.title}
-          createdat={learningUnit.createdAt}
-          createdby={learningUnit.createdBy}
+          to="/unit/{journey.unitId}"
+          tags={journey.tags.map((t) => ({
+            variant: tagCodeToBadgeVariant(t.code),
+            content: t.label,
+          }))}
+          title={journey.title}
+          createdat={journey.createdAt}
+          createdby={journey.createdBy}
         />
       {/each}
     </div>
@@ -62,13 +65,16 @@
     </div>
 
     <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
-      {#each data.learningUnits as learningUnit (learningUnit.id)}
+      {#each data.journeys.isCompleted as journey (journey.id)}
         <LearningUnit
-          to={learningUnit.to}
-          tags={learningUnit.tags as LearningUnitProps['tags']}
-          title={learningUnit.title}
-          createdat={learningUnit.createdAt}
-          createdby={learningUnit.createdBy}
+          to="/unit/{journey.unitId}"
+          tags={journey.tags.map((t) => ({
+            variant: tagCodeToBadgeVariant(t.code),
+            content: t.label,
+          }))}
+          title={journey.title}
+          createdat={journey.createdAt}
+          createdby={journey.createdBy}
         />
       {/each}
     </div>
