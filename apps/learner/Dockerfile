@@ -53,6 +53,9 @@ FROM base AS production
 
 RUN apk add --no-cache ca-certificates
 
+# Download SSL certificate bundle.
+RUN wget https://truststore.pki.rds.amazonaws.com/ap-southeast-1/ap-southeast-1-bundle.pem -O /etc/ssl/certs/rds-ca-bundle.pem
+
 # 1. Create a new user named `zero`.
 # 2. Change the permission of `app` folder to user `zero`.
 # 3. Change the current user from `root` to `zero`.
