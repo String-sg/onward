@@ -141,9 +141,8 @@ model Thread {
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   // Domain-Specific Fields.
-  isActive Boolean @default(false) @map("is_active")
-  totalTokens Int @default(0) @map("total_tokens")
-  messagesSkipped Int @default(0) @map("messages_skipped")
+  isActive    Boolean @default(false) @map("is_active")
+  totalTokens Int     @default(0) @map("total_tokens")
 
   // Relations.
   userId BigInt @map("user_id")
@@ -161,9 +160,9 @@ model Message {
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   // Domain-Specific Fields.
-  content String @map("content")
-  role    Role   @map("role")
-  tokenCount Int @default(0) @map("token_count")
+  content    String @map("content")
+  role       Role   @map("role")
+  tokenCount Int    @default(0) @map("token_count")
 
   // Relations.
   threadId BigInt @map("thread_id")
