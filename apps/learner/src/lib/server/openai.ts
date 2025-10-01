@@ -16,7 +16,7 @@ enum Role {
 }
 
 /**
- * The maximum input tokens.
+ * The maximum input tokens of GPT-5-nano.
  */
 const MAX_CHAT_INPUT_TOKENS = 272_000 as const;
 const MAX_EMBEDDING_INPUT_TOKENS = 8192 as const;
@@ -42,12 +42,39 @@ const client = new OpenAI({
   baseURL: env.OPENAI_BASE_URL || '',
 });
 
-function truncateHistory(
-  developerMessage: string,
-  contextMessage: string,
-  history: Message[],
-  query: string,
-): Message[] {
+/**
+ * Truncates the chat history until it fits within the maximum chat input tokens.
+ *
+ * This function pairs the chat per turn (user and assistant messages) and uses
+ * binary search to find the optimal cutoff point in the chat history.
+ *
+ * @param developerMessage - The developer message.
+ * @param contextMessage - The retrieved context message.
+ * @param history - The chat conversation history.
+ * @param query - The user query.
+ * @returns The truncated history within the maximum chat input tokens.
+ *
+ * @example
+ * ```ts
+ * const history = truncateHistory(
+ *   "Developer Rules...",
+ *   "# Context \n\n- Relevant context...",
+ *   [{ role: "user", content: "Hello" }, { role: "assistant", content: "Hi there!" }...],
+ *   'What is AI?'
+ * );
+ * ```
+ */
+function truncateHistory({
+  developerMessage,
+  contextMessage,
+  history,
+  query,
+}: {
+  developerMessage: string;
+  contextMessage: string;
+  history: Message[];
+  query: string;
+}): Message[] {
   const tokenAllowance =
     MAX_CHAT_INPUT_TOKENS -
     (countTokens(developerMessage) + countTokens(contextMessage) + countTokens(query));
@@ -68,7 +95,6 @@ function truncateHistory(
     const latestConvoTokens = conversationTurns
       .slice(mid)
       .reduce((acc, turn) => acc + turn.tokenCount, 0);
-    console.log({ mid, latestConvoTokens });
 
     if (latestConvoTokens <= tokenAllowance) {
       cutOffIndex = mid;
@@ -77,7 +103,6 @@ function truncateHistory(
       left = mid + 1;
     }
   }
-  console.log({ historyCutOffIndex: conversationTurns[cutOffIndex].startIndex });
 
   return history.slice(conversationTurns[cutOffIndex].startIndex);
 }
@@ -134,14 +159,17 @@ export async function completions({
   const developerMessageTokens = countTokens(DEVELOPER_MESSAGE);
   const contextMessageTokens = countTokens(contextMessage);
   const queryTokens = countTokens(query);
-  console.log({ developerMessageTokens, contextMessageTokens, historyTokens, queryTokens });
 
   if (
     historyTokens + developerMessageTokens + contextMessageTokens + queryTokens >=
     MAX_CHAT_INPUT_TOKENS
   ) {
-    console.log('Truncating history');
-    history = truncateHistory(DEVELOPER_MESSAGE, contextMessage, history, query);
+    history = truncateHistory({
+      developerMessage: DEVELOPER_MESSAGE,
+      contextMessage,
+      history,
+      query,
+    });
   }
 
   const response = await client.chat.completions.create({

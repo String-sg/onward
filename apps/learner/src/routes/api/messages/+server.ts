@@ -118,7 +118,6 @@ export const POST: RequestHandler = async (event) => {
     logger.error({ err, userId: user.id }, 'Failed to create thread');
     return json(null, { status: 500 });
   }
-  console.log('Thread total tokens', thread.totalTokens);
 
   const messageArgs = {
     select: {
@@ -189,11 +188,6 @@ export const POST: RequestHandler = async (event) => {
     logger.error({ err, userId: user.id }, 'Failed to create a message');
     return json(null, { status: 500 });
   }
-
-  console.log({
-    queryTokenCount: getTokenCount(query),
-    answerTokenCount: getTokenCount(answer),
-  });
 
   return json(
     {
