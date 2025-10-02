@@ -103,9 +103,11 @@
         <Badge variant={tagCodeToBadgeVariant(currenttrack.tags?.[0].code)}>
           {currenttrack.tags?.[0].label}
         </Badge>
+
         <a
-          href={`/content/${currenttrack.id}`}
+          href={`/unit/${currenttrack.id}`}
           class="w-fit text-xl focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+          onclick={() => onclose()}
         >
           {currenttrack.title}
         </a>
