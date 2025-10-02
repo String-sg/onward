@@ -29,17 +29,15 @@
   {:else}
     <div class="mt-20 flex flex-col items-center gap-y-8">
       <div class="flex flex-col items-center gap-y-6">
-        <enhanced:img src="$lib/assets/fireworks.png?w=200" alt="Fireworks" />
+        <enhanced:img src="$lib/assets/fireworks.png?w=200" alt="No learning journey found" />
 
         <div class="flex flex-col items-center gap-y-2">
-          <span class="text-2xl font-semibold">Welcome {data.user.name}</span>
-          <span class="text-center">
-            Kick off your learning journey by diving into our excisting curated content!
-          </span>
+          <span class="text-2xl font-semibold">Welcome {data.user}</span>
+          Kick off your learning journey by diving into our excisting curated content!
         </div>
       </div>
 
-      <LinkButton href="/explore" class="max-w-md" width="full">Go to explore</LinkButton>
+      <LinkButton href="/explore" width="full" class="max-w-md">Go to explore</LinkButton>
     </div>
   {/if}
 </main>
