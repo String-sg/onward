@@ -92,6 +92,7 @@ model LearningJourney {
   user         User         @relation(fields: [userId], references: [id])
   learningUnit LearningUnit @relation(fields: [learningUnitId], references: [id])
 
+  @@unique([userId, learningUnitId])
   @@map("learning_journeys")
 }
 
