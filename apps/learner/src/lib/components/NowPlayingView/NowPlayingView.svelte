@@ -1,6 +1,5 @@
 <script lang="ts">
   import { ChevronDown, Pause, Play, RotateCcw, RotateCw } from '@lucide/svelte';
-  import type { MouseEventHandler } from 'svelte/elements';
 
   import { Badge } from '$lib/components/Badge/index.js';
   import { Modal, type ModalProps } from '$lib/components/Modal/index.js';
@@ -74,7 +73,7 @@
     onspeedchange,
   }: Props = $props();
 
-  const handleClose: MouseEventHandler<HTMLButtonElement> = () => {
+  const handleClose = () => {
     onclose();
   };
 
@@ -107,7 +106,7 @@
         <a
           href={`/unit/${currenttrack.id}`}
           class="w-fit text-xl focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-          onclick={() => onclose()}
+          onclick={handleClose}
         >
           {currenttrack.title}
         </a>
