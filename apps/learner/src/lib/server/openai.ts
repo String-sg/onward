@@ -51,7 +51,9 @@ const client = new OpenAI({
  * @param developerMessage - The developer message.
  * @param contextMessage - The retrieved context message.
  * @param history - The chat conversation history.
- * @param query - The user query.
+ * @param developerMessageTokens - The developer message tokens count.
+ * @param contextMessageTokens - The context message tokens count.
+ * @param queryTokens - The query token count.
  * @returns The truncated history within the maximum chat input tokens.
  *
  * @example
