@@ -31,12 +31,16 @@
     isFeedbackModalOpen = !isFeedbackModalOpen;
   };
 
-  const handleContinueClick = () => {
+  const handleContinueClick = async () => {
     const isLastQuestionAnswer = currentQuestionAnswerIndex === data.questionAnswers.length - 1;
 
     isFeedbackModalOpen = false;
 
     if (isLastQuestionAnswer) {
+      await fetch('?/updateQuizStatus', {
+        method: 'POST',
+        body: new FormData(),
+      });
       isCompletionModalOpen = true;
       return;
     }
