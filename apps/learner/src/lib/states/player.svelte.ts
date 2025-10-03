@@ -46,6 +46,9 @@ export class Player {
   #progress = $state(0);
   #playbackSpeedIndex = $state(1);
 
+  #trackingTimer: number | null = null;
+  #hasTrackedCurrentSession = false;
+
   #audio: HTMLAudioElement | null = null;
 
   constructor() {
@@ -62,15 +65,25 @@ export class Player {
       this.#audio.onended = () => {
         this.#isPlaying = false;
         this.#progress = 0;
+        if (this.#hasTrackedCurrentSession) {
+          this.#updateLearningJourney();
+        }
+        this.#clearTimer();
       };
       this.#audio.onplaying = () => {
         this.#isPlaying = true;
+        this.#startTracking();
       };
       this.#audio.onpause = () => {
         this.#isPlaying = false;
+        if (this.#hasTrackedCurrentSession) {
+          this.#updateLearningJourney();
+        }
+        this.#clearTimer();
       };
 
       return () => {
+        this.#hasTrackedCurrentSession = false;
         if (this.#audio) {
           this.#audio.src = '';
           this.#audio.load();
@@ -238,6 +251,41 @@ export class Player {
     this.#audio.load();
 
     this.#currentTrack = null;
+  }
+
+  async #updateLearningJourney() {
+    if (!this.#currentTrack?.id || !browser) {
+      throw new OperationUnpermittedError();
+    }
+
+    await fetch('/api/learningjourney', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id: Number(this.#currentTrack.id),
+        lastCheckpoint: this.#progress,
+      }),
+    });
+  }
+
+  #startTracking() {
+    this.#clearTimer();
+
+    this.#trackingTimer = window.setInterval(async () => {
+      if (this.#isPlaying) {
+        await this.#updateLearningJourney();
+        this.#hasTrackedCurrentSession = true; // Marks as tracked after first call
+      }
+    }, 10000);
+  }
+
+  #clearTimer() {
+    if (this.#trackingTimer) {
+      clearInterval(this.#trackingTimer);
+      this.#trackingTimer = null;
+    }
   }
 }
 
