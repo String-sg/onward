@@ -39,7 +39,7 @@ export interface Track {
  * console.log(player.currentTrack); // { id: 1, title: 'My Track' } or null
  * ```
  */
-export class Player {
+export class Player extends EventTarget {
   #currentTrack = $state.raw<Track | null>(null);
   #isPlaying = $state(false);
   #duration = $state(0);
@@ -49,6 +49,7 @@ export class Player {
   #audio: HTMLAudioElement | null = null;
 
   constructor() {
+    super();
     $effect.pre(() => {
       this.#audio = new Audio();
 
@@ -62,12 +63,15 @@ export class Player {
       this.#audio.onended = () => {
         this.#isPlaying = false;
         this.#progress = 0;
+        this.dispatchEvent(new Event('ended'));
       };
       this.#audio.onplaying = () => {
         this.#isPlaying = true;
+        this.dispatchEvent(new Event('play'));
       };
       this.#audio.onpause = () => {
         this.#isPlaying = false;
+        this.dispatchEvent(new Event('pause'));
       };
 
       return () => {
