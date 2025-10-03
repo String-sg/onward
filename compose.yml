@@ -43,6 +43,7 @@ services:
     environment:
       ENABLE_MODULES: 'text2vec-openai'
       ASYNC_INDEXING: true
+      CLUSTER_HOSTNAME: 'node1'
       AUTHENTICATION_APIKEY_ENABLED: true
       AUTHENTICATION_APIKEY_USERS: dummy
       AUTHENTICATION_APIKEY_ALLOWED_KEYS: secret
