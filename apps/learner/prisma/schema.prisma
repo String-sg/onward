@@ -141,17 +141,38 @@ model Thread {
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   // Domain-Specific Fields.
-  isActive    Boolean @default(false) @map("is_active")
-  totalTokens Int     @default(0) @map("total_tokens")
+  isActive Boolean @default(false) @map("is_active")
 
   // Relations.
   userId BigInt @map("user_id")
 
   user User @relation(fields: [userId], references: [id])
 
-  messages Message[]
+  messages  Message[]
+  dialogues Dialogue[]
 
   @@map("threads")
+}
+
+model Dialogue {
+  id        BigInt   @id @default(autoincrement()) @map("id")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  // Domain-Specific Fields.
+  tokens           Int @default(0) @map("tokens")
+  cumulativeTokens Int @default(0) @map("cumulative_tokens")
+
+  // Relations.
+  threadId           BigInt @map("thread_id")
+  userMessageId      BigInt @unique @map("user_message_id")
+  assistantMessageId BigInt @unique @map("assistant_message_id")
+
+  thread           Thread  @relation(fields: [threadId], references: [id])
+  userMessage      Message @relation("UserMessage", fields: [userMessageId], references: [id])
+  assistantMessage Message @relation("AssistantMessage", fields: [assistantMessageId], references: [id])
+
+  @@map("dialogues")
 }
 
 model Message {
@@ -160,14 +181,15 @@ model Message {
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   // Domain-Specific Fields.
-  content    String @map("content")
-  role       Role   @map("role")
-  tokenCount Int    @default(0) @map("token_count")
+  content String @map("content")
+  role    Role   @map("role")
 
   // Relations.
   threadId BigInt @map("thread_id")
 
-  thread Thread @relation(fields: [threadId], references: [id])
+  thread            Thread    @relation(fields: [threadId], references: [id])
+  userDialogue      Dialogue? @relation("UserMessage")
+  assistantDialogue Dialogue? @relation("AssistantMessage")
 
   @@map("messages")
 }
