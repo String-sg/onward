@@ -17,7 +17,7 @@ enum Role {
 /**
  * The maximum input tokens of GPT-5-nano.
  */
-export const MAX_CHAT_INPUT_TOKENS = 3000 as const;
+export const MAX_CHAT_INPUT_TOKENS = 272_000 as const;
 export const MAX_EMBEDDING_INPUT_TOKENS = 8192 as const;
 
 const DEVELOPER_MESSAGE = `
@@ -41,7 +41,6 @@ You are a learning assistant. Your primary goal is to help users learn new conce
 const client = new OpenAI({
   apiKey: env.OPENAI_API_KEY || '',
   baseURL: env.OPENAI_BASE_URL || '',
-  timeout: 120000,
 });
 
 /**

@@ -2,13 +2,21 @@ import { json, type RequestHandler } from '@sveltejs/kit';
 
 import {
   db,
+  type DialogueFindFirstArgs,
+  type DialogueGetPayload,
   type MessageFindManyArgs,
   type MessageGetPayload,
   Role,
   type ThreadFindFirstArgs,
   type ThreadGetPayload,
 } from '$lib/server/db.js';
-import { completions, getTokenCount, isWithinMaxEmbeddingInputTokens } from '$lib/server/openai';
+import {
+  completions,
+  getDeveloperMessageTokens,
+  getTokenCount,
+  MAX_CHAT_INPUT_TOKENS,
+  MAX_EMBEDDING_INPUT_TOKENS,
+} from '$lib/server/openai';
 import { search } from '$lib/server/weaviate';
 
 type JSONPrimitive = string | number | boolean | null;
@@ -74,8 +82,9 @@ export const POST: RequestHandler = async (event) => {
   }
 
   const query = params['query'];
+  const queryTokens = getTokenCount(query);
 
-  if (!isWithinMaxEmbeddingInputTokens(query)) {
+  if (queryTokens >= MAX_EMBEDDING_INPUT_TOKENS) {
     return json(null, { status: 413 });
   }
 
@@ -83,15 +92,28 @@ export const POST: RequestHandler = async (event) => {
   try {
     result = await search(query);
   } catch (err) {
-    logger.error({ err, userId: user.id }, 'Failed to search for relevant content');
+    logger.error(
+      {
+        err,
+        userId: user.id,
+        queryLength: query.length,
+        queryTokens,
+      },
+      'Failed to search for relevant content',
+    );
     return json(null, { status: 500 });
   }
 
+  const context =
+    'Context \n' +
+    (result.length === 0
+      ? 'No relevant context found.'
+      : result.map((cont) => `- ${cont}`).join('\n\n'));
+  const contextTokens = getTokenCount(context);
+
+  // Retrieve message history within max input token limit.
   const threadArgs = {
-    select: {
-      id: true,
-      totalTokens: true,
-    },
+    select: { id: true },
     where: {
       userId: BigInt(user.id),
       isActive: true,
@@ -108,10 +130,7 @@ export const POST: RequestHandler = async (event) => {
           userId: BigInt(user.id),
           isActive: true,
         },
-        select: {
-          id: true,
-          totalTokens: true,
-        },
+        select: { id: true },
       });
     }
   } catch (err) {
@@ -119,68 +138,144 @@ export const POST: RequestHandler = async (event) => {
     return json(null, { status: 500 });
   }
 
-  const messageArgs = {
+  const lastDialogueArgs = {
+    where: { threadId: thread.id },
+    orderBy: { createdAt: 'desc' },
+    select: { cumulativeTokens: true },
+  } satisfies DialogueFindFirstArgs;
+
+  let lastDialogue: DialogueGetPayload<typeof lastDialogueArgs> | null;
+  try {
+    lastDialogue = await db.dialogue.findFirst(lastDialogueArgs);
+  } catch (error) {
+    logger.error(
+      {
+        error,
+        userId: user.id,
+        threadID: thread.id,
+      },
+      'Failed to find dialogue',
+    );
+    return json(null, { status: 500 });
+  }
+
+  const tokenAllowance: number =
+    MAX_CHAT_INPUT_TOKENS - (getDeveloperMessageTokens() + contextTokens + queryTokens);
+
+  const messageSelectArgs = {
     select: {
       role: true,
       content: true,
-      tokenCount: true,
     },
-    where: {
-      threadId: thread.id,
-    },
-    orderBy: { createdAt: 'asc' },
   } satisfies MessageFindManyArgs;
 
-  let history: MessageGetPayload<typeof messageArgs>[];
-  try {
-    history = await db.message.findMany(messageArgs);
-  } catch (err) {
-    if (err instanceof Error) {
-      logger.error({ err, userId: user.id }, err.message || 'Failed to retrieve message history');
+  let history: MessageGetPayload<typeof messageSelectArgs>[];
+  if (lastDialogue && lastDialogue.cumulativeTokens > tokenAllowance) {
+    const cutoffDialogueArgs = {
+      select: {
+        userMessageId: true,
+        userMessage: {
+          select: {
+            createdAt: true,
+          },
+        },
+      },
+      where: {
+        threadId: thread.id,
+        cumulativeTokens: { gt: lastDialogue.cumulativeTokens - tokenAllowance },
+      },
+      orderBy: { createdAt: 'asc' },
+    } satisfies DialogueFindFirstArgs;
+
+    let cutoffDialogue: DialogueGetPayload<typeof cutoffDialogueArgs>;
+    try {
+      cutoffDialogue = await db.dialogue.findFirstOrThrow(cutoffDialogueArgs);
+    } catch (error) {
+      logger.error(
+        {
+          error,
+          threadId: thread.id,
+          tokenAllowance,
+          cumulativeTokens: lastDialogue.cumulativeTokens,
+        },
+        'Failed to find cutoff dialogue',
+      );
+      return json(null, { status: 500 });
     }
-    return json(null, { status: 500 });
+
+    try {
+      history = await db.message.findMany({
+        ...messageSelectArgs,
+        where: {
+          threadId: thread.id,
+          createdAt: { gte: cutoffDialogue.userMessage.createdAt },
+        },
+        orderBy: { createdAt: 'asc' },
+      });
+    } catch (err) {
+      logger.error(
+        {
+          err,
+          userId: user.id,
+          threadID: thread.id,
+          cutoffUserMessageCreatedAt: cutoffDialogue.userMessage.createdAt,
+        },
+        'Failed to retrieve message history',
+      );
+      return json(null, { status: 500 });
+    }
+  } else {
+    history = await db.message.findMany({
+      ...messageSelectArgs,
+      where: {
+        threadId: thread.id,
+      },
+      orderBy: { createdAt: 'asc' },
+    });
   }
 
   let answer: string;
   try {
     answer = await completions({
-      query,
       history,
-      context: result,
-      historyTokens: thread.totalTokens,
+      context,
+      query,
     });
   } catch (err) {
     logger.error({ err, userId: user.id }, 'Failed to complete chat');
     return json(null, { status: 500 });
   }
 
-  const queryTokenCount = getTokenCount(query);
-  const answerTokenCount = getTokenCount(answer);
+  const answerTokens = getTokenCount(answer);
+
   try {
     await db.$transaction(async (tx) => {
-      await tx.message.createMany({
+      const [userMessage, assistantMessage] = await tx.message.createManyAndReturn({
+        select: { id: true },
         data: [
           {
             threadId: thread.id,
             role: Role.USER,
             content: query,
-            tokenCount: queryTokenCount,
+            tokens: queryTokens,
           },
           {
             threadId: thread.id,
             role: Role.ASSISTANT,
             content: answer,
-            tokenCount: answerTokenCount,
+            tokens: answerTokens,
           },
         ],
       });
 
-      await tx.thread.update({
-        where: { id: thread.id },
+      const dialogueTokens = queryTokens + answerTokens;
+      await tx.dialogue.create({
         data: {
-          totalTokens: {
-            increment: queryTokenCount + answerTokenCount,
-          },
+          threadId: thread.id,
+          userMessageId: userMessage.id,
+          assistantMessageId: assistantMessage.id,
+          tokens: dialogueTokens,
+          cumulativeTokens: (lastDialogue?.cumulativeTokens || 0) + dialogueTokens,
         },
       });
     });
