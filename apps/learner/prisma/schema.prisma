@@ -183,6 +183,7 @@ model Message {
   // Domain-Specific Fields.
   content String @map("content")
   role    Role   @map("role")
+  tokens  Int    @default(0) @map("tokens")
 
   // Relations.
   threadId BigInt @map("thread_id")
