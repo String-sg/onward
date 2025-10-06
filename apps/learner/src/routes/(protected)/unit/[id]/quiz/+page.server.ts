@@ -78,8 +78,10 @@ export const load: PageServerLoad = async (event) => {
 };
 
 export const actions: Actions = {
-  updateQuizStatus: async (event) => {
-    const logger = event.locals.logger.child({ handler: 'page_update_quiz' });
+  updateLJCompletionStatus: async (event) => {
+    const logger = event.locals.logger.child({
+      handler: 'page_action_update_learning_journey_status',
+    });
 
     const { user } = event.locals.session;
     if (!user) {
@@ -88,10 +90,10 @@ export const actions: Actions = {
     }
 
     const learningJourneyArgs = {
-      update: { isCompleted: true },
       where: {
         userId_learningUnitId: { userId: BigInt(user.id), learningUnitId: BigInt(event.params.id) },
       },
+      update: { isCompleted: true },
       create: {
         userId: BigInt(user.id),
         learningUnitId: BigInt(event.params.id),
@@ -103,7 +105,7 @@ export const actions: Actions = {
     try {
       await db.learningJourney.upsert(learningJourneyArgs);
     } catch (err) {
-      logger.error({ err }, 'Failed to update quiz completion status');
+      logger.error({ err }, 'Failed to update learning journey completion status');
       throw error(500);
     }
   },

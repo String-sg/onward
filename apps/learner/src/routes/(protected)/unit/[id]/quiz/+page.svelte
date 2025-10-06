@@ -37,7 +37,7 @@
     isFeedbackModalOpen = false;
 
     if (isLastQuestionAnswer) {
-      await fetch('?/updateQuizStatus', {
+      await fetch('?/updateLJCompletionStatus', {
         method: 'POST',
         body: new FormData(),
       });
