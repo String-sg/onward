@@ -21,35 +21,31 @@ const requestLoggingHandle: Handle = async ({ event, resolve }) => {
 /**
  * A handle that enforces authentication on protected routes.
  * - Requests to `/api/*` are always allowed through
- * - Unauthenticated users are redirected to `/login`
  * - Authenticated users visiting `/login` are redirected back to `/`
+ * - Unauthenticated users are redirected to `/login`
  */
 const routeProtectionHandle: Handle = async ({ event, resolve }) => {
   if (event.url.pathname.startsWith('/api/')) {
     return await resolve(event);
   }
 
-  if (!event.locals.session.isAuthenticated) {
-    if (event.url.pathname === '/') {
-      return redirect(303, '/login');
-    }
-
-    if (
-      event.url.pathname !== '/login' &&
-      event.url.pathname !== '/auth/google' &&
-      event.url.pathname !== '/auth/google/callback'
-    ) {
-      return redirect(303, `/login?return_to=${encodeURIComponent(event.url.pathname)}`);
+  if (event.locals.session.isAuthenticated) {
+    if (event.url.pathname === '/login') {
+      return redirect(302, '/');
     }
 
     return await resolve(event);
   }
 
-  if (event.url.pathname === '/login') {
-    return redirect(302, '/');
+  if (
+    event.url.pathname === '/login' ||
+    event.url.pathname === '/auth/google' ||
+    event.url.pathname === '/auth/google/callback'
+  ) {
+    return await resolve(event);
   }
 
-  return await resolve(event);
+  return redirect(303, `/login?return_to=${encodeURIComponent(event.url.pathname)}`);
 };
 
 export const handle: Handle = sequence(requestLoggingHandle, auth.handle, routeProtectionHandle);
