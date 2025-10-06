@@ -12,3 +12,20 @@
 @theme {
   --font-geist: 'Geist', sans-serif;
 }
+
+@utility prose-slate {
+  --tw-prose-body: var(--color-slate-950);
+  --tw-prose-headings: var(--color-slate-950);
+  --tw-prose-links: var(--color-slate-950);
+  --tw-prose-bold: var(--color-slate-950);
+  --tw-prose-counters: var(--color-slate-950);
+  --tw-prose-bullets: var(--color-slate-950);
+  --tw-prose-hr: var(--color-slate-300);
+  --tw-prose-quotes: var(--color-slate-950);
+  --tw-prose-quote-borders: var(--color-slate-300);
+  --tw-prose-code: var(--color-slate-950);
+  --tw-prose-pre-code: var(--color-slate-200);
+  --tw-prose-pre-bg: var(--color-slate-800);
+  --tw-prose-th-borders: var(--color-slate-300);
+  --tw-prose-td-borders: var(--color-slate-200);
+}
