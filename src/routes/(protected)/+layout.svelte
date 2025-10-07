@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onDestroy, onMount } from 'svelte';
+  import { onMount } from 'svelte';
 
   import { ChatView } from '$lib/components/ChatView/index.js';
   import { ChatWidget } from '$lib/components/ChatWidget/index.js';
@@ -12,7 +12,6 @@
   let isNowPlayingViewOpen = $state(false);
   let isChatViewOpen = $state(false);
   let isTrackingSession = $state(false);
-  let sessionTimer: number | null;
 
   const player = Player.create();
 
@@ -65,59 +64,34 @@
     });
   };
 
-  const startPeriodicTracking = () => {
-    clearPeriodicTracking();
-
-    sessionTimer = window.setInterval(async () => {
-      await updateLearningJourney(player.progress);
-      isTrackingSession = true;
-    }, 10000);
-  };
-
-  const clearPeriodicTracking = () => {
-    if (sessionTimer) {
-      clearInterval(sessionTimer);
-      sessionTimer = null;
-    }
-  };
-
-  const handlePlay = () => {
-    startPeriodicTracking();
-  };
-
   const handlePause = () => {
-    clearPeriodicTracking();
-
     if (isTrackingSession) {
       updateLearningJourney(player.progress);
     }
   };
 
   const handleEnded = () => {
-    clearPeriodicTracking();
-
     if (isTrackingSession) {
       updateLearningJourney(0);
     }
-
     isTrackingSession = false;
   };
 
+  const handleCheckpoint = () => {
+    isTrackingSession = true;
+    updateLearningJourney(player.progress);
+  };
+
   onMount(() => {
-    player.addEventListener('play', handlePlay);
     player.addEventListener('pause', handlePause);
     player.addEventListener('ended', handleEnded);
+    player.addEventListener('checkpoint', handleCheckpoint);
 
     return () => {
-      clearPeriodicTracking();
-      player.removeEventListener('play', handlePlay);
       player.removeEventListener('pause', handlePause);
       player.removeEventListener('ended', handleEnded);
+      player.removeEventListener('checkpoint', handleCheckpoint);
     };
-  });
-
-  onDestroy(() => {
-    clearPeriodicTracking();
   });
 </script>
 
