@@ -1,10 +1,10 @@
 import { redirect } from '@sveltejs/kit';
 
-import { logger } from '$lib/server/logger';
-
 import type { LayoutServerLoad } from './$types';
 
 export const load: LayoutServerLoad = async (event) => {
+  const logger = event.locals.logger.child({ handler: 'layout_root' });
+
   const { user } = event.locals.session;
   if (!user) {
     logger.warn('User not authenticated');
