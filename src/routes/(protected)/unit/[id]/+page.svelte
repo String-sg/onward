@@ -18,7 +18,7 @@
   const isWithinViewport = new IsWithinViewport(() => target);
   const player = Player.get();
 
-  let isActive = $derived(player.currentTrack?.id === data.id);
+  let isActive = $derived(player.currentTrack?.id === data.id && player.progress !== 0);
   let lastCheckpoint = $state(data.lastCheckpoint);
 
   afterNavigate(({ from, type }) => {
