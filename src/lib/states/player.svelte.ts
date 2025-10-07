@@ -258,18 +258,20 @@ export class Player extends EventTarget {
     let lastTrackingTime = Date.now();
 
     this.#trackingTimer = window.setInterval(() => {
-      if (lastTrackingTime && this.#isPlaying) {
-        const currentTime = Date.now();
-        const timeSinceLastCheck = (currentTime - lastTrackingTime) / 1000;
-
-        this.#cumulativePlayTime += timeSinceLastCheck;
-
-        if (Math.round(this.#cumulativePlayTime) % 10 === 0) {
-          this.dispatchEvent(new Event('checkpoint'));
-        }
-
-        lastTrackingTime = currentTime;
+      if (!this.#isPlaying) {
+        return;
       }
+
+      const currentTime = Date.now();
+      const timeSinceLastCheck = (currentTime - lastTrackingTime) / 1000;
+
+      this.#cumulativePlayTime += timeSinceLastCheck;
+
+      if (Math.round(this.#cumulativePlayTime) % 10 === 0) {
+        this.dispatchEvent(new Event('checkpoint'));
+      }
+
+      lastTrackingTime = currentTime;
     }, 1000);
   }
 
