@@ -35,6 +35,7 @@ export const load: PageServerLoad = async (event) => {
     return {
       name: user.name,
       email: user.email,
+      userAvatar: user.avatarURL,
       learningUnitsConsumedByMonth: byMonth.reduce((total, group) => total + group._count._all, 0),
       learningUnitsConsumedByWeek: byWeek.reduce((total, group) => total + group._count._all, 0),
       learningUnitsCompletedByMonth: byMonth.find((group) => group.isCompleted)?._count._all ?? 0,

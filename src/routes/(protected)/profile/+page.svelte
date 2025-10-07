@@ -53,8 +53,9 @@
 
 <main class="relative mx-auto flex min-h-svh max-w-5xl flex-col gap-y-4 px-4 py-3 pt-23">
   <div class="flex items-center gap-x-6 rounded-3xl bg-white p-4">
-    <!-- Placeholder for profile picture -->
-    <div class="h-10 w-10 rounded-full bg-slate-200"></div>
+    <div class="h-10 w-10 overflow-hidden rounded-full">
+      <img src={data.userAvatar} alt="profile" loading="lazy" referrerpolicy="no-referrer" />
+    </div>
 
     <div class="flex flex-col">
       <span class="text-xl font-medium">{data.name}</span>

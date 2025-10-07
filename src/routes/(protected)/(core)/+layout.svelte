@@ -12,6 +12,8 @@
   const isLearningPage = $derived(page.url.pathname === '/learning');
   const isExplorePage = $derived(page.url.pathname === '/explore');
 
+  const avatar = $derived(page.data.userAvatar);
+
   const isWithinViewport = new IsWithinViewport(() => target);
 </script>
 
@@ -30,8 +32,15 @@
         <a
           href="/profile"
           aria-label="Profile"
-          class="h-10 w-10 cursor-pointer rounded-full bg-white"
+          class="h-10 w-10 cursor-pointer overflow-hidden rounded-full bg-white"
         >
+          <img
+            src={avatar}
+            alt="profile"
+            class="h-full w-full object-cover"
+            loading="lazy"
+            referrerpolicy="no-referrer"
+          />
         </a>
       </div>
 
