@@ -52,6 +52,7 @@ export class Player extends EventTarget {
 
   constructor() {
     super();
+
     $effect.pre(() => {
       this.#audio = new Audio();
 
