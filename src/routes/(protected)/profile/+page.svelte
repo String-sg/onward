@@ -54,7 +54,7 @@
 <main class="relative mx-auto flex min-h-svh max-w-5xl flex-col gap-y-4 px-4 py-3 pt-23">
   <div class="flex items-center gap-x-6 rounded-3xl bg-white p-4">
     <div class="h-10 w-10 overflow-hidden rounded-full">
-      <img src={data.avatarURL} alt="profile" loading="lazy" />
+      <img src={data.avatarURL} alt="profile" />
     </div>
 
     <div class="flex flex-col">

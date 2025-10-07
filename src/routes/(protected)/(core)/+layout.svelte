@@ -30,9 +30,9 @@
         <a
           href="/profile"
           aria-label="Profile"
-          class="h-10 w-10 cursor-pointer overflow-hidden rounded-full bg-white"
+          class="h-10 w-10 cursor-pointer overflow-hidden rounded-full"
         >
-          <img src={data.avatarURL} alt="profile" loading="lazy" />
+          <img src={data.avatarURL} alt="profile" />
         </a>
       </div>
 
