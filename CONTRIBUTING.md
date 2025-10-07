@@ -95,13 +95,7 @@ To contribute code, you'll need to set up your development environment.
    pnpm install
    ```
 
-3. **Set up the local environment**:
-
-   ```sh
-   ./setup.sh
-   ```
-
-4. **Start required local services**:
+3. **Start required local services**:
 
    ```sh
    docker compose up -d valkey postgres minio weaviate
@@ -109,14 +103,14 @@ To contribute code, you'll need to set up your development environment.
 
    > 💡 You can stop the services later with `docker compose down`.
 
-5. **Set up bucket in MinIO**
+4. **Set up bucket in MinIO**
    1. Login to MinIO console at `http://localhost:9001`
    2. Create a bucket named `onward`
 
-6. **Run tests:**
+5. **Run tests:**
 
    ```sh
-   pnpm -r test
+   pnpm test
    ```
 
 ## Code Style Guidelines

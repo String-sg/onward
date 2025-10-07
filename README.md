@@ -6,24 +6,24 @@ A professional development platform that empowers teachers with flexible, person
 
 Please ensure that you have completed the required [development setup](./CONTRIBUTING.md#development-setup) before proceeding.
 
-### Learner
-
 ```sh
-pnpm --filter="@onward/learner" dev
+pnpm dev
 ```
 
 ## 🧞 Commands
 
 All commands are run from the root of the project, from a terminal:
 
-| Command            | Action                                       |
-| :----------------- | :------------------------------------------- |
-| `pnpm db:generate` | Generate database client and other artifacts |
-| `pnpm db:migrate`  | Create and apply database migrations         |
-| `pnpm db:deploy`   | Apply pending database migrations            |
-| `pnpm bootstrap`   | Build internal dependencies                  |
-| `pnpm format`      | Format codebase                              |
-| `pnpm lint`        | Lint codebase                                |
+| Command            | Action                                          |
+| :----------------- | :---------------------------------------------- |
+| `pnpm dev`         | Start the development server with hot reloading |
+| `pnpm build`       | Builds the application for production           |
+| `pnpm test`        | Runs the test suite                             |
+| `pnpm db:generate` | Generates the database client                   |
+| `pnpm db:migrate`  | Creates and applies new database migrations     |
+| `pnpm db:deploy`   | Applies any pending database migrations         |
+| `pnpm format`      | Formats the codebase using the configured style |
+| `pnpm lint`        | Lints the codebase for issues and style errors  |
 
 ## Contributing
 
