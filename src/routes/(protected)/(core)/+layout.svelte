@@ -26,7 +26,7 @@
   <div class="mx-auto w-full max-w-5xl px-4 py-3">
     <div class="flex flex-col gap-y-4">
       <div class="flex items-center justify-between px-2">
-        <span class="text-2xl font-semibold">Onward</span>
+        <span class="text-2xl font-semibold">Glow</span>
         <a
           href="/profile"
           aria-label="Profile"

@@ -9,7 +9,7 @@
 
   <div class="flex flex-col items-center justify-center gap-y-3 py-5">
     {@render logo()}
-    <span class="font-mono font-bold">Onward</span>
+    <span class="font-mono font-bold">Glow</span>
   </div>
 
   <div class="flex flex-1 flex-col items-center justify-center">
