@@ -45,9 +45,7 @@ export class Player extends EventTarget {
   #duration = $state(0);
   #progress = $state(0);
   #playbackSpeedIndex = $state(1);
-  #cumulativePlayTime = $state(0);
-  #lastTrackingTime: number | null = null;
-  #hasReachedThreshold = $state(false);
+  #cumulativePlayTime = 0;
   #trackingTimer: number | null = null;
 
   #audio: HTMLAudioElement | null = null;
@@ -72,6 +70,7 @@ export class Player extends EventTarget {
       this.#audio.onplaying = () => {
         this.#isPlaying = true;
         this.#startCumulativeTracking();
+        this.dispatchEvent(new Event('play'));
       };
       this.#audio.onpause = () => {
         this.#isPlaying = false;
@@ -80,7 +79,7 @@ export class Player extends EventTarget {
       };
 
       return () => {
-        this.#resetCumulativeTracking();
+        this.#stopCumulativeTracking();
         if (this.#audio) {
           this.#audio.src = '';
           this.#audio.load();
@@ -248,7 +247,6 @@ export class Player extends EventTarget {
     this.#audio.load();
 
     this.#currentTrack = null;
-    this.#resetCumulativeTracking();
   }
 
   /**
@@ -256,25 +254,20 @@ export class Player extends EventTarget {
    */
   #startCumulativeTracking() {
     this.#stopCumulativeTracking();
-    this.#lastTrackingTime = Date.now();
+    let lastTrackingTime = Date.now();
 
     this.#trackingTimer = window.setInterval(() => {
-      if (this.#lastTrackingTime && this.#isPlaying) {
+      if (lastTrackingTime && this.#isPlaying) {
         const currentTime = Date.now();
-        const timeSinceLastCheck = (currentTime - this.#lastTrackingTime) / 1000;
+        const timeSinceLastCheck = (currentTime - lastTrackingTime) / 1000;
 
         this.#cumulativePlayTime += timeSinceLastCheck;
-
-        if (this.#cumulativePlayTime >= 10 && !this.#hasReachedThreshold) {
-          this.#hasReachedThreshold = true;
-          this.dispatchEvent(new Event('checkpoint'));
-        }
 
         if (Math.round(this.#cumulativePlayTime) % 10 === 0) {
           this.dispatchEvent(new Event('checkpoint'));
         }
 
-        this.#lastTrackingTime = currentTime;
+        lastTrackingTime = currentTime;
       }
     }, 1000);
   }
@@ -283,20 +276,12 @@ export class Player extends EventTarget {
    * Stops cumulative playtime tracking state
    */
   #stopCumulativeTracking() {
-    if (this.#trackingTimer) {
-      clearInterval(this.#trackingTimer);
-      this.#trackingTimer = null;
+    if (!this.#trackingTimer) {
+      return;
     }
-    this.#lastTrackingTime = null;
-  }
 
-  /**
-   * Reset cumulative playtime tracking state
-   */
-  #resetCumulativeTracking() {
-    this.#stopCumulativeTracking();
-    this.#cumulativePlayTime = 0;
-    this.#hasReachedThreshold = false;
+    clearInterval(this.#trackingTimer);
+    this.#trackingTimer = null;
   }
 }
 

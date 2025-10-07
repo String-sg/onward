@@ -51,38 +51,44 @@
     isChatViewOpen = false;
   };
 
-  const updateLearningJourney = async (progress: number) => {
-    await fetch('/api/learningjourney', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        id: Number(player.currentTrack?.id),
-        lastCheckpoint: progress,
-      }),
-    });
-  };
-
-  const handlePause = () => {
-    if (isTrackingSession) {
-      updateLearningJourney(player.progress);
-    }
-  };
-
-  const handleEnded = () => {
-    if (isTrackingSession) {
-      updateLearningJourney(0);
-    }
-    isTrackingSession = false;
-  };
-
-  const handleCheckpoint = () => {
-    isTrackingSession = true;
-    updateLearningJourney(player.progress);
-  };
-
   onMount(() => {
+    const updateLearningJourney = async (progress: number) => {
+      await fetch('/api/learningjourney', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: Number(player.currentTrack?.id),
+          lastCheckpoint: progress,
+        }),
+      });
+    };
+
+    const handlePause = () => {
+      if (!isTrackingSession) {
+        return;
+      }
+
+      updateLearningJourney(player.progress);
+    };
+
+    const handleEnded = () => {
+      if (isTrackingSession) {
+        updateLearningJourney(0);
+      }
+
+      isTrackingSession = false;
+    };
+
+    const handleCheckpoint = () => {
+      if (!isTrackingSession) {
+        isTrackingSession = true;
+      }
+
+      updateLearningJourney(player.progress);
+    };
+
     player.addEventListener('pause', handlePause);
     player.addEventListener('ended', handleEnded);
     player.addEventListener('checkpoint', handleCheckpoint);
