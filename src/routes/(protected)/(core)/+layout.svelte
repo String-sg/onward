@@ -4,15 +4,13 @@
   import { page } from '$app/state';
   import { IsWithinViewport } from '$lib/helpers/index.js';
 
-  const { children } = $props();
+  const { children, data } = $props();
 
   let target = $state<HTMLElement | null>(null);
 
   const isHomePage = $derived(page.url.pathname === '/');
   const isLearningPage = $derived(page.url.pathname === '/learning');
   const isExplorePage = $derived(page.url.pathname === '/explore');
-
-  const avatar = $derived(page.data.userAvatar);
 
   const isWithinViewport = new IsWithinViewport(() => target);
 </script>
@@ -34,13 +32,7 @@
           aria-label="Profile"
           class="h-10 w-10 cursor-pointer overflow-hidden rounded-full bg-white"
         >
-          <img
-            src={avatar}
-            alt="profile"
-            class="h-full w-full object-cover"
-            loading="lazy"
-            referrerpolicy="no-referrer"
-          />
+          <img src={data.avatarURL} alt="profile" loading="lazy" />
         </a>
       </div>
 
