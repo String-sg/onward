@@ -1,8 +1,13 @@
 import { error, redirect } from '@sveltejs/kit';
 
-import { db, type LearningUnitFindUniqueArgs, type LearningUnitGetPayload } from '$lib/server/db';
+import {
+  db,
+  type LearningJourneyUpsertArgs,
+  type LearningUnitFindUniqueArgs,
+  type LearningUnitGetPayload,
+} from '$lib/server/db';
 
-import type { PageServerLoad } from './$types';
+import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async (event) => {
   const logger = event.locals.logger.child({ handler: 'page_quiz' });
@@ -70,4 +75,38 @@ export const load: PageServerLoad = async (event) => {
     type: learningUnit.collection.type,
     label: learningUnit.collection.tags[0]?.tag.label,
   };
+};
+
+export const actions: Actions = {
+  updateLJCompletionStatus: async (event) => {
+    const logger = event.locals.logger.child({
+      handler: 'page_action_update_learning_journey_status',
+    });
+
+    const { user } = event.locals.session;
+    if (!user) {
+      logger.warn('User not authenticated');
+      return redirect(303, '/login');
+    }
+
+    const learningJourneyArgs = {
+      where: {
+        userId_learningUnitId: { userId: BigInt(user.id), learningUnitId: BigInt(event.params.id) },
+      },
+      update: { isCompleted: true },
+      create: {
+        userId: BigInt(user.id),
+        learningUnitId: BigInt(event.params.id),
+        isCompleted: true,
+        lastCheckpoint: 0,
+      },
+    } satisfies LearningJourneyUpsertArgs;
+
+    try {
+      await db.learningJourney.upsert(learningJourneyArgs);
+    } catch (err) {
+      logger.error({ err }, 'Failed to update learning journey completion status');
+      throw error(500);
+    }
+  },
 };
