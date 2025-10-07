@@ -4,7 +4,7 @@
   import { page } from '$app/state';
   import { IsWithinViewport } from '$lib/helpers/index.js';
 
-  const { children } = $props();
+  const { data, children } = $props();
 
   let target = $state<HTMLElement | null>(null);
 
@@ -30,8 +30,9 @@
         <a
           href="/profile"
           aria-label="Profile"
-          class="h-10 w-10 cursor-pointer rounded-full bg-white"
+          class="h-10 w-10 cursor-pointer overflow-hidden rounded-full"
         >
+          <img src={data.avatarURL} alt="profile" />
         </a>
       </div>
 
