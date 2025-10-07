@@ -4,7 +4,7 @@
   import { page } from '$app/state';
   import { IsWithinViewport } from '$lib/helpers/index.js';
 
-  const { children, data } = $props();
+  const { data, children } = $props();
 
   let target = $state<HTMLElement | null>(null);
 
