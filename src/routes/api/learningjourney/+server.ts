@@ -58,7 +58,5 @@ export const POST: RequestHandler = async (event) => {
     return json(null, { status: 500 });
   }
 
-  return json({
-    success: true,
-  });
+  return json(null, { status: 200 });
 };
