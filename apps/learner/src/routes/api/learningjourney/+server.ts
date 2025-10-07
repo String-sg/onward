@@ -2,11 +2,8 @@ import { json } from '@sveltejs/kit';
 
 import { db, type LearningJourneyUpsertArgs } from '$lib/server/db.js';
 
+import type { JSONObject } from '../types';
 import type { RequestHandler } from './$types';
-
-type JSONPrimitive = string | number | boolean | null;
-type JSONValue = JSONPrimitive | JSONValue[] | JSONObject;
-type JSONObject = { [key in string]: JSONValue };
 
 export const POST: RequestHandler = async (event) => {
   const logger = event.locals.logger.child({ handler: 'api_create_update_learning_journey' });
