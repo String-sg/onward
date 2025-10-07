@@ -19,6 +19,7 @@
   const player = Player.get();
 
   let isActive = $derived(player.currentTrack?.id === data.id);
+  let lastCheckpoint = $state(data.lastCheckpoint);
 
   afterNavigate(({ from, type }) => {
     if (type === 'enter' || !from) {
@@ -53,7 +54,7 @@
 
   const handleResume = () => {
     if (!isActive) {
-      const initialSeekTime = data?.lastCheckpoint || 0;
+      const initialSeekTime = lastCheckpoint;
       player.play(
         {
           id: data.id,
@@ -63,6 +64,8 @@
         },
         initialSeekTime,
       );
+
+      lastCheckpoint = 0;
     } else {
       player.toggle();
     }
@@ -129,7 +132,7 @@
             <Play class="h-4 w-4" />
             <span class="font-medium">Resume</span>
           </Button>
-        {:else if data.lastCheckpoint && data.lastCheckpoint > 0}
+        {:else if lastCheckpoint && lastCheckpoint > 0}
           <Button variant="primary" width="full" onclick={handleResume}>
             <Play class="h-4 w-4" />
             <span class="font-medium">Resume</span>
