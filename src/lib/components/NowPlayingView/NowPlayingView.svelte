@@ -105,7 +105,7 @@
 
         <a
           href={`/unit/${currenttrack.id}`}
-          class="w-fit text-xl focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+          class="w-fit text-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white focus-visible:outline-dashed"
           onclick={handleClose}
         >
           {currenttrack.title}
