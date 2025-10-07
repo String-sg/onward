@@ -37,11 +37,11 @@ export const POST: RequestHandler = async (event) => {
   }
 
   const learningJourneyArgs = {
-    update: {
-      lastCheckpoint: params.lastCheckpoint,
-    },
     where: {
       userId_learningUnitId: { userId: BigInt(user.id), learningUnitId: BigInt(params.id) },
+    },
+    update: {
+      lastCheckpoint: params.lastCheckpoint,
     },
     create: {
       userId: BigInt(user.id),
