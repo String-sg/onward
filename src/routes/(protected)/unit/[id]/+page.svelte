@@ -52,7 +52,20 @@
   };
 
   const handleResume = () => {
-    player.toggle();
+    if (!isActive) {
+      const initialSeekTime = data?.lastCheckpoint || 0;
+      player.play(
+        {
+          id: data.id,
+          tags: data.tags,
+          title: data.title,
+          url: data.url,
+        },
+        initialSeekTime,
+      );
+    } else {
+      player.toggle();
+    }
   };
 </script>
 
@@ -112,6 +125,11 @@
             <span class="font-medium">Pause</span>
           </Button>
         {:else if isActive && !player.isPlaying}
+          <Button variant="primary" width="full" onclick={handleResume}>
+            <Play class="h-4 w-4" />
+            <span class="font-medium">Resume</span>
+          </Button>
+        {:else if data.lastCheckpoint && data.lastCheckpoint > 0}
           <Button variant="primary" width="full" onclick={handleResume}>
             <Play class="h-4 w-4" />
             <span class="font-medium">Resume</span>

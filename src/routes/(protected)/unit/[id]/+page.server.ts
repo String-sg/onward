@@ -1,6 +1,12 @@
 import { error, redirect } from '@sveltejs/kit';
 
-import { db, type LearningUnitFindUniqueArgs, type LearningUnitGetPayload } from '$lib/server/db';
+import {
+  db,
+  type LearningJourneyFindUniqueArgs,
+  type LearningJourneyGetPayload,
+  type LearningUnitFindUniqueArgs,
+  type LearningUnitGetPayload,
+} from '$lib/server/db';
 
 import type { PageServerLoad } from './$types';
 
@@ -60,6 +66,26 @@ export const load: PageServerLoad = async (event) => {
     throw error(500);
   }
 
+  const learningJourneyArgs = {
+    select: {
+      lastCheckpoint: true,
+    },
+    where: {
+      userId_learningUnitId: {
+        userId: BigInt(user.id),
+        learningUnitId: BigInt(event.params.id),
+      },
+    },
+  } satisfies LearningJourneyFindUniqueArgs;
+
+  let learningJourney: LearningJourneyGetPayload<typeof learningJourneyArgs> | null;
+  try {
+    learningJourney = await db.learningJourney.findUnique(learningJourneyArgs);
+  } catch (err) {
+    logger.error({ err }, 'Failed to retrieve learning journey record');
+    throw error(500);
+  }
+
   return {
     id: learningUnit.id,
     tags: learningUnit.tags.map((t) => t.tag),
@@ -69,5 +95,6 @@ export const load: PageServerLoad = async (event) => {
     createdAt: learningUnit.createdAt,
     createdBy: learningUnit.createdBy,
     isQuizAvailable,
+    lastCheckpoint: Number(learningJourney?.lastCheckpoint),
   };
 };
