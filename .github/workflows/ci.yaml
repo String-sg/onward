@@ -82,14 +82,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Bootstrap
-        run: pnpm bootstrap
-
       - name: Generate database client
         run: pnpm db:generate
 
       - name: Check
-        run: pnpm -r check
+        run: pnpm check
 
   test:
     name: Test
@@ -114,7 +111,7 @@ jobs:
         run: pnpm install
 
       - name: Test
-        run: pnpm -r test
+        run: pnpm test
 
   build-and-push-image:
     name: Build and push image
@@ -155,7 +152,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: apps/${{ matrix.app }}/Dockerfile
+          file: ./Dockerfile
           push: true
           platforms: linux/arm64
           tags: ${{ steps.metadata.outputs.tags }}

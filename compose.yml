@@ -59,7 +59,7 @@ services:
     container_name: onward-learner
     build:
       context: .
-      dockerfile: apps/learner/Dockerfile
+      dockerfile: ./Dockerfile
     ports:
       - 3000:3000
 
