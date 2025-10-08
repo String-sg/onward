@@ -43,7 +43,6 @@ export const load: PageServerLoad = async (event) => {
     };
   } catch (err) {
     logger.error({ err, userId: user.id }, 'Failed to retrieve learning journey counts');
-
     throw error(500);
   }
 };
