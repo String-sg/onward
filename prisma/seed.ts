@@ -122,6 +122,7 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     questionAnswers: {
       create: questionAnswers,
     },
+    contentDuration: 300,
   },
   {
     id: 2,
@@ -150,6 +151,7 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     questionAnswers: {
       create: questionAnswers,
     },
+    contentDuration: 300,
   },
   {
     id: 3,
@@ -178,6 +180,7 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     questionAnswers: {
       create: questionAnswers,
     },
+    contentDuration: 300,
   },
   {
     id: 4,
@@ -206,6 +209,7 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     questionAnswers: {
       create: questionAnswers,
     },
+    contentDuration: 300,
   },
 ];
 
