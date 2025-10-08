@@ -4,9 +4,7 @@ import { db, type MessageFindManyArgs, type MessageGetPayload, Role } from '$lib
 import { completions } from '$lib/server/openai.js';
 import { search } from '$lib/server/weaviate';
 
-type JSONPrimitive = string | number | boolean | null;
-type JSONValue = JSONPrimitive | JSONValue[] | JSONObject;
-type JSONObject = { [key in string]: JSONValue };
+import type { JSONObject } from '../types';
 
 export const GET: RequestHandler = async (event) => {
   const logger = event.locals.logger.child({ handler: 'api_get_messages' });
