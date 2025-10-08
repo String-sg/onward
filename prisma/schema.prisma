@@ -55,11 +55,12 @@ model LearningUnit {
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   // Domain-Specific Fields.
-  title       String      @map("title")
-  contentType ContentType @map("content_type")
-  contentURL  String      @map("content_url")
-  summary     String      @map("summary")
-  createdBy   String      @map("created_by")
+  title           String      @map("title")
+  contentType     ContentType @map("content_type")
+  contentURL      String      @map("content_url")
+  contentDuration Decimal     @map("content_duration")
+  summary         String      @map("summary")
+  createdBy       String      @map("created_by")
 
   // Relations.
   collectionId BigInt @map("collection_id")
