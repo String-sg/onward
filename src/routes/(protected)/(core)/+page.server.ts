@@ -17,7 +17,6 @@ export const load: PageServerLoad = async (event) => {
     const learningJourneys = await db.learningJourney.findMany({
       select: {
         id: true,
-        isCompleted: true,
         learningUnit: {
           select: {
             id: true,
@@ -49,9 +48,8 @@ export const load: PageServerLoad = async (event) => {
     });
 
     return {
-      learningUnits: learningJourneys.map((journey) => ({
+      learningJourneys: learningJourneys.map((journey) => ({
         ...journey.learningUnit,
-        isCompleted: journey.isCompleted,
       })),
       username: user.name,
     };

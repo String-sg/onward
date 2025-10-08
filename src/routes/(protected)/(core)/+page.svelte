@@ -8,7 +8,7 @@
 
   const player = Player.get();
 
-  const handleLearningUnitPlay = (learningUnit: (typeof data.learningUnits)[0]) => {
+  const handleLearningUnitPlay = (learningUnit: (typeof data.learningJourneys)[0]) => {
     player.play({
       id: learningUnit.id,
       tags: learningUnit.tags.map((t) => ({
@@ -30,26 +30,26 @@
 </script>
 
 <main class="relative mx-auto flex min-h-svh max-w-5xl flex-col gap-y-3 px-4 pt-43 pb-28">
-  {#if data.learningUnits && data.learningUnits.length > 0}
+  {#if data.learningJourneys && data.learningJourneys.length > 0}
     <div class="px-2">
       <span class="text-xl font-semibold">Recently learned</span>
     </div>
 
     <div class="flex flex-col gap-y-4">
-      {#each data.learningUnits as learningUnit (learningUnit.id)}
+      {#each data.learningJourneys as learningJourney (learningJourney.id)}
         <LearningUnit
-          to={`/unit/${learningUnit.id}`}
-          tags={learningUnit.tags.map((t) => ({
+          to={`/unit/${learningJourney.id}`}
+          tags={learningJourney.tags.map((t) => ({
             variant: tagCodeToBadgeVariant(t.tag.code),
             content: t.tag.label,
           }))}
-          title={learningUnit.title}
-          createdat={learningUnit.createdAt}
-          createdby={learningUnit.createdBy}
+          title={learningJourney.title}
+          createdat={learningJourney.createdAt}
+          createdby={learningJourney.createdBy}
           player={{
-            isactive: player.currentTrack?.id === learningUnit.id,
+            isactive: player.currentTrack?.id === learningJourney.id,
             isplaying: player.isPlaying,
-            onplay: () => handleLearningUnitPlay(learningUnit),
+            onplay: () => handleLearningUnitPlay(learningJourney),
             onpause: handleLearningUnitPause,
             onresume: handleLearningUnitResume,
           }}
