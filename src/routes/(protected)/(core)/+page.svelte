@@ -8,15 +8,15 @@
 
   const player = Player.get();
 
-  const handleLearningUnitPlay = (learningUnit: (typeof data.learningJourneys)[0]) => {
+  const handleLearningUnitPlay = (learningJourney: (typeof data.learningJourneys)[0]) => {
     player.play({
-      id: learningUnit.id,
-      tags: learningUnit.tags.map((t) => ({
+      id: learningJourney.learningUnit.id,
+      tags: learningJourney.learningUnit.tags.map((t) => ({
         code: t.tag.code,
         label: t.tag.label,
       })),
-      title: learningUnit.title,
-      url: `/audio/${encodeURIComponent(learningUnit.contentURL)}`,
+      title: learningJourney.learningUnit.title,
+      url: learningJourney.learningUnit.contentURL,
     });
   };
 
@@ -30,7 +30,7 @@
 </script>
 
 <main class="relative mx-auto flex min-h-svh max-w-5xl flex-col gap-y-3 px-4 pt-43 pb-28">
-  {#if data.learningJourneys && data.learningJourneys.length > 0}
+  {#if data.learningJourneys.length > 0}
     <div class="px-2">
       <span class="text-xl font-semibold">Recently learned</span>
     </div>
@@ -38,16 +38,16 @@
     <div class="flex flex-col gap-y-4">
       {#each data.learningJourneys as learningJourney (learningJourney.id)}
         <LearningUnit
-          to={`/unit/${learningJourney.id}`}
-          tags={learningJourney.tags.map((t) => ({
+          to={`/unit/${learningJourney.learningUnit.id}`}
+          tags={learningJourney.learningUnit.tags.map((t) => ({
             variant: tagCodeToBadgeVariant(t.tag.code),
             content: t.tag.label,
           }))}
-          title={learningJourney.title}
-          createdat={learningJourney.createdAt}
-          createdby={learningJourney.createdBy}
+          title={learningJourney.learningUnit.title}
+          createdat={learningJourney.learningUnit.createdAt}
+          createdby={learningJourney.learningUnit.createdBy}
           player={{
-            isactive: player.currentTrack?.id === learningJourney.id,
+            isactive: player.currentTrack?.id === learningJourney.learningUnit.id,
             isplaying: player.isPlaying,
             onplay: () => handleLearningUnitPlay(learningJourney),
             onpause: handleLearningUnitPause,

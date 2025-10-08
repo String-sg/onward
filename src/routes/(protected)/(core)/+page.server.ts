@@ -1,6 +1,10 @@
 import { error, redirect } from '@sveltejs/kit';
 
-import { db } from '$lib/server/db';
+import {
+  db,
+  type LearningJourneyFindManyArgs,
+  type LearningJourneyGetPayload,
+} from '$lib/server/db';
 
 import type { PageServerLoad } from './$types';
 
@@ -13,48 +17,49 @@ export const load: PageServerLoad = async (event) => {
     throw redirect(303, '/login');
   }
 
-  try {
-    const learningJourneys = await db.learningJourney.findMany({
-      select: {
-        id: true,
-        learningUnit: {
-          select: {
-            id: true,
-            title: true,
-            contentURL: true,
-            createdAt: true,
-            createdBy: true,
-            tags: {
-              select: {
-                tag: {
-                  select: {
-                    code: true,
-                    label: true,
-                  },
+  const learningJourneyArgs = {
+    select: {
+      id: true,
+      learningUnit: {
+        select: {
+          id: true,
+          title: true,
+          contentURL: true,
+          createdAt: true,
+          createdBy: true,
+          tags: {
+            select: {
+              tag: {
+                select: {
+                  code: true,
+                  label: true,
                 },
               },
             },
           },
         },
       },
-      where: {
-        userId: BigInt(user.id),
-        isCompleted: false,
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-      take: 3,
-    });
+    },
+    where: {
+      userId: BigInt(user.id),
+      isCompleted: false,
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+    take: 3,
+  } satisfies LearningJourneyFindManyArgs;
 
-    return {
-      learningJourneys: learningJourneys.map((journey) => ({
-        ...journey.learningUnit,
-      })),
-      username: user.name,
-    };
+  let learningJourneys: LearningJourneyGetPayload<typeof learningJourneyArgs>[];
+  try {
+    learningJourneys = await db.learningJourney.findMany(learningJourneyArgs);
   } catch (err) {
     logger.error({ err }, 'Failed to retrieve learning journeys');
     throw error(500);
   }
+
+  return {
+    learningJourneys: learningJourneys,
+    username: user.name,
+  };
 };
