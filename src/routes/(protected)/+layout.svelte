@@ -1,19 +1,23 @@
 <script lang="ts">
   import { onMount } from 'svelte';
 
+  import { Button, LinkButton } from '$lib/components/Button/index.js';
   import { ChatView } from '$lib/components/ChatView/index.js';
   import { ChatWidget } from '$lib/components/ChatWidget/index.js';
+  import { Modal } from '$lib/components/Modal/index.js';
   import { NowPlayingBar } from '$lib/components/NowPlayingBar/index.js';
   import { NowPlayingView } from '$lib/components/NowPlayingView/index.js';
+  import { noop } from '$lib/helpers/index.js';
   import { Player } from '$lib/states/index.js';
 
   const { children } = $props();
 
+  const player = Player.create();
+
   let isNowPlayingViewOpen = $state(false);
   let isChatViewOpen = $state(false);
   let isTrackingSession = $state(false);
-
-  const player = Player.create();
+  let isPodcastCompletedModalOpen = $state(false);
 
   const handleNowPlayingBarClick = () => {
     isNowPlayingViewOpen = true;
@@ -51,6 +55,10 @@
     isChatViewOpen = false;
   };
 
+  const handlePodcastCompletedModalClose = () => {
+    isPodcastCompletedModalOpen = false;
+  };
+
   onMount(() => {
     const updateLearningJourney = async (progress: number) => {
       await fetch('/api/learningjourney', {
@@ -78,6 +86,7 @@
         updateLearningJourney(0);
       }
 
+      isPodcastCompletedModalOpen = true;
       isTrackingSession = false;
     };
 
@@ -133,5 +142,43 @@
     onskipforward={handleSkipForward}
     onspeedchange={handleSpeedChange}
   />
+
+  <Modal isopen={isPodcastCompletedModalOpen} onclose={noop} class="z-300">
+    <div class="mx-auto flex min-h-svh max-w-5xl flex-col px-4 py-3">
+      <div class="flex flex-1 flex-col items-center justify-center">
+        <enhanced:img
+          src="$lib/assets/flagplanet.png?w=768"
+          alt="flagplanet"
+          sizes="384px"
+          class="h-full w-full object-contain"
+        />
+      </div>
+
+      <div class="flex flex-col gap-y-12">
+        <div class="flex flex-col gap-y-4 text-center">
+          <span class="text-xl font-medium">Just completed learning!</span>
+
+          <div class="flex flex-col items-center gap-y-2">
+            <span>And you are almost there.</span>
+            <span>Deepen your understanding by taking a </span>
+            <span>quiz and earn one more completion status.</span>
+          </div>
+        </div>
+
+        <div class="flex justify-center gap-4">
+          <Button variant="secondary" onclick={handlePodcastCompletedModalClose}>Close</Button>
+          <LinkButton
+            href={`/unit/${player.currentTrack.id}/quiz`}
+            class="flex-1"
+            width="full"
+            onclick={handlePodcastCompletedModalClose}
+          >
+            Take quiz
+          </LinkButton>
+        </div>
+      </div>
+    </div>
+  </Modal>
 {/if}
+
 <ChatView isopen={isChatViewOpen} onclose={handleChatViewClose} />
