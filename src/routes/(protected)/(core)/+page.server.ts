@@ -59,7 +59,7 @@ export const load: PageServerLoad = async (event) => {
   }
 
   return {
-    learningJourneys: learningJourneys,
+    learningJourneys,
     username: user.name,
   };
 };
