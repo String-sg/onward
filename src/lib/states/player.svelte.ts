@@ -39,16 +39,20 @@ export interface Track {
  * console.log(player.currentTrack); // { id: 1, title: 'My Track' } or null
  * ```
  */
-export class Player {
+export class Player extends EventTarget {
   #currentTrack = $state.raw<Track | null>(null);
   #isPlaying = $state(false);
   #duration = $state(0);
   #progress = $state(0);
   #playbackSpeedIndex = $state(1);
+  #cumulativePlayTime = 0;
+  #trackingTimer: number | null = null;
 
   #audio: HTMLAudioElement | null = null;
 
   constructor() {
+    super();
+
     $effect.pre(() => {
       this.#audio = new Audio();
 
@@ -62,15 +66,21 @@ export class Player {
       this.#audio.onended = () => {
         this.#isPlaying = false;
         this.#progress = 0;
+        this.dispatchEvent(new Event('ended'));
       };
       this.#audio.onplaying = () => {
         this.#isPlaying = true;
+        this.#startCumulativeTracking();
+        this.dispatchEvent(new Event('play'));
       };
       this.#audio.onpause = () => {
         this.#isPlaying = false;
+        this.#stopCumulativeTracking();
+        this.dispatchEvent(new Event('pause'));
       };
 
       return () => {
+        this.#stopCumulativeTracking();
         if (this.#audio) {
           this.#audio.src = '';
           this.#audio.load();
@@ -238,6 +248,43 @@ export class Player {
     this.#audio.load();
 
     this.#currentTrack = null;
+  }
+
+  /**
+   * Start cumulative playtime tracking state
+   */
+  #startCumulativeTracking() {
+    this.#stopCumulativeTracking();
+    let lastTrackingTime = Date.now();
+
+    this.#trackingTimer = window.setInterval(() => {
+      if (!this.#isPlaying) {
+        return;
+      }
+
+      const currentTime = Date.now();
+      const timeSinceLastCheck = (currentTime - lastTrackingTime) / 1000;
+
+      this.#cumulativePlayTime += timeSinceLastCheck;
+
+      if (Math.round(this.#cumulativePlayTime) % 10 === 0) {
+        this.dispatchEvent(new Event('checkpoint'));
+      }
+
+      lastTrackingTime = currentTime;
+    }, 1000);
+  }
+
+  /**
+   * Stops cumulative playtime tracking state
+   */
+  #stopCumulativeTracking() {
+    if (!this.#trackingTimer) {
+      return;
+    }
+
+    clearInterval(this.#trackingTimer);
+    this.#trackingTimer = null;
   }
 }
 

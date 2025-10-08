@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
+
   import { ChatView } from '$lib/components/ChatView/index.js';
   import { ChatWidget } from '$lib/components/ChatWidget/index.js';
   import { NowPlayingBar } from '$lib/components/NowPlayingBar/index.js';
@@ -9,6 +11,7 @@
 
   let isNowPlayingViewOpen = $state(false);
   let isChatViewOpen = $state(false);
+  let isTrackingSession = $state(false);
 
   const player = Player.create();
 
@@ -47,6 +50,55 @@
   const handleChatViewClose = () => {
     isChatViewOpen = false;
   };
+
+  onMount(() => {
+    const updateLearningJourney = async (progress: number) => {
+      await fetch('/api/learningjourney', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: Number(player.currentTrack?.id),
+          lastCheckpoint: progress,
+        }),
+      });
+    };
+
+    const handlePause = () => {
+      if (!isTrackingSession) {
+        return;
+      }
+
+      updateLearningJourney(player.progress);
+    };
+
+    const handleEnded = () => {
+      if (isTrackingSession) {
+        updateLearningJourney(0);
+      }
+
+      isTrackingSession = false;
+    };
+
+    const handleCheckpoint = () => {
+      if (!isTrackingSession) {
+        isTrackingSession = true;
+      }
+
+      updateLearningJourney(player.progress);
+    };
+
+    player.addEventListener('pause', handlePause);
+    player.addEventListener('ended', handleEnded);
+    player.addEventListener('checkpoint', handleCheckpoint);
+
+    return () => {
+      player.removeEventListener('pause', handlePause);
+      player.removeEventListener('ended', handleEnded);
+      player.removeEventListener('checkpoint', handleCheckpoint);
+    };
+  });
 </script>
 
 {@render children()}

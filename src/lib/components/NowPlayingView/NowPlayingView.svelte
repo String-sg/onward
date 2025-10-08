@@ -1,11 +1,10 @@
 <script lang="ts">
   import { ChevronDown, Pause, Play, RotateCcw, RotateCw } from '@lucide/svelte';
-  import type { MouseEventHandler } from 'svelte/elements';
 
   import { Badge } from '$lib/components/Badge/index.js';
   import { Modal, type ModalProps } from '$lib/components/Modal/index.js';
   import { Slider, type SliderProps } from '$lib/components/Slider/index.js';
-  import { formatTime } from '$lib/helpers/index.js';
+  import { formatTime, tagCodeToBadgeVariant } from '$lib/helpers/index.js';
   import type { Track } from '$lib/states/index.js';
 
   export interface Props {
@@ -74,7 +73,7 @@
     onspeedchange,
   }: Props = $props();
 
-  const handleClose: MouseEventHandler<HTMLButtonElement> = () => {
+  const handleClose = () => {
     onclose();
   };
 
@@ -100,10 +99,14 @@
     <div class="flex flex-col gap-y-6">
       <!-- Badge and Title -->
       <div class="flex flex-col gap-y-3">
-        <Badge variant="purple">{currenttrack.tags?.[0]}</Badge>
+        <Badge variant={tagCodeToBadgeVariant(currenttrack.tags?.[0].code)}>
+          {currenttrack.tags?.[0].label}
+        </Badge>
+
         <a
-          href={`/content/${currenttrack.id}`}
+          href={`/unit/${currenttrack.id}`}
           class="w-fit text-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white focus-visible:outline-dashed"
+          onclick={handleClose}
         >
           {currenttrack.title}
         </a>
