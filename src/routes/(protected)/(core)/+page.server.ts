@@ -48,13 +48,11 @@ export const load: PageServerLoad = async (event) => {
       take: 3,
     });
 
-    const learningUnits = learningJourneys.map((journey) => ({
-      ...journey.learningUnit,
-      isCompleted: journey.isCompleted,
-    }));
-
     return {
-      learningUnits,
+      learningUnits: learningJourneys.map((journey) => ({
+        ...journey.learningUnit,
+        isCompleted: journey.isCompleted,
+      })),
       username: user.name,
     };
   } catch (err) {
