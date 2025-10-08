@@ -18,7 +18,8 @@
   const isWithinViewport = new IsWithinViewport(() => target);
   const player = Player.get();
 
-  let isActive = $derived(player.currentTrack?.id === data.id);
+  let isActive = $derived(player.currentTrack?.id === data.id && player.progress !== 0);
+  let lastCheckpoint = $state(data.lastCheckpoint);
 
   afterNavigate(({ from, type }) => {
     if (type === 'enter' || !from) {
@@ -52,7 +53,22 @@
   };
 
   const handleResume = () => {
-    player.toggle();
+    if (!isActive) {
+      const initialSeekTime = lastCheckpoint;
+      player.play(
+        {
+          id: data.id,
+          tags: data.tags,
+          title: data.title,
+          url: data.url,
+        },
+        initialSeekTime,
+      );
+
+      lastCheckpoint = 0;
+    } else {
+      player.toggle();
+    }
   };
 </script>
 
@@ -112,6 +128,11 @@
             <span class="font-medium">Pause</span>
           </Button>
         {:else if isActive && !player.isPlaying}
+          <Button variant="primary" width="full" onclick={handleResume}>
+            <Play class="h-4 w-4" />
+            <span class="font-medium">Resume</span>
+          </Button>
+        {:else if lastCheckpoint && lastCheckpoint > 0}
           <Button variant="primary" width="full" onclick={handleResume}>
             <Play class="h-4 w-4" />
             <span class="font-medium">Resume</span>

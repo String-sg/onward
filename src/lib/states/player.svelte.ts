@@ -164,8 +164,9 @@ export class Player extends EventTarget {
   /**
    * Plays the track with the specified metadata.
    * @param track - The track metadata.
+   * @param initialSeekTime - Optional time in seconds to seek to after loading the track.
    */
-  play(track: Track) {
+  play(track: Track, initialSeekTime?: number) {
     if (!browser || !this.#audio) {
       throw new OperationUnpermittedError();
     }
@@ -178,6 +179,16 @@ export class Player extends EventTarget {
       this.#audio.load();
 
       this.#currentTrack = track;
+
+      if (initialSeekTime !== undefined && initialSeekTime > 0) {
+        const seekToTime = () => {
+          if (this.#audio && this.#duration > 0) {
+            this.seek(initialSeekTime);
+            this.#audio.removeEventListener('loadedmetadata', seekToTime);
+          }
+        };
+        this.#audio.addEventListener('loadedmetadata', seekToTime);
+      }
     }
 
     this.#audio.play();
