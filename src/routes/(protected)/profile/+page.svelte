@@ -2,7 +2,7 @@
   import { ArrowLeft, BookOpenCheck, Lightbulb } from '@lucide/svelte';
 
   import { afterNavigate } from '$app/navigation';
-  import { Button, LinkButton } from '$lib/components/Button';
+  import { Button } from '$lib/components/Button';
   import { IsWithinViewport } from '$lib/helpers/index.js';
 
   const { data } = $props();
@@ -45,6 +45,13 @@
           <ArrowLeft />
         </a>
       </div>
+      <a
+        href="/logout"
+        class="rounded-full p-4 transition-colors hover:bg-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed"
+        data-sveltekit-reload
+      >
+        Log out
+      </a>
     </div>
   </div>
 </header>
@@ -116,6 +123,4 @@
       </div>
     </div>
   </div>
-
-  <LinkButton href="/logout" data-sveltekit-reload width="full">Log out</LinkButton>
 </main>
