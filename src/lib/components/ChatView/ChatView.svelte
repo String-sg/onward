@@ -100,6 +100,8 @@
 
     messages.push({ role: 'USER', content: query });
     isAiTyping = true;
+    const bodyParams = { query };
+    query = '';
 
     try {
       const response = await fetch('/api/messages', {
@@ -108,7 +110,7 @@
           'Content-Type': 'application/json',
           Accept: 'application/json',
         },
-        body: JSON.stringify({ query }),
+        body: JSON.stringify(bodyParams),
       });
 
       if (!response.ok) {

@@ -1,7 +1,10 @@
 <script lang="ts">
   import { ArrowLeft, ChevronsDown, Lightbulb, Pause, Play, Share } from '@lucide/svelte';
   import { formatDistanceToNow } from 'date-fns';
+  import DOMPurify from 'dompurify';
+  import { marked } from 'marked';
 
+  import { browser } from '$app/environment';
   import { afterNavigate } from '$app/navigation';
   import { page } from '$app/state';
   import { Badge } from '$lib/components/Badge/index.js';
@@ -157,21 +160,24 @@
     </div>
   </div>
 
-  <div class="flex flex-col items-center gap-y-4">
+  <div class="flex flex-col gap-y-4">
     <div
       class={[
         'max-h-28 overflow-hidden mask-b-from-10%',
         isExpanded && 'max-h-full mask-b-from-100%',
       ]}
     >
-      <p class={['line-clamp-4 text-lg', isExpanded && 'line-clamp-none']}>
-        {data.summary}
+      <p class={['prose prose-slate line-clamp-4 text-lg', isExpanded && 'line-clamp-none']}>
+        {#if browser}
+          <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+          {@html DOMPurify.sanitize(marked.parse(data.summary, { async: false }))}
+        {/if}
       </p>
     </div>
 
     {#if !isExpanded}
       <button
-        class="flex w-fit cursor-pointer items-center gap-x-1 px-4 py-2"
+        class="flex w-fit cursor-pointer items-center gap-x-1 self-center px-4 py-2"
         onclick={toggleIsExpanded}
       >
         <span class="text-sm font-medium">Read more</span>
