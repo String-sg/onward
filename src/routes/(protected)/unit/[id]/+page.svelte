@@ -1,6 +1,9 @@
 <script lang="ts">
   import { ArrowLeft, ChevronsDown, Lightbulb, Pause, Play, Share } from '@lucide/svelte';
   import { formatDistanceToNow } from 'date-fns';
+  import DOMPurify from 'dompurify';
+  import { marked } from 'marked';
+  import { onMount } from 'svelte';
 
   import { afterNavigate } from '$app/navigation';
   import { page } from '$app/state';
@@ -11,6 +14,7 @@
 
   const { data } = $props();
 
+  let summary = $state(data.summary);
   let returnTo = $state('/');
   let isExpanded = $state(false);
   let target = $state<HTMLElement | null>(null);
@@ -33,6 +37,10 @@
 
     sessionStorage.setItem('unit_origin', from.url.pathname);
     returnTo = from.url.pathname;
+  });
+
+  onMount(() => {
+    summary = DOMPurify.sanitize(marked.parse(summary, { async: false }));
   });
 
   const toggleIsExpanded = () => {
@@ -164,8 +172,9 @@
         isExpanded && 'max-h-full mask-b-from-100%',
       ]}
     >
-      <p class={['line-clamp-4 text-lg', isExpanded && 'line-clamp-none']}>
-        {data.summary}
+      <p class={['prose prose-slate line-clamp-4 text-lg', isExpanded && 'line-clamp-none']}>
+        <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+        {@html summary}
       </p>
     </div>
 

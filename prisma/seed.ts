@@ -94,14 +94,22 @@ const questionAnswers: Prisma.QuestionAnswerCreateManyLearningUnitInput[] = [
   },
 ];
 
+const summary = `# **Project Summary**
+
+**Artificial intelligence** is transforming industries by reshaping communication, learning, and creativity.
+
+- From automating data analysis to generating human-like language, AI offers **immense potential**.
+- **Ethical concerns**, data privacy, and transparency remain key challenges.
+
+> This is a pivotal era for intelligent systems.`;
+
 const learningUnits: Prisma.LearningUnitCreateInput[] = [
   {
     id: 1,
     title: 'SEN Learning Unit 1',
     contentType: ContentType.PODCAST,
     contentURL: 'http://localhost:5173',
-    summary:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+    summary,
     createdBy: 'DXD Product Team',
     collection: {
       connect: {
@@ -128,8 +136,7 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     title: 'SEN Learning Unit 2',
     contentType: ContentType.PODCAST,
     contentURL: 'http://localhost:5173',
-    summary:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+    summary,
     createdBy: 'DXD Product Team',
     collection: {
       connect: {
@@ -156,8 +163,7 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     title: 'AI Learning Unit 1',
     contentType: ContentType.PODCAST,
     contentURL: 'http://localhost:5173',
-    summary:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+    summary,
     createdBy: 'DXD Product Team',
     collection: {
       connect: {
@@ -184,8 +190,7 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     title: 'AI Learning Unit 2',
     contentType: ContentType.PODCAST,
     contentURL: 'http://localhost:5173',
-    summary:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+    summary,
     createdBy: 'DXD Product Team',
     collection: {
       connect: {
