@@ -24,6 +24,7 @@ export const load: PageServerLoad = async (event) => {
         select: {
           id: true,
           title: true,
+          contentDuration: true,
           contentURL: true,
           createdAt: true,
           createdBy: true,
@@ -58,8 +59,16 @@ export const load: PageServerLoad = async (event) => {
     throw error(500);
   }
 
+  const journeys = learningJourneys.map((journey) => ({
+    ...journey,
+    learningUnit: {
+      ...journey.learningUnit,
+      contentDuration: journey.learningUnit.contentDuration.toNumber(),
+    },
+  }));
+
   return {
-    learningJourneys,
+    learningJourneys: journeys,
     username: user.name,
   };
 };
