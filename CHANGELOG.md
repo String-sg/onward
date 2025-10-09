@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.2.0 (2025-10-09)
+
+### Features
+
+- feat(learner): add playback support for player ([#262](https://github.com/String-sg/onward/pull/262))([d9ffba3](https://github.com/String-sg/onward/commit/d9ffba30f22ae2ffb7ce4b25f10f649c041ae9c7))
+- feat(learner): Add Podcast Completion Modal ([#258](https://github.com/String-sg/onward/pull/258))([fdb16dc](https://github.com/String-sg/onward/commit/fdb16dc73e17973624f7e1b2dc2d49bd08996195))
+- feat(learner): add dynamic data for home page and update empty state ([#263](https://github.com/String-sg/onward/pull/263))([678175e](https://github.com/String-sg/onward/commit/678175e4042cbcfb8d751aac7f69e7581fe92225))
+- feat(learner): Create learning journey record ([#254](https://github.com/String-sg/onward/pull/254))([e5801bd](https://github.com/String-sg/onward/commit/e5801bd75505607af82b931749b788999b97bc69))
+- feat(learner): add avatarURL in layout and profile page ([#260](https://github.com/String-sg/onward/pull/260))([a192c1b](https://github.com/String-sg/onward/commit/a192c1b837d257de8afa22728e521c6a2d951fc6))
+- feat(learner): update quiz completion status after finishing quiz ([#251](https://github.com/String-sg/onward/pull/251))([96d9099](https://github.com/String-sg/onward/commit/96d9099c2402e34d88c8f1ff9d252ed1d6bb709f))
+
+### Chores 🧹
+
+- chore(learner): update support email ([#264](https://github.com/String-sg/onward/pull/264))([a75b846](https://github.com/String-sg/onward/commit/a75b84698a74828d36c0e89623f2811ab07430d8))
+- chore(learner): rename app to glow ([#261](https://github.com/String-sg/onward/pull/261))([79586b7](https://github.com/String-sg/onward/commit/79586b7da1cd224934288660d3986dcfee57ef83))
+- refactor: revert to single-repo structure ([#259](https://github.com/String-sg/onward/pull/259))([fc9bab4](https://github.com/String-sg/onward/commit/fc9bab480d0107c5851f0a9acf28fa51f2e8f757))
+
 ## 0.1.0 (2025-10-06)
 
 ### Features ✨
