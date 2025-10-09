@@ -160,7 +160,7 @@
     </div>
   </div>
 
-  <div class="flex flex-col items-center gap-y-4">
+  <div class="flex flex-col gap-y-4">
     <div
       class={[
         'max-h-28 overflow-hidden mask-b-from-10%',
@@ -177,7 +177,7 @@
 
     {#if !isExpanded}
       <button
-        class="flex w-fit cursor-pointer items-center gap-x-1 px-4 py-2"
+        class="flex w-fit cursor-pointer items-center gap-x-1 self-center px-4 py-2"
         onclick={toggleIsExpanded}
       >
         <span class="text-sm font-medium">Read more</span>
