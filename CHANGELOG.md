@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.2.2 (2025-10-09)
+
+### Bug Fixes 🐛
+
+- fix: remove unnecessary slash in the key when getting podcast object ([#271](https://github.com/String-sg/onward/pull/271))([f428eef](https://github.com/String-sg/onward/commit/f428eeff))
+
+### Chores 🧹
+
+- chore(learner): center text in empty state ([#270](https://github.com/String-sg/onward/pull/270))([f682481](https://github.com/String-sg/onward/commit/f682481))
+- chore(learner): add anchor tag to home when logo and text are clicked ([#269](https://github.com/String-sg/onward/pull/269))([746ab9c](https://github.com/String-sg/onward/commit/746ab9c))
+- chore(learner): fix typo on empty state ([#268](https://github.com/String-sg/onward/pull/268))([69ad2b2](https://github.com/String-sg/onward/commit/69ad2b2))
+
 ## 0.2.1 (2025-10-09)
 
 ### Bug Fixes 🐛
@@ -10,7 +22,7 @@ All notable changes to this project will be documented in this file.
 
 ## 0.2.0 (2025-10-09)
 
-### Features
+### Features ✨
 
 - feat(learner): add playback support for player ([#262](https://github.com/String-sg/onward/pull/262))([d9ffba3](https://github.com/String-sg/onward/commit/d9ffba30f22ae2ffb7ce4b25f10f649c041ae9c7))
 - feat(learner): Add Podcast Completion Modal ([#258](https://github.com/String-sg/onward/pull/258))([fdb16dc](https://github.com/String-sg/onward/commit/fdb16dc73e17973624f7e1b2dc2d49bd08996195))
