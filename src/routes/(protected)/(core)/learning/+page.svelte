@@ -31,7 +31,7 @@
       <div class="flex flex-col items-center gap-y-6">
         <enhanced:img src="$lib/assets/fireworks.png?w=200" alt="No learning journey found" />
 
-        <div class="flex flex-col items-center gap-y-2">
+        <div class="flex flex-col items-center gap-y-2 text-center">
           <span class="text-2xl font-semibold">Welcome {data.username}</span>
           Kick off your learning journey by diving into our excisting curated content!
         </div>
