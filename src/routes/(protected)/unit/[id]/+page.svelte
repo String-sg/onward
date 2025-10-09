@@ -3,8 +3,8 @@
   import { formatDistanceToNow } from 'date-fns';
   import DOMPurify from 'dompurify';
   import { marked } from 'marked';
-  import { onMount } from 'svelte';
 
+  import { browser } from '$app/environment';
   import { afterNavigate } from '$app/navigation';
   import { page } from '$app/state';
   import { Badge } from '$lib/components/Badge/index.js';
@@ -14,7 +14,6 @@
 
   const { data } = $props();
 
-  let summary = $state(data.summary);
   let returnTo = $state('/');
   let isExpanded = $state(false);
   let target = $state<HTMLElement | null>(null);
@@ -37,10 +36,6 @@
 
     sessionStorage.setItem('unit_origin', from.url.pathname);
     returnTo = from.url.pathname;
-  });
-
-  onMount(() => {
-    summary = DOMPurify.sanitize(marked.parse(summary, { async: false }));
   });
 
   const toggleIsExpanded = () => {
@@ -173,8 +168,10 @@
       ]}
     >
       <p class={['prose prose-slate line-clamp-4 text-lg', isExpanded && 'line-clamp-none']}>
-        <!-- eslint-disable-next-line svelte/no-at-html-tags -->
-        {@html summary}
+        {#if browser}
+          <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+          {@html DOMPurify.sanitize(marked.parse(data.summary, { async: false }))}
+        {/if}
       </p>
     </div>
 
