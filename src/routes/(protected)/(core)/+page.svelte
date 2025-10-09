@@ -63,7 +63,7 @@
 
         <div class="flex flex-col items-center gap-y-2">
           <span class="text-2xl font-semibold">Welcome {data.username}</span>
-          Kick off your learning journey by diving into our existing curated content!
+          Kick off your learning journey by diving into our exciting curated content!
         </div>
       </div>
 
