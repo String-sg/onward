@@ -2,6 +2,7 @@
   import { ChevronDown, SendHorizontal } from '@lucide/svelte';
   import DOMPurify from 'dompurify';
   import { marked } from 'marked';
+  import { tick } from 'svelte';
   import type { MouseEventHandler } from 'svelte/elements';
   import { fade, fly } from 'svelte/transition';
 
@@ -32,6 +33,7 @@
   let query = $state('');
   let messages = $state<ChatMessage[]>([]);
   let isAiTyping = $state(false);
+  let chatWindow = $state<HTMLDivElement | null>(null);
   let textareaElement = $state<HTMLTextAreaElement | null>(null);
 
   let isUserTyping = $derived(query.trim());
@@ -44,6 +46,32 @@
     'What are three quick strategies for teaching reading to a student with dyslexia in a mainstream classroom?',
     'How can I create a sensory-friendly classroom for students with autism spectrum disorder?',
   ];
+
+  async function fetchMessages() {
+    try {
+      const response = await fetch('/api/messages', {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          return goto('/login');
+        }
+
+        console.error('Failed to fetch messages');
+        return;
+      }
+
+      const data = await response.json();
+      messages = data.messages;
+      isMessagesFetched = true;
+    } catch (err) {
+      console.error(err);
+    }
+  }
 
   // Disable scrolling when view is open.
   $effect(() => {
@@ -61,33 +89,27 @@
   // Fetch messages when view is opened for the first time.
   $effect(() => {
     if (isopen && !isMessagesFetched) {
-      const fetchMessages = async () => {
-        try {
-          const response = await fetch('/api/messages', {
-            method: 'GET',
-            headers: {
-              Accept: 'application/json',
-            },
+      fetchMessages().finally(() => {
+        tick();
+
+        if (chatWindow) {
+          chatWindow.scrollTo({
+            top: chatWindow.scrollHeight,
+            behavior: 'instant',
           });
-
-          if (!response.ok) {
-            if (response.status === 401) {
-              return goto('/login');
-            }
-
-            console.error('Failed to fetch messages');
-            return;
-          }
-
-          const data = await response.json();
-          messages = data.messages;
-        } catch (err) {
-          console.error(err);
         }
-      };
+      });
+    }
+  });
 
-      fetchMessages();
-      isMessagesFetched = true;
+  $effect(() => {
+    if (isopen && isMessagesFetched) {
+      if (chatWindow) {
+        chatWindow.scrollTo({
+          top: chatWindow.scrollHeight,
+          behavior: 'instant',
+        });
+      }
     }
   });
 
@@ -96,7 +118,9 @@
   };
 
   const handleSendQuery = async () => {
-    if (!query.trim()) return;
+    if (!query.trim()) {
+      return;
+    }
 
     messages.push({ role: 'USER', content: query });
     isAiTyping = true;
@@ -129,6 +153,13 @@
     } finally {
       query = '';
       isAiTyping = false;
+
+      if (chatWindow) {
+        chatWindow.scrollTo({
+          top: chatWindow.scrollHeight,
+          behavior: 'smooth',
+        });
+      }
     }
   };
 
@@ -216,7 +247,7 @@
         <div bind:this={target} class="absolute inset-x-0 top-0 h-px"></div>
 
         <!-- TODO: temporary hardcode height for now. To relook at how to set this height without hardcoding an arbitrary height -->
-        <div class="h-[calc(100vh-180px)] overflow-y-auto px-4 pt-3">
+        <div bind:this={chatWindow} class="h-[calc(100vh-180px)] overflow-y-auto px-4 pt-3">
           <div class="flex flex-col gap-y-4">
             {#if messages.length === 0}
               <span class="text-xl font-medium">
