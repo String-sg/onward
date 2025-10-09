@@ -21,7 +21,7 @@
           The page you are looking for does not exist.
         {:else}
           If the problem persists, please contact the
-          <a href="mailto:support@example.com" class=" whitespace-nowrap text-slate-900 underline">
+          <a href="mailto:glow@moe.edu.sg" class=" whitespace-nowrap text-slate-900 underline">
             IT team
           </a>.
         {/if}
