@@ -71,7 +71,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: apps/learner/Dockerfile
+          file: Dockerfile
           push: true
           platforms: linux/arm64
           tags: ${{ steps.metadata.outputs.tags }}
