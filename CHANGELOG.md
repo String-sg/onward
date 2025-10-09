@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.2.1 (2025-10-09)
+
+### Bug Fixes 🐛
+
+- fix: update dockerfile path ([#266](https://github.com/String-sg/onward/pull/266))([53d2e3a](https://github.com/String-sg/onward/commit/53d2e3a554aaeac0c0ae7c9d6a495346c8838c7f))
+
 ## 0.2.0 (2025-10-09)
 
 ### Features
