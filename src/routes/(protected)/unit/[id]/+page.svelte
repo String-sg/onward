@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { ArrowLeft, ChevronsDown, Lightbulb, Pause, Play, Share } from '@lucide/svelte';
+  import { ArrowLeft, ChevronsDown, Lightbulb, Pause, Play } from '@lucide/svelte';
   import { formatDistanceToNow } from 'date-fns';
   import DOMPurify from 'dompurify';
   import { marked } from 'marked';
@@ -90,12 +90,6 @@
     >
       <ArrowLeft />
     </a>
-
-    <button
-      class="cursor-pointer rounded-full p-4 transition-colors hover:bg-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed"
-    >
-      <Share />
-    </button>
   </div>
 </header>
 
