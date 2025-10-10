@@ -47,32 +47,6 @@
     'How can I create a sensory-friendly classroom for students with autism spectrum disorder?',
   ];
 
-  async function fetchMessages() {
-    try {
-      const response = await fetch('/api/messages', {
-        method: 'GET',
-        headers: {
-          Accept: 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        if (response.status === 401) {
-          return goto('/login');
-        }
-
-        console.error('Failed to fetch messages');
-        return;
-      }
-
-      const data = await response.json();
-      messages = data.messages;
-      isMessagesFetched = true;
-    } catch (err) {
-      console.error(err);
-    }
-  }
-
   // Disable scrolling when view is open.
   $effect(() => {
     document.body.style.overflow = isopen ? 'hidden' : '';
@@ -89,16 +63,43 @@
   // Fetch messages when view is opened for the first time.
   $effect(() => {
     if (isopen && !isMessagesFetched) {
-      fetchMessages().finally(() => {
-        tick();
+      fetch('/api/messages', {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+        },
+      })
+        .then((response) => {
+          if (!response.ok) {
+            if (response.status === 401) {
+              goto('/login');
+              return;
+            }
 
-        if (chatWindow) {
-          chatWindow.scrollTo({
-            top: chatWindow.scrollHeight,
-            behavior: 'instant',
-          });
-        }
-      });
+            return Promise.reject(
+              new Error('Failed to fetch messages', { cause: { status: response.status } }),
+            );
+          }
+
+          return response.json();
+        })
+        .then((data: { messages: ChatMessage[] }) => {
+          messages = data.messages;
+          isMessagesFetched = true;
+
+          return tick();
+        })
+        .then(() => {
+          if (chatWindow) {
+            chatWindow.scrollTo({
+              top: chatWindow.scrollHeight,
+              behavior: 'instant',
+            });
+          }
+        })
+        .catch((err) => {
+          console.error('Unknown error occurred while loading messages', err);
+        });
     }
   });
 
