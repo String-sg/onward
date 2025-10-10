@@ -83,7 +83,7 @@
     ]}
   ></div>
 
-  <div class="mx-auto flex w-full max-w-5xl items-center justify-between gap-x-8 px-4 py-3">
+  <div class="mx-auto flex max-w-5xl px-4 py-3">
     <a
       href={returnTo}
       class="rounded-full p-4 transition-colors hover:bg-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed"
