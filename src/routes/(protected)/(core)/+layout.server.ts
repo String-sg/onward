@@ -1,5 +1,7 @@
 import { redirect } from '@sveltejs/kit';
 
+import { getAvatarUrl } from '$lib/server/cache/index.js';
+
 import type { LayoutServerLoad } from './$types';
 
 export const load: LayoutServerLoad = async (event) => {
@@ -11,7 +13,9 @@ export const load: LayoutServerLoad = async (event) => {
     return redirect(303, '/login');
   }
 
+  const avatarUrl = await getAvatarUrl(user.id.toString(), user.avatarURL);
+
   return {
-    avatarURL: user.avatarURL,
+    avatarURL: avatarUrl,
   };
 };
