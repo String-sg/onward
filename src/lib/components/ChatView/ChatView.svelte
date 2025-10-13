@@ -128,6 +128,7 @@
 
       messages.push({ role: 'ASSISTANT', content: '' });
       isAiTyping = false;
+
       while (true) {
         const { done, value } = await reader.read();
         if (done) {
@@ -140,20 +141,43 @@
         buffer = events.pop() || '';
 
         for (const event of events) {
-          if (!event.startsWith('data: ')) continue;
+          if (!event.startsWith('data: ')) {
+            continue;
+          }
+
           const data = event.replace(/^data: /, '');
 
           if (data === '[DONE]') {
             return;
           }
 
-          const json = JSON.parse(data);
-          messages[messages.length - 1].content += json.text;
-          console.log('Updated message:', messages[messages.length - 1].content);
+          const payload: { type: 'string' | 'error'; text?: string; message?: string } =
+            JSON.parse(data);
+
+          if (payload.type === 'error') {
+            if (payload.message === 'Max number of tokens has been reached.') {
+              messages.push({
+                role: 'ASSISTANT',
+                content: 'Max tokens has been reached, please clear your chat.',
+              });
+              break;
+            } else {
+              messages.push({
+                role: 'ASSISTANT',
+                content: 'Oops! Something went wrong. Please try again.',
+              });
+              break;
+            }
+          }
+
+          messages[messages.length - 1].content += payload.message;
         }
       }
-    } catch (err) {
-      console.error(err);
+    } catch {
+      messages.push({
+        role: 'ASSISTANT',
+        content: 'Oops! Something went wrong. Please try again.',
+      });
     }
   };
 
