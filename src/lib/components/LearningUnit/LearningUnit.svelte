@@ -88,9 +88,8 @@
   };
 
   const formatTimeRemaining = (timeInSeconds: number): string => {
-    if (timeInSeconds > 0 && timeInSeconds < 60) {
-      return '< 1 min left';
-    }
+    if (timeInSeconds <= 0) return '0 mins left';
+    if (timeInSeconds < 60) return '< 1 min left';
     const minutes = Math.ceil(timeInSeconds / 60);
     const unit = minutes === 1 ? 'min' : 'mins';
     return `${minutes} ${unit} left`;
@@ -148,7 +147,7 @@
           currentTime={player ? player.duration - player.timeremaining : 0}
         />
         <span class="text-sm text-slate-600">
-          {player.timeremaining ? formatTimeRemaining(player.timeremaining) : '0m left'}
+          {formatTimeRemaining(player.timeremaining ?? 0)}
         </span>
       </div>
     </div>
