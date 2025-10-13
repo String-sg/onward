@@ -2,6 +2,7 @@
   import { ChevronDown, CircleAlert, SendHorizontal } from '@lucide/svelte';
   import DOMPurify from 'dompurify';
   import { marked } from 'marked';
+  import { tick } from 'svelte';
   import type { MouseEventHandler } from 'svelte/elements';
   import { fade, fly } from 'svelte/transition';
 
@@ -33,6 +34,7 @@
   let query = $state('');
   let messages = $state<ChatMessage[]>([]);
   let isAiTyping = $state(false);
+  let chatWindow = $state<HTMLDivElement | null>(null);
   let textareaElement = $state<HTMLTextAreaElement | null>(null);
   let error = $state<string | null>(null);
 
@@ -59,33 +61,53 @@
   // Fetch messages when view is opened for the first time.
   $effect(() => {
     if (isopen && !isMessagesFetched) {
-      const fetchMessages = async () => {
-        try {
-          const response = await fetch('/api/messages', {
-            method: 'GET',
-            headers: {
-              Accept: 'application/json',
-            },
-          });
-
+      fetch('/api/messages', {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+        },
+      })
+        .then((response) => {
           if (!response.ok) {
             if (response.status === 401) {
-              return goto('/login');
+              goto('/login');
+              return;
             }
 
-            error = DEFAULT_ERROR_MESSAGE;
-            return;
+            return Promise.reject(
+              new Error('Failed to fetch messages', { cause: { status: response.status } }),
+            );
           }
 
-          const data = await response.json();
+          return response.json();
+        })
+        .then((data: { messages: ChatMessage[] }) => {
           messages = data.messages;
-        } catch {
-          error = DEFAULT_ERROR_MESSAGE;
-        }
-      };
+          isMessagesFetched = true;
 
-      fetchMessages();
-      isMessagesFetched = true;
+          return tick();
+        })
+        .then(() => {
+          if (chatWindow) {
+            chatWindow.scrollTo({
+              top: chatWindow.scrollHeight,
+              behavior: 'instant',
+            });
+          }
+        })
+        .catch((err) => {
+          error = DEFAULT_ERROR_MESSAGE;
+        });
+    }
+  });
+
+  // Scroll to latest message every time the modal opens.
+  $effect(() => {
+    if (isopen && isMessagesFetched && chatWindow) {
+      chatWindow.scrollTo({
+        top: chatWindow.scrollHeight,
+        behavior: 'instant',
+      });
     }
   });
 
@@ -101,6 +123,14 @@
 
     const bodyParams = { query };
     query = '';
+
+    await tick();
+    if (chatWindow) {
+      chatWindow.scrollTo({
+        top: chatWindow.scrollHeight,
+        behavior: 'smooth',
+      });
+    }
 
     try {
       const response = await fetch('/api/messages', {
@@ -128,6 +158,7 @@
         error = DEFAULT_ERROR_MESSAGE;
         return;
       }
+
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
 
@@ -135,6 +166,14 @@
 
       isAiTyping = false;
       messages.push({ role: 'ASSISTANT', content: '' });
+
+      await tick();
+      if (chatWindow) {
+        chatWindow.scrollTo({
+          top: chatWindow.scrollHeight,
+          behavior: 'smooth',
+        });
+      }
 
       while (true) {
         const { done, value } = await reader.read();
@@ -153,9 +192,8 @@
           }
 
           const data = event.replace(/^data: /, '');
-
           if (data === '[DONE]') {
-            return;
+            break;
           }
 
           const payload: { type: 'string' | 'error'; text?: string; message?: string } =
@@ -172,6 +210,15 @@
           }
 
           messages[messages.length - 1].content += payload.message;
+
+          await tick();
+
+          if (chatWindow) {
+            chatWindow.scrollTo({
+              top: chatWindow.scrollHeight,
+              behavior: 'smooth',
+            });
+          }
         }
       }
     } catch {
@@ -258,7 +305,7 @@
         <div bind:this={target} class="absolute inset-x-0 top-0 h-px"></div>
 
         <!-- TODO: temporary hardcode height for now. To relook at how to set this height without hardcoding an arbitrary height -->
-        <div class="h-[calc(100svh-180px)] overflow-y-auto px-4 pt-3">
+        <div bind:this={chatWindow} class="h-[calc(100svh-180px)] overflow-y-auto px-4 pt-3">
           <div class="flex flex-col gap-y-4">
             {#if messages.length === 0}
               <span class="text-center text-xl font-medium">
