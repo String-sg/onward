@@ -1,1 +1,1 @@
-export * from './profile.js';
+export * from './avatar.js';

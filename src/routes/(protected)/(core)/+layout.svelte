@@ -35,7 +35,7 @@
           aria-label="Profile"
           class="h-10 w-10 cursor-pointer overflow-hidden rounded-full"
         >
-          <img src={data.avatarURL} alt="profile" />
+          <img src={data.avatar} alt="profile" />
         </a>
       </div>
 
