@@ -104,13 +104,11 @@
   });
 
   $effect(() => {
-    if (isopen && isMessagesFetched) {
-      if (chatWindow) {
-        chatWindow.scrollTo({
-          top: chatWindow.scrollHeight,
-          behavior: 'instant',
-        });
-      }
+    if (isopen && isMessagesFetched && chatWindow) {
+      chatWindow.scrollTo({
+        top: chatWindow.scrollHeight,
+        behavior: 'instant',
+      });
     }
   });
 
