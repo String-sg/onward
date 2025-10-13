@@ -131,6 +131,7 @@
       let buffer = '';
 
       messages.push({ role: 'ASSISTANT', content: '' });
+      isAiTyping = false;
       while (true) {
         const { done, value } = await reader.read();
         if (done) {
@@ -157,8 +158,6 @@
       }
     } catch (err) {
       console.error(err);
-    } finally {
-      isAiTyping = false;
     }
   };
 
@@ -282,7 +281,7 @@
               {/each}
 
               {#if isAiTyping}
-                <span class="rounded-3xl p-4 text-left">AI is typing...</span>
+                <span class="typing-dots rounded-3xl p-4 text-left">AI is typing</span>
               {/if}
             </div>
           </div>
@@ -323,3 +322,27 @@
     </div>
   {/if}
 </Portal>
+
+<style>
+  .typing-dots::after {
+    content: '';
+    animation: dots 1.5s infinite;
+  }
+
+  @keyframes dots {
+    0%,
+    20% {
+      content: '';
+    }
+    40% {
+      content: '.';
+    }
+    60% {
+      content: '..';
+    }
+    80%,
+    100% {
+      content: '...';
+    }
+  }
+</style>
