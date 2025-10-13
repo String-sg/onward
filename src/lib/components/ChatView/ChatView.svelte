@@ -125,8 +125,17 @@
 
     messages.push({ role: 'USER', content: query });
     isAiTyping = true;
+
     const bodyParams = { query };
     query = '';
+
+    await tick();
+    if (chatWindow) {
+      chatWindow.scrollTo({
+        top: chatWindow.scrollHeight,
+        behavior: 'smooth',
+      });
+    }
 
     try {
       const response = await fetch('/api/messages', {
@@ -152,15 +161,7 @@
     } catch (err) {
       console.error(err);
     } finally {
-      query = '';
       isAiTyping = false;
-
-      if (chatWindow) {
-        chatWindow.scrollTo({
-          top: chatWindow.scrollHeight,
-          behavior: 'smooth',
-        });
-      }
     }
   };
 
