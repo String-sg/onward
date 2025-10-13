@@ -1,0 +1,21 @@
+diff --git a/dist/index.js b/dist/index.js
+index 4867f5f7698961141470465ae506a93c05341345..7e93b8615e9cadb3601bc9f25d2f46501514713b 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -1,6 +1,6 @@
+ import { basename, extname } from 'node:path';
+ import { relative } from 'node:path/posix';
+-import { mkdirSync, createReadStream, statSync } from 'node:fs';
++import { mkdirSync, createReadStream, statSync, writeFileSync } from 'node:fs';
+ import { opendir, stat, rm, writeFile, readFile } from 'node:fs/promises';
+ import { normalizePath } from 'vite';
+ import { builtins, builtinOutputFormats, getMetadata, parseURL, extractEntries, resolveConfigs, generateTransforms, applyTransforms, urlFormat } from 'imagetools-core';
+@@ -123,7 +123,7 @@ function imagetools(userOptions = {}) {
+                     const res = await applyTransforms(transforms, img, pluginOptions.removeMetadata);
+                     metadata = res.metadata;
+                     if (cacheOptions.enabled) {
+-                        await writeFile(`${cacheOptions.dir}/${id}`, await res.image.toBuffer());
++                        writeFileSync(`${cacheOptions.dir}/${id}`, await res.image.toBuffer());
+                     }
+                     else {
+                         image = res.image;

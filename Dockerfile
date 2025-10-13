@@ -26,6 +26,7 @@ ENV PRISMA_SKIP_POSTINSTALL_GENERATE=true
 
 # Fetch all dependencies into the virtual store.
 COPY pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY patches ./patches
 RUN pnpm fetch
 
 COPY . .
