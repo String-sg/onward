@@ -161,7 +161,12 @@
         isExpanded && 'max-h-full mask-b-from-100%',
       ]}
     >
-      <p class={['prose prose-slate line-clamp-4 text-lg', isExpanded && 'line-clamp-none']}>
+      <p
+        class={[
+          'prose prose-slate line-clamp-4 max-w-full text-lg',
+          isExpanded && 'line-clamp-none',
+        ]}
+      >
         {#if browser}
           <!-- eslint-disable-next-line svelte/no-at-html-tags -->
           {@html DOMPurify.sanitize(marked.parse(data.summary, { async: false }))}
