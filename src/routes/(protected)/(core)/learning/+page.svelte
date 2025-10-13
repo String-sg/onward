@@ -6,7 +6,7 @@
   const { data } = $props();
 </script>
 
-<main class="relative mx-auto flex min-h-svh max-w-5xl flex-col gap-y-3 px-4 pt-43 pb-28">
+<main class="relative mx-auto flex min-h-svh max-w-5xl flex-col gap-y-3 px-4 pb-28">
   {#if data.collections.length > 0}
     <div class="px-2">
       <span class="text-xl font-semibold">Your learnings</span>

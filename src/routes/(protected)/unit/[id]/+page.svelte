@@ -64,13 +64,13 @@
   <div class="mx-auto flex w-full max-w-5xl items-center justify-between gap-x-8 px-4 py-3">
     <a
       href={returnTo}
-      class="rounded-full p-4 transition-colors hover:bg-slate-200 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950"
+      class="rounded-full p-4 transition-colors hover:bg-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed"
     >
       <ArrowLeft />
     </a>
 
     <button
-      class="cursor-pointer rounded-full p-4 transition-colors hover:bg-slate-200 focus-visible:outline-dashed focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950"
+      class="cursor-pointer rounded-full p-4 transition-colors hover:bg-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed"
     >
       <Share />
     </button>
@@ -83,7 +83,7 @@
   class="relative mx-auto flex min-h-svh max-w-5xl flex-col gap-y-6 px-4 pb-28"
   style="padding-top: {mastheadState.height + 92}px;"
 >
-  <div class="shadow-xs flex flex-col gap-y-2 rounded-3xl bg-white p-4">
+  <div class="flex flex-col gap-y-2 rounded-3xl bg-white p-4 shadow-xs">
     <div class="flex flex-wrap gap-1">
       {#each data.tags as tag (tag)}
         <Badge variant={tagCodeToBadgeVariant(tag.code)}>{tag.label}</Badge>
@@ -123,7 +123,7 @@
           </Button>
         {/if}
 
-        <LinkButton variant="secondary" width="full" href={`/content/${data.id}/quiz`}>
+        <LinkButton variant="secondary" width="full" href={`/unit/${data.id}/quiz`}>
           <Lightbulb class="h-4 w-4" />
           <span class="font-medium">Take the quiz</span>
         </LinkButton>
@@ -134,8 +134,8 @@
   <div class="flex flex-col items-center gap-y-4">
     <div
       class={[
-        'mask-b-from-10% max-h-28 overflow-hidden',
-        isExpanded && 'mask-b-from-100% max-h-full',
+        'max-h-28 overflow-hidden mask-b-from-10%',
+        isExpanded && 'max-h-full mask-b-from-100%',
       ]}
     >
       <p class={['line-clamp-4 text-lg', isExpanded && 'line-clamp-none']}>
