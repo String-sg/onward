@@ -108,7 +108,7 @@
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Accept: 'application/json',
+          Accept: 'text/event-stream',
         },
         body: JSON.stringify(bodyParams),
       });
@@ -122,12 +122,42 @@
         return;
       }
 
-      const result = await response.json();
-      messages.push(result);
+      if (!response.body) {
+        console.error('Response body is null');
+        return;
+      }
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = '';
+
+      messages.push({ role: 'ASSISTANT', content: '' });
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) {
+          break;
+        }
+
+        buffer += decoder.decode(value, { stream: true });
+
+        const events = buffer.split('\n\n');
+        buffer = events.pop() || '';
+
+        for (const event of events) {
+          if (!event.startsWith('data: ')) continue;
+          const data = event.replace(/^data: /, '');
+
+          if (data === '[DONE]') {
+            return;
+          }
+
+          const json = JSON.parse(data);
+          messages[messages.length - 1].content += json.text;
+          console.log('Updated message:', messages[messages.length - 1].content);
+        }
+      }
     } catch (err) {
       console.error(err);
     } finally {
-      query = '';
       isAiTyping = false;
     }
   };
