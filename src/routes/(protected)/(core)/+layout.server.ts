@@ -1,5 +1,7 @@
 import { redirect } from '@sveltejs/kit';
 
+import { getBase64EncodedAvatar } from '$lib/server/cache/index.js';
+
 import type { LayoutServerLoad } from './$types';
 
 export const load: LayoutServerLoad = async (event) => {
@@ -12,6 +14,6 @@ export const load: LayoutServerLoad = async (event) => {
   }
 
   return {
-    avatarURL: user.avatarURL,
+    avatar: await getBase64EncodedAvatar(BigInt(user.id)),
   };
 };
