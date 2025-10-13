@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { ArrowLeft, ChevronsDown, Lightbulb, Pause, Play, Share } from '@lucide/svelte';
+  import { ArrowLeft, ChevronsDown, Lightbulb, Pause, Play } from '@lucide/svelte';
   import { formatDistanceToNow } from 'date-fns';
   import DOMPurify from 'dompurify';
   import { marked } from 'marked';
@@ -83,19 +83,13 @@
     ]}
   ></div>
 
-  <div class="mx-auto flex w-full max-w-5xl items-center justify-between gap-x-8 px-4 py-3">
+  <div class="mx-auto flex max-w-5xl px-4 py-3">
     <a
       href={returnTo}
       class="rounded-full p-4 transition-colors hover:bg-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed"
     >
       <ArrowLeft />
     </a>
-
-    <button
-      class="cursor-pointer rounded-full p-4 transition-colors hover:bg-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed"
-    >
-      <Share />
-    </button>
   </div>
 </header>
 
