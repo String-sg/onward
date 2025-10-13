@@ -42,7 +42,7 @@
     stroke="#E2E8F0"
     fill="none"
     stroke-width="3.5px"
-    stroke-linecap="round"
+    stroke-linecap="butt"
     stroke-dasharray={dashArray}
     stroke-dashoffset={dashOffset}
     transform="rotate(-90 12 12)"
