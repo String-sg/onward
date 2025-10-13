@@ -6,3 +6,6 @@ onlyBuiltDependencies:
   - prisma
   - protobufjs
   - sharp
+
+patchedDependencies:
+  vite-imagetools: patches/vite-imagetools.patch
