@@ -134,7 +134,6 @@ export const GET: RequestHandler = async (event) => {
       id: user.id.toString(),
       email: user.email,
       name: user.name,
-      avatarURL: user.avatarURL,
     });
   } catch (err) {
     logger.error({ err, email: user.email }, 'Failed to sign in user');
