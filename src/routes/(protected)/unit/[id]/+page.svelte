@@ -1,8 +1,12 @@
 <script lang="ts">
-  import { ArrowLeft, ChevronsDown, Lightbulb, Pause, Play, Share } from '@lucide/svelte';
+  import { ArrowLeft, ChevronsDown, Lightbulb, Pause, Play } from '@lucide/svelte';
   import { formatDistanceToNow } from 'date-fns';
+  import DOMPurify from 'dompurify';
+  import { marked } from 'marked';
 
+  import { browser } from '$app/environment';
   import { afterNavigate } from '$app/navigation';
+  import { page } from '$app/state';
   import { Badge } from '$lib/components/Badge/index.js';
   import { Button, LinkButton } from '$lib/components/Button/index.js';
   import { IsWithinViewport, tagCodeToBadgeVariant } from '$lib/helpers/index.js';
@@ -17,14 +21,20 @@
   const isWithinViewport = new IsWithinViewport(() => target);
   const player = Player.get();
 
-  let isActive = $derived(player.currentTrack?.id === data.id);
+  let isActive = $derived(player.currentTrack?.id === data.id && player.progress !== 0);
+  let lastCheckpoint = $state(data.lastCheckpoint);
 
   afterNavigate(({ from, type }) => {
     if (type === 'enter' || !from) {
-      returnTo = '/';
       return;
     }
 
+    if (from.route.id && page.route.id && from.route.id.startsWith(page.route.id)) {
+      returnTo = sessionStorage.getItem('unit_origin') || '/';
+      return;
+    }
+
+    sessionStorage.setItem('unit_origin', from.url.pathname);
     returnTo = from.url.pathname;
   });
 
@@ -46,7 +56,22 @@
   };
 
   const handleResume = () => {
-    player.toggle();
+    if (!isActive) {
+      const initialSeekTime = lastCheckpoint;
+      player.play(
+        {
+          id: data.id,
+          tags: data.tags,
+          title: data.title,
+          url: data.url,
+        },
+        initialSeekTime,
+      );
+
+      lastCheckpoint = 0;
+    } else {
+      player.toggle();
+    }
   };
 </script>
 
@@ -61,19 +86,13 @@
     ]}
   ></div>
 
-  <div class="mx-auto flex w-full max-w-5xl items-center justify-between gap-x-8 px-4 py-3">
+  <div class="mx-auto flex max-w-5xl px-4 py-3">
     <a
       href={returnTo}
       class="rounded-full p-4 transition-colors hover:bg-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed"
     >
       <ArrowLeft />
     </a>
-
-    <button
-      class="cursor-pointer rounded-full p-4 transition-colors hover:bg-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed"
-    >
-      <Share />
-    </button>
   </div>
 </header>
 
@@ -116,6 +135,11 @@
             <Play class="h-4 w-4" />
             <span class="font-medium">Resume</span>
           </Button>
+        {:else if lastCheckpoint && lastCheckpoint > 0}
+          <Button variant="primary" width="full" onclick={handleResume}>
+            <Play class="h-4 w-4" />
+            <span class="font-medium">Resume</span>
+          </Button>
         {:else}
           <Button variant="primary" width="full" onclick={handlePlay}>
             <Play class="h-4 w-4" />
@@ -123,7 +147,12 @@
           </Button>
         {/if}
 
-        <LinkButton variant="secondary" width="full" href={`/unit/${data.id}/quiz`}>
+        <LinkButton
+          variant="secondary"
+          width="full"
+          disabled={!data.isQuizAvailable}
+          href={`/unit/${data.id}/quiz`}
+        >
           <Lightbulb class="h-4 w-4" />
           <span class="font-medium">Take the quiz</span>
         </LinkButton>
@@ -131,21 +160,24 @@
     </div>
   </div>
 
-  <div class="flex flex-col items-center gap-y-4">
+  <div class="flex flex-col gap-y-4">
     <div
       class={[
         'max-h-28 overflow-hidden mask-b-from-10%',
         isExpanded && 'max-h-full mask-b-from-100%',
       ]}
     >
-      <p class={['line-clamp-4 text-lg', isExpanded && 'line-clamp-none']}>
-        {data.summary}
+      <p class={['prose prose-slate line-clamp-4 text-lg', isExpanded && 'line-clamp-none']}>
+        {#if browser}
+          <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+          {@html DOMPurify.sanitize(marked.parse(data.summary, { async: false }))}
+        {/if}
       </p>
     </div>
 
     {#if !isExpanded}
       <button
-        class="flex w-fit cursor-pointer items-center gap-x-1 px-4 py-2"
+        class="flex w-fit cursor-pointer items-center gap-x-1 self-center px-4 py-2"
         onclick={toggleIsExpanded}
       >
         <span class="text-sm font-medium">Read more</span>
