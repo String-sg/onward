@@ -57,6 +57,10 @@
        * The time remaining in the playback.
        */
       timeremaining: number;
+      /**
+       * The duration of the playback.
+       */
+      duration: number;
     } | null;
   }
 
@@ -135,7 +139,10 @@
       {/if}
 
       <div class="flex items-center gap-x-2">
-        <ProgressSpinner></ProgressSpinner>
+        <ProgressSpinner
+          duration={player?.duration ?? 0}
+          currentTime={player ? player.duration - player.timeremaining : 0}
+        />
         <span class="text-sm text-slate-600">
           {player.timeremaining ? formatTimeRemaining(player.timeremaining) : '0m left'}
         </span>

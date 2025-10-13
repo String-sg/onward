@@ -98,6 +98,9 @@
               ),
             onpause: handleLearningUnitPause,
             onresume: handleLearningUnitResume,
+            duration:
+              progressState.find((ps) => ps.id === learningJourney.learningUnit.id)
+                ?.contentDuration ?? 0,
             timeremaining: (() => {
               const ps = progressState.find((ps) => ps.id === learningJourney.learningUnit.id);
               return Math.max((ps?.contentDuration ?? 0) - (ps?.progress ?? 0), 0);
