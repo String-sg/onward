@@ -80,7 +80,7 @@ export const load: PageServerLoad = async (event) => {
 };
 
 export const actions: Actions = {
-  updateLearningUnitCompletionStatus: async (event) => {
+  updateLJCompletionStatus: async (event) => {
     const logger = event.locals.logger.child({
       handler: 'page_action_update_learning_unit_completion_status',
     });
