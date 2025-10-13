@@ -88,8 +88,12 @@
   };
 
   const formatTimeRemaining = (timeInSeconds: number): string => {
+    if (timeInSeconds > 0 && timeInSeconds < 60) {
+      return '< 1 min left';
+    }
     const minutes = Math.ceil(timeInSeconds / 60);
-    return `${minutes}m left`;
+    const unit = minutes === 1 ? 'min' : 'mins';
+    return `${minutes} ${unit} left`;
   };
 </script>
 
