@@ -122,51 +122,61 @@ export const POST: RequestHandler = async (event) => {
   });
 
   const encoder = new TextEncoder();
-
-  let chunkAnswer = '';
   let fullAnswer = '';
-
   const answerStream = new ReadableStream({
     async start(controller) {
       try {
         for await (const chunk of completion) {
+          let errorMessage: { type: 'error'; message: string };
+
           if (!('choices' in chunk) || chunk.choices.length === 0 || !chunk.choices[0].delta) {
             logger.error({ chunk: chunk }, 'Invalid stream format');
+            errorMessage = { type: 'error', message: 'Invalid stream format.' };
+            controller.enqueue(encoder.encode(`data: ${JSON.stringify(errorMessage)}\n\n`));
             break;
           }
 
           if (chunk.choices[0].delta.refusal) {
             logger.warn(
               { refusal: chunk.choices[0].delta.refusal, userId: user.id },
-              'Request refused by model',
+              'Request refused by AI',
             );
+            errorMessage = { type: 'error', message: 'Request refused by AI.' };
+            controller.enqueue(encoder.encode(`data: ${JSON.stringify(errorMessage)}\n\n`));
             break;
           }
 
           if (chunk.choices[0].finish_reason) {
             if (chunk.choices[0].finish_reason === 'length') {
               logger.warn('Max number of tokens in request has been reached');
+              errorMessage = { type: 'error', message: 'Max number of tokens has been reached.' };
+              controller.enqueue(encoder.encode(`data: ${JSON.stringify(errorMessage)}\n\n`));
               break;
             }
 
             if (chunk.choices[0].finish_reason === 'content_filter') {
               logger.warn('Content is flagged');
+              errorMessage = { type: 'error', message: 'Content is flagged.' };
+              controller.enqueue(encoder.encode(`data: ${JSON.stringify(errorMessage)}\n\n`));
               break;
             }
           }
 
           if (!chunk.choices[0].delta.content) {
             logger.warn('Content is missing');
+            errorMessage = { type: 'error', message: 'Content is missing.' };
+            controller.enqueue(encoder.encode(`data: ${JSON.stringify(errorMessage)}\n\n`));
             break;
           }
 
-          chunkAnswer = chunk.choices[0].delta.content;
-          fullAnswer += chunkAnswer;
+          fullAnswer += chunk.choices[0].delta.content;
 
-          if (chunk.choices[0].delta.content) {
-            const sseChunk = `data: ${JSON.stringify({ text: chunkAnswer })}\n\n`;
-            controller.enqueue(encoder.encode(sseChunk));
-          }
+          const chunkMessage: { type: 'chunk'; message: string } = {
+            type: 'chunk',
+            message: chunk.choices[0].delta.content,
+          };
+
+          controller.enqueue(encoder.encode(`data: ${JSON.stringify(chunkMessage)}\n\n`));
         }
 
         try {
@@ -204,10 +214,8 @@ export const POST: RequestHandler = async (event) => {
         }
 
         controller.enqueue(encoder.encode(`data: [DONE]\n\n`));
-        controller.close();
       } catch (err) {
         controller.enqueue(encoder.encode(`data: ${JSON.stringify({ error: err })}\n\n`));
-        controller.enqueue(encoder.encode(`data: ${JSON.stringify({ text: chunkAnswer })}\n\n`));
       } finally {
         controller.close();
       }
