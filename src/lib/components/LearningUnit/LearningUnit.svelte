@@ -5,6 +5,7 @@
 
   import { Badge, type BadgeProps } from '$lib/components/Badge/index.js';
   import { Button } from '$lib/components/Button/index.js';
+  import { ProgressSpinner } from '$lib/components/ProgressSpinner/index.js';
 
   export interface Props {
     /**
@@ -52,6 +53,14 @@
        * A callback to resume playback.
        */
       onresume: () => void;
+      /**
+       * The time remaining in the playback.
+       */
+      timeremaining: number;
+      /**
+       * The duration of the playback.
+       */
+      duration: number;
     } | null;
   }
 
@@ -76,6 +85,14 @@
     event.preventDefault();
 
     player?.onresume();
+  };
+
+  const formatTimeRemaining = (timeInSeconds: number): string => {
+    if (timeInSeconds <= 0) return '0 mins left';
+    if (timeInSeconds < 60) return '< 1 min left';
+    const minutes = Math.ceil(timeInSeconds / 60);
+    const unit = minutes === 1 ? 'min' : 'mins';
+    return `${minutes} ${unit} left`;
   };
 </script>
 
@@ -125,23 +142,13 @@
       {/if}
 
       <div class="flex items-center gap-x-2">
-        <svg viewBox="0 0 24 24" class="h-6 w-6">
-          <circle cx="12" cy="12" r="9" stroke="#E2E8F0" fill="none" stroke-width="3px" />
-          <circle
-            cx="12"
-            cy="12"
-            r="9"
-            stroke="#020617"
-            fill="none"
-            stroke-width="3px"
-            stroke-dasharray="56.55"
-            stroke-dashoffset="12"
-            transform-origin="center"
-            transform="rotate(-90 0 0)"
-          />
-        </svg>
-
-        <span class="text-sm text-slate-600">23m left</span>
+        <ProgressSpinner
+          duration={player?.duration ?? 0}
+          currentTime={player ? player.duration - player.timeremaining : 0}
+        />
+        <span class="text-sm text-slate-600">
+          {formatTimeRemaining(player.timeremaining ?? 0)}
+        </span>
       </div>
     </div>
   {/if}

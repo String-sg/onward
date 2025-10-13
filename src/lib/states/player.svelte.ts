@@ -62,6 +62,13 @@ export class Player extends EventTarget {
       };
       this.#audio.ontimeupdate = () => {
         this.#progress = this.#audio?.currentTime || 0;
+        this.dispatchEvent(
+          new CustomEvent('progress', {
+            detail: {
+              currentTime: this.#audio?.currentTime,
+            },
+          }),
+        );
       };
       this.#audio.onended = () => {
         this.#isPlaying = false;
