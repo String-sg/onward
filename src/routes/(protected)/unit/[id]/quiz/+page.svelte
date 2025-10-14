@@ -73,10 +73,6 @@
       >
         <ArrowLeft />
       </a>
-
-      <Badge variant="slate">
-        Question {currentQuestionAnswerIndex + 1} of {data.questionAnswers.length}
-      </Badge>
     </div>
   </div>
 </header>
@@ -85,6 +81,10 @@
 
 <main class="relative mx-auto flex min-h-svh max-w-5xl flex-col gap-y-10 px-4 pt-23 pb-3">
   <div class="flex flex-1 flex-col gap-y-2">
+    <Badge variant="slate">
+      Question {currentQuestionAnswerIndex + 1} of {data.questionAnswers.length}
+    </Badge>
+
     {#each data.questionAnswers as q, qi (q.id)}
       <div class={['flex flex-col gap-y-4', currentQuestionAnswerIndex !== qi && 'hidden']}>
         <span id="question-{qi}" class="text-xl font-medium">{q.question}</span>
