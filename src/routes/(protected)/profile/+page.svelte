@@ -4,6 +4,7 @@
   import { afterNavigate } from '$app/navigation';
   import { Button } from '$lib/components/Button';
   import { IsWithinViewport } from '$lib/helpers/index.js';
+  import { mastheadState } from '$lib/states/index.js';
 
   const { data } = $props();
 
@@ -27,7 +28,10 @@
   };
 </script>
 
-<header class="fixed inset-x-0 top-0 z-50 bg-slate-100/90 backdrop-blur-sm">
+<header
+  class="fixed inset-x-0 z-50 bg-slate-100/90 backdrop-blur-sm"
+  style="padding-top: {mastheadState.height}px;"
+>
   <div
     class={[
       'absolute inset-x-0 top-full h-px bg-transparent transition-colors duration-300',
@@ -58,7 +62,10 @@
 
 <div bind:this={target} class="absolute inset-x-0 top-0 h-px"></div>
 
-<main class="relative mx-auto flex min-h-svh max-w-5xl flex-col gap-y-4 px-4 py-3 pt-23">
+<main
+  class="relative mx-auto flex min-h-svh max-w-5xl flex-col gap-y-4 px-4 py-3"
+  style="padding-top: {mastheadState.height + 92}px;"
+>
   <div class="flex items-center gap-x-6 rounded-3xl bg-white p-4">
     <div class="h-10 w-10 overflow-hidden rounded-full">
       <img src={data.avatar} alt="profile" />

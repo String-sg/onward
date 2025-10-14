@@ -10,7 +10,7 @@
   import { Badge } from '$lib/components/Badge/index.js';
   import { Button, LinkButton } from '$lib/components/Button/index.js';
   import { IsWithinViewport, tagCodeToBadgeVariant } from '$lib/helpers/index.js';
-  import { Player } from '$lib/states/index.js';
+  import { mastheadState, Player } from '$lib/states/index.js';
 
   const { data } = $props();
 
@@ -75,7 +75,10 @@
   };
 </script>
 
-<header class="fixed inset-x-0 top-0 z-50 bg-slate-100/90 backdrop-blur-sm">
+<header
+  class="fixed inset-x-0 top-0 z-50 bg-slate-100/90 backdrop-blur-sm"
+  style="padding-top: {mastheadState.height}px;"
+>
   <div
     class={[
       'absolute inset-x-0 top-full h-px bg-transparent transition-colors duration-300',
@@ -95,7 +98,10 @@
 
 <div bind:this={target} class="absolute inset-x-0 top-0 h-px"></div>
 
-<main class="relative mx-auto flex min-h-svh max-w-5xl flex-col gap-y-6 px-4 pt-23 pb-28">
+<main
+  class="relative mx-auto flex min-h-svh max-w-5xl flex-col gap-y-6 px-4 pb-28"
+  style="padding-top: {mastheadState.height + 92}px;"
+>
   <div class="flex flex-col gap-y-2 rounded-3xl bg-white p-4 shadow-xs">
     <div class="flex flex-wrap gap-1">
       {#each data.tags as tag (tag)}
