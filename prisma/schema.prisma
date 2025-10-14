@@ -45,8 +45,6 @@ model Collection {
 }
 
 enum CollectionType {
-  SEN
-  AI
   SPECIAL_EDUCATIONAL_NEEDS
   LEARN_ABOUT_AI
 }
