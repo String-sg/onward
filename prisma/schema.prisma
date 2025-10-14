@@ -47,6 +47,8 @@ model Collection {
 enum CollectionType {
   SPECIAL_EDUCATIONAL_NEEDS
   LEARN_ABOUT_AI
+  INNOVATION
+  LEARN_WITH_BOB
 }
 
 model LearningUnit {

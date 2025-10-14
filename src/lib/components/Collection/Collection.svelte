@@ -21,7 +21,7 @@
     /**
      * Defines the visual theme and icon for the collection.
      */
-    type: 'SPECIAL_EDUCATIONAL_NEEDS' | 'LEARN_ABOUT_AI';
+    type: 'SPECIAL_EDUCATIONAL_NEEDS' | 'LEARN_ABOUT_AI' | 'INNOVATION' | 'LEARN_WITH_BOB';
   }
 
   let { to, tags, title, numberofpodcasts, type }: Props = $props();
@@ -36,6 +36,10 @@
       {#if type === 'SPECIAL_EDUCATIONAL_NEEDS'}
         <enhanced:img src="$lib/assets/jupiter.png?w=200" alt={title} />
       {:else if type === 'LEARN_ABOUT_AI'}
+        <enhanced:img src="$lib/assets/stars.png?w=200" alt={title} />
+      {:else if type === 'INNOVATION'}
+        <enhanced:img src="$lib/assets/jupiter.png?w=200" alt={title} />
+      {:else if type === 'LEARN_WITH_BOB'}
         <enhanced:img src="$lib/assets/stars.png?w=200" alt={title} />
       {/if}
     </div>
