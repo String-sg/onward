@@ -9,7 +9,7 @@
   import { page } from '$app/state';
   import { Badge } from '$lib/components/Badge/index.js';
   import { Button, LinkButton } from '$lib/components/Button/index.js';
-  import { IsWithinViewport, tagCodeToBadgeVariant } from '$lib/helpers/index.js';
+  import { IsWithinViewport, tagCodeToBadgeVariant, trackPodcastPlay } from '$lib/helpers/index.js';
   import { Player } from '$lib/states/index.js';
 
   const { data } = $props();
@@ -43,6 +43,8 @@
   };
 
   const handlePlay = () => {
+    trackPodcastPlay(data.id);
+
     player.play({
       id: data.id,
       tags: data.tags,
@@ -56,6 +58,8 @@
   };
 
   const handleResume = () => {
+    trackPodcastPlay(data.id);
+
     if (!isActive) {
       const initialSeekTime = lastCheckpoint;
       player.play(
