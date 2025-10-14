@@ -216,7 +216,7 @@
         <div bind:this={target} class="absolute inset-x-0 top-0 h-px"></div>
 
         <!-- TODO: temporary hardcode height for now. To relook at how to set this height without hardcoding an arbitrary height -->
-        <div class="h-[calc(100vh-180px)] overflow-y-auto px-4 pt-3">
+        <div class="h-[calc(100svh-180px)] overflow-y-auto px-4 pt-3">
           <div class="flex flex-col gap-y-4">
             {#if messages.length === 0}
               <span class="text-xl font-medium">
