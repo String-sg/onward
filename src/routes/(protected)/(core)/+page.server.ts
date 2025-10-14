@@ -4,6 +4,8 @@ import {
   db,
   type LearningJourneyFindManyArgs,
   type LearningJourneyGetPayload,
+  type LearningUnitFindManyArgs,
+  type LearningUnitGetPayload,
 } from '$lib/server/db';
 
 import type { PageServerLoad } from './$types';
@@ -58,8 +60,51 @@ export const load: PageServerLoad = async (event) => {
     throw error(500);
   }
 
+  const recommendedLearningUnitsArgs = {
+    select: {
+      id: true,
+      title: true,
+      contentURL: true,
+      createdAt: true,
+      createdBy: true,
+      tags: {
+        select: {
+          tag: {
+            select: {
+              code: true,
+              label: true,
+            },
+          },
+        },
+      },
+    },
+    where: {
+      isRecommended: true,
+      NOT: {
+        learningJourneys: {
+          some: {
+            userId: BigInt(user.id),
+          },
+        },
+      },
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+    take: 3,
+  } satisfies LearningUnitFindManyArgs;
+
+  let recommendedLearningUnits: LearningUnitGetPayload<typeof recommendedLearningUnitsArgs>[];
+  try {
+    recommendedLearningUnits = await db.learningUnit.findMany(recommendedLearningUnitsArgs);
+  } catch (err) {
+    logger.error({ err }, 'Failed to retrieve recommended learning units');
+    throw error(500);
+  }
+
   return {
     learningJourneys,
+    recommendedLearningUnits,
     username: user.name,
   };
 };
