@@ -157,16 +157,14 @@
   <div class="flex flex-col gap-y-4">
     <div
       class={[
-        'max-h-28 overflow-hidden mask-b-from-10%',
-        isExpanded && 'max-h-full mask-b-from-100%',
+        'prose prose-slate line-clamp-4 max-h-28 max-w-none mask-b-from-10% text-lg',
+        isExpanded && 'line-clamp-none max-h-full mask-b-from-100%',
       ]}
     >
-      <p class={['prose prose-slate line-clamp-4 text-lg', isExpanded && 'line-clamp-none']}>
-        {#if browser}
-          <!-- eslint-disable-next-line svelte/no-at-html-tags -->
-          {@html DOMPurify.sanitize(marked.parse(data.summary, { async: false }))}
-        {/if}
-      </p>
+      {#if browser}
+        <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+        {@html DOMPurify.sanitize(marked.parse(data.summary, { async: false }))}
+      {/if}
     </div>
 
     {#if !isExpanded}
