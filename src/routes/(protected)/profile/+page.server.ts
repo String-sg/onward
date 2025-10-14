@@ -1,12 +1,13 @@
 import { error, redirect } from '@sveltejs/kit';
 import { startOfMonth, startOfWeek } from 'date-fns';
 
+import { getBase64EncodedAvatar } from '$lib/server/cache/index.js';
 import { db } from '$lib/server/db';
 
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async (event) => {
-  const logger = event.locals.logger.child({ handler: 'user_profile' });
+  const logger = event.locals.logger.child({ handler: 'page_user_profile' });
 
   const { user } = event.locals.session;
   if (!user) {
@@ -35,7 +36,7 @@ export const load: PageServerLoad = async (event) => {
     return {
       name: user.name,
       email: user.email,
-      avatarURL: user.avatarURL,
+      avatar: await getBase64EncodedAvatar(BigInt(user.id)),
       learningUnitsConsumedByMonth: byMonth.reduce((total, group) => total + group._count._all, 0),
       learningUnitsConsumedByWeek: byWeek.reduce((total, group) => total + group._count._all, 0),
       learningUnitsCompletedByMonth: byMonth.find((group) => group.isCompleted)?._count._all ?? 0,

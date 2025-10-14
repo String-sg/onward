@@ -16,7 +16,6 @@ export interface User {
   id: string | number;
   email: string;
   name: string;
-  avatarURL: string;
 }
 
 type JSONPrimitive = string | number | boolean | null;
@@ -137,9 +136,7 @@ export default class Session {
       !payload['user']['email'] ||
       typeof payload['user']['email'] !== 'string' ||
       !payload['user']['name'] ||
-      typeof payload['user']['name'] !== 'string' ||
-      !payload['user']['avatarURL'] ||
-      typeof payload['user']['avatarURL'] !== 'string'
+      typeof payload['user']['name'] !== 'string'
     ) {
       return null;
     }
@@ -151,7 +148,6 @@ export default class Session {
         id: payload['user']['id'],
         email: payload['user']['email'],
         name: payload['user']['name'],
-        avatarURL: payload['user']['avatarURL'],
       },
       data: payload['data'],
     });
