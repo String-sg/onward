@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.4.0 (2025-10-14)
+
+### Features ✨
+
+- feat: cache user's avatar in Valkey ([#286](https://github.com/String-sg/onward/pull/286)) ([5b67b5c](https://github.com/String-sg/onward/commit/5b67b5ce171fa3dc0cefa1d8ae3b4db6c6caa49e))
+
+### Bug Fixes 🐛
+
+- fix: chat window for IOS Safari ([#313](https://github.com/String-sg/onward/pull/313)) ([c1fd12c](https://github.com/String-sg/onward/commit/c1fd12c6f1798633ab8bd2241c24a7275ec9d4a9))
+- fix: reposition badge on quiz ([#312](https://github.com/String-sg/onward/pull/312)) ([8bc2467](https://github.com/String-sg/onward/commit/8bc246706a4af4213d9fa8cc2068c869addbbf43))
+- fix: prevent quiz page from showing chat modal ([#311](https://github.com/String-sg/onward/pull/311)) ([39a8926](https://github.com/String-sg/onward/commit/39a892633341e954d2124669ded7f5e28f48c351))
+
+### Chores 🧹
+
+- chore: remove spinner and time in LearningUnit for now ([#315](https://github.com/String-sg/onward/pull/315)) ([01c8643](https://github.com/String-sg/onward/commit/01c864359f1619ece6fc8ee2ad80c55d4df77171))
+- chore: remove default max width from tailwind typography ([#298](https://github.com/String-sg/onward/pull/298)) ([c7f064b](https://github.com/String-sg/onward/commit/c7f064b34358d32702758b5d8a817e87611dec4d))
+- chore: update `pre-push` script to just run `pnpm check` ([#299](https://github.com/String-sg/onward/pull/299)) ([8f3bd47](https://github.com/String-sg/onward/commit/8f3bd47d8a8dd0c1c74333c540700c691ec38541))
+
 ## 0.3.0 (2025-10-13)
 
 ### Features ✨
