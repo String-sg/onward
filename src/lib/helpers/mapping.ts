@@ -17,6 +17,10 @@ export function tagCodeToBadgeVariant(code: string): BadgeProps['variant'] {
       return 'purple';
     case 'AI':
       return 'amber';
+    case 'INN':
+      return 'slate';
+    case 'BOB':
+      return 'blue';
     default:
       return 'slate';
   }
