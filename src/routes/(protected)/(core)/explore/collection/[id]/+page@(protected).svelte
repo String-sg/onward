@@ -45,7 +45,7 @@
   class="relative mx-auto flex min-h-svh max-w-5xl flex-col gap-y-6 px-4 pb-28"
   style="padding-top: {mastheadState.height + 92}px;"
 >
-  <div class="shadow-xs flex flex-col gap-y-2 rounded-3xl bg-slate-200 p-4">
+  <div class="flex flex-col gap-y-2 rounded-3xl bg-slate-200 p-4 shadow-xs">
     <span class="text-lg font-medium">About this topic</span>
     <p>
       {data.description}

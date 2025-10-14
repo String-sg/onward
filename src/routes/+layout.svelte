@@ -17,7 +17,7 @@
 </script>
 
 <!-- Fixed masthead at the very top -->
-<div bind:this={mastheadElement} class="z-100 fixed inset-x-0 top-0">
+<div bind:this={mastheadElement} class="fixed inset-x-0 top-0 z-100">
   <Masthead />
 </div>
 
