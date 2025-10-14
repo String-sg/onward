@@ -35,8 +35,15 @@
 
 <main class="relative mx-auto flex min-h-svh max-w-5xl flex-col gap-y-4 px-4 pt-43 pb-28">
   {#if data.learningJourneys.length > 0}
-    <div class="px-2">
+    <div class="flex items-center justify-between px-2">
       <span class="text-xl font-semibold">Recently learned</span>
+
+      <a
+        href="/learning"
+        class="rounded-2xl px-4 py-2 text-sm font-medium hover:bg-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed"
+      >
+        See all
+      </a>
     </div>
 
     <div class="flex flex-col gap-y-4">
@@ -63,8 +70,15 @@
   {/if}
 
   {#if data.recommendedLearningUnits.length > 0}
-    <div class="px-2">
+    <div class="flex items-center justify-between px-2">
       <span class="text-xl font-semibold">Recommended for you</span>
+
+      <a
+        href="/explore"
+        class="rounded-2xl px-4 py-2 text-sm font-medium hover:bg-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed"
+      >
+        See all
+      </a>
     </div>
 
     <div class="flex flex-col gap-y-4">
