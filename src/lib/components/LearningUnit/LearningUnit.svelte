@@ -106,43 +106,21 @@
   </div>
 
   {#if player}
-    <div class="flex items-center gap-x-3">
-      {#if player.isactive && player.isplaying}
-        <Button variant="secondary" onclick={handlePause}>
-          <Pause class="h-4 w-4" />
-          <span class="font-medium">Pause</span>
-        </Button>
-      {:else if player.isactive && !player.isplaying}
-        <Button variant="secondary" onclick={handleResume}>
-          <Play class="h-4 w-4" />
-          <span class="font-medium">Resume</span>
-        </Button>
-      {:else}
-        <Button variant="secondary" onclick={handlePlay}>
-          <Play class="h-4 w-4" />
-          <span class="font-medium">Play</span>
-        </Button>
-      {/if}
-
-      <div class="flex items-center gap-x-2">
-        <svg viewBox="0 0 24 24" class="h-6 w-6">
-          <circle cx="12" cy="12" r="9" stroke="#E2E8F0" fill="none" stroke-width="3px" />
-          <circle
-            cx="12"
-            cy="12"
-            r="9"
-            stroke="#020617"
-            fill="none"
-            stroke-width="3px"
-            stroke-dasharray="56.55"
-            stroke-dashoffset="12"
-            transform-origin="center"
-            transform="rotate(-90 0 0)"
-          />
-        </svg>
-
-        <span class="text-sm text-slate-600">23m left</span>
-      </div>
-    </div>
+    {#if player.isactive && player.isplaying}
+      <Button variant="secondary" onclick={handlePause}>
+        <Pause class="h-4 w-4" />
+        <span class="font-medium">Pause</span>
+      </Button>
+    {:else if player.isactive && !player.isplaying}
+      <Button variant="secondary" onclick={handleResume}>
+        <Play class="h-4 w-4" />
+        <span class="font-medium">Resume</span>
+      </Button>
+    {:else}
+      <Button variant="secondary" onclick={handlePlay}>
+        <Play class="h-4 w-4" />
+        <span class="font-medium">Play</span>
+      </Button>
+    {/if}
   {/if}
 </a>
