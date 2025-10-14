@@ -35,7 +35,7 @@ const collections: Prisma.CollectionCreateInput[] = [
     title: 'SEN Peer Support',
     description:
       'Explore the world of Special Educational Needs (SEN) peer support that indicates Singapore specific peer support knowledge, case studies and more to gain knowledge about SEN.',
-    type: CollectionType.SEN,
+    type: CollectionType.SPECIAL_EDUCATIONAL_NEEDS,
     tags: {
       create: [
         {
@@ -53,7 +53,7 @@ const collections: Prisma.CollectionCreateInput[] = [
     title: 'Learn to use AI',
     description:
       'Discover how AI is transforming education through personalized learning, intelligent tutoring systems, and data-driven insights to enhance teaching effectiveness.',
-    type: CollectionType.AI,
+    type: CollectionType.LEARN_ABOUT_AI,
     tags: {
       create: [
         {
