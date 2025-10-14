@@ -9,7 +9,7 @@
   let target = $state<HTMLElement | null>(null);
 
   const isHomePage = $derived(page.url.pathname === '/');
-  const isLearningPage = $derived(page.url.pathname === '/learning');
+  const isMyLearningPage = $derived(page.url.pathname === '/learning');
   const isExplorePage = $derived(page.url.pathname === '/explore');
 
   const isWithinViewport = new IsWithinViewport(() => target);
@@ -69,7 +69,7 @@
           <div
             class={[
               'rounded-[100px] px-5 py-1 transition-colors',
-              isLearningPage && 'bg-slate-950 text-white',
+              isMyLearningPage && 'bg-slate-950 text-white',
             ]}
           >
             <BookHeart />
@@ -77,10 +77,10 @@
           <span
             class={[
               'text-center text-xs font-semibold',
-              isLearningPage ? 'text-slate-950' : 'text-slate-700',
+              isMyLearningPage ? 'text-slate-950' : 'text-slate-700',
             ]}
           >
-            Learning
+            My Learning
           </span>
         </a>
 
