@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
 
+  import { page } from '$app/state';
   import { Button, LinkButton } from '$lib/components/Button/index.js';
   import { ChatView } from '$lib/components/ChatView/index.js';
   import { ChatWidget } from '$lib/components/ChatWidget/index.js';
@@ -18,6 +19,8 @@
   let isChatViewOpen = $state(false);
   let isTrackingSession = $state(false);
   let isPodcastCompletedModalOpen = $state(false);
+
+  const isQuizPage = $derived(page.url.pathname.includes('/quiz'));
 
   const handleNowPlayingBarClick = () => {
     isNowPlayingViewOpen = true;
@@ -112,20 +115,22 @@
 
 {@render children()}
 
-<div class="pointer-events-none fixed inset-x-0 bottom-0 z-100">
-  <div class="mx-auto flex max-w-5xl justify-end gap-x-4 px-4 py-3">
-    {#if player.currentTrack}
-      <NowPlayingBar
-        title={player.currentTrack.title}
-        isplaying={player.isPlaying}
-        onclick={handleNowPlayingBarClick}
-        onplay={handleNowPlayingBarPlay}
-      />
-    {/if}
+{#if !isQuizPage}
+  <div class="pointer-events-none fixed inset-x-0 bottom-0 z-100">
+    <div class="mx-auto flex max-w-5xl justify-end gap-x-4 px-4 py-3">
+      {#if player.currentTrack}
+        <NowPlayingBar
+          title={player.currentTrack.title}
+          isplaying={player.isPlaying}
+          onclick={handleNowPlayingBarClick}
+          onplay={handleNowPlayingBarPlay}
+        />
+      {/if}
 
-    <ChatWidget onclick={handleChatWidgetClick} />
+      <ChatWidget onclick={handleChatWidgetClick} />
+    </div>
   </div>
-</div>
+{/if}
 
 {#if player.currentTrack}
   <NowPlayingView
