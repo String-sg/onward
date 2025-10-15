@@ -117,6 +117,7 @@ export const POST: RequestHandler = async (event) => {
         content: query,
       },
     ],
+    reasoning_effort: 'minimal',
     stream: true,
   });
 
