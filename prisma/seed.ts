@@ -63,7 +63,7 @@ const collections: Prisma.CollectionCreateInput[] = [
     title: 'Learn to use AI',
     description:
       'Discover how AI is transforming education through personalized learning, intelligent tutoring systems, and data-driven insights to enhance teaching effectiveness.',
-    type: CollectionType.LEARN_ABOUT_AI,
+    type: CollectionType.LEARN_TO_USE_AI,
     tags: {
       create: [
         {

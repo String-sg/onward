@@ -21,7 +21,15 @@
     /**
      * Defines the visual theme and icon for the collection.
      */
-    type: 'SPECIAL_EDUCATIONAL_NEEDS' | 'LEARN_ABOUT_AI' | 'INNOVATION' | 'LEARN_WITH_BOB';
+    type:
+      | 'SPECIAL_EDUCATIONAL_NEEDS'
+      | 'LEARN_ABOUT_AI'
+      | 'LEARN_TO_USE_AI'
+      | 'INNOVATION'
+      | 'LEARN_WITH_BOB'
+      | 'STUDENT_WELLBEING'
+      | 'STAFF_WELLBEING'
+      | 'NEWS';
   }
 
   let { to, tags, title, numberofpodcasts, type }: Props = $props();
