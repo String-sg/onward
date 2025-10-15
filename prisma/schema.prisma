@@ -104,7 +104,7 @@ model LearningUnitSentiments {
 model LearningUnitSources {
   id        BigInt   @id @default(autoincrement()) @map("id")
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   // Domain-Specific Fields.
   title     String @map("title")
