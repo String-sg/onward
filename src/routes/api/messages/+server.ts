@@ -122,7 +122,9 @@ export const POST: RequestHandler = async (event) => {
   });
 
   const encoder = new TextEncoder();
+
   let fullAnswer = '';
+
   const answerStream = new ReadableStream({
     async start(controller) {
       try {

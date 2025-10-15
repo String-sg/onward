@@ -98,6 +98,7 @@
 
     messages.push({ role: 'USER', content: query });
     isAiTyping = true;
+
     const bodyParams = { query };
     query = '';
 
@@ -129,10 +130,11 @@
       }
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
+
       let buffer = '';
 
-      messages.push({ role: 'ASSISTANT', content: '' });
       isAiTyping = false;
+      messages.push({ role: 'ASSISTANT', content: '' });
 
       while (true) {
         const { done, value } = await reader.read();
