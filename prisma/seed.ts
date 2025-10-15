@@ -94,16 +94,26 @@ const questionAnswers: Prisma.QuestionAnswerCreateManyLearningUnitInput[] = [
   },
 ];
 
-const objectives = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lacinia odio vitae vestibulum vestibulum. Cras venenatis euismod malesuada. Nullam ac erat ante. Proin sit amet turpis nec nisl efficitur dignissim. Integer a sapien eget sapien tincidunt aliquet. Curabitur non massa nec urna vulputate facilisis. Fusce ut lectus non nulla gravida volutpat.
+const objectives = `
+### Objectives
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lacinia odio vitae vestibulum vestibulum. Cras venenatis euismod malesuada. Nullam ac erat ante. Proin sit amet turpis nec nisl efficitur dignissim. Integer a sapien eget sapien tincidunt aliquet. Curabitur non massa nec urna vulputate facilisis. Fusce ut lectus non nulla gravida volutpat.
 
-a) Lorem ipsum dolor sit amet, consectetur adipiscing elit.  
-b) Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.  
-c) Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.`;
-const summary = `- Filler for Layouts: Lorem Ipsum is used to simulate text in designs without distracting from visual structure.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lacinia odio vitae vestibulum vestibulum. Cras venenatis euismod malesuada. Nullam ac erat ante. Proin sit amet turpis nec nisl efficitur dignissim. Integer a sapien eget sapien tincidunt aliquet. Curabitur non massa nec urna vulputate facilisis. Fusce ut lectus non nulla gravida volutpat.
 
-- Ancient Origins: It's derived from classical Latin literature, giving it realistic word patterns.
+- **Lorem** ipsum dolor sit amet, consectetur adipiscing elit.
+- **Sed** do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+- **Ut enim** ad minim veniam, quis nostrud exercitation ullamco laboris.
+`;
+const summary = `
+### Summary
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lacinia odio vitae vestibulum vestibulum. Cras venenatis euismod malesuada. Nullam ac erat ante. Proin sit amet turpis nec nisl efficitur dignissim. Integer a sapien eget sapien tincidunt aliquet. Curabitur non massa nec urna vulputate facilisis. Fusce ut lectus non nulla gravida volutpat.
 
-- Neutral Content: It provides a generic, nonsensical placeholder that doesn’t carry actual meaning. `;
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lacinia odio vitae vestibulum vestibulum. Cras venenatis euismod malesuada. Nullam ac erat ante. Proin sit amet turpis nec nisl efficitur dignissim. Integer a sapien eget sapien tincidunt aliquet. Curabitur non massa nec urna vulputate facilisis. Fusce ut lectus non nulla gravida volutpat.
+
+- **Lorem** ipsum dolor sit amet, consectetur adipiscing elit.
+- **Sed** do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+- **Ut enim** ad minim veniam, quis nostrud exercitation ullamco laboris.
+`;
 
 const learningUnits: Prisma.LearningUnitCreateInput[] = [
   {
