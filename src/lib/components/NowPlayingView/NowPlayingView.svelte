@@ -96,11 +96,11 @@
       </button>
     </div>
 
-    <div
-      class="prose prose-white max-w-none overflow-y-auto mask-t-from-98% mask-b-from-90% text-xl"
-    >
-      <!-- eslint-disable-next-line svelte/no-at-html-tags -->
-      {@html DOMPurify.sanitize(marked.parse(currenttrack.summary, { async: false }))}
+    <div class="overflow-y-auto mask-t-from-98% mask-b-from-90%">
+      <div class="prose prose-white max-w-none pb-4 text-xl">
+        <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+        {@html DOMPurify.sanitize(marked.parse(currenttrack.summary, { async: false }))}
+      </div>
     </div>
 
     <div class="mt-auto flex flex-col gap-y-6">
