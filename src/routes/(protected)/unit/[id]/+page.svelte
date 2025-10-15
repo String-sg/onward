@@ -18,7 +18,12 @@
   import { page } from '$app/state';
   import { Badge } from '$lib/components/Badge/index.js';
   import { Button, LinkButton } from '$lib/components/Button/index.js';
-  import { IsWithinViewport, tagCodeToBadgeVariant, trackPodcastPlay } from '$lib/helpers/index.js';
+  import {
+    IsWithinViewport,
+    tagCodeToBadgeVariant,
+    trackPodcastPlay,
+    trackQuizClick,
+  } from '$lib/helpers/index.js';
   import { Player } from '$lib/states/index.js';
 
   const { data } = $props();
@@ -53,7 +58,7 @@
   };
 
   const handlePlay = () => {
-    trackPodcastPlay(data.id);
+    trackPodcastPlay(data.id.toString());
 
     player.play({
       id: data.id,
@@ -69,7 +74,7 @@
   };
 
   const handleResume = () => {
-    trackPodcastPlay(data.id);
+    trackPodcastPlay(data.id.toString());
 
     if (!isActive) {
       const initialSeekTime = lastCheckpoint;
@@ -88,6 +93,10 @@
     } else {
       player.toggle();
     }
+  };
+
+  const handleQuizClick = () => {
+    trackQuizClick(data.id.toString());
   };
 </script>
 
@@ -189,6 +198,7 @@
             width="full"
             disabled={!data.isQuizAvailable}
             href={`/unit/${data.id}/quiz`}
+            onclick={handleQuizClick}
           >
             <Lightbulb class="h-4 w-4" />
             <span class="font-medium">Take the quiz</span>
