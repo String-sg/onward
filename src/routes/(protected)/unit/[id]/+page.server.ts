@@ -13,6 +13,8 @@ import {
   type LearningUnitSentimentsFindUniqueArgs,
   type LearningUnitSentimentsGetPayload,
   type LearningUnitSentimentsUpsertArgs,
+  type LearningUnitSourcesFindManyArgs,
+  type LearningUnitSourcesGetPayload,
 } from '$lib/server/db';
 
 import type { Actions, PageServerLoad } from './$types';
@@ -132,6 +134,34 @@ export const load: PageServerLoad = async (event) => {
     throw error(500);
   }
 
+  const learningUnitSourcesArg = {
+    select: {
+      title: true,
+      sourceURL: true,
+      tags: {
+        select: {
+          tag: {
+            select: {
+              code: true,
+              label: true,
+            },
+          },
+        },
+      },
+    },
+    where: {
+      learningUnitId: BigInt(event.params.id),
+    },
+  } satisfies LearningUnitSourcesFindManyArgs;
+
+  let learningUnitSources: LearningUnitSourcesGetPayload<typeof learningUnitSourcesArg>[];
+  try {
+    learningUnitSources = await db.learningUnitSources.findMany(learningUnitSourcesArg);
+  } catch (err) {
+    logger.error({ err }, 'Failed to retrieve learning unit sources');
+    throw error(500);
+  }
+
   return {
     csrfToken: event.locals.session.csrfToken(),
     id: learningUnit.id,
@@ -146,6 +176,7 @@ export const load: PageServerLoad = async (event) => {
     lastCheckpoint: Number(learningJourney?.lastCheckpoint),
     userSentiment: sentiment?.hasLiked ?? null,
     likesCount: likesAggregate._count.hasLiked,
+    learningUnitSources,
   };
 };
 

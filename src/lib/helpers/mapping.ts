@@ -21,6 +21,10 @@ export function tagCodeToBadgeVariant(code: string): BadgeProps['variant'] {
       return 'slate';
     case 'BOB':
       return 'blue';
+    case 'PDF':
+      return 'rose';
+    case 'LINK':
+      return 'blue';
     default:
       return 'slate';
   }

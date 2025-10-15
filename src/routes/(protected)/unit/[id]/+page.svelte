@@ -1,12 +1,15 @@
 <script lang="ts">
   import {
     ArrowLeft,
+    BookOpenIcon,
     ChevronsDown,
+    ExternalLink,
     Lightbulb,
     Pause,
     Play,
     ThumbsDown,
     ThumbsUp,
+    X,
   } from '@lucide/svelte';
   import { formatDistanceToNow } from 'date-fns';
   import DOMPurify from 'dompurify';
@@ -18,6 +21,7 @@
   import { page } from '$app/state';
   import { Badge } from '$lib/components/Badge/index.js';
   import { Button, LinkButton } from '$lib/components/Button/index.js';
+  import { Modal } from '$lib/components/Modal/index.js';
   import { IsWithinViewport, tagCodeToBadgeVariant, trackPodcastPlay } from '$lib/helpers/index.js';
   import { Player } from '$lib/states/index.js';
 
@@ -26,6 +30,7 @@
   let returnTo = $state('/');
   let isExpanded = $state(false);
   let target = $state<HTMLElement | null>(null);
+  let isSourcesModalOpen = $state(false);
   let sentiment = $derived(data.userSentiment);
 
   const isWithinViewport = new IsWithinViewport(() => target);
@@ -89,6 +94,14 @@
       player.toggle();
     }
   };
+
+  const handleSourcesModal = () => {
+    isSourcesModalOpen = true;
+  };
+
+  const toggleSourcesModalVisibility = () => {
+    isSourcesModalOpen = !isSourcesModalOpen;
+  };
 </script>
 
 <header class="fixed inset-x-0 top-0 z-50 bg-slate-100/90 backdrop-blur-sm">
@@ -133,32 +146,38 @@
           </span>
         </div>
 
-        <div class="flex gap-x-2">
-          <form method="POST" action="?/updateSentiment" use:enhance>
-            <input type="hidden" name="csrfToken" value={data.csrfToken} />
-            <input type="hidden" name="hasLiked" value={sentiment === true ? null : 'true'} />
+        <div class="flex justify-between">
+          <div class="flex gap-x-2">
+            <form method="POST" action="?/updateSentiment" use:enhance>
+              <input type="hidden" name="csrfToken" value={data.csrfToken} />
+              <input type="hidden" name="hasLiked" value={sentiment === true ? null : 'true'} />
 
-            <Button
-              type="submit"
-              variant={sentiment === true ? 'primary' : 'secondary'}
-              class="gap-x-2.5 !px-4 !py-3"
-            >
-              <ThumbsUp />
-              <span class="font-medium">{data.likesCount}</span>
-            </Button>
-          </form>
+              <Button
+                type="submit"
+                variant={sentiment === true ? 'primary' : 'secondary'}
+                class="gap-x-2.5 !px-4 !py-3"
+              >
+                <ThumbsUp />
+                <span class="font-medium">{data.likesCount}</span>
+              </Button>
+            </form>
 
-          <form method="POST" action="?/updateSentiment" use:enhance>
-            <input type="hidden" name="csrfToken" value={data.csrfToken} />
-            <input type="hidden" name="hasLiked" value={sentiment === false ? null : 'false'} />
-            <Button
-              type="submit"
-              variant={sentiment === false ? 'primary' : 'secondary'}
-              class="!p-3"
-            >
-              <ThumbsDown />
-            </Button>
-          </form>
+            <form method="POST" action="?/updateSentiment" use:enhance>
+              <input type="hidden" name="csrfToken" value={data.csrfToken} />
+              <input type="hidden" name="hasLiked" value={sentiment === false ? null : 'false'} />
+              <Button
+                type="submit"
+                variant={sentiment === false ? 'primary' : 'secondary'}
+                class="!p-3"
+              >
+                <ThumbsDown />
+              </Button>
+            </form>
+          </div>
+
+          <Button variant="secondary" class="!p-3" onclick={handleSourcesModal}>
+            <BookOpenIcon />
+          </Button>
         </div>
 
         <div class="flex flex-col gap-y-4">
@@ -222,3 +241,44 @@
     </div>
   </div>
 </main>
+
+<Modal isopen={isSourcesModalOpen} onclose={toggleSourcesModalVisibility} size="partial">
+  <header class="sticky inset-x-0 top-0 bg-white/90 backdrop-blur-sm">
+    <div class="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
+      <span class="text-xl font-medium">Sources</span>
+
+      <button
+        onclick={toggleSourcesModalVisibility}
+        class="cursor-pointer rounded-full p-3 transition-colors hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed"
+      >
+        <X />
+      </button>
+    </div>
+  </header>
+
+  <main class="mx-auto flex min-h-[calc(100%-72px)] max-w-5xl flex-col gap-y-10 px-4 py-3">
+    {#if data.learningUnitSources.length === 0}
+      <span class="flex justify-center text-sm">No references available for this podcast</span>
+    {/if}
+
+    <div class="flex flex-col gap-y-4">
+      {#each data.learningUnitSources as source (source)}
+        <a
+          href={source.sourceURL}
+          target="_blank"
+          class="flex items-center justify-between rounded-2xl bg-slate-100 p-3"
+        >
+          <div class="flex flex-col gap-y-1">
+            {#each source.tags.map((t) => t.tag) as tag (tag)}
+              <Badge variant={tagCodeToBadgeVariant(tag.code)}>{tag.label}</Badge>
+            {/each}
+
+            <span>{source.title}</span>
+          </div>
+
+          <ExternalLink class="h-5 w-5 shrink-0" />
+        </a>
+      {/each}
+    </div>
+  </main>
+</Modal>
