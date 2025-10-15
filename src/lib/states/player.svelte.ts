@@ -10,6 +10,7 @@ export interface Track {
   id: number | string | bigint;
   tags: { code: string; label: string }[];
   title: string;
+  summary: string;
   url: string;
 }
 

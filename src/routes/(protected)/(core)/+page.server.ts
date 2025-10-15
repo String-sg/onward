@@ -26,6 +26,7 @@ export const load: PageServerLoad = async (event) => {
         select: {
           id: true,
           title: true,
+          summary: true,
           contentURL: true,
           createdAt: true,
           createdBy: true,
@@ -64,6 +65,7 @@ export const load: PageServerLoad = async (event) => {
     select: {
       id: true,
       title: true,
+      summary: true,
       contentURL: true,
       createdAt: true,
       createdBy: true,
