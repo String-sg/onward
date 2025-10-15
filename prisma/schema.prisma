@@ -12,7 +12,7 @@ datasource db {
 model User {
   id        BigInt   @id @default(autoincrement()) @map("id")
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(3)
 
   // Domain-Specific Fields.
   name             String @map("name") @db.VarChar(255)
@@ -31,7 +31,7 @@ model User {
 model Collection {
   id        BigInt   @id @default(autoincrement()) @map("id")
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(3)
 
   // Domain-Specific Fields.
   title       String         @map("title")
@@ -55,15 +55,15 @@ enum CollectionType {
 model LearningUnit {
   id        BigInt   @id @default(autoincrement()) @map("id")
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(3)
 
   // Domain-Specific Fields.
-  title       String      @map("title")
-  contentType ContentType @map("content_type")
-  contentURL  String      @map("content_url")
-  summary     String      @map("summary")
-  objectives  String      @map("objectives")
-  createdBy   String      @map("created_by")
+  title         String      @map("title")
+  contentType   ContentType @map("content_type")
+  contentURL    String      @map("content_url")
+  summary       String      @map("summary")
+  objectives    String      @map("objectives")
+  createdBy     String      @map("created_by")
   isRecommended Boolean     @default(false) @map("is_recommended")
 
   // Relations.
@@ -80,7 +80,7 @@ model LearningUnit {
 
 model LearningUnitSentiments {
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(3)
 
   // Domain-Specific Fields.
   hasLiked Boolean @map("has_liked")
@@ -103,7 +103,7 @@ enum ContentType {
 model LearningJourney {
   id        BigInt   @id @default(autoincrement()) @map("id")
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(3)
 
   // Domain-Specific Fields.
   isCompleted    Boolean @default(false) @map("is_completed")
@@ -123,7 +123,7 @@ model LearningJourney {
 model Tag {
   id        BigInt   @id @default(autoincrement()) @map("id")
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(3)
 
   // Domain-Specific Fields.
   code  String @unique @map("code") @db.VarChar(8) // e.g. "SEN"
@@ -163,7 +163,7 @@ model LearningUnitTag {
 model Thread {
   id        BigInt   @id @default(autoincrement()) @map("id")
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(3)
 
   // Domain-Specific Fields.
   isActive Boolean @default(false) @map("is_active")
@@ -181,7 +181,7 @@ model Thread {
 model Message {
   id        BigInt   @id @default(autoincrement()) @map("id")
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(3)
 
   // Domain-Specific Fields.
   content String @map("content")
@@ -203,7 +203,7 @@ enum Role {
 model QuestionAnswer {
   id        BigInt   @id @default(autoincrement()) @map("id")
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz(3)
 
   // Domain-Specific Fields.
   question    String   @map("question")
