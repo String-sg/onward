@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.7.0 (2025-10-15)
+
+### Features ✨
+
+- feat: use streaming for chatbot ([#293](https://github.com/String-sg/onward/pull/293)) ([bf18164](https://github.com/String-sg/onward/commit/bf18164e01d4d1a46666778d9d405e9e81bc827d))
+
 ## 0.6.0 (2025-10-15)
 
 ### Features ✨
@@ -25,7 +31,6 @@ All notable changes to this project will be documented in this file.
 ### Features ✨
 
 - feat: track podcast play event ([#321](https://github.com/String-sg/onward/pull/321)) ([c37d60f](https://github.com/String-sg/onward/commit/c37d60f7c9d291dff5a2f0874b21d17bf838203a))
-
 - feat: add recommendation section to home page ([#318](https://github.com/String-sg/onward/pull/318)) ([1f46be0](https://github.com/String-sg/onward/commit/1f46be0758fae00f447593648dd4f967e412ba39))
 
 ## 0.4.0 (2025-10-14)
