@@ -27,6 +27,16 @@ const tags: Prisma.TagCreateInput[] = [
     code: 'AI',
     label: 'Artificial Intelligence',
   },
+  {
+    id: 3,
+    code: 'PDF',
+    label: 'PDF',
+  },
+  {
+    id: 4,
+    code: 'LINK',
+    label: 'Link',
+  },
 ];
 
 const collections: Prisma.CollectionCreateInput[] = [
@@ -230,6 +240,177 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
   },
 ];
 
+const learningUnitSources: Prisma.LearningUnitSourcesCreateInput[] = [
+  {
+    id: 1,
+    title: 'Learning Resource 1',
+    learningUnit: {
+      connect: {
+        id: learningUnits[0].id,
+      },
+    },
+    sourceURL: 'http://localhost:5173',
+    tags: {
+      create: [
+        {
+          tag: {
+            connect: {
+              id: tags[2].id,
+            },
+          },
+        },
+      ],
+    },
+  },
+  {
+    id: 2,
+    title: 'Learning Resource 2',
+    learningUnit: {
+      connect: {
+        id: learningUnits[1].id,
+      },
+    },
+    sourceURL: 'http://localhost:5173',
+    tags: {
+      create: [
+        {
+          tag: {
+            connect: {
+              id: tags[3].id,
+            },
+          },
+        },
+      ],
+    },
+  },
+  {
+    id: 3,
+    title: 'Learning Resource 3',
+    learningUnit: {
+      connect: {
+        id: learningUnits[2].id,
+      },
+    },
+    sourceURL: 'http://localhost:5173',
+    tags: {
+      create: [
+        {
+          tag: {
+            connect: {
+              id: tags[0].id,
+            },
+          },
+        },
+      ],
+    },
+  },
+  {
+    id: 4,
+    title: 'Learning Resource 4',
+    learningUnit: {
+      connect: {
+        id: learningUnits[3].id,
+      },
+    },
+    sourceURL: 'http://localhost:5173',
+    tags: {
+      create: [
+        {
+          tag: {
+            connect: {
+              id: tags[0].id,
+            },
+          },
+        },
+      ],
+    },
+  },
+  {
+    id: 5,
+    title: 'Learning Resource 5',
+    learningUnit: {
+      connect: {
+        id: learningUnits[0].id,
+      },
+    },
+    sourceURL: 'http://localhost:5173',
+    tags: {
+      create: [
+        {
+          tag: {
+            connect: {
+              id: tags[0].id,
+            },
+          },
+        },
+      ],
+    },
+  },
+  {
+    id: 6,
+    title: 'Learning Resource 6',
+    learningUnit: {
+      connect: {
+        id: learningUnits[1].id,
+      },
+    },
+    sourceURL: 'http://localhost:5173',
+    tags: {
+      create: [
+        {
+          tag: {
+            connect: {
+              id: tags[0].id,
+            },
+          },
+        },
+      ],
+    },
+  },
+  {
+    id: 7,
+    title: 'Learning Resource 7',
+    learningUnit: {
+      connect: {
+        id: learningUnits[2].id,
+      },
+    },
+    sourceURL: 'http://localhost:5173',
+    tags: {
+      create: [
+        {
+          tag: {
+            connect: {
+              id: tags[0].id,
+            },
+          },
+        },
+      ],
+    },
+  },
+  {
+    id: 8,
+    title: 'Learning Resource 8',
+    learningUnit: {
+      connect: {
+        id: learningUnits[3].id,
+      },
+    },
+    sourceURL: 'http://localhost:5173',
+    tags: {
+      create: [
+        {
+          tag: {
+            connect: {
+              id: tags[0].id,
+            },
+          },
+        },
+      ],
+    },
+  },
+];
+
 async function main() {
   for (const tag of tags) {
     await db.tag.upsert({
@@ -252,6 +433,14 @@ async function main() {
       where: { id: learningUnit.id },
       update: {},
       create: learningUnit,
+    });
+  }
+
+  for (const source of learningUnitSources) {
+    await db.learningUnitSources.upsert({
+      where: { id: source.id },
+      update: {},
+      create: source,
     });
   }
 }
