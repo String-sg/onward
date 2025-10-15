@@ -117,7 +117,6 @@ export const POST: RequestHandler = async (event) => {
         content: query,
       },
     ],
-    temperature: 0,
     stream: true,
   });
 
