@@ -36,12 +36,54 @@ export function initAnalytics() {
  * Tracks when a podcast is played.
  * @param learningUnitId - The ID of the learning unit that was played.
  */
-export function trackPodcastPlay(learningUnitId: bigint) {
+export function trackPodcastPlay(learningUnitId: string) {
   if (!browser) {
     return;
   }
 
   window.gtag('event', 'podcast_play', {
+    learning_unit_id: learningUnitId,
+  });
+}
+
+/**
+ * Tracks when the quiz is clicked.
+ * @param learningUnitId - The ID of the learning unit of the quiz.
+ */
+export function trackQuizClick(learningUnitId: string) {
+  if (!browser) {
+    return;
+  }
+
+  window.gtag('event', 'quiz_click', {
+    learning_unit_id: learningUnitId,
+  });
+}
+
+/**
+ * Tracks when the quiz is attempted.
+ * @param learningUnitId - The ID of the learning unit of the quiz.
+ */
+export function trackQuizAttempt(learningUnitId: string) {
+  if (!browser) {
+    return;
+  }
+
+  window.gtag('event', 'quiz_attempt', {
+    learning_unit_id: learningUnitId,
+  });
+}
+
+/**
+ * Tracks when the quiz is completed.
+ * @param learningUnitId - The ID of the learning unit of the quiz.
+ */
+export function trackQuizCompletion(learningUnitId: string) {
+  if (!browser) {
+    return;
+  }
+
+  window.gtag('event', 'quiz_completion', {
     learning_unit_id: learningUnitId,
   });
 }

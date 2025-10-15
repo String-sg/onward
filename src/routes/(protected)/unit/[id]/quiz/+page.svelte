@@ -8,7 +8,13 @@
   import { Button, LinkButton } from '$lib/components/Button/index.js';
   import { Modal } from '$lib/components/Modal/index.js';
   import { Starfield } from '$lib/components/Starfield/index.js';
-  import { IsWithinViewport, noop, tagCodeToBadgeVariant } from '$lib/helpers/index.js';
+  import {
+    IsWithinViewport,
+    noop,
+    tagCodeToBadgeVariant,
+    trackQuizAttempt,
+    trackQuizCompletion,
+  } from '$lib/helpers/index.js';
   import { Player } from '$lib/states/index.js';
 
   const { data, params } = $props();
@@ -33,6 +39,8 @@
   });
 
   const toggleFeedbackModalVisibility = () => {
+    trackQuizAttempt(params.id.toString());
+
     isFeedbackModalOpen = !isFeedbackModalOpen;
   };
 
@@ -49,6 +57,8 @@
   };
 
   const handleSubmit: SubmitFunction = async () => {
+    trackQuizCompletion(params.id.toString());
+
     isCompletionModalOpen = true;
 
     return async ({ update }) => {
