@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.7.1 (2025-10-16)
+
+### Bug Fixes 🐛
+
+- fix: place the learning unit objectives container into it's proper position ([#337](https://github.com/String-sg/onward/pull/337)) ([bff0210](https://github.com/String-sg/onward/commit/bff021084a57173310f0ee39b149a213469ca176))
+
 ## 0.7.0 (2025-10-15)
 
 ### Features ✨
