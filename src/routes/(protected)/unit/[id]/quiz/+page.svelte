@@ -37,9 +37,8 @@
   });
 
   const toggleFeedbackModalVisibility = () => {
-    if (!isFeedbackModalOpen) {
-      trackQuizAttempt(params.id.toString());
-    }
+    trackQuizAttempt(params.id.toString());
+
     isFeedbackModalOpen = !isFeedbackModalOpen;
   };
 
