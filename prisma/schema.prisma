@@ -58,12 +58,12 @@ model LearningUnit {
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   // Domain-Specific Fields.
-  title       String      @map("title")
-  contentType ContentType @map("content_type")
-  contentURL  String      @map("content_url")
-  summary     String      @map("summary")
-  objectives  String      @map("objectives")
-  createdBy   String      @map("created_by")
+  title         String      @map("title")
+  contentType   ContentType @map("content_type")
+  contentURL    String      @map("content_url")
+  summary       String      @map("summary")
+  objectives    String      @map("objectives")
+  createdBy     String      @map("created_by")
   isRecommended Boolean     @default(false) @map("is_recommended")
 
   // Relations.
@@ -74,6 +74,7 @@ model LearningUnit {
   tags             LearningUnitTag[]
   learningJourneys LearningJourney[]
   questionAnswers  QuestionAnswer[]
+  sources          LearningUnitSources[]
 
   @@map("learning_units")
 }
@@ -94,6 +95,23 @@ model LearningUnitSentiments {
 
   @@unique([userId, learningUnitId])
   @@map("learning_unit_sentiments")
+}
+
+model LearningUnitSources {
+  id        BigInt   @id @default(autoincrement()) @map("id")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  // Domain-Specific Fields.
+  title     String @map("title")
+  sourceURL String @map("source_url")
+
+  // Relations.
+  learningUnitId BigInt                   @map("learning_unit_id")
+  learningUnit   LearningUnit             @relation(fields: [learningUnitId], references: [id])
+  tags           LearningUnitSourcesTag[]
+
+  @@map("learning_unit_sources")
 }
 
 enum ContentType {
@@ -130,8 +148,9 @@ model Tag {
   label String @map("label") @db.VarChar(100) // e.g. "Special Educational Needs"
 
   // Relations.
-  collections   CollectionTag[]
-  learningUnits LearningUnitTag[]
+  collections         CollectionTag[]
+  learningUnits       LearningUnitTag[]
+  LearningUnitSources LearningUnitSourcesTag[]
 
   @@map("tags")
 }
@@ -158,6 +177,18 @@ model LearningUnitTag {
 
   @@id([learningUnitId, tagId])
   @@map("learning_unit_tags")
+}
+
+model LearningUnitSourcesTag {
+  // Relations.
+  learningUnitSourceId BigInt @map("learning_unit_source_id")
+  tagId                BigInt @map("tag_id")
+
+  learningUnitSource LearningUnitSources @relation(fields: [learningUnitSourceId], references: [id], onDelete: Cascade)
+  tag                Tag                 @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([learningUnitSourceId, tagId])
+  @@map("learning_unit_sources_tags")
 }
 
 model Thread {
