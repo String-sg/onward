@@ -7,7 +7,12 @@
   import { Badge } from '$lib/components/Badge/index.js';
   import { Button, LinkButton } from '$lib/components/Button/index.js';
   import { Modal } from '$lib/components/Modal/index.js';
-  import { IsWithinViewport, noop } from '$lib/helpers/index.js';
+  import {
+    IsWithinViewport,
+    noop,
+    trackQuizAttempt,
+    trackQuizCompletion,
+  } from '$lib/helpers/index.js';
   import { Player } from '$lib/states/index.js';
 
   const { data, params } = $props();
@@ -32,6 +37,9 @@
   });
 
   const toggleFeedbackModalVisibility = () => {
+    if (!isFeedbackModalOpen) {
+      trackQuizAttempt(params.id.toString());
+    }
     isFeedbackModalOpen = !isFeedbackModalOpen;
   };
 
@@ -48,6 +56,8 @@
   };
 
   const handleSubmit: SubmitFunction = async () => {
+    trackQuizCompletion(params.id.toString());
+
     isCompletionModalOpen = true;
 
     return async ({ update }) => {
