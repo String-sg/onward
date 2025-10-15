@@ -20,6 +20,7 @@
         label: t.tag.label,
       })),
       title: learningUnit.title,
+      summary: learningUnit.summary,
       url: learningUnit.contentURL,
     });
   };

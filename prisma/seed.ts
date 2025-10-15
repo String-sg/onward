@@ -94,14 +94,26 @@ const questionAnswers: Prisma.QuestionAnswerCreateManyLearningUnitInput[] = [
   },
 ];
 
-const summary = `# **Project Summary**
+const objectives = `
+### Objectives
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lacinia odio vitae vestibulum vestibulum. Cras venenatis euismod malesuada. Nullam ac erat ante. Proin sit amet turpis nec nisl efficitur dignissim. Integer a sapien eget sapien tincidunt aliquet. Curabitur non massa nec urna vulputate facilisis. Fusce ut lectus non nulla gravida volutpat.
 
-**Artificial intelligence** is transforming industries by reshaping communication, learning, and creativity.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lacinia odio vitae vestibulum vestibulum. Cras venenatis euismod malesuada. Nullam ac erat ante. Proin sit amet turpis nec nisl efficitur dignissim. Integer a sapien eget sapien tincidunt aliquet. Curabitur non massa nec urna vulputate facilisis. Fusce ut lectus non nulla gravida volutpat.
 
-- From automating data analysis to generating human-like language, AI offers **immense potential**.
-- **Ethical concerns**, data privacy, and transparency remain key challenges.
+- **Lorem** ipsum dolor sit amet, consectetur adipiscing elit.
+- **Sed** do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+- **Ut enim** ad minim veniam, quis nostrud exercitation ullamco laboris.
+`;
+const summary = `
+### Summary
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lacinia odio vitae vestibulum vestibulum. Cras venenatis euismod malesuada. Nullam ac erat ante. Proin sit amet turpis nec nisl efficitur dignissim. Integer a sapien eget sapien tincidunt aliquet. Curabitur non massa nec urna vulputate facilisis. Fusce ut lectus non nulla gravida volutpat.
 
-> This is a pivotal era for intelligent systems.`;
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lacinia odio vitae vestibulum vestibulum. Cras venenatis euismod malesuada. Nullam ac erat ante. Proin sit amet turpis nec nisl efficitur dignissim. Integer a sapien eget sapien tincidunt aliquet. Curabitur non massa nec urna vulputate facilisis. Fusce ut lectus non nulla gravida volutpat.
+
+- **Lorem** ipsum dolor sit amet, consectetur adipiscing elit.
+- **Sed** do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+- **Ut enim** ad minim veniam, quis nostrud exercitation ullamco laboris.
+`;
 
 const learningUnits: Prisma.LearningUnitCreateInput[] = [
   {
@@ -110,6 +122,7 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     contentType: ContentType.PODCAST,
     contentURL: 'http://localhost:5173',
     summary,
+    objectives,
     createdBy: 'DXD Product Team',
     collection: {
       connect: {
@@ -137,6 +150,7 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     contentType: ContentType.PODCAST,
     contentURL: 'http://localhost:5173',
     summary,
+    objectives,
     createdBy: 'DXD Product Team',
     collection: {
       connect: {
@@ -164,6 +178,7 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     contentType: ContentType.PODCAST,
     contentURL: 'http://localhost:5173',
     summary,
+    objectives,
     createdBy: 'DXD Product Team',
     collection: {
       connect: {
@@ -191,6 +206,7 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     contentType: ContentType.PODCAST,
     contentURL: 'http://localhost:5173',
     summary,
+    objectives,
     createdBy: 'DXD Product Team',
     collection: {
       connect: {

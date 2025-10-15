@@ -54,7 +54,7 @@ export const load: PageServerLoad = async (event) => {
         },
       },
       title: true,
-      summary: true,
+      objectives: true,
       contentURL: true,
       createdAt: true,
       createdBy: true,

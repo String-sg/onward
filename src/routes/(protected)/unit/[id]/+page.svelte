@@ -49,6 +49,7 @@
       id: data.id,
       tags: data.tags,
       title: data.title,
+      summary: data.summary,
       url: data.url,
     });
   };
@@ -67,6 +68,7 @@
           id: data.id,
           tags: data.tags,
           title: data.title,
+          summary: data.summary,
           url: data.url,
         },
         initialSeekTime,
@@ -167,7 +169,7 @@
     >
       {#if browser}
         <!-- eslint-disable-next-line svelte/no-at-html-tags -->
-        {@html DOMPurify.sanitize(marked.parse(data.summary, { async: false }))}
+        {@html DOMPurify.sanitize(marked.parse(data.objectives, { async: false }))}
       {/if}
     </div>
 

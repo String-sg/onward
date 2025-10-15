@@ -1,5 +1,7 @@
 <script lang="ts">
   import { ChevronDown, Pause, Play, RotateCcw, RotateCw } from '@lucide/svelte';
+  import DOMPurify from 'dompurify';
+  import { marked } from 'marked';
 
   import { Badge } from '$lib/components/Badge/index.js';
   import { Modal, type ModalProps } from '$lib/components/Modal/index.js';
@@ -83,7 +85,7 @@
 </script>
 
 <Modal {isopen} {onclose} variant="dark">
-  <div class="mx-auto flex min-h-svh max-w-5xl flex-col gap-y-4 px-4 py-3">
+  <div class="mx-auto flex h-svh max-w-5xl flex-col gap-y-4 px-4 py-3">
     <!-- Navigation -->
     <div class="flex items-center">
       <button
@@ -94,9 +96,14 @@
       </button>
     </div>
 
-    <div class="flex-1"></div>
+    <div class="overflow-y-auto mask-t-from-98% mask-b-from-90%">
+      <div class="prose prose-white max-w-none pb-4 text-lg">
+        <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+        {@html DOMPurify.sanitize(marked.parse(currenttrack.summary, { async: false }))}
+      </div>
+    </div>
 
-    <div class="flex flex-col gap-y-6">
+    <div class="mt-auto flex flex-col gap-y-6">
       <!-- Badge and Title -->
       <div class="flex flex-col gap-y-3">
         <Badge variant={tagCodeToBadgeVariant(currenttrack.tags?.[0].code)}>

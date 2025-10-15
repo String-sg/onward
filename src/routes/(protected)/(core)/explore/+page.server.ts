@@ -8,7 +8,7 @@ export const load: PageServerLoad = async () => {
       id: true,
       createdAt: true,
       title: true,
-      summary: true,
+      objectives: true,
       contentURL: true,
       createdBy: true,
       tags: {
