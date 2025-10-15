@@ -95,7 +95,7 @@
             });
           }
         })
-        .catch((err) => {
+        .catch(() => {
           error = DEFAULT_ERROR_MESSAGE;
         });
     }
