@@ -317,16 +317,14 @@
               {#each messages as { role, content }, index (index)}
                 {#if role === 'USER'}
                   <div class="flex flex-col items-end">
-                    <span
-                      class="prose prose-slate max-w-4/5 rounded-3xl bg-white p-4 text-left break-words"
-                    >
+                    <span class="max-w-4/5 rounded-3xl bg-white p-4 text-left break-words">
                       <!-- eslint-disable-next-line svelte/no-at-html-tags -->
                       {content}
                     </span>
                   </div>
                 {:else}
                   <div class="flex flex-col">
-                    <span class="prose prose-slate rounded-3xlp-4 text-left break-words">
+                    <span class="prose prose-slate rounded-3xl p-4 text-left break-words">
                       <!-- eslint-disable-next-line svelte/no-at-html-tags -->
                       {@html DOMPurify.sanitize(marked.parse(content, { async: false }))}
                     </span>
