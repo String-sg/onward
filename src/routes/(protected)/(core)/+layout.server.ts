@@ -15,5 +15,6 @@ export const load: LayoutServerLoad = async (event) => {
 
   return {
     avatar: await getBase64EncodedAvatar(BigInt(user.id)),
+    username: user.name,
   };
 };

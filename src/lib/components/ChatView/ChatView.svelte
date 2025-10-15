@@ -6,6 +6,7 @@
   import { fade, fly } from 'svelte/transition';
 
   import { goto } from '$app/navigation';
+  import { page } from '$app/state';
   import { Badge } from '$lib/components/Badge/index.js';
   import { Portal } from '$lib/components/Portal/index.js';
   import { IsWithinViewport } from '$lib/helpers/index.js';
@@ -39,11 +40,6 @@
   let isMessagesFetched = false;
 
   const isWithinViewport = new IsWithinViewport(() => target);
-
-  const recommendedQueries = [
-    'What are three quick strategies for teaching reading to a student with dyslexia in a mainstream classroom?',
-    'How can I create a sensory-friendly classroom for students with autism spectrum disorder?',
-  ];
 
   // Disable scrolling when view is open.
   $effect(() => {
@@ -132,11 +128,6 @@
     }
   };
 
-  const handleRecommendedQuery = (recommendedQuery: string) => {
-    query = recommendedQuery;
-    handleSendQuery();
-  };
-
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.key === 'Enter' && !event.shiftKey) {
       // Prevent default behavior of creating a new line within textarea.
@@ -219,24 +210,12 @@
         <div class="h-[calc(100svh-180px)] overflow-y-auto px-4 pt-3">
           <div class="flex flex-col gap-y-4">
             {#if messages.length === 0}
-              <span class="text-xl font-medium">
-                Hi Mr. Tan, here are some of the example questions relevant to Special Educational
-                Needs topic.
+              <span class="text-center text-xl font-medium">
+                {`Hi${page.data.username ? ` ${page.data.username}` : ''}! How can I assist you today?`}
               </span>
             {/if}
 
             <div class="flex flex-col gap-y-2.5">
-              {#if messages.length === 0}
-                {#each recommendedQueries as recommendedQuery, index (index)}
-                  <button
-                    class="cursor-pointer rounded-3xl bg-white p-4 text-left hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed"
-                    onclick={() => handleRecommendedQuery(recommendedQuery)}
-                  >
-                    {recommendedQuery}
-                  </button>
-                {/each}
-              {/if}
-
               {#each messages as { role, content }, index (index)}
                 <div class={['flex flex-col', role === 'USER' && 'items-end']}>
                   <span
@@ -273,7 +252,7 @@
               bind:this={textareaElement}
               name="query"
               class="w-full resize-none items-center px-3 outline-0"
-              placeholder="Ask AI about SEN"
+              placeholder="Ask questions about a topic"
               onkeydown={handleKeyDown}
               rows="1"
               disabled={isAiTyping}
