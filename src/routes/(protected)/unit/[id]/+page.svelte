@@ -158,7 +158,10 @@
                 class="gap-x-2.5 !px-4 !py-3"
               >
                 <ThumbsUp />
-                <span class="font-medium">{data.likesCount}</span>
+
+                {#if data.likesCount > 0}
+                  <span class="font-medium">{data.likesCount}</span>
+                {/if}
               </Button>
             </form>
 
