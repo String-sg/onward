@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { ChevronDown, SendHorizontal } from '@lucide/svelte';
+  import { ChevronDown, CircleAlert, SendHorizontal } from '@lucide/svelte';
   import DOMPurify from 'dompurify';
   import { marked } from 'marked';
   import type { MouseEventHandler } from 'svelte/elements';
@@ -34,9 +34,11 @@
   let messages = $state<ChatMessage[]>([]);
   let isAiTyping = $state(false);
   let textareaElement = $state<HTMLTextAreaElement | null>(null);
+  let error = $state<string | null>(null);
 
   let isUserTyping = $derived(query.trim());
 
+  const DEFAULT_ERROR_MESSAGE = 'Something went wrong. Please refresh the page and try again.';
   let isMessagesFetched = false;
 
   const isWithinViewport = new IsWithinViewport(() => target);
@@ -71,14 +73,14 @@
               return goto('/login');
             }
 
-            console.error('Failed to fetch messages');
+            error = DEFAULT_ERROR_MESSAGE;
             return;
           }
 
           const data = await response.json();
           messages = data.messages;
-        } catch (err) {
-          console.error(err);
+        } catch {
+          error = DEFAULT_ERROR_MESSAGE;
         }
       };
 
@@ -110,16 +112,19 @@
       });
 
       if (!response.ok) {
+        isAiTyping = false;
         if (response.status === 401) {
-          return goto('/login');
+          goto('/login');
+          return;
         }
 
-        console.error('Failed to send query');
+        error = DEFAULT_ERROR_MESSAGE;
         return;
       }
 
       if (!response.body) {
-        console.error('Response body is null');
+        isAiTyping = false;
+        error = DEFAULT_ERROR_MESSAGE;
         return;
       }
       const reader = response.body.getReader();
@@ -156,16 +161,10 @@
 
           if (payload.type === 'error') {
             if (payload.message === 'Max number of tokens has been reached.') {
-              messages.push({
-                role: 'ASSISTANT',
-                content: 'Max tokens has been reached, please clear your chat.',
-              });
+              error = 'Max tokens has been reached, please clear your chat.';
               break;
             } else {
-              messages.push({
-                role: 'ASSISTANT',
-                content: 'Oops! Something went wrong. Please try again.',
-              });
+              error = DEFAULT_ERROR_MESSAGE;
               break;
             }
           }
@@ -174,10 +173,7 @@
         }
       }
     } catch {
-      messages.push({
-        role: 'ASSISTANT',
-        content: 'Oops! Something went wrong. Please try again.',
-      });
+      error = DEFAULT_ERROR_MESSAGE;
     }
   };
 
@@ -270,21 +266,38 @@
 
             <div class="flex flex-col gap-y-2.5">
               {#each messages as { role, content }, index (index)}
-                <div class={['flex flex-col', role === 'USER' && 'items-end']}>
-                  <span
-                    class={[
-                      'prose prose-slate rounded-3xl p-4 text-left break-words',
-                      role === 'USER' && 'max-w-4/5 bg-white',
-                    ]}
-                  >
-                    <!-- eslint-disable-next-line svelte/no-at-html-tags -->
-                    {@html DOMPurify.sanitize(marked.parse(content, { async: false }))}
-                  </span>
-                </div>
+                {#if role === 'USER'}
+                  <div class="flex flex-col items-end">
+                    <span
+                      class="prose prose-slate max-w-4/5 rounded-3xl bg-white p-4 text-left break-words"
+                    >
+                      <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+                      {content}
+                    </span>
+                  </div>
+                {:else}
+                  <div class="flex flex-col">
+                    <span class="prose prose-slate rounded-3xlp-4 text-left break-words">
+                      <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+                      {@html DOMPurify.sanitize(marked.parse(content, { async: false }))}
+                    </span>
+                  </div>
+                {/if}
               {/each}
 
               {#if isAiTyping}
                 <span class="typing-dots rounded-3xl p-4 text-left">AI is typing</span>
+              {/if}
+
+              {#if error}
+                <div class="flex flex-col">
+                  <span
+                    class="flex w-fit max-w-4/5 flex-row gap-2 rounded-3xl border border-solid border-slate-300 p-4 text-left break-words"
+                  >
+                    <CircleAlert />
+                    {error}
+                  </span>
+                </div>
               {/if}
             </div>
           </div>
