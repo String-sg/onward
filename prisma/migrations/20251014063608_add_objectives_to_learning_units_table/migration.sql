@@ -5,4 +5,4 @@
 
 */
 -- AlterTable
-ALTER TABLE "public"."learning_units" ADD COLUMN     "objectives" TEXT NOT NULL;
+ALTER TABLE "public"."learning_units" ADD COLUMN     "objectives" TEXT;

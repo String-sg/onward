@@ -23,6 +23,7 @@ model User {
   // Relations.
   learningJourneys LearningJourney[]
   threads          Thread[]
+  sentiments       LearningUnitSentiments[]
 
   @@map("users")
 }
@@ -68,12 +69,31 @@ model LearningUnit {
   // Relations.
   collectionId BigInt @map("collection_id")
 
-  collection       Collection        @relation(fields: [collectionId], references: [id])
+  collection       Collection               @relation(fields: [collectionId], references: [id])
+  sentiments       LearningUnitSentiments[]
   tags             LearningUnitTag[]
   learningJourneys LearningJourney[]
   questionAnswers  QuestionAnswer[]
 
   @@map("learning_units")
+}
+
+model LearningUnitSentiments {
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  // Domain-Specific Fields.
+  hasLiked Boolean @map("has_liked")
+
+  // Relations.
+  userId         BigInt @map("user_id")
+  learningUnitId BigInt @map("learning_unit_id")
+
+  user         User         @relation(fields: [userId], references: [id])
+  learningUnit LearningUnit @relation(fields: [learningUnitId], references: [id])
+
+  @@unique([userId, learningUnitId])
+  @@map("learning_unit_sentiments")
 }
 
 enum ContentType {

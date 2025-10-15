@@ -1,10 +1,19 @@
 <script lang="ts">
-  import { ArrowLeft, ChevronsDown, Lightbulb, Pause, Play } from '@lucide/svelte';
+  import {
+    ArrowLeft,
+    ChevronsDown,
+    Lightbulb,
+    Pause,
+    Play,
+    ThumbsDown,
+    ThumbsUp,
+  } from '@lucide/svelte';
   import { formatDistanceToNow } from 'date-fns';
   import DOMPurify from 'dompurify';
   import { marked } from 'marked';
 
   import { browser } from '$app/environment';
+  import { enhance } from '$app/forms';
   import { afterNavigate } from '$app/navigation';
   import { page } from '$app/state';
   import { Badge } from '$lib/components/Badge/index.js';
@@ -17,6 +26,7 @@
   let returnTo = $state('/');
   let isExpanded = $state(false);
   let target = $state<HTMLElement | null>(null);
+  let sentiment = $derived(data.userSentiment);
 
   const isWithinViewport = new IsWithinViewport(() => target);
   const player = Player.get();
@@ -122,65 +132,93 @@
             {formatDistanceToNow(data.createdAt, { addSuffix: true })}
           </span>
         </div>
-      </div>
 
-      <div class="flex flex-col gap-y-4">
-        {#if isActive && player.isPlaying}
-          <Button variant="primary" width="full" onclick={handlePause}>
-            <Pause class="h-4 w-4" />
-            <span class="font-medium">Pause</span>
-          </Button>
-        {:else if isActive && !player.isPlaying}
-          <Button variant="primary" width="full" onclick={handleResume}>
-            <Play class="h-4 w-4" />
-            <span class="font-medium">Resume</span>
-          </Button>
-        {:else if lastCheckpoint && lastCheckpoint > 0}
-          <Button variant="primary" width="full" onclick={handleResume}>
-            <Play class="h-4 w-4" />
-            <span class="font-medium">Resume</span>
-          </Button>
-        {:else}
-          <Button variant="primary" width="full" onclick={handlePlay}>
-            <Play class="h-4 w-4" />
-            <span class="font-medium">Play</span>
-          </Button>
-        {/if}
+        <div class="flex gap-x-2">
+          <form method="POST" action="?/updateSentiment" use:enhance>
+            <input type="hidden" name="csrfToken" value={data.csrfToken} />
+            <input type="hidden" name="hasLiked" value={sentiment === true ? null : 'true'} />
 
-        <LinkButton
-          variant="secondary"
-          width="full"
-          disabled={!data.isQuizAvailable}
-          href={`/unit/${data.id}/quiz`}
-        >
-          <Lightbulb class="h-4 w-4" />
-          <span class="font-medium">Take the quiz</span>
-        </LinkButton>
+            <Button
+              type="submit"
+              variant={sentiment === true ? 'primary' : 'secondary'}
+              class="gap-x-2.5 !px-4 !py-3"
+            >
+              <ThumbsUp />
+              <span class="font-medium">{data.likesCount}</span>
+            </Button>
+          </form>
+
+          <form method="POST" action="?/updateSentiment" use:enhance>
+            <input type="hidden" name="csrfToken" value={data.csrfToken} />
+            <input type="hidden" name="hasLiked" value={sentiment === false ? null : 'false'} />
+            <Button
+              type="submit"
+              variant={sentiment === false ? 'primary' : 'secondary'}
+              class="!p-3"
+            >
+              <ThumbsDown />
+            </Button>
+          </form>
+        </div>
+
+        <div class="flex flex-col gap-y-4">
+          {#if isActive && player.isPlaying}
+            <Button variant="primary" width="full" onclick={handlePause}>
+              <Pause class="h-4 w-4" />
+              <span class="font-medium">Pause</span>
+            </Button>
+          {:else if isActive && !player.isPlaying}
+            <Button variant="primary" width="full" onclick={handleResume}>
+              <Play class="h-4 w-4" />
+              <span class="font-medium">Resume</span>
+            </Button>
+          {:else if lastCheckpoint && lastCheckpoint > 0}
+            <Button variant="primary" width="full" onclick={handleResume}>
+              <Play class="h-4 w-4" />
+              <span class="font-medium">Resume</span>
+            </Button>
+          {:else}
+            <Button variant="primary" width="full" onclick={handlePlay}>
+              <Play class="h-4 w-4" />
+              <span class="font-medium">Play</span>
+            </Button>
+          {/if}
+
+          <LinkButton
+            variant="secondary"
+            width="full"
+            disabled={!data.isQuizAvailable}
+            href={`/unit/${data.id}/quiz`}
+          >
+            <Lightbulb class="h-4 w-4" />
+            <span class="font-medium">Take the quiz</span>
+          </LinkButton>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="flex flex-col gap-y-4">
-    <div
-      class={[
-        'prose prose-slate line-clamp-4 max-h-28 max-w-none mask-b-from-10% text-lg',
-        isExpanded && 'line-clamp-none max-h-full mask-b-from-100%',
-      ]}
-    >
-      {#if browser}
-        <!-- eslint-disable-next-line svelte/no-at-html-tags -->
-        {@html DOMPurify.sanitize(marked.parse(data.objectives, { async: false }))}
+    <div class="flex flex-col gap-y-4">
+      <div
+        class={[
+          'prose prose-slate line-clamp-4 max-h-28 max-w-none mask-b-from-10% text-lg',
+          isExpanded && 'line-clamp-none max-h-full mask-b-from-100%',
+        ]}
+      >
+        {#if browser}
+          <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+          {@html DOMPurify.sanitize(marked.parse(data.objectives, { async: false }))}
+        {/if}
+      </div>
+
+      {#if !isExpanded}
+        <button
+          class="flex w-fit cursor-pointer items-center gap-x-1 self-center px-4 py-2"
+          onclick={toggleIsExpanded}
+        >
+          <span class="text-sm font-medium">Read more</span>
+          <ChevronsDown class="h-4 w-4" />
+        </button>
       {/if}
     </div>
-
-    {#if !isExpanded}
-      <button
-        class="flex w-fit cursor-pointer items-center gap-x-1 self-center px-4 py-2"
-        onclick={toggleIsExpanded}
-      >
-        <span class="text-sm font-medium">Read more</span>
-        <ChevronsDown class="h-4 w-4" />
-      </button>
-    {/if}
   </div>
 </main>
