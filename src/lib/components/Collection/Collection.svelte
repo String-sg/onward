@@ -21,7 +21,15 @@
     /**
      * Defines the visual theme and icon for the collection.
      */
-    type: 'SPECIAL_EDUCATIONAL_NEEDS' | 'LEARN_ABOUT_AI' | 'INNOVATION' | 'LEARN_WITH_BOB';
+    type:
+      | 'SPECIAL_EDUCATIONAL_NEEDS'
+      | 'LEARN_ABOUT_AI'
+      | 'LEARN_TO_USE_AI'
+      | 'INNOVATION'
+      | 'LEARN_WITH_BOB'
+      | 'STUDENT_WELLBEING'
+      | 'STAFF_WELLBEING'
+      | 'NEWS';
   }
 
   let { to, tags, title, numberofpodcasts, type }: Props = $props();
@@ -34,13 +42,24 @@
   <div class="flex flex-col gap-y-8">
     <div class="flex justify-center">
       {#if type === 'SPECIAL_EDUCATIONAL_NEEDS'}
-        <enhanced:img src="$lib/assets/jupiter.png?w=200" alt={title} />
+        <enhanced:img
+          src="$lib/assets/collections/special-educational-needs.png?w=200"
+          alt={title}
+        />
       {:else if type === 'LEARN_ABOUT_AI'}
-        <enhanced:img src="$lib/assets/stars.png?w=200" alt={title} />
+        <enhanced:img src="$lib/assets/collections/learn-about-ai.png?w=200" alt={title} />
+      {:else if type === 'LEARN_TO_USE_AI'}
+        <enhanced:img src="$lib/assets/collections/learn-to-use-ai.png?w=200" alt={title} />
       {:else if type === 'INNOVATION'}
-        <enhanced:img src="$lib/assets/jupiter.png?w=200" alt={title} />
+        <enhanced:img src="$lib/assets/collections/innovation.png?w=200" alt={title} />
       {:else if type === 'LEARN_WITH_BOB'}
-        <enhanced:img src="$lib/assets/stars.png?w=200" alt={title} />
+        <enhanced:img src="$lib/assets/collections/learn-with-bob.png?w=200" alt={title} />
+      {:else if type === 'STUDENT_WELLBEING'}
+        <enhanced:img src="$lib/assets/collections/student-wellbeing.png?w=200" alt={title} />
+      {:else if type === 'STAFF_WELLBEING'}
+        <enhanced:img src="$lib/assets/collections/staff-wellbeing.png?w=200" alt={title} />
+      {:else if type === 'NEWS'}
+        <enhanced:img src="$lib/assets/collections/news.png?w=200" alt={title} />
       {/if}
     </div>
 

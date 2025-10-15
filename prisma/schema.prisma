@@ -48,8 +48,12 @@ model Collection {
 enum CollectionType {
   SPECIAL_EDUCATIONAL_NEEDS
   LEARN_ABOUT_AI
+  LEARN_TO_USE_AI
   INNOVATION
   LEARN_WITH_BOB
+  STUDENT_WELLBEING
+  STAFF_WELLBEING
+  NEWS
 }
 
 model LearningUnit {
@@ -144,7 +148,7 @@ model Tag {
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   // Domain-Specific Fields.
-  code  String @unique @map("code") @db.VarChar(8) // e.g. "SEN"
+  code  String @unique @map("code") @db.VarChar(32) // e.g. "SPECIAL_EDUCATIONAL_NEEDS"
   label String @map("label") @db.VarChar(100) // e.g. "Special Educational Needs"
 
   // Relations.

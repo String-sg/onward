@@ -19,13 +19,13 @@ const db = new PrismaClient({
 const tags: Prisma.TagCreateInput[] = [
   {
     id: 1,
-    code: 'SEN',
+    code: 'SPECIAL_EDUCATIONAL_NEEDS',
     label: 'Special Educational Needs',
   },
   {
     id: 2,
-    code: 'AI',
-    label: 'Artificial Intelligence',
+    code: 'LEARN_TO_USE_AI',
+    label: 'Learn to Use AI',
   },
   {
     id: 3,
@@ -63,7 +63,7 @@ const collections: Prisma.CollectionCreateInput[] = [
     title: 'Learn to use AI',
     description:
       'Discover how AI is transforming education through personalized learning, intelligent tutoring systems, and data-driven insights to enhance teaching effectiveness.',
-    type: CollectionType.LEARN_ABOUT_AI,
+    type: CollectionType.LEARN_TO_USE_AI,
     tags: {
       create: [
         {
