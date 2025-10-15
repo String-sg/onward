@@ -97,7 +97,7 @@
     </div>
 
     <div class="overflow-y-auto mask-t-from-98% mask-b-from-90%">
-      <div class="prose prose-white max-w-none pb-4 text-xl">
+      <div class="prose prose-white max-w-none pb-4 text-lg">
         <!-- eslint-disable-next-line svelte/no-at-html-tags -->
         {@html DOMPurify.sanitize(marked.parse(currenttrack.summary, { async: false }))}
       </div>
