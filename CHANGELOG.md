@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.6.0 (2025-10-15)
+
+### Features ✨
+
+- feat: add new collection types ([#334](https://github.com/String-sg/onward/pull/334)) ([ea8391d](https://github.com/String-sg/onward/commit/ea8391db5af46c5558a496ff4930eabdefd6f37b))
+- feat: add learning units sources ([#331](https://github.com/String-sg/onward/pull/331)) ([ac89334](https://github.com/String-sg/onward/commit/ac89334004dd73526f078aa44893bec50d0fccc8))
+- feat: update `updatedAt` to default now ([#333](https://github.com/String-sg/onward/pull/333)) ([bedacde](https://github.com/String-sg/onward/commit/bedacde8e9455fda260797a387f118ffafaa9ea5))
+- feat: add learning units sentiments ([#325](https://github.com/String-sg/onward/pull/325)) ([9276a7c](https://github.com/String-sg/onward/commit/9276a7ca4b30f0e71e68097bdda98cb2213fcc14))
+- feat: add summary in player view ([#328](https://github.com/String-sg/onward/pull/328)) ([b9ba6b8](https://github.com/String-sg/onward/commit/b9ba6b88c1f69a9b68c02edb8e85c6e70a5dc2e3))
+- feat: display username and a generic placeholder message in chat view ([#302](https://github.com/String-sg/onward/pull/302)) ([0467bff](https://github.com/String-sg/onward/commit/0467bff495e96f2c2472440de0cee3c9ecc8b323))
+- feat: rename `Learning` tab to `My Learning` ([#324](https://github.com/String-sg/onward/pull/324)) ([e36e8e2](https://github.com/String-sg/onward/commit/e36e8e23628742d7f9d52719040683f2f212eb92))
+- feat: add new collection types ([#322](https://github.com/String-sg/onward/pull/322)) ([b1a8407](https://github.com/String-sg/onward/commit/b1a84076ad8f48c72bbfaa0b4e0d788920ada2fe))
+
+### Chores 🧹
+
+- chore(deps): bump `pino` from `9.9.0` to `10.0.0` ([#327](https://github.com/String-sg/onward/pull/327)) ([c19cb53](https://github.com/String-sg/onward/commit/c19cb53b1eddb65db167253d9f094a370786f0c9))
+- chore(deps): bump `nanoid` from `5.1.5` to `5.1.6` ([#326](https://github.com/String-sg/onward/pull/326)) ([83c4a93](https://github.com/String-sg/onward/commit/83c4a93fe646bde734d02110fbd1194bcaf39056))
+
 ## 0.5.0 (2025-10-14)
 
 ### Features ✨
