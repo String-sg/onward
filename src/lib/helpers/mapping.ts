@@ -8,19 +8,27 @@ import type { BadgeProps } from '$lib/components/Badge/index.js';
  *
  * @example
  * ```typescript
- * const variant = tagCodeToBadgeVariant('SEN');
+ * const variant = tagCodeToBadgeVariant('SPECIAL_EDUCATIONAL_NEEDS');
  * ```
  */
 export function tagCodeToBadgeVariant(code: string): BadgeProps['variant'] {
   switch (code) {
-    case 'SEN':
+    case 'SPECIAL_EDUCATIONAL_NEEDS':
       return 'purple';
-    case 'AI':
+    case 'LEARN_ABOUT_AI':
+      return 'rose';
+    case 'LEARN_TO_USE_AI':
       return 'amber';
-    case 'INN':
-      return 'slate';
-    case 'BOB':
-      return 'blue';
+    case 'INNOVATION':
+      return 'sky';
+    case 'LEARN_WITH_BOB':
+      return 'indigo';
+    case 'STUDENT_WELLBEING':
+      return 'green';
+    case 'STAFF_WELLBEING':
+      return 'teal';
+    case 'NEWS':
+      return 'orange';
     case 'PDF':
       return 'rose';
     case 'LINK':

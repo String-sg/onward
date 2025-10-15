@@ -148,7 +148,7 @@ model Tag {
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   // Domain-Specific Fields.
-  code  String @unique @map("code") @db.VarChar(32) // e.g. "SEN"
+  code  String @unique @map("code") @db.VarChar(32) // e.g. "SPECIAL_EDUCATIONAL_NEEDS"
   label String @map("label") @db.VarChar(100) // e.g. "Special Educational Needs"
 
   // Relations.

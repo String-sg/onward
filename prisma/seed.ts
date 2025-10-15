@@ -19,13 +19,13 @@ const db = new PrismaClient({
 const tags: Prisma.TagCreateInput[] = [
   {
     id: 1,
-    code: 'SEN',
+    code: 'SPECIAL_EDUCATIONAL_NEEDS',
     label: 'Special Educational Needs',
   },
   {
     id: 2,
-    code: 'AI',
-    label: 'Artificial Intelligence',
+    code: 'LEARN_TO_USE_AI',
+    label: 'Learn to Use AI',
   },
   {
     id: 3,
