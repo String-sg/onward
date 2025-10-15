@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.7.2 (2025-10-16)
+
+### Features ✨
+
+- feat: set reasoning effort to `minimal` ([#347](https://github.com/String-sg/onward/pull/347)) ([60203fd](https://github.com/String-sg/onward/commit/60203fda7e60a2e51c8f99e18602d6ffc1224398))
+
+### Bug Fixes 🐛
+
+- fix: update thumbs up padding size ([#348](https://github.com/String-sg/onward/pull/348)) ([9d95fab](https://github.com/String-sg/onward/commit/9d95fab2daf0b2f6ac4800703ffe1ce3aa6b2774))
+- fix: remove temperature property ([#345](https://github.com/String-sg/onward/pull/345)) ([93dbb58](https://github.com/String-sg/onward/commit/93dbb587f55e60e5cd0042da390650cf432cd522))
+- fix: remove likes count when it is zero ([#343](https://github.com/String-sg/onward/pull/343)) ([4bc4ddb](https://github.com/String-sg/onward/commit/4bc4ddb43716ec41d87810b43b75bc18846be708))
+- fix: username in greeting message of chatbot ([#339](https://github.com/String-sg/onward/pull/339)) ([2bb670e](https://github.com/String-sg/onward/commit/2bb670eb717ac6ada77304e287bfc2577181126d))
+
 ## 0.7.1 (2025-10-16)
 
 ### Bug Fixes 🐛
