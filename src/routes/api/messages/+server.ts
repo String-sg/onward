@@ -118,6 +118,7 @@ export const POST: RequestHandler = async (event) => {
       },
     ],
     stream: true,
+    reasoning_effort: 'minimal',
   });
 
   const encoder = new TextEncoder();
