@@ -155,7 +155,7 @@
               <Button
                 type="submit"
                 variant={sentiment === true ? 'primary' : 'secondary'}
-                class="gap-x-2.5 !px-4 !py-3"
+                class="gap-x-2 !p-3"
               >
                 <ThumbsUp />
 
