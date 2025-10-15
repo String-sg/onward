@@ -318,7 +318,6 @@
                 {#if role === 'USER'}
                   <div class="flex flex-col items-end">
                     <span class="max-w-4/5 rounded-3xl bg-white p-4 text-left break-words">
-                      <!-- eslint-disable-next-line svelte/no-at-html-tags -->
                       {content}
                     </span>
                   </div>
