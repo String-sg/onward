@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.8.0 (2025-10-16)
+
+### Features ✨
+
+- feat: add collection description in learning collection page view ([#355](https://github.com/String-sg/onward/pull/355)) ([494f0c9](https://github.com/String-sg/onward/commit/494f0c923420eb3cb5c9fde20c127ec3939b6464))
+
+### Bug Fixes 🐛
+
+- fix: always remove `overflow` property when closing modal ([#353](https://github.com/String-sg/onward/pull/353)) ([d706a52](https://github.com/String-sg/onward/commit/d706a528438a19a3dbd4638286eb86ba77762b28))
+- fix: add default for updated_at column for learning unit sources ([#338](https://github.com/String-sg/onward/pull/338)) ([141bd80](https://github.com/String-sg/onward/commit/141bd805dd606b2c0f105beb78c4a817f786d3c9))
+
 ## 0.7.2 (2025-10-16)
 
 ### Features ✨
