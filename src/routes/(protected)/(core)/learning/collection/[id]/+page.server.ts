@@ -32,6 +32,7 @@ export const load: PageServerLoad = async (event) => {
     where: { id: BigInt(event.params.id) },
     select: {
       title: true,
+      description: true,
     },
   });
 
@@ -72,6 +73,7 @@ export const load: PageServerLoad = async (event) => {
 
   return {
     title: collection.title,
+    description: collection.description,
     journeys: learningJourneys.reduce<{
       inProgress: Result[];
       isCompleted: Result[];

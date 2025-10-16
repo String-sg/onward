@@ -38,6 +38,13 @@
 <div bind:this={target} class="absolute inset-x-0 top-0 h-px"></div>
 
 <main class="relative mx-auto flex min-h-svh max-w-5xl flex-col gap-y-6 px-4 pt-23 pb-28">
+  <div class="flex flex-col gap-y-2 rounded-3xl bg-slate-200 p-4 shadow-xs">
+    <span class="text-lg font-medium">About this topic</span>
+    <p>
+      {data.description}
+    </p>
+  </div>
+
   <div class="flex flex-col gap-y-3">
     <div class="px-2">
       <span class="text-xl font-semibold">In Progress</span>
