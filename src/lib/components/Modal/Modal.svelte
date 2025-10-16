@@ -52,14 +52,12 @@
   }: Props = $props();
 
   $effect.pre(() => {
-    const prev = document.body.style.getPropertyValue('overflow');
-
     if (isopen) {
       document.body.style.setProperty('overflow', 'hidden');
     }
 
     return () => {
-      document.body.style.setProperty('overflow', prev);
+      document.body.style.removeProperty('overflow');
     };
   });
 
