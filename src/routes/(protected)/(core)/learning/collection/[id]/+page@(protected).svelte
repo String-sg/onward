@@ -45,45 +45,49 @@
     </p>
   </div>
 
-  <div class="flex flex-col gap-y-3">
-    <div class="px-2">
-      <span class="text-xl font-semibold">In Progress</span>
-    </div>
+  {#if data.journeys.inProgress.length > 0}
+    <div class="flex flex-col gap-y-3">
+      <div class="px-2">
+        <span class="text-xl font-semibold">In Progress</span>
+      </div>
 
-    <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
-      {#each data.journeys.inProgress as journey (journey.id)}
-        <LearningUnit
-          to="/unit/{journey.unitId}"
-          tags={journey.tags.map((t) => ({
-            variant: tagCodeToBadgeVariant(t.code),
-            content: t.label,
-          }))}
-          title={journey.title}
-          createdat={journey.createdAt}
-          createdby={journey.createdBy}
-        />
-      {/each}
+      <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
+        {#each data.journeys.inProgress as journey (journey.id)}
+          <LearningUnit
+            to="/unit/{journey.unitId}"
+            tags={journey.tags.map((t) => ({
+              variant: tagCodeToBadgeVariant(t.code),
+              content: t.label,
+            }))}
+            title={journey.title}
+            createdat={journey.createdAt}
+            createdby={journey.createdBy}
+          />
+        {/each}
+      </div>
     </div>
-  </div>
+  {/if}
 
-  <div class="flex flex-col gap-y-3">
-    <div class="px-2">
-      <span class="text-xl font-semibold">Completed</span>
-    </div>
+  {#if data.journeys.isCompleted.length > 0}
+    <div class="flex flex-col gap-y-3">
+      <div class="px-2">
+        <span class="text-xl font-semibold">Completed</span>
+      </div>
 
-    <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
-      {#each data.journeys.isCompleted as journey (journey.id)}
-        <LearningUnit
-          to="/unit/{journey.unitId}"
-          tags={journey.tags.map((t) => ({
-            variant: tagCodeToBadgeVariant(t.code),
-            content: t.label,
-          }))}
-          title={journey.title}
-          createdat={journey.createdAt}
-          createdby={journey.createdBy}
-        />
-      {/each}
+      <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
+        {#each data.journeys.isCompleted as journey (journey.id)}
+          <LearningUnit
+            to="/unit/{journey.unitId}"
+            tags={journey.tags.map((t) => ({
+              variant: tagCodeToBadgeVariant(t.code),
+              content: t.label,
+            }))}
+            title={journey.title}
+            createdat={journey.createdAt}
+            createdby={journey.createdBy}
+          />
+        {/each}
+      </div>
     </div>
-  </div>
+  {/if}
 </main>
