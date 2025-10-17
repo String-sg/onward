@@ -69,6 +69,9 @@ export const load: PageServerLoad = async (event) => {
         collectionId: BigInt(event.params.id),
       },
     },
+    orderBy: {
+      updatedAt: 'desc',
+    },
   });
 
   return {
