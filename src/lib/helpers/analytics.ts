@@ -16,17 +16,15 @@ export function initAnalytics() {
     return;
   }
 
-  // Load gtag script
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = (...args) => {
+    window.dataLayer.push(args);
+  };
+
   const script = document.createElement('script');
   script.async = true;
   script.src = `https://www.googletagmanager.com/gtag/js?id=${env.PUBLIC_GOOGLE_ANALYTICS_ID}`;
   document.head.appendChild(script);
-
-  window.dataLayer = window.dataLayer || [];
-
-  window.gtag = (...args) => {
-    window.dataLayer.push(args);
-  };
 
   window.gtag('js', new Date());
   window.gtag('config', env.PUBLIC_GOOGLE_ANALYTICS_ID);
