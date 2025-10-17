@@ -2,7 +2,6 @@
   import {
     ArrowLeft,
     BookOpenIcon,
-    ChevronsDown,
     ExternalLink,
     Lightbulb,
     Pause,
@@ -28,7 +27,6 @@
   const { data } = $props();
 
   let returnTo = $state('/');
-  let isExpanded = $state(false);
   let target = $state<HTMLElement | null>(null);
   let isSourcesModalOpen = $state(false);
   let sentiment = $derived(data.userSentiment);
@@ -52,10 +50,6 @@
     sessionStorage.setItem('unit_origin', from.url.pathname);
     returnTo = from.url.pathname;
   });
-
-  const toggleIsExpanded = () => {
-    isExpanded = !isExpanded;
-  };
 
   const handlePlay = () => {
     trackPodcastPlay(data.id);
@@ -220,27 +214,10 @@
     </div>
   </div>
 
-  <div class="flex flex-col gap-y-4">
-    <div
-      class={[
-        'prose prose-slate line-clamp-4 max-h-28 max-w-none mask-b-from-10% text-lg',
-        isExpanded && 'line-clamp-none max-h-full mask-b-from-100%',
-      ]}
-    >
-      {#if browser}
-        <!-- eslint-disable-next-line svelte/no-at-html-tags -->
-        {@html DOMPurify.sanitize(marked.parse(data.objectives, { async: false }))}
-      {/if}
-    </div>
-
-    {#if !isExpanded}
-      <button
-        class="flex w-fit cursor-pointer items-center gap-x-1 self-center px-4 py-2"
-        onclick={toggleIsExpanded}
-      >
-        <span class="text-sm font-medium">Read more</span>
-        <ChevronsDown class="h-4 w-4" />
-      </button>
+  <div class={['prose prose-slate text-lg']}>
+    {#if browser}
+      <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+      {@html DOMPurify.sanitize(marked.parse(data.objectives, { async: false }))}
     {/if}
   </div>
 </main>
