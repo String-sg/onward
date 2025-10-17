@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.9.0 (2025-10-17)
+
+### Features ✨
+
+- feat: sort learning journeys in descending order of creation ([#365](https://github.com/String-sg/onward/pull/365)) ([d61e742](https://github.com/String-sg/onward/commit/d61e74236fc6b6c77d9db03fd957178f825e8bdc))
+- feat: always show full objectives in learning unit page ([#364](https://github.com/String-sg/onward/pull/364)) ([a97faa3](https://github.com/String-sg/onward/commit/a97faa3fe7f555a2565bf81ca9b82b7a86f054dd))
+- feat: hide empty progress sections when no units to display ([#362](https://github.com/String-sg/onward/pull/362)) ([178ef4c](https://github.com/String-sg/onward/commit/178ef4ce88efa48ed80009b53a2af43a84197b3d))
+
+### Bug Fixes 🐛
+
+- fix: ensure `dataLayer` and `gtag` are defined before loading the `gtag` script ([#363](https://github.com/String-sg/onward/pull/363)) ([26d3e47](https://github.com/String-sg/onward/commit/26d3e47ea547df11571a4bfe914aa581b30c45b4))
+
 ## 0.8.0 (2025-10-16)
 
 ### Features ✨
