@@ -43,8 +43,13 @@ export const load: PageServerLoad = async (event) => {
     GROUP BY c.id;
   `;
 
+  const collection = collections.map((collection) => ({
+    ...collection,
+    numberOfPodcasts: Number(collection.numberOfPodcasts),
+  }));
+
   return {
-    collections,
+    collections: collection,
     username: user.name,
   };
 };
