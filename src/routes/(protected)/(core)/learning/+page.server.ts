@@ -40,7 +40,8 @@ export const load: PageServerLoad = async (event) => {
     INNER JOIN learning_units lu ON lu.id = lj.learning_unit_id
     INNER JOIN collections c ON c.id = lu.collection_id
     WHERE lj.user_id = ${user.id}
-    GROUP BY c.id;
+    GROUP BY c.id
+    ORDER BY MAX(lj.updated_at) DESC;
   `;
 
   return {
