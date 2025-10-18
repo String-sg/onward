@@ -34,7 +34,7 @@ export function initAnalytics() {
  * Tracks when a podcast is played.
  * @param learningUnitId - The ID of the learning unit that was played.
  */
-export function trackPodcastPlay(learningUnitId: bigint) {
+export function trackPodcastPlay(learningUnitId: string) {
   if (!browser) {
     return;
   }

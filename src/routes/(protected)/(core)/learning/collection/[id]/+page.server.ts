@@ -29,7 +29,7 @@ export const load: PageServerLoad = async (event) => {
   }
 
   const collection = await db.collection.findUnique({
-    where: { id: BigInt(event.params.id) },
+    where: { id: event.params.id },
     select: {
       title: true,
       description: true,
@@ -64,9 +64,9 @@ export const load: PageServerLoad = async (event) => {
       },
     },
     where: {
-      userId: BigInt(user.id),
+      userId: user.id,
       learningUnit: {
-        collectionId: BigInt(event.params.id),
+        collectionId: event.params.id,
       },
     },
     orderBy: {

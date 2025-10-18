@@ -13,7 +13,7 @@ const DEFAULT_SESSION_ID_LENGTH = 32;
 const DEFAULT_CSRF_TOKEN_LENGTH = 32;
 
 export interface User {
-  id: string | number;
+  id: string;
   email: string;
   name: string;
 }
@@ -132,7 +132,7 @@ export default class Session {
 
     if (
       !payload['user']['id'] ||
-      (typeof payload['user']['id'] !== 'string' && typeof payload['user']['id'] !== 'number') ||
+      typeof payload['user']['id'] !== 'string' ||
       !payload['user']['email'] ||
       typeof payload['user']['email'] !== 'string' ||
       !payload['user']['name'] ||

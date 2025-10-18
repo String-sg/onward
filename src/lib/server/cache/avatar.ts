@@ -20,7 +20,7 @@ const AVATAR_TTL = 24 * 60 * 60;
  * @param userId - The ID of the user whose avatar should be retrieved.
  * @returns The base64-encoded avatar, or `null` if the user is not found.
  */
-export async function getBase64EncodedAvatar(userId: bigint): Promise<string | null> {
+export async function getBase64EncodedAvatar(userId: string): Promise<string | null> {
   let avatar = await valkey.get(`${AVATAR_NAMESPACE}:${userId}`);
   if (avatar) {
     return avatar.toString();

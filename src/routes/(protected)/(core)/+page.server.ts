@@ -44,7 +44,7 @@ export const load: PageServerLoad = async (event) => {
       },
     },
     where: {
-      userId: BigInt(user.id),
+      userId: user.id,
       isCompleted: false,
     },
     orderBy: {
@@ -85,7 +85,7 @@ export const load: PageServerLoad = async (event) => {
       NOT: {
         learningJourneys: {
           some: {
-            userId: BigInt(user.id),
+            userId: user.id,
           },
         },
       },
