@@ -90,7 +90,7 @@
             <BookOpenCheck class="h-4 w-4" />
           </div>
 
-          <span>No. of MLUs consumed</span>
+          <span>Consumed bites</span>
         </div>
 
         <div class="flex items-center gap-x-1">
@@ -99,7 +99,7 @@
               ? data.learningUnitsConsumedByMonth
               : data.learningUnitsConsumedByWeek}
           </span>
-          <span class="text-slate-500">MLUs</span>
+          <span class="text-slate-500">bites</span>
         </div>
       </div>
 
@@ -109,7 +109,7 @@
             <Lightbulb class="h-4 w-4" />
           </div>
 
-          <span>Completed MLUs</span>
+          <span>Completed bites</span>
         </div>
 
         <div class="flex items-center gap-x-1">
@@ -118,7 +118,7 @@
               ? data.learningUnitsCompletedByMonth
               : data.learningUnitsCompletedByWeek}
           </span>
-          <span class="text-slate-500">MLUs</span>
+          <span class="text-slate-500">bites</span>
         </div>
       </div>
     </div>
