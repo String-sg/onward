@@ -9,7 +9,7 @@
 <main class="relative mx-auto flex min-h-svh max-w-5xl flex-col gap-y-6 px-4 pt-43 pb-28">
   <div class="flex flex-col gap-y-3">
     <div class="flex flex-row justify-between px-2">
-      <span class="text-xl font-semibold">Learning units</span>
+      <span class="text-xl font-semibold">Learning bites</span>
       <a
         href="/explore/units"
         class="rounded-2xl px-4 py-2 text-sm font-medium hover:bg-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed"
