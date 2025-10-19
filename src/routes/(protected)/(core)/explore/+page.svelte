@@ -1,7 +1,6 @@
 <script lang="ts">
   import { Collection } from '$lib/components/Collection/index.js';
   import { LearningUnit } from '$lib/components/LearningUnit/index.js';
-  import { tagCodeToBadgeVariant } from '$lib/helpers/index.js';
 
   const { data } = $props();
 </script>
@@ -21,10 +20,7 @@
       {#each data.learningUnits as learningUnit (learningUnit.id)}
         <LearningUnit
           to="/unit/{learningUnit.id}"
-          tags={learningUnit.tags.map((t) => ({
-            variant: tagCodeToBadgeVariant(t.code),
-            content: t.label,
-          }))}
+          tags={learningUnit.tags}
           title={learningUnit.title}
           createdat={learningUnit.createdAt}
           createdby={learningUnit.createdBy}
@@ -44,10 +40,7 @@
             to="/explore/collection/{collection.id}"
             title={collection.title}
             type={collection.type}
-            tags={collection.tags.map((t) => ({
-              variant: tagCodeToBadgeVariant(t.code),
-              content: t.label,
-            }))}
+            tags={collection.tags}
             numberofpodcasts={collection.numberOfPodcasts}
           />
         {/if}

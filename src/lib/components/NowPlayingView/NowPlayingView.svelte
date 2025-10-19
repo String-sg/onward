@@ -106,9 +106,11 @@
     <div class="mt-auto flex flex-col gap-y-6">
       <!-- Badge and Title -->
       <div class="flex flex-col gap-y-3">
-        <Badge variant={tagCodeToBadgeVariant(currenttrack.tags?.[0].code)}>
-          {currenttrack.tags?.[0].label}
-        </Badge>
+        {#each currenttrack.tags as tag (tag.label)}
+          <Badge variant={tagCodeToBadgeVariant(tag.code)}>
+            {tag.label}
+          </Badge>
+        {/each}
 
         <a
           href={`/unit/${currenttrack.id}`}

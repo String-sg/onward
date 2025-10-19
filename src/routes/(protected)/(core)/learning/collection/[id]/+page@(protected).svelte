@@ -2,7 +2,7 @@
   import { ArrowLeft } from '@lucide/svelte';
 
   import { LearningUnit } from '$lib/components/LearningUnit/index.js';
-  import { IsWithinViewport, tagCodeToBadgeVariant } from '$lib/helpers/index.js';
+  import { IsWithinViewport } from '$lib/helpers/index.js';
 
   let target = $state<HTMLElement | null>(null);
 
@@ -55,10 +55,7 @@
         {#each data.journeys.inProgress as journey (journey.id)}
           <LearningUnit
             to="/unit/{journey.unitId}"
-            tags={journey.tags.map((t) => ({
-              variant: tagCodeToBadgeVariant(t.code),
-              content: t.label,
-            }))}
+            tags={journey.tags}
             title={journey.title}
             createdat={journey.createdAt}
             createdby={journey.createdBy}
@@ -78,10 +75,7 @@
         {#each data.journeys.isCompleted as journey (journey.id)}
           <LearningUnit
             to="/unit/{journey.unitId}"
-            tags={journey.tags.map((t) => ({
-              variant: tagCodeToBadgeVariant(t.code),
-              content: t.label,
-            }))}
+            tags={journey.tags}
             title={journey.title}
             createdat={journey.createdAt}
             createdby={journey.createdBy}

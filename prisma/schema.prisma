@@ -46,14 +46,15 @@ model Collection {
 }
 
 enum CollectionType {
-  SPECIAL_EDUCATIONAL_NEEDS
-  LEARN_ABOUT_AI
-  LEARN_TO_USE_AI
-  INNOVATION
-  LEARN_WITH_BOB
-  STUDENT_WELLBEING
-  STAFF_WELLBEING
+  AI
+  BOB
+  CAREER
+  INNOV
   NEWS
+  PROD
+  STU_DEV
+  STU_WELL
+  WELLBEING
 }
 
 model LearningUnit {

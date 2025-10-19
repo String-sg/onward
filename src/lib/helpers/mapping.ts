@@ -1,5 +1,19 @@
 import type { BadgeProps } from '$lib/components/Badge/index.js';
 
+const TAG_CODE_TO_BADGE_VARIANT: Record<string, BadgeProps['variant']> = {
+  AI: 'amber',
+  BOB: 'indigo',
+  CAREER: 'green',
+  INNOV: 'sky',
+  NEWS: 'orange',
+  PROD: 'rose',
+  STU_DEV: 'purple',
+  STU_WELL: 'green',
+  WELLBEING: 'teal',
+  PDF: 'rose',
+  LINK: 'blue',
+};
+
 /**
  * Get the variant of the badge based on the given tag code.
  *
@@ -8,32 +22,9 @@ import type { BadgeProps } from '$lib/components/Badge/index.js';
  *
  * @example
  * ```typescript
- * const variant = tagCodeToBadgeVariant('SPECIAL_EDUCATIONAL_NEEDS');
+ * const variant = tagCodeToBadgeVariant('BOB');
  * ```
  */
 export function tagCodeToBadgeVariant(code: string): BadgeProps['variant'] {
-  switch (code) {
-    case 'SPECIAL_EDUCATIONAL_NEEDS':
-      return 'purple';
-    case 'LEARN_ABOUT_AI':
-      return 'rose';
-    case 'LEARN_TO_USE_AI':
-      return 'amber';
-    case 'INNOVATION':
-      return 'sky';
-    case 'LEARN_WITH_BOB':
-      return 'indigo';
-    case 'STUDENT_WELLBEING':
-      return 'green';
-    case 'STAFF_WELLBEING':
-      return 'teal';
-    case 'NEWS':
-      return 'orange';
-    case 'PDF':
-      return 'rose';
-    case 'LINK':
-      return 'blue';
-    default:
-      return 'slate';
-  }
+  return TAG_CODE_TO_BADGE_VARIANT[code.toUpperCase()] || 'slate';
 }

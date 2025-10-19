@@ -20,13 +20,13 @@ const db = new PrismaClient({
 const tags: Prisma.TagCreateInput[] = [
   {
     id: uuidv7(),
-    code: 'SPECIAL_EDUCATIONAL_NEEDS',
-    label: 'Special Educational Needs',
+    code: 'STU_DEV',
+    label: 'Student Development',
   },
   {
     id: uuidv7(),
-    code: 'LEARN_TO_USE_AI',
-    label: 'Learn to Use AI',
+    code: 'AI',
+    label: 'AI',
   },
   {
     id: uuidv7(),
@@ -46,7 +46,7 @@ const collections: Prisma.CollectionCreateInput[] = [
     title: 'SEN Peer Support',
     description:
       'Explore the world of Special Educational Needs (SEN) peer support that indicates Singapore specific peer support knowledge, case studies and more to gain knowledge about SEN.',
-    type: CollectionType.SPECIAL_EDUCATIONAL_NEEDS,
+    type: CollectionType.STU_DEV,
     tags: {
       create: [
         {
@@ -64,7 +64,7 @@ const collections: Prisma.CollectionCreateInput[] = [
     title: 'Learn to use AI',
     description:
       'Discover how AI is transforming education through personalized learning, intelligent tutoring systems, and data-driven insights to enhance teaching effectiveness.',
-    type: CollectionType.LEARN_TO_USE_AI,
+    type: CollectionType.AI,
     tags: {
       create: [
         {

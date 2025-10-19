@@ -2,7 +2,7 @@
   import { ArrowLeft } from '@lucide/svelte';
 
   import { LearningUnit } from '$lib/components/LearningUnit/index.js';
-  import { IsWithinViewport, tagCodeToBadgeVariant } from '$lib/helpers/index.js';
+  import { IsWithinViewport } from '$lib/helpers/index.js';
 
   const { data } = $props();
 
@@ -56,10 +56,7 @@
       {#each data.learningUnits as learningUnit (learningUnit.id)}
         <LearningUnit
           to="/unit/{learningUnit.id}"
-          tags={learningUnit.tags.map((t) => ({
-            variant: tagCodeToBadgeVariant(t.code),
-            content: t.label,
-          }))}
+          tags={learningUnit.tags}
           title={learningUnit.title}
           createdat={learningUnit.createdAt}
           createdby={learningUnit.createdBy}
