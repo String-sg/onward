@@ -19,7 +19,7 @@ export const GET: RequestHandler = async (event) => {
     const messages = await db.message.findMany({
       where: {
         thread: {
-          userId: BigInt(user.id),
+          userId: user.id,
           isActive: true,
         },
       },
@@ -78,7 +78,7 @@ export const POST: RequestHandler = async (event) => {
     select: { role: true, content: true },
     where: {
       thread: {
-        userId: BigInt(user.id),
+        userId: user.id,
         isActive: true,
       },
     },
@@ -168,13 +168,13 @@ export const POST: RequestHandler = async (event) => {
             try {
               await db.$transaction(async (tx) => {
                 let thread = await tx.thread.findFirst({
-                  where: { userId: BigInt(user.id), isActive: true },
+                  where: { userId: user.id, isActive: true },
                   select: { id: true },
                 });
 
                 if (!thread) {
                   thread = await tx.thread.create({
-                    data: { userId: BigInt(user.id), isActive: true },
+                    data: { userId: user.id, isActive: true },
                     select: { id: true },
                   });
                 }
@@ -249,7 +249,7 @@ export const DELETE: RequestHandler = async (event) => {
 
   try {
     await db.thread.updateMany({
-      where: { userId: BigInt(user.id), isActive: true },
+      where: { userId: user.id, isActive: true },
       data: { isActive: false },
     });
 

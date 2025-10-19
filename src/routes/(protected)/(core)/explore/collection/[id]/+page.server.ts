@@ -24,7 +24,7 @@ export const load: PageServerLoad = async (event) => {
       title: true,
       description: true,
     },
-    where: { id: BigInt(event.params.id) },
+    where: { id: event.params.id },
   } satisfies CollectionFindUniqueArgs;
 
   let collection: CollectionGetPayload<typeof collectionArgs> | null;
@@ -59,7 +59,7 @@ export const load: PageServerLoad = async (event) => {
       createdAt: true,
       createdBy: true,
     },
-    where: { collectionId: BigInt(event.params.id) },
+    where: { collectionId: event.params.id },
     orderBy: {
       createdAt: 'desc',
     },

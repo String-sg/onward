@@ -1,6 +1,7 @@
 import 'dotenv/config';
 
 import { PrismaPg } from '@prisma/adapter-pg';
+import { v7 as uuidv7 } from 'uuid';
 
 import {
   CollectionType,
@@ -18,22 +19,22 @@ const db = new PrismaClient({
 
 const tags: Prisma.TagCreateInput[] = [
   {
-    id: 1,
+    id: uuidv7(),
     code: 'SPECIAL_EDUCATIONAL_NEEDS',
     label: 'Special Educational Needs',
   },
   {
-    id: 2,
+    id: uuidv7(),
     code: 'LEARN_TO_USE_AI',
     label: 'Learn to Use AI',
   },
   {
-    id: 3,
+    id: uuidv7(),
     code: 'PDF',
     label: 'PDF',
   },
   {
-    id: 4,
+    id: uuidv7(),
     code: 'LINK',
     label: 'Link',
   },
@@ -41,7 +42,7 @@ const tags: Prisma.TagCreateInput[] = [
 
 const collections: Prisma.CollectionCreateInput[] = [
   {
-    id: 1,
+    id: uuidv7(),
     title: 'SEN Peer Support',
     description:
       'Explore the world of Special Educational Needs (SEN) peer support that indicates Singapore specific peer support knowledge, case studies and more to gain knowledge about SEN.',
@@ -59,7 +60,7 @@ const collections: Prisma.CollectionCreateInput[] = [
     },
   },
   {
-    id: 2,
+    id: uuidv7(),
     title: 'Learn to use AI',
     description:
       'Discover how AI is transforming education through personalized learning, intelligent tutoring systems, and data-driven insights to enhance teaching effectiveness.',
@@ -127,7 +128,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lacinia odio vi
 
 const learningUnits: Prisma.LearningUnitCreateInput[] = [
   {
-    id: 1,
+    id: uuidv7(),
     title: 'SEN Learning Unit 1',
     contentType: ContentType.PODCAST,
     contentURL: 'http://localhost:5173',
@@ -155,7 +156,7 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     },
   },
   {
-    id: 2,
+    id: uuidv7(),
     title: 'SEN Learning Unit 2',
     contentType: ContentType.PODCAST,
     contentURL: 'http://localhost:5173',
@@ -183,7 +184,7 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     },
   },
   {
-    id: 3,
+    id: uuidv7(),
     title: 'AI Learning Unit 1',
     contentType: ContentType.PODCAST,
     contentURL: 'http://localhost:5173',
@@ -211,7 +212,7 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     },
   },
   {
-    id: 4,
+    id: uuidv7(),
     title: 'AI Learning Unit 2',
     contentType: ContentType.PODCAST,
     contentURL: 'http://localhost:5173',
@@ -242,7 +243,7 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
 
 const learningUnitSources: Prisma.LearningUnitSourcesCreateInput[] = [
   {
-    id: 1,
+    id: uuidv7(),
     title: 'Learning Resource 1',
     learningUnit: {
       connect: {
@@ -263,7 +264,7 @@ const learningUnitSources: Prisma.LearningUnitSourcesCreateInput[] = [
     },
   },
   {
-    id: 2,
+    id: uuidv7(),
     title: 'Learning Resource 2',
     learningUnit: {
       connect: {
@@ -284,7 +285,7 @@ const learningUnitSources: Prisma.LearningUnitSourcesCreateInput[] = [
     },
   },
   {
-    id: 3,
+    id: uuidv7(),
     title: 'Learning Resource 3',
     learningUnit: {
       connect: {
@@ -305,7 +306,7 @@ const learningUnitSources: Prisma.LearningUnitSourcesCreateInput[] = [
     },
   },
   {
-    id: 4,
+    id: uuidv7(),
     title: 'Learning Resource 4',
     learningUnit: {
       connect: {
@@ -326,7 +327,7 @@ const learningUnitSources: Prisma.LearningUnitSourcesCreateInput[] = [
     },
   },
   {
-    id: 5,
+    id: uuidv7(),
     title: 'Learning Resource 5',
     learningUnit: {
       connect: {
@@ -347,7 +348,7 @@ const learningUnitSources: Prisma.LearningUnitSourcesCreateInput[] = [
     },
   },
   {
-    id: 6,
+    id: uuidv7(),
     title: 'Learning Resource 6',
     learningUnit: {
       connect: {
@@ -368,7 +369,7 @@ const learningUnitSources: Prisma.LearningUnitSourcesCreateInput[] = [
     },
   },
   {
-    id: 7,
+    id: uuidv7(),
     title: 'Learning Resource 7',
     learningUnit: {
       connect: {
@@ -389,7 +390,7 @@ const learningUnitSources: Prisma.LearningUnitSourcesCreateInput[] = [
     },
   },
   {
-    id: 8,
+    id: uuidv7(),
     title: 'Learning Resource 8',
     learningUnit: {
       connect: {

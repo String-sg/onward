@@ -25,7 +25,7 @@ export const POST: RequestHandler = async (event) => {
       !params ||
       typeof params !== 'object' ||
       !('id' in params) ||
-      typeof params['id'] !== 'number' ||
+      typeof params['id'] !== 'string' ||
       !('lastCheckpoint' in params) ||
       typeof params['lastCheckpoint'] !== 'number'
     ) {
@@ -38,14 +38,14 @@ export const POST: RequestHandler = async (event) => {
 
   const learningJourneyArgs = {
     where: {
-      userId_learningUnitId: { userId: BigInt(user.id), learningUnitId: BigInt(params.id) },
+      userId_learningUnitId: { userId: user.id, learningUnitId: params.id },
     },
     update: {
       lastCheckpoint: params.lastCheckpoint,
     },
     create: {
-      userId: BigInt(user.id),
-      learningUnitId: BigInt(params.id),
+      userId: user.id,
+      learningUnitId: params.id,
       isCompleted: false,
       lastCheckpoint: params.lastCheckpoint,
     },

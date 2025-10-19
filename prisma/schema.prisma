@@ -10,7 +10,7 @@ datasource db {
 }
 
 model User {
-  id        BigInt   @id @default(autoincrement()) @map("id")
+  id        String   @id @default(dbgenerated("uuid_generate_v7()")) @map("id") @db.Uuid
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
 
@@ -29,7 +29,7 @@ model User {
 }
 
 model Collection {
-  id        BigInt   @id @default(autoincrement()) @map("id")
+  id        String   @id @default(dbgenerated("uuid_generate_v7()")) @map("id") @db.Uuid
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
 
@@ -57,7 +57,7 @@ enum CollectionType {
 }
 
 model LearningUnit {
-  id        BigInt   @id @default(autoincrement()) @map("id")
+  id        String   @id @default(dbgenerated("uuid_generate_v7()")) @map("id") @db.Uuid
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
 
@@ -71,7 +71,7 @@ model LearningUnit {
   isRecommended Boolean     @default(false) @map("is_recommended")
 
   // Relations.
-  collectionId BigInt @map("collection_id")
+  collectionId String @map("collection_id") @db.Uuid
 
   collection       Collection               @relation(fields: [collectionId], references: [id])
   sentiments       LearningUnitSentiments[]
@@ -91,8 +91,8 @@ model LearningUnitSentiments {
   hasLiked Boolean @map("has_liked")
 
   // Relations.
-  userId         BigInt @map("user_id")
-  learningUnitId BigInt @map("learning_unit_id")
+  userId         String @map("user_id") @db.Uuid
+  learningUnitId String @map("learning_unit_id") @db.Uuid
 
   user         User         @relation(fields: [userId], references: [id])
   learningUnit LearningUnit @relation(fields: [learningUnitId], references: [id])
@@ -102,7 +102,7 @@ model LearningUnitSentiments {
 }
 
 model LearningUnitSources {
-  id        BigInt   @id @default(autoincrement()) @map("id")
+  id        String   @id @default(dbgenerated("uuid_generate_v7()")) @map("id") @db.Uuid
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
 
@@ -111,9 +111,10 @@ model LearningUnitSources {
   sourceURL String @map("source_url")
 
   // Relations.
-  learningUnitId BigInt                   @map("learning_unit_id")
-  learningUnit   LearningUnit             @relation(fields: [learningUnitId], references: [id])
-  tags           LearningUnitSourcesTag[]
+  learningUnitId String @map("learning_unit_id") @db.Uuid
+
+  learningUnit LearningUnit             @relation(fields: [learningUnitId], references: [id])
+  tags         LearningUnitSourcesTag[]
 
   @@map("learning_unit_sources")
 }
@@ -123,7 +124,7 @@ enum ContentType {
 }
 
 model LearningJourney {
-  id        BigInt   @id @default(autoincrement()) @map("id")
+  id        String   @id @default(dbgenerated("uuid_generate_v7()")) @map("id") @db.Uuid
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
 
@@ -132,8 +133,8 @@ model LearningJourney {
   lastCheckpoint Decimal @map("last_checkpoint")
 
   // Relations.
-  userId         BigInt @map("user_id")
-  learningUnitId BigInt @map("learning_unit_id")
+  userId         String @map("user_id") @db.Uuid
+  learningUnitId String @map("learning_unit_id") @db.Uuid
 
   user         User         @relation(fields: [userId], references: [id])
   learningUnit LearningUnit @relation(fields: [learningUnitId], references: [id])
@@ -143,7 +144,7 @@ model LearningJourney {
 }
 
 model Tag {
-  id        BigInt   @id @default(autoincrement()) @map("id")
+  id        String   @id @default(dbgenerated("uuid_generate_v7()")) @map("id") @db.Uuid
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
 
@@ -161,8 +162,8 @@ model Tag {
 
 model CollectionTag {
   // Relations.
-  collectionId BigInt @map("collection_id")
-  tagId        BigInt @map("tag_id")
+  collectionId String @map("collection_id") @db.Uuid
+  tagId        String @map("tag_id") @db.Uuid
 
   collection Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
   tag        Tag        @relation(fields: [tagId], references: [id], onDelete: Cascade)
@@ -173,8 +174,8 @@ model CollectionTag {
 
 model LearningUnitTag {
   // Relations.
-  learningUnitId BigInt @map("learning_unit_id")
-  tagId          BigInt @map("tag_id")
+  learningUnitId String @map("learning_unit_id") @db.Uuid
+  tagId          String @map("tag_id") @db.Uuid
 
   learningUnit LearningUnit @relation(fields: [learningUnitId], references: [id], onDelete: Cascade)
   tag          Tag          @relation(fields: [tagId], references: [id], onDelete: Cascade)
@@ -185,8 +186,8 @@ model LearningUnitTag {
 
 model LearningUnitSourcesTag {
   // Relations.
-  learningUnitSourceId BigInt @map("learning_unit_source_id")
-  tagId                BigInt @map("tag_id")
+  learningUnitSourceId String @map("learning_unit_source_id") @db.Uuid
+  tagId                String @map("tag_id") @db.Uuid
 
   learningUnitSource LearningUnitSources @relation(fields: [learningUnitSourceId], references: [id], onDelete: Cascade)
   tag                Tag                 @relation(fields: [tagId], references: [id], onDelete: Cascade)
@@ -196,7 +197,7 @@ model LearningUnitSourcesTag {
 }
 
 model Thread {
-  id        BigInt   @id @default(autoincrement()) @map("id")
+  id        String   @id @default(dbgenerated("uuid_generate_v7()")) @map("id") @db.Uuid
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
 
@@ -204,7 +205,7 @@ model Thread {
   isActive Boolean @default(false) @map("is_active")
 
   // Relations.
-  userId BigInt @map("user_id")
+  userId String @map("user_id") @db.Uuid
 
   user User @relation(fields: [userId], references: [id])
 
@@ -214,7 +215,7 @@ model Thread {
 }
 
 model Message {
-  id        BigInt   @id @default(autoincrement()) @map("id")
+  id        String   @id @default(dbgenerated("uuid_generate_v7()")) @map("id") @db.Uuid
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
 
@@ -223,7 +224,7 @@ model Message {
   role    Role   @map("role")
 
   // Relations.
-  threadId BigInt @map("thread_id")
+  threadId String @map("thread_id") @db.Uuid
 
   thread Thread @relation(fields: [threadId], references: [id])
 
@@ -236,7 +237,7 @@ enum Role {
 }
 
 model QuestionAnswer {
-  id        BigInt   @id @default(autoincrement()) @map("id")
+  id        String   @id @default(dbgenerated("uuid_generate_v7()")) @map("id") @db.Uuid
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
 
@@ -248,7 +249,7 @@ model QuestionAnswer {
   order       Int      @map("order") @db.SmallInt
 
   // Relations.
-  learningUnitId BigInt @map("learning_unit_id")
+  learningUnitId String @map("learning_unit_id") @db.Uuid
 
   learningUnit LearningUnit @relation(fields: [learningUnitId], references: [id])
 

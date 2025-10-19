@@ -23,12 +23,12 @@ export const load: PageServerLoad = async (event) => {
     const [byWeek, byMonth] = await Promise.all([
       db.learningJourney.groupBy({
         by: ['isCompleted'],
-        where: { userId: BigInt(user.id), updatedAt: { gte: startOfWeekMonday } },
+        where: { userId: user.id, updatedAt: { gte: startOfWeekMonday } },
         _count: { _all: true },
       }),
       db.learningJourney.groupBy({
         by: ['isCompleted'],
-        where: { userId: BigInt(user.id), updatedAt: { gte: firstOfMonth } },
+        where: { userId: user.id, updatedAt: { gte: firstOfMonth } },
         _count: { _all: true },
       }),
     ]);
@@ -36,7 +36,7 @@ export const load: PageServerLoad = async (event) => {
     return {
       name: user.name,
       email: user.email,
-      avatar: await getBase64EncodedAvatar(BigInt(user.id)),
+      avatar: await getBase64EncodedAvatar(user.id),
       learningUnitsConsumedByMonth: byMonth.reduce((total, group) => total + group._count._all, 0),
       learningUnitsConsumedByWeek: byWeek.reduce((total, group) => total + group._count._all, 0),
       learningUnitsCompletedByMonth: byMonth.find((group) => group.isCompleted)?._count._all ?? 0,

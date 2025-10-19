@@ -50,7 +50,7 @@ export const load: PageServerLoad = async (event) => {
       },
     },
     where: {
-      id: BigInt(event.params.id),
+      id: event.params.id,
     },
   } satisfies LearningUnitFindUniqueArgs;
 
@@ -104,17 +104,14 @@ export const actions: Actions = {
       return redirect(303, '/login');
     }
 
-    const userId = BigInt(user.id);
-    const learningUnitId = BigInt(event.params.id);
-
     const learningJourneyArgs = {
       where: {
-        userId_learningUnitId: { userId, learningUnitId },
+        userId_learningUnitId: { userId: user.id, learningUnitId: event.params.id },
       },
       update: { isCompleted: true },
       create: {
-        userId,
-        learningUnitId,
+        userId: user.id,
+        learningUnitId: event.params.id,
         isCompleted: true,
         lastCheckpoint: 0,
       },

@@ -48,7 +48,7 @@ export const load: PageServerLoad = async (event) => {
       createdAt: true,
       createdBy: true,
     },
-    where: { id: BigInt(event.params.id) },
+    where: { id: event.params.id },
   } satisfies LearningUnitFindUniqueArgs;
 
   let learningUnit: LearningUnitGetPayload<typeof learningUnitArgs> | null;
@@ -68,7 +68,7 @@ export const load: PageServerLoad = async (event) => {
     isQuizAvailable =
       (await db.questionAnswer.count({
         where: {
-          learningUnitId: BigInt(event.params.id),
+          learningUnitId: event.params.id,
         },
       })) > 0;
   } catch (err) {
@@ -82,8 +82,8 @@ export const load: PageServerLoad = async (event) => {
     },
     where: {
       userId_learningUnitId: {
-        userId: BigInt(user.id),
-        learningUnitId: BigInt(event.params.id),
+        userId: user.id,
+        learningUnitId: event.params.id,
       },
     },
   } satisfies LearningJourneyFindUniqueArgs;
@@ -102,8 +102,8 @@ export const load: PageServerLoad = async (event) => {
     },
     where: {
       userId_learningUnitId: {
-        userId: BigInt(user.id),
-        learningUnitId: BigInt(event.params.id),
+        userId: user.id,
+        learningUnitId: event.params.id,
       },
     },
   } satisfies LearningUnitSentimentsFindUniqueArgs;
@@ -118,7 +118,7 @@ export const load: PageServerLoad = async (event) => {
 
   const likesAggregateArgs = {
     where: {
-      learningUnitId: BigInt(event.params.id),
+      learningUnitId: event.params.id,
       hasLiked: true,
     },
     _count: {
@@ -150,7 +150,7 @@ export const load: PageServerLoad = async (event) => {
       },
     },
     where: {
-      learningUnitId: BigInt(event.params.id),
+      learningUnitId: event.params.id,
     },
   } satisfies LearningUnitSourcesFindManyArgs;
 
@@ -209,8 +209,8 @@ export const actions: Actions = {
       const deleteUserSentimentArgs = {
         where: {
           userId_learningUnitId: {
-            userId: BigInt(user.id),
-            learningUnitId: BigInt(event.params.id),
+            userId: user.id,
+            learningUnitId: event.params.id,
           },
         },
       } satisfies LearningUnitSentimentsDeleteArgs;
@@ -226,16 +226,16 @@ export const actions: Actions = {
       const learningUnitSentimentsArgs = {
         where: {
           userId_learningUnitId: {
-            userId: BigInt(user.id),
-            learningUnitId: BigInt(event.params.id),
+            userId: user.id,
+            learningUnitId: event.params.id,
           },
         },
         update: {
           hasLiked,
         },
         create: {
-          userId: BigInt(user.id),
-          learningUnitId: BigInt(event.params.id),
+          userId: user.id,
+          learningUnitId: event.params.id,
           hasLiked,
         },
       } satisfies LearningUnitSentimentsUpsertArgs;

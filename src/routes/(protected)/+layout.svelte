@@ -70,7 +70,7 @@
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          id: Number(player.currentTrack?.id),
+          id: player.currentTrack?.id,
           lastCheckpoint: progress,
         }),
       });
