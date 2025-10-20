@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { Badge, type BadgeProps } from '$lib/components/Badge/index.js';
+  import { Badge } from '$lib/components/Badge/index.js';
+  import { tagCodeToBadgeVariant } from '$lib/helpers/index.js';
 
   export interface Props {
     /**
@@ -9,7 +10,7 @@
     /**
      * The tags to display on the collection.
      */
-    tags: { variant: BadgeProps['variant']; content: string }[];
+    tags: { code: string; label: string }[];
     /**
      * The title of the collection.
      */
@@ -22,14 +23,15 @@
      * Defines the visual theme and icon for the collection.
      */
     type:
-      | 'SPECIAL_EDUCATIONAL_NEEDS'
-      | 'LEARN_ABOUT_AI'
-      | 'LEARN_TO_USE_AI'
-      | 'INNOVATION'
-      | 'LEARN_WITH_BOB'
-      | 'STUDENT_WELLBEING'
-      | 'STAFF_WELLBEING'
-      | 'NEWS';
+      | 'AI'
+      | 'BOB'
+      | 'CAREER'
+      | 'INNOV'
+      | 'NEWS'
+      | 'PROD'
+      | 'STU_DEV'
+      | 'STU_WELL'
+      | 'WELLBEING';
   }
 
   let { to, tags, title, numberofpodcasts, type }: Props = $props();
@@ -41,32 +43,31 @@
 >
   <div class="flex flex-col gap-y-8">
     <div class="flex justify-center">
-      {#if type === 'SPECIAL_EDUCATIONAL_NEEDS'}
-        <enhanced:img
-          src="$lib/assets/collections/special-educational-needs.png?w=200"
-          alt={title}
-        />
-      {:else if type === 'LEARN_ABOUT_AI'}
-        <enhanced:img src="$lib/assets/collections/learn-about-ai.png?w=200" alt={title} />
-      {:else if type === 'LEARN_TO_USE_AI'}
-        <enhanced:img src="$lib/assets/collections/learn-to-use-ai.png?w=200" alt={title} />
-      {:else if type === 'INNOVATION'}
-        <enhanced:img src="$lib/assets/collections/innovation.png?w=200" alt={title} />
-      {:else if type === 'LEARN_WITH_BOB'}
-        <enhanced:img src="$lib/assets/collections/learn-with-bob.png?w=200" alt={title} />
-      {:else if type === 'STUDENT_WELLBEING'}
-        <enhanced:img src="$lib/assets/collections/student-wellbeing.png?w=200" alt={title} />
-      {:else if type === 'STAFF_WELLBEING'}
-        <enhanced:img src="$lib/assets/collections/staff-wellbeing.png?w=200" alt={title} />
+      {#if type === 'AI'}
+        <enhanced:img src="$lib/assets/collections/ai.png?w=200" alt={title} />
+      {:else if type === 'BOB'}
+        <enhanced:img src="$lib/assets/collections/bob.png?w=200" alt={title} />
+      {:else if type === 'CAREER'}
+        <enhanced:img src="$lib/assets/collections/news.png?w=200" alt={title} />
+      {:else if type === 'INNOV'}
+        <enhanced:img src="$lib/assets/collections/innov.png?w=200" alt={title} />
       {:else if type === 'NEWS'}
         <enhanced:img src="$lib/assets/collections/news.png?w=200" alt={title} />
+      {:else if type === 'PROD'}
+        <enhanced:img src="$lib/assets/collections/news.png?w=200" alt={title} />
+      {:else if type === 'STU_DEV'}
+        <enhanced:img src="$lib/assets/collections/stu-dev.png?w=200" alt={title} />
+      {:else if type === 'STU_WELL'}
+        <enhanced:img src="$lib/assets/collections/stu-well.png?w=200" alt={title} />
+      {:else if type === 'WELLBEING'}
+        <enhanced:img src="$lib/assets/collections/wellbeing.png?w=200" alt={title} />
       {/if}
     </div>
 
     <div class="flex flex-col gap-y-2">
       <div class="flex flex-col gap-y-1">
-        {#each tags as tag (tag.content)}
-          <Badge variant={tag.variant}>{tag.content}</Badge>
+        {#each tags as tag (tag.label)}
+          <Badge variant={tagCodeToBadgeVariant(tag.code)}>{tag.label}</Badge>
         {/each}
 
         <span class="text-xl font-semibold">

@@ -1,7 +1,6 @@
 <script lang="ts">
   import { LinkButton } from '$lib/components/Button/index.js';
   import { LearningUnit } from '$lib/components/LearningUnit/index.js';
-  import { tagCodeToBadgeVariant } from '$lib/helpers/index.js';
   import { Player } from '$lib/states/index.js';
 
   const { data } = $props();
@@ -15,10 +14,7 @@
 
     player.play({
       id: learningUnit.id,
-      tags: learningUnit.tags.map((t) => ({
-        code: t.tag.code,
-        label: t.tag.label,
-      })),
+      tags: learningUnit.tags,
       title: learningUnit.title,
       summary: learningUnit.summary,
       url: learningUnit.contentURL,
@@ -51,10 +47,7 @@
       {#each data.learningJourneys as learningJourney (learningJourney.id)}
         <LearningUnit
           to={`/unit/${learningJourney.learningUnit.id}`}
-          tags={learningJourney.learningUnit.tags.map((t) => ({
-            variant: tagCodeToBadgeVariant(t.tag.code),
-            content: t.tag.label,
-          }))}
+          tags={learningJourney.learningUnit.tags}
           title={learningJourney.learningUnit.title}
           createdat={learningJourney.learningUnit.createdAt}
           createdby={learningJourney.learningUnit.createdBy}
@@ -86,10 +79,7 @@
       {#each data.recommendedLearningUnits as learningUnit (learningUnit.id)}
         <LearningUnit
           to={`/unit/${learningUnit.id}`}
-          tags={learningUnit.tags.map((t) => ({
-            variant: tagCodeToBadgeVariant(t.tag.code),
-            content: t.tag.label,
-          }))}
+          tags={learningUnit.tags}
           title={learningUnit.title}
           createdat={learningUnit.createdAt}
           createdby={learningUnit.createdBy}

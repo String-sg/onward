@@ -1,7 +1,6 @@
 <script lang="ts">
   import LinkButton from '$lib/components/Button/LinkButton.svelte';
   import { Collection } from '$lib/components/Collection/index.js';
-  import { tagCodeToBadgeVariant } from '$lib/helpers/index.js';
 
   const { data } = $props();
 </script>
@@ -18,10 +17,7 @@
           to={`/learning/collection/${collection.id}`}
           title={collection.title}
           type={collection.type}
-          tags={collection.tags.map((t) => ({
-            variant: tagCodeToBadgeVariant(t.code),
-            content: t.label,
-          }))}
+          tags={collection.tags}
           numberofpodcasts={collection.numberOfPodcasts}
         />
       {/each}

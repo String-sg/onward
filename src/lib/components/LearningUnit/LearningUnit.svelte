@@ -3,8 +3,9 @@
   import { formatDistanceToNow } from 'date-fns';
   import type { MouseEventHandler } from 'svelte/elements';
 
-  import { Badge, type BadgeProps } from '$lib/components/Badge/index.js';
+  import { Badge } from '$lib/components/Badge/index.js';
   import { Button } from '$lib/components/Button/index.js';
+  import { tagCodeToBadgeVariant } from '$lib/helpers/index.js';
 
   export interface Props {
     /**
@@ -14,7 +15,7 @@
     /**
      * The tags to display on the card.
      */
-    tags: { variant: BadgeProps['variant']; content: string }[];
+    tags: { code: string; label: string }[];
     /**
      * The title of the card.
      */
@@ -85,8 +86,8 @@
 >
   <div class="flex flex-col gap-y-2">
     <div class="flex flex-wrap gap-1">
-      {#each tags as tag (tag.content)}
-        <Badge variant={tag.variant}>{tag.content}</Badge>
+      {#each tags as tag (tag.label)}
+        <Badge variant={tagCodeToBadgeVariant(tag.code)}>{tag.label}</Badge>
       {/each}
     </div>
 

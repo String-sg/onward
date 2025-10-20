@@ -105,8 +105,17 @@ export const load: PageServerLoad = async (event) => {
   }
 
   return {
-    learningJourneys,
-    recommendedLearningUnits,
+    learningJourneys: learningJourneys.map((lj) => ({
+      ...lj,
+      learningUnit: {
+        ...lj.learningUnit,
+        tags: lj.learningUnit.tags.map((t) => t.tag),
+      },
+    })),
+    recommendedLearningUnits: recommendedLearningUnits.map((lu) => ({
+      ...lu,
+      tags: lu.tags.map((t) => t.tag),
+    })),
     username: user.name,
   };
 };

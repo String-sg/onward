@@ -41,6 +41,7 @@ export const load: PageServerLoad = async (event) => {
             select: {
               tag: {
                 select: {
+                  code: true,
                   label: true,
                 },
               },
@@ -75,7 +76,7 @@ export const load: PageServerLoad = async (event) => {
     csrfToken: event.locals.session.csrfToken(),
     questionAnswers: learningUnit.questionAnswers,
     type: learningUnit.collection.type,
-    label: learningUnit.collection.tags[0]?.tag.label,
+    tags: learningUnit.collection.tags.map((t) => t.tag),
   };
 };
 

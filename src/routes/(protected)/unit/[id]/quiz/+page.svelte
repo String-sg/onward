@@ -230,7 +230,7 @@
         <div class="flex flex-col items-center gap-y-2">
           <span>You have earned completion status for</span>
 
-          <Badge variant={tagCodeToBadgeVariant(data.type)}>{data.label}</Badge>
+          <Badge variant={tagCodeToBadgeVariant(data.tags[0].code)}>{data.tags[0].label}</Badge>
 
           <span>Track completed topics on your profile.</span>
         </div>
