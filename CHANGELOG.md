@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.0.0 (2025-10-22)
+
+### Features ✨
+
+- feat: update quiz completion modal ([##395](https://github.com/String-sg/onward/pull/#395)) ([85db236](https://github.com/String-sg/onward/commit/85db236727535aededaa42117cf7958114701b26))
+- feat: new UI changes ([#396](https://github.com/String-sg/onward/pull/396)) ([c5e11dc](https://github.com/String-sg/onward/commit/c5e11dc1ceb50d1a560656795bb7c76b08bf5de2))
+
 ## 0.10.0 (2025-10-21)
 
 ### Features ✨
