@@ -29,7 +29,7 @@
 
 <div
   class={[
-    'inline-flex w-fit rounded-md px-2.5 py-1',
+    'inline-flex w-fit rounded-md px-2.5 py-0.75',
     variant === 'blue' && 'bg-blue-200 text-blue-900',
     variant === 'sky' && 'bg-sky-200 text-sky-900',
     variant === 'orange' && 'bg-orange-200 text-orange-900',
@@ -39,7 +39,7 @@
     variant === 'rose' && 'bg-rose-200 text-rose-900',
     variant === 'purple' && 'bg-purple-200 text-purple-900',
     variant === 'indigo' && 'bg-indigo-200 text-indigo-900',
-    variant === 'slate' && 'bg-slate-200 text-slate-950',
+    variant === 'slate' && 'bg-slate-100 text-slate-950',
     variant === 'slate-dark' && 'bg-slate-950 text-white',
     clazz,
   ]}
