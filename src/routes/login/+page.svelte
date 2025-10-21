@@ -10,44 +10,38 @@
     ]}
   ></div> -->
 
-  <div class="relative z-1">
-    <!-- <enhanced:img
+  <!-- <enhanced:img
       src="$lib/assets/login-splash.png?w=484.8;808"
       alt="Login splash"
       class="w-[242.4px] md:w-[404px]"
       sizes="(min-width: 768px) 404px, (max-width: 768px) 242.4px"
     /> -->
 
-    <enhanced:img
-      src="$lib/assets/login-splash.png?w=484.8"
-      alt="Login splash"
-      class="w-[242.4px]"
-    />
+  <enhanced:img src="$lib/assets/login-splash.png?w=484.8" alt="Login splash" class="w-[242.4px]" />
 
-    <div class="z-1 flex w-full shrink-0 flex-col items-center justify-center gap-y-8 px-4 pb-5">
-      <div class="flex w-full flex-col items-center justify-center gap-y-8">
-        <span class="font-logo text-3xl">Small Bites.<br />Big Growth.</span>
+  <div class="flex w-full flex-col items-center justify-center gap-y-8 px-4 pb-5">
+    <div class="flex w-full flex-col items-center justify-center gap-y-8">
+      <span class="font-logo text-3xl">Small Bites.<br />Big Growth.</span>
 
-        <LinkButton
-          href={`/auth/google?return_to=${encodeURIComponent(page.url.searchParams.get('return_to') || '/')}`}
-          data-sveltekit-reload
-          variant="primary"
-          width="full"
-          class="max-w-sm gap-x-2"
-        >
-          {@render googleIcon()}
-          <span class="font-medium">Continue with Google</span>
-        </LinkButton>
+      <LinkButton
+        href={`/auth/google?return_to=${encodeURIComponent(page.url.searchParams.get('return_to') || '/')}`}
+        data-sveltekit-reload
+        variant="primary"
+        width="full"
+        class="max-w-sm gap-x-2"
+      >
+        {@render googleIcon()}
+        <span class="font-medium">Continue with Google</span>
+      </LinkButton>
+    </div>
+
+    <div class="flex flex-col items-center justify-center gap-y-6">
+      <div class="flex flex-col items-center justify-center text-xs">
+        <span>By continuing, you agree to our</span>
+        <span>Terms and Privacy Policy.</span>
       </div>
 
-      <div class="flex flex-col items-center justify-center gap-y-6">
-        <div class="flex flex-col items-center justify-center text-xs">
-          <span>By continuing, you agree to our</span>
-          <span>Terms and Privacy Policy.</span>
-        </div>
-
-        {@render dxdLogo()}
-      </div>
+      {@render dxdLogo()}
     </div>
   </div>
 </main>
