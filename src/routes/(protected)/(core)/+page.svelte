@@ -18,6 +18,7 @@
       title: learningUnit.title,
       summary: learningUnit.summary,
       url: learningUnit.contentURL,
+      type: learningUnit.collectionType,
     });
   };
 

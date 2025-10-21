@@ -12,6 +12,7 @@ export interface Track {
   title: string;
   summary: string;
   url: string;
+  type: string;
 }
 
 /**
