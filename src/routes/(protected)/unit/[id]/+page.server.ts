@@ -52,6 +52,11 @@ export const load: PageServerLoad = async (event) => {
       contentURL: true,
       createdAt: true,
       createdBy: true,
+      collection: {
+        select: {
+          type: true,
+        },
+      },
     },
     where: { id: event.params.id },
   } satisfies LearningUnitFindUniqueArgs;
@@ -177,6 +182,7 @@ export const load: PageServerLoad = async (event) => {
     url: learningUnit.contentURL,
     createdAt: learningUnit.createdAt,
     createdBy: learningUnit.createdBy,
+    collectionType: learningUnit.collection.type,
     isQuizAvailable,
     lastCheckpoint: Number(learningJourney?.lastCheckpoint),
     userSentiment: sentiment?.hasLiked ?? null,
