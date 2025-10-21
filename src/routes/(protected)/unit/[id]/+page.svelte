@@ -214,7 +214,7 @@
     </div>
   </div>
 
-  <div class={['prose prose-slate text-lg']}>
+  <div class={['prose prose-slate max-w-none text-lg']}>
     {#if browser}
       <!-- eslint-disable-next-line svelte/no-at-html-tags -->
       {@html DOMPurify.sanitize(marked.parse(data.objectives, { async: false }))}
