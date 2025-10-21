@@ -9,18 +9,30 @@
   class="relative mx-auto flex min-h-svh max-w-5xl flex-col items-center justify-center gap-y-8 px-4 py-3"
 >
   <div class="flex flex-col items-center">
-    <enhanced:img src="$lib/assets/desert.png?w=200" alt="Page not found" />
+    {#if is404}
+      <enhanced:img
+        src="$lib/assets/page-not-found.png?w=584"
+        alt="Page not found"
+        class="w-[292px]"
+      />
+    {:else}
+      <enhanced:img
+        src="$lib/assets/something-went-wrong.png?w=552"
+        alt="Something went wrong"
+        class="w-[276px]"
+      />
+    {/if}
 
     <div class="flex flex-col gap-y-2">
-      <span class="text-center text-2xl font-semibold">
+      <span class="text-center text-xl font-bold">
         {is404 ? 'Page not found' : 'Something went wrong'}
       </span>
 
-      <span class="text-center text-slate-900">
+      <span class="text-center font-medium text-slate-900">
         {#if is404}
-          The page you are looking for does not exist.
+          The page you are looking<br /> for does not exist.
         {:else}
-          If the problem persists, please contact the
+          If the problem persists,<br /> please contact the
           <a href="mailto:glow@moe.edu.sg" class=" whitespace-nowrap text-slate-900 underline">
             IT team
           </a>.
@@ -29,5 +41,5 @@
     </div>
   </div>
 
-  <LinkButton href="/" width="full" class="max-w-md">Go to Home</LinkButton>
+  <LinkButton href="/" width="full" class="max-w-sm">Go to Home</LinkButton>
 </main>
