@@ -40,7 +40,7 @@
     'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed',
     'aria-disabled:pointer-events-none aria-disabled:border-transparent aria-disabled:bg-slate-900/50 aria-disabled:text-white',
     variant === 'primary' && 'border-transparent bg-slate-950 text-white hover:bg-slate-900/90',
-    variant === 'secondary' && 'border-slate-300 bg-white text-slate-950 hover:bg-slate-100',
+    variant === 'secondary' && 'border-slate-200 bg-white text-slate-950 hover:bg-slate-100',
     width === 'fit' && 'w-fit',
     width === 'full' && 'w-full',
     clazz,
