@@ -69,7 +69,7 @@
     <div class="flex items-center gap-x-3">
       <a
         href="/unit/{params.id}"
-        class="rounded-full p-4 transition-colors hover:bg-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed"
+        class="rounded-full p-4 transition-colors hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed"
       >
         <ArrowLeft />
       </a>
@@ -93,9 +93,9 @@
           {#each q.options as o, oi (o)}
             <label
               class={[
-                'group flex cursor-pointer items-center gap-x-3 rounded-2xl border-2 border-transparent bg-white px-2.5 py-3.5 shadow-xs transition-all has-focus-visible:outline-dashed',
-                'hover:shadow-sm hover:ring-1 hover:ring-slate-300',
-                'has-checked:border-slate-950 has-checked:hover:translate-none has-checked:hover:bg-white has-checked:hover:shadow-xs',
+                'group flex cursor-pointer items-center gap-x-3 rounded-2xl border border-slate-200 bg-white px-2.5 py-3.5 transition-[border-color,box-shadow] has-focus-visible:outline-dashed',
+                'hover:ring-1 hover:ring-slate-200',
+                'has-checked:border-slate-950 has-checked:ring-slate-950',
                 'has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-slate-950 has-focus-visible:outline-dashed',
               ]}
             >
@@ -108,7 +108,7 @@
               />
 
               <span
-                class="rounded-lg bg-slate-200 px-2.5 py-1 font-semibold transition-colors group-has-checked:bg-slate-950 group-has-checked:text-white"
+                class="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 font-semibold transition-colors group-has-checked:bg-slate-950 group-has-checked:text-white"
               >
                 {String.fromCharCode(65 + oi)}
               </span>
@@ -122,6 +122,7 @@
   </div>
 
   <Button
+    class="py-3.75"
     width="full"
     disabled={selectedOptionIndex === -1}
     onclick={toggleFeedbackModalVisibility}
@@ -153,13 +154,13 @@
 
         <div
           class={[
-            'flex items-center gap-x-3 rounded-2xl border-2 px-2.5 py-3.5 shadow-xs',
+            'flex items-center gap-x-3 rounded-2xl border px-2.5 py-3.5',
             isCorrectAnswer ? 'border-transparent bg-lime-200' : 'border-slate-950 bg-white',
           ]}
         >
           <span
             class={[
-              'rounded-lg px-2.5 py-1 font-semibold',
+              'flex h-8 w-8 items-center justify-center rounded-lg font-semibold',
               isCorrectAnswer ? 'bg-lime-400' : 'bg-slate-950 text-white',
             ]}
           >
@@ -177,9 +178,11 @@
           <span class="font-medium">Correct answer</span>
 
           <div
-            class="flex items-center gap-x-3 rounded-2xl border-2 border-transparent bg-lime-200 px-2.5 py-3.5 shadow-xs"
+            class="flex items-center gap-x-3 rounded-2xl border border-transparent bg-lime-200 px-2.5 py-3.5"
           >
-            <span class="rounded-lg bg-lime-400 px-2.5 py-1 font-semibold">
+            <span
+              class="flex h-8 w-8 items-center justify-center rounded-lg bg-lime-400 font-semibold"
+            >
               {String.fromCharCode(65 + currentQuestionAnswer.answer)}
             </span>
 
@@ -200,6 +203,7 @@
       <input type="hidden" name="csrfToken" value={data.csrfToken} />
 
       <Button
+        class="py-3.75"
         width="full"
         type={isLastQuestionAnswer ? 'submit' : 'button'}
         onclick={handleContinueClick}
