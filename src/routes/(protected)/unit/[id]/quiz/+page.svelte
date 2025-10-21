@@ -8,7 +8,7 @@
   import { Button, LinkButton } from '$lib/components/Button/index.js';
   import { Modal } from '$lib/components/Modal/index.js';
   import { Starfield } from '$lib/components/Starfield/index.js';
-  import { IsWithinViewport, noop, tagCodeToBadgeVariant } from '$lib/helpers/index.js';
+  import { IsWithinViewport, noop } from '$lib/helpers/index.js';
   import { Player } from '$lib/states/index.js';
 
   const { data, params } = $props();
@@ -234,7 +234,25 @@
         <div class="flex flex-col items-center gap-y-2">
           <span>You have earned completion status for</span>
 
-          <Badge variant={tagCodeToBadgeVariant(data.tags[0].code)}>{data.tags[0].label}</Badge>
+          {#if data.collectionType === 'BOB'}
+            <Badge variant="blue">Learn with BOB</Badge>
+          {:else if data.collectionType === 'AI'}
+            <Badge variant="cyan">Artificial Intelligence</Badge>
+          {:else if data.collectionType === 'NEWS'}
+            <Badge variant="orange">In the news</Badge>
+          {:else if data.collectionType === 'PROD'}
+            <Badge variant="emerald">Productivity</Badge>
+          {:else if data.collectionType === 'CAREER'}
+            <Badge variant="violet">Career growth</Badge>
+          {:else if data.collectionType === 'INNOV'}
+            <Badge variant="pink">Innovation</Badge>
+          {:else if data.collectionType === 'WELLBEING'}
+            <Badge variant="teal">Wellbeing</Badge>
+          {:else if data.collectionType === 'STU_WELL'}
+            <Badge variant="sky">Student wellbeing</Badge>
+          {:else if data.collectionType === 'STU_DEV'}
+            <Badge variant="green">Student development</Badge>
+          {/if}
 
           <span>Track completed topics on your profile.</span>
         </div>
