@@ -60,6 +60,7 @@
       title: data.title,
       summary: data.summary,
       url: data.url,
+      type: data.collectionType,
     });
   };
 
@@ -79,6 +80,7 @@
           title: data.title,
           summary: data.summary,
           url: data.url,
+          type: data.collectionType,
         },
         initialSeekTime,
       );
@@ -159,7 +161,7 @@
           {data.title}
         </span>
 
-        <div class="flex gap-x-1.5">
+        <div class="flex flex-wrap gap-x-1.5">
           <span class="text-slate-500">By {data.createdBy}</span>
           <span class="text-slate-500">•</span>
           <span class="text-slate-500">

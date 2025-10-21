@@ -40,6 +40,11 @@ export const load: PageServerLoad = async (event) => {
               },
             },
           },
+          collection: {
+            select: {
+              type: true,
+            },
+          },
         },
       },
     },
@@ -79,6 +84,11 @@ export const load: PageServerLoad = async (event) => {
           },
         },
       },
+      collection: {
+        select: {
+          type: true,
+        },
+      },
     },
     where: {
       isRecommended: true,
@@ -110,11 +120,13 @@ export const load: PageServerLoad = async (event) => {
       learningUnit: {
         ...lj.learningUnit,
         tags: lj.learningUnit.tags.map((t) => t.tag),
+        collectionType: lj.learningUnit.collection.type,
       },
     })),
     recommendedLearningUnits: recommendedLearningUnits.map((lu) => ({
       ...lu,
       tags: lu.tags.map((t) => t.tag),
+      collectionType: lu.collection.type,
     })),
     username: user.name,
   };
