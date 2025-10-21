@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.10.0 (2025-10-21)
+
+### Features ✨
+
+- feat: rename `MLUs` to `bites` ([#369](https://github.com/String-sg/onward/pull/369)) ([7a26a15](https://github.com/String-sg/onward/commit/7a26a157edde7f8d523f62149d96d3eb4a4d33e3))
+- feat: switch database primary keys from `bigint` to `uuidv7` ([#371](https://github.com/String-sg/onward/pull/371)) ([6802ad9](https://github.com/String-sg/onward/commit/6802ad93696b665d8152dd9626b08b2893861cc4))
+- feat: update collection types and tag codes ([#372](https://github.com/String-sg/onward/pull/372)) ([26d68b8](https://github.com/String-sg/onward/commit/26d68b80ca0874a1588dffca9eec51b6eab50dee))
+- feat: disable clear button when AI is responding ([#375](https://github.com/String-sg/onward/pull/375)) ([e84ac7e](https://github.com/String-sg/onward/commit/e84ac7ec39cfbea9d617394b2aa84a3b108331f7))
+
+### Bug Fixes 🐛
+
+- fix: use standard function with `arguments` when declaring `gtag` function ([#370](https://github.com/String-sg/onward/pull/370)) ([ff60630](https://github.com/String-sg/onward/commit/ff60630673b4d5bea8d5cbe51caf8f710e3f509c))
+- fix: learning unit objectives width for bigger screens ([#382](https://github.com/String-sg/onward/pull/382)) ([4c245dc](https://github.com/String-sg/onward/commit/4c245dc98e8c188363e49edb48687b8163ee986b))
+
+### Chores 🧹
+
+- chore: squash database migrations ([#373](https://github.com/String-sg/onward/pull/373)) ([0b19ad6](https://github.com/String-sg/onward/commit/0b19ad6ce8be6a38bfb05bef4b00c62d5cd27b3b))
+
 ## 0.9.0 (2025-10-17)
 
 ### Features ✨
