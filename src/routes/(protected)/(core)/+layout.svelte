@@ -15,7 +15,7 @@
   const isWithinViewport = new IsWithinViewport(() => target);
 </script>
 
-<header class="fixed inset-x-0 top-0 z-50 bg-slate-100/90 backdrop-blur-sm">
+<header class="fixed inset-x-0 top-0 z-50 bg-white/90 backdrop-blur-sm">
   <div
     class={[
       'absolute inset-x-0 top-full h-px bg-transparent transition-colors duration-300',
@@ -39,7 +39,7 @@
         </a>
       </div>
 
-      <div class="flex items-center rounded-[80px] bg-white px-4 shadow-xs">
+      <div class="flex items-center rounded-[80px] bg-slate-100 px-4 shadow-xs">
         <a
           href="/"
           class="group flex flex-1 cursor-pointer flex-col items-center justify-center gap-y-1 pt-3 pb-4"
