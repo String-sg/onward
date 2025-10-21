@@ -292,8 +292,9 @@
 
           {#if messages.length > 0}
             <button
+              disabled={isAiTyping}
               onclick={handleClear}
-              class="cursor-pointer rounded-full p-4 font-bold transition-colors hover:bg-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed"
+              class="cursor-pointer rounded-full p-4 font-bold transition-colors hover:bg-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed disabled:pointer-events-none disabled:text-slate-900/50"
             >
               Clear
             </button>
