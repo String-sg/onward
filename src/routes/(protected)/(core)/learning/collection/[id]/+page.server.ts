@@ -1,4 +1,5 @@
 import { error, redirect } from '@sveltejs/kit';
+import { validate as uuidValidate } from 'uuid';
 
 import {
   db,
@@ -26,6 +27,10 @@ export const load: PageServerLoad = async (event) => {
   if (!user) {
     logger.warn('User not authenticated');
     throw redirect(303, '/login');
+  }
+
+  if (!uuidValidate(event.params.id)) {
+    throw error(404);
   }
 
   const collection = await db.collection.findUnique({
