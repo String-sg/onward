@@ -1,7 +1,7 @@
 <script lang="ts">
   import {
     ArrowLeft,
-    BookOpenIcon,
+    BookOpenTextIcon,
     ExternalLink,
     Lightbulb,
     Pause,
@@ -118,107 +118,145 @@
 
 <div bind:this={target} class="absolute inset-x-0 top-0 h-px"></div>
 
-<main class="relative mx-auto flex min-h-svh max-w-5xl flex-col gap-y-6 px-4 pt-23 pb-28">
-  <div class="flex flex-col gap-y-2 rounded-3xl bg-white p-4 shadow-xs">
-    <div class="flex flex-wrap gap-1">
-      {#each data.tags as tag (tag)}
-        <Badge variant={tagCodeToBadgeVariant(tag.code)}>{tag.label}</Badge>
-      {/each}
-    </div>
+<main class="relative mx-auto flex min-h-svh max-w-5xl flex-col gap-y-5 px-4 pt-23 pb-28">
+  <div
+    class={[
+      'flex flex-col gap-y-2 rounded-3xl border border-slate-200 p-6',
+      data.collectionType === 'BOB' && 'bg-blue-50',
+      data.collectionType === 'AI' && 'bg-cyan-50',
+      data.collectionType === 'NEWS' && 'bg-orange-50',
+      data.collectionType === 'PROD' && 'bg-emerald-50',
+      data.collectionType === 'CAREER' && 'bg-violet-50',
+      data.collectionType === 'INNOV' && 'bg-pink-50',
+      data.collectionType === 'WELLBEING' && 'bg-teal-50',
+      data.collectionType === 'STU_WELL' && 'bg-sky-50',
+      data.collectionType === 'STU_DEV' && 'bg-green-50',
+    ]}
+  >
+    {#if data.collectionType === 'BOB'}
+      <Badge variant="blue">Learn with BOB</Badge>
+    {:else if data.collectionType === 'AI'}
+      <Badge variant="cyan">Artificial Intelligence</Badge>
+    {:else if data.collectionType === 'NEWS'}
+      <Badge variant="orange">In the news</Badge>
+    {:else if data.collectionType === 'PROD'}
+      <Badge variant="emerald">Productivity</Badge>
+    {:else if data.collectionType === 'CAREER'}
+      <Badge variant="violet">Career growth</Badge>
+    {:else if data.collectionType === 'INNOV'}
+      <Badge variant="pink">Innovation</Badge>
+    {:else if data.collectionType === 'WELLBEING'}
+      <Badge variant="teal">Wellbeing</Badge>
+    {:else if data.collectionType === 'STU_WELL'}
+      <Badge variant="sky">Student wellbeing</Badge>
+    {:else if data.collectionType === 'STU_DEV'}
+      <Badge variant="green">Student development</Badge>
+    {/if}
 
     <div class="flex flex-col gap-y-6">
-      <div class="flex flex-col gap-y-3">
-        <span class="text-xl font-medium text-slate-950">
+      <div class="flex flex-col gap-y-2">
+        <span class="text-lg font-medium">
           {data.title}
         </span>
 
-        <div class="flex gap-x-1">
-          <span class="text-sm text-slate-600">By {data.createdBy}</span>
-          <span class="text-sm text-slate-600">•</span>
-          <span class="text-sm text-slate-600">
+        <div class="flex gap-x-1.5">
+          <span class="text-slate-500">By {data.createdBy}</span>
+          <span class="text-slate-500">•</span>
+          <span class="text-slate-500">
             {formatDistanceToNow(data.createdAt, { addSuffix: true })}
           </span>
         </div>
+      </div>
 
-        <div class="flex justify-between">
-          <div class="flex gap-x-2">
-            <form method="POST" action="?/updateSentiment" use:enhance>
-              <input type="hidden" name="csrfToken" value={data.csrfToken} />
-              <input type="hidden" name="hasLiked" value={sentiment === true ? null : 'true'} />
+      <div class="flex gap-x-2">
+        <form method="POST" action="?/updateSentiment" use:enhance>
+          <input type="hidden" name="csrfToken" value={data.csrfToken} />
+          <input type="hidden" name="hasLiked" value={sentiment === true ? null : 'true'} />
 
-              <Button
-                type="submit"
-                variant={sentiment === true ? 'primary' : 'secondary'}
-                class="gap-x-2 !p-3"
-              >
-                <ThumbsUp />
-
-                {#if data.likesCount > 0}
-                  <span class="font-medium">{data.likesCount}</span>
-                {/if}
-              </Button>
-            </form>
-
-            <form method="POST" action="?/updateSentiment" use:enhance>
-              <input type="hidden" name="csrfToken" value={data.csrfToken} />
-              <input type="hidden" name="hasLiked" value={sentiment === false ? null : 'false'} />
-              <Button
-                type="submit"
-                variant={sentiment === false ? 'primary' : 'secondary'}
-                class="!p-3"
-              >
-                <ThumbsDown />
-              </Button>
-            </form>
-          </div>
-
-          <Button variant="secondary" class="!p-3" onclick={handleSourcesModal}>
-            <BookOpenIcon />
-          </Button>
-        </div>
-
-        <div class="flex flex-col gap-y-4">
-          {#if isActive && player.isPlaying}
-            <Button variant="primary" width="full" onclick={handlePause}>
-              <Pause class="h-4 w-4" />
-              <span class="font-medium">Pause</span>
-            </Button>
-          {:else if isActive && !player.isPlaying}
-            <Button variant="primary" width="full" onclick={handleResume}>
-              <Play class="h-4 w-4" />
-              <span class="font-medium">Resume</span>
-            </Button>
-          {:else if lastCheckpoint && lastCheckpoint > 0}
-            <Button variant="primary" width="full" onclick={handleResume}>
-              <Play class="h-4 w-4" />
-              <span class="font-medium">Resume</span>
-            </Button>
-          {:else}
-            <Button variant="primary" width="full" onclick={handlePlay}>
-              <Play class="h-4 w-4" />
-              <span class="font-medium">Play</span>
-            </Button>
-          {/if}
-
-          <LinkButton
-            variant="secondary"
-            width="full"
-            disabled={!data.isQuizAvailable}
-            href={`/unit/${data.id}/quiz`}
+          <button
+            type="submit"
+            class={[
+              'flex cursor-pointer items-center justify-center gap-x-2.5 rounded-full bg-white p-3 hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed',
+              sentiment === true && '!bg-slate-950 px-4 py-2.5 text-white',
+            ]}
           >
-            <Lightbulb class="h-4 w-4" />
-            <span class="font-medium">Take the quiz</span>
-          </LinkButton>
-        </div>
+            <ThumbsUp class="h-4 w-4" />
+
+            {#if data.likesCount > 0}
+              <span class="text-sm font-medium">{data.likesCount}</span>
+            {/if}
+          </button>
+        </form>
+
+        <form method="POST" action="?/updateSentiment" use:enhance>
+          <input type="hidden" name="csrfToken" value={data.csrfToken} />
+          <input type="hidden" name="hasLiked" value={sentiment === false ? null : 'false'} />
+
+          <button
+            type="submit"
+            class={[
+              'flex cursor-pointer items-center justify-center gap-x-2.5 rounded-full bg-white p-3 hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed',
+              sentiment === false && '!bg-slate-950 text-white',
+            ]}
+          >
+            <ThumbsDown class="h-4 w-4" />
+          </button>
+        </form>
+      </div>
+
+      <div class="flex flex-col gap-y-4">
+        {#if isActive && player.isPlaying}
+          <Button variant="primary" width="full" onclick={handlePause}>
+            <Pause class="h-4 w-4" />
+            <span class="font-medium">Pause</span>
+          </Button>
+        {:else if isActive && !player.isPlaying}
+          <Button variant="primary" width="full" onclick={handleResume}>
+            <Play class="h-4 w-4" />
+            <span class="font-medium">Resume</span>
+          </Button>
+        {:else if lastCheckpoint && lastCheckpoint > 0}
+          <Button variant="primary" width="full" onclick={handleResume}>
+            <Play class="h-4 w-4" />
+            <span class="font-medium">Resume</span>
+          </Button>
+        {:else}
+          <Button variant="primary" width="full" onclick={handlePlay}>
+            <Play class="h-4 w-4" />
+            <span class="font-medium">Play</span>
+          </Button>
+        {/if}
+
+        <LinkButton
+          variant="secondary"
+          width="full"
+          disabled={!data.isQuizAvailable}
+          href={`/unit/${data.id}/quiz`}
+        >
+          <Lightbulb class="h-4 w-4" />
+          <span class="font-medium">Take the quiz</span>
+        </LinkButton>
       </div>
     </div>
   </div>
 
-  <div class={['prose prose-slate text-lg']}>
-    {#if browser}
-      <!-- eslint-disable-next-line svelte/no-at-html-tags -->
-      {@html DOMPurify.sanitize(marked.parse(data.objectives, { async: false }))}
-    {/if}
+  <div class="flex flex-col gap-y-6">
+    <div class={['prose prose-slate text-lg']}>
+      {#if browser}
+        <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+        {@html DOMPurify.sanitize(marked.parse(data.objectives, { async: false }))}
+      {/if}
+    </div>
+
+    <div class="flex gap-x-6">
+      <button
+        class="inline-flex cursor-pointer items-center justify-center gap-x-2.5 rounded-full bg-slate-200 px-4 py-3 transition-colors hover:bg-slate-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed"
+        onclick={handleSourcesModal}
+      >
+        <BookOpenTextIcon />
+        <span class="text-sm font-medium">Sources</span>
+      </button>
+    </div>
   </div>
 </main>
 
