@@ -246,17 +246,21 @@
         <a
           href={source.sourceURL}
           target="_blank"
-          class="flex items-center justify-between rounded-2xl bg-slate-100 p-3"
+          class="inline-flex gap-x-4 rounded-2xl border border-slate-200 bg-white p-3"
         >
-          <div class="flex flex-col gap-y-1">
+          <div class="flex w-[calc(100%-36px)] flex-col gap-y-1">
             {#each source.tags.map((t) => t.tag) as tag (tag)}
               <Badge variant={tagCodeToBadgeVariant(tag.code)}>{tag.label}</Badge>
             {/each}
 
-            <span>{source.title}</span>
+            <span class="truncate">
+              {source.title}
+            </span>
           </div>
 
-          <ExternalLink class="h-5 w-5 shrink-0" />
+          <div class="flex items-center justify-center">
+            <ExternalLink class="h-5 w-5" />
+          </div>
         </a>
       {/each}
     </div>

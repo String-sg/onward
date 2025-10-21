@@ -298,7 +298,7 @@ const learningUnitSources: Prisma.LearningUnitSourcesCreateInput[] = [
         {
           tag: {
             connect: {
-              id: tags[0].id,
+              id: tags[2].id,
             },
           },
         },
@@ -319,7 +319,7 @@ const learningUnitSources: Prisma.LearningUnitSourcesCreateInput[] = [
         {
           tag: {
             connect: {
-              id: tags[0].id,
+              id: tags[3].id,
             },
           },
         },
@@ -340,7 +340,7 @@ const learningUnitSources: Prisma.LearningUnitSourcesCreateInput[] = [
         {
           tag: {
             connect: {
-              id: tags[0].id,
+              id: tags[2].id,
             },
           },
         },
@@ -361,7 +361,7 @@ const learningUnitSources: Prisma.LearningUnitSourcesCreateInput[] = [
         {
           tag: {
             connect: {
-              id: tags[0].id,
+              id: tags[3].id,
             },
           },
         },
@@ -382,7 +382,7 @@ const learningUnitSources: Prisma.LearningUnitSourcesCreateInput[] = [
         {
           tag: {
             connect: {
-              id: tags[0].id,
+              id: tags[2].id,
             },
           },
         },
@@ -403,7 +403,7 @@ const learningUnitSources: Prisma.LearningUnitSourcesCreateInput[] = [
         {
           tag: {
             connect: {
-              id: tags[0].id,
+              id: tags[3].id,
             },
           },
         },
