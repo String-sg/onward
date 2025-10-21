@@ -33,16 +33,6 @@ export const load: PageServerLoad = async () => {
       id: true,
       title: true,
       type: true,
-      tags: {
-        select: {
-          tag: {
-            select: {
-              code: true,
-              label: true,
-            },
-          },
-        },
-      },
       _count: {
         select: {
           learningUnit: true,
@@ -58,7 +48,6 @@ export const load: PageServerLoad = async () => {
     })),
     collections: collections.map((collection) => ({
       ...collection,
-      tags: collection.tags.map((t) => t.tag),
       numberOfPodcasts: collection._count.learningUnit,
     })),
   };
