@@ -23,19 +23,7 @@ export const load: PageServerLoad = async (event) => {
       c.id AS id,
       c.title AS title,
       c.type AS type,
-      COUNT(DISTINCT lj.id) AS "numberOfPodcasts",
-      COALESCE(
-        (
-          SELECT JSON_AGG(
-                  JSONB_BUILD_OBJECT('code', t.code, 'label', t.label)
-                  ORDER BY t.created_at
-                )
-          FROM collection_tags ct
-          INNER JOIN tags t ON t.id = ct.tag_id
-          WHERE ct.collection_id = c.id
-        ),
-        '[]'
-      ) AS tags
+      COUNT(DISTINCT lj.id) AS "numberOfPodcasts"
     FROM learning_journeys lj
     INNER JOIN learning_units lu ON lu.id = lj.learning_unit_id
     INNER JOIN collections c ON c.id = lu.collection_id

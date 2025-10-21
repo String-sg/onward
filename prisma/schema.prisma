@@ -40,7 +40,6 @@ model Collection {
 
   // Relations.
   learningUnit LearningUnit[]
-  tags         CollectionTag[]
 
   @@map("collections")
 }
@@ -154,23 +153,10 @@ model Tag {
   label String @map("label") @db.VarChar(100) // e.g. "Special Educational Needs"
 
   // Relations.
-  collections         CollectionTag[]
   learningUnits       LearningUnitTag[]
   LearningUnitSources LearningUnitSourcesTag[]
 
   @@map("tags")
-}
-
-model CollectionTag {
-  // Relations.
-  collectionId String @map("collection_id") @db.Uuid
-  tagId        String @map("tag_id") @db.Uuid
-
-  collection Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
-  tag        Tag        @relation(fields: [tagId], references: [id], onDelete: Cascade)
-
-  @@id([collectionId, tagId])
-  @@map("collection_tags")
 }
 
 model LearningUnitTag {

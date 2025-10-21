@@ -26,7 +26,7 @@ const tags: Prisma.TagCreateInput[] = [
   {
     id: uuidv7(),
     code: 'AI',
-    label: 'AI',
+    label: 'Artificial Intelligence',
   },
   {
     id: uuidv7(),
@@ -47,17 +47,6 @@ const collections: Prisma.CollectionCreateInput[] = [
     description:
       'Explore the world of Special Educational Needs (SEN) peer support that indicates Singapore specific peer support knowledge, case studies and more to gain knowledge about SEN.',
     type: CollectionType.STU_DEV,
-    tags: {
-      create: [
-        {
-          tag: {
-            connect: {
-              id: tags[0].id,
-            },
-          },
-        },
-      ],
-    },
   },
   {
     id: uuidv7(),
@@ -65,17 +54,6 @@ const collections: Prisma.CollectionCreateInput[] = [
     description:
       'Discover how AI is transforming education through personalized learning, intelligent tutoring systems, and data-driven insights to enhance teaching effectiveness.',
     type: CollectionType.AI,
-    tags: {
-      create: [
-        {
-          tag: {
-            connect: {
-              id: tags[1].id,
-            },
-          },
-        },
-      ],
-    },
   },
 ];
 
