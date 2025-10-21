@@ -1,17 +1,17 @@
 import type { BadgeProps } from '$lib/components/Badge/index.js';
 
 const TAG_CODE_TO_BADGE_VARIANT: Record<string, BadgeProps['variant']> = {
-  AI: 'amber',
-  BOB: 'indigo',
-  CAREER: 'green',
-  INNOV: 'sky',
+  AI: 'cyan',
+  BOB: 'blue',
+  CAREER: 'violet',
+  INNOV: 'pink',
   NEWS: 'orange',
-  PROD: 'rose',
-  STU_DEV: 'purple',
-  STU_WELL: 'green',
+  PROD: 'emerald',
+  STU_DEV: 'green',
+  STU_WELL: 'sky',
   WELLBEING: 'teal',
-  PDF: 'rose',
-  LINK: 'blue',
+  PDF: 'slate',
+  LINK: 'slate',
 };
 
 /**

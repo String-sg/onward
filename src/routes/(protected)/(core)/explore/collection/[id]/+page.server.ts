@@ -28,6 +28,7 @@ export const load: PageServerLoad = async (event) => {
     select: {
       title: true,
       description: true,
+      type: true,
     },
     where: { id: event.params.id },
   } satisfies CollectionFindUniqueArgs;
@@ -79,8 +80,7 @@ export const load: PageServerLoad = async (event) => {
   }
 
   return {
-    title: collection.title,
-    description: collection.description,
+    collection,
     learningUnits: learningUnits.map((unit) => ({
       ...unit,
       tags: unit.tags.map((t) => t.tag),

@@ -40,7 +40,6 @@
             to="/explore/collection/{collection.id}"
             title={collection.title}
             type={collection.type}
-            tags={collection.tags}
             numberofpodcasts={collection.numberOfPodcasts}
           />
         {/if}

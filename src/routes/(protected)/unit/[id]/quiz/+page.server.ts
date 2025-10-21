@@ -26,6 +26,11 @@ export const load: PageServerLoad = async (event) => {
 
   const learningUnitArgs = {
     select: {
+      collection: {
+        select: {
+          type: true,
+        },
+      },
       questionAnswers: {
         select: {
           id: true,
@@ -37,21 +42,6 @@ export const load: PageServerLoad = async (event) => {
         },
         orderBy: {
           order: 'asc',
-        },
-      },
-      collection: {
-        select: {
-          type: true,
-          tags: {
-            select: {
-              tag: {
-                select: {
-                  code: true,
-                  label: true,
-                },
-              },
-            },
-          },
         },
       },
     },
@@ -80,8 +70,7 @@ export const load: PageServerLoad = async (event) => {
   return {
     csrfToken: event.locals.session.csrfToken(),
     questionAnswers: learningUnit.questionAnswers,
-    type: learningUnit.collection.type,
-    tags: learningUnit.collection.tags.map((t) => t.tag),
+    collectionType: learningUnit.collection.type,
   };
 };
 

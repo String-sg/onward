@@ -82,9 +82,9 @@
 
 <a
   href={to}
-  class="flex flex-col gap-y-6 rounded-3xl bg-white p-6 shadow-xs transition-shadow hover:ring-1 hover:ring-slate-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed"
+  class="flex flex-col gap-y-6 rounded-3xl border border-slate-200 bg-white p-5.75 transition-shadow hover:ring-1 hover:ring-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed"
 >
-  <div class="flex flex-col gap-y-2">
+  <div class="flex flex-col gap-y-1">
     <div class="flex flex-wrap gap-1">
       {#each tags as tag (tag.label)}
         <Badge variant={tagCodeToBadgeVariant(tag.code)}>{tag.label}</Badge>
@@ -92,14 +92,14 @@
     </div>
 
     <div class="flex flex-col gap-y-3">
-      <span class="text-xl font-medium text-slate-950">
+      <span class="line-clamp-2 text-lg font-medium text-slate-950">
         {title}
       </span>
 
       <div class="flex gap-x-1">
-        <span class="text-sm text-slate-600">{createdby}</span>
-        <span class="text-sm text-slate-600">•</span>
-        <span class="text-sm text-slate-600">
+        <span class="text-sm text-slate-500">{createdby}</span>
+        <span class="text-sm text-slate-500">•</span>
+        <span class="text-sm text-slate-500">
           {formatDistanceToNow(createdat, { addSuffix: true })}
         </span>
       </div>

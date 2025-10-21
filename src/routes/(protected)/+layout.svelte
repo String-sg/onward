@@ -1,8 +1,9 @@
 <script lang="ts">
+  import { XIcon } from '@lucide/svelte';
   import { onMount } from 'svelte';
 
   import { page } from '$app/state';
-  import { Button, LinkButton } from '$lib/components/Button/index.js';
+  import { LinkButton } from '$lib/components/Button/index.js';
   import { ChatView } from '$lib/components/ChatView/index.js';
   import { ChatWidget } from '$lib/components/ChatWidget/index.js';
   import { Modal } from '$lib/components/Modal/index.js';
@@ -149,32 +150,102 @@
   />
 
   <Modal isopen={isPodcastCompletedModalOpen} onclose={noop} class="z-300">
-    <div class="mx-auto flex min-h-svh max-w-5xl flex-col px-4 py-3">
-      <div class="flex flex-1 flex-col items-center justify-center">
-        <enhanced:img
-          src="$lib/assets/flagplanet.png?w=768"
-          alt="flagplanet"
-          sizes="384px"
-          class="h-full w-full object-contain"
-        />
+    <div
+      class={[
+        'absolute left-1/2 h-1/3 w-[150%] -translate-x-1/2 rounded-b-[50%]',
+        player.currentTrack.type === 'BOB' && 'bg-blue-400',
+        player.currentTrack.type === 'AI' && 'bg-cyan-400',
+        player.currentTrack.type === 'NEWS' && 'bg-orange-400',
+        player.currentTrack.type === 'PROD' && 'bg-emerald-400',
+        player.currentTrack.type === 'CAREER' && 'bg-violet-400',
+        player.currentTrack.type === 'INNOV' && 'bg-pink-400',
+        player.currentTrack.type === 'WELLBEING' && 'bg-teal-400',
+        player.currentTrack.type === 'STU_WELL' && 'bg-sky-400',
+        player.currentTrack.type === 'STU_DEV' && 'bg-green-400',
+      ]}
+    ></div>
+
+    <div class="relative z-1">
+      <div class="mx-auto flex max-w-5xl items-center justify-end px-4 py-3">
+        <button
+          onclick={handlePodcastCompletedModalClose}
+          class="flex cursor-pointer items-center justify-center rounded-full bg-white/20 p-3 transition-colors hover:bg-white/50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed"
+        >
+          <XIcon />
+        </button>
       </div>
 
-      <div class="flex flex-col gap-y-12">
-        <div class="flex flex-col gap-y-4 text-center">
-          <span class="text-xl font-medium">Just completed learning!</span>
-
-          <div class="flex flex-col items-center gap-y-2">
-            <span>And you are almost there.</span>
-            <span>Deepen your understanding by taking a </span>
-            <span>quiz and earn one more completion status.</span>
-          </div>
+      <div class="mx-auto flex min-h-svh max-w-5xl flex-col gap-y-6 px-4 py-3">
+        <div class="flex flex-col items-center justify-center">
+          {#if player.currentTrack.type === 'BOB'}
+            <enhanced:img
+              src="$lib/assets/collections/learn-with-bob.png?w=464"
+              alt="Learn with Bob"
+              class="w-[232px]"
+            />
+          {:else if player.currentTrack.type === 'AI'}
+            <enhanced:img
+              src="$lib/assets/collections/artificial-intelligence.png?w=464"
+              alt="Artificial Intelligence"
+              class="w-[232px]"
+            />
+          {:else if player.currentTrack.type === 'NEWS'}
+            <enhanced:img
+              src="$lib/assets/collections/in-the-news.png?w=464"
+              alt="In the News"
+              class="w-[232px]"
+            />
+          {:else if player.currentTrack.type === 'PROD'}
+            <enhanced:img
+              src="$lib/assets/collections/productivity.png?w=464"
+              alt="Productivity"
+              class="w-[232px]"
+            />
+          {:else if player.currentTrack.type === 'CAREER'}
+            <enhanced:img
+              src="$lib/assets/collections/career-growth.png?w=464"
+              alt="Career Growth"
+              class="w-[232px]"
+            />
+          {:else if player.currentTrack.type === 'INNOV'}
+            <enhanced:img
+              src="$lib/assets/collections/innovation.png?w=464"
+              alt="Innovation"
+              class="w-[232px]"
+            />
+          {:else if player.currentTrack.type === 'WELLBEING'}
+            <enhanced:img
+              src="$lib/assets/collections/wellbeing.png?w=464"
+              alt="Wellbeing"
+              class="w-[232px]"
+            />
+          {:else if player.currentTrack.type === 'STU_WELL'}
+            <enhanced:img
+              src="$lib/assets/collections/student-wellbeing.png?w=464"
+              alt="Student Wellbeing"
+              class="w-[232px]"
+            />
+          {:else if player.currentTrack.type === 'STU_DEV'}
+            <enhanced:img
+              src="$lib/assets/collections/student-development.png?w=464"
+              alt="Student Development"
+              class="w-[232px]"
+            />
+          {/if}
         </div>
 
-        <div class="flex justify-center gap-4">
-          <Button variant="secondary" onclick={handlePodcastCompletedModalClose}>Close</Button>
+        <div class="flex flex-col items-center justify-center gap-y-6">
+          <div class="flex flex-col gap-y-4 text-center">
+            <span class="text-xl font-medium">Just completed learning!</span>
+            <span class="text-sm leading-6">
+              And you are almost there.<br />Deepen your understanding by taking a<br />quiz and
+              earn one more completion status.
+            </span>
+          </div>
+
           <LinkButton
             href={`/unit/${player.currentTrack.id}/quiz`}
-            class="flex-1"
+            class="max-w-sm"
             width="full"
             onclick={handlePodcastCompletedModalClose}
           >

@@ -1,5 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Inria+Sans:wght@400;700&display=swap');
+
 @import 'tailwindcss';
 
 @plugin "@tailwindcss/typography";
@@ -12,7 +12,7 @@
 
 @theme {
   --font-geist: 'Geist', sans-serif;
-  --font-mono: 'Geist Mono', monospace;
+  --font-logo: 'Inria Sans', sans-serif;
 }
 
 @utility prose-slate {

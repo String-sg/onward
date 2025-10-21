@@ -38,6 +38,7 @@ export const load: PageServerLoad = async (event) => {
     select: {
       title: true,
       description: true,
+      type: true,
     },
   });
 
@@ -80,8 +81,7 @@ export const load: PageServerLoad = async (event) => {
   });
 
   return {
-    title: collection.title,
-    description: collection.description,
+    collection,
     journeys: learningJourneys.reduce<{
       inProgress: Result[];
       isCompleted: Result[];

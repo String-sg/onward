@@ -8,7 +8,7 @@
   import { Button, LinkButton } from '$lib/components/Button/index.js';
   import { Modal } from '$lib/components/Modal/index.js';
   import { Starfield } from '$lib/components/Starfield/index.js';
-  import { IsWithinViewport, noop, tagCodeToBadgeVariant } from '$lib/helpers/index.js';
+  import { IsWithinViewport, noop } from '$lib/helpers/index.js';
   import { Player } from '$lib/states/index.js';
 
   const { data, params } = $props();
@@ -57,7 +57,7 @@
   };
 </script>
 
-<header class="fixed inset-x-0 top-0 z-50 bg-slate-100/90 backdrop-blur-sm">
+<header class="fixed inset-x-0 top-0 z-50 bg-white/90 backdrop-blur-sm">
   <div
     class={[
       'absolute inset-x-0 top-full h-px bg-transparent transition-colors duration-300',
@@ -69,7 +69,7 @@
     <div class="flex items-center gap-x-3">
       <a
         href="/unit/{params.id}"
-        class="rounded-full p-4 transition-colors hover:bg-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed"
+        class="rounded-full p-4 transition-colors hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed"
       >
         <ArrowLeft />
       </a>
@@ -93,9 +93,9 @@
           {#each q.options as o, oi (o)}
             <label
               class={[
-                'group flex cursor-pointer items-center gap-x-3 rounded-2xl border-2 border-transparent bg-white px-2.5 py-3.5 shadow-xs transition-all has-focus-visible:outline-dashed',
-                'hover:shadow-sm hover:ring-1 hover:ring-slate-300',
-                'has-checked:border-slate-950 has-checked:hover:translate-none has-checked:hover:bg-white has-checked:hover:shadow-xs',
+                'group flex cursor-pointer items-center gap-x-3 rounded-2xl border border-slate-200 bg-white px-2.5 py-3.5 transition-[border-color,box-shadow] has-focus-visible:outline-dashed',
+                'hover:ring-1 hover:ring-slate-200',
+                'has-checked:border-slate-950 has-checked:ring-slate-950',
                 'has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-slate-950 has-focus-visible:outline-dashed',
               ]}
             >
@@ -108,7 +108,7 @@
               />
 
               <span
-                class="rounded-lg bg-slate-200 px-2.5 py-1 font-semibold transition-colors group-has-checked:bg-slate-950 group-has-checked:text-white"
+                class="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 font-semibold transition-colors group-has-checked:bg-slate-950 group-has-checked:text-white"
               >
                 {String.fromCharCode(65 + oi)}
               </span>
@@ -122,6 +122,7 @@
   </div>
 
   <Button
+    class="py-3.75"
     width="full"
     disabled={selectedOptionIndex === -1}
     onclick={toggleFeedbackModalVisibility}
@@ -153,13 +154,13 @@
 
         <div
           class={[
-            'flex items-center gap-x-3 rounded-2xl border-2 px-2.5 py-3.5 shadow-xs',
+            'flex items-center gap-x-3 rounded-2xl border px-2.5 py-3.5',
             isCorrectAnswer ? 'border-transparent bg-lime-200' : 'border-slate-950 bg-white',
           ]}
         >
           <span
             class={[
-              'rounded-lg px-2.5 py-1 font-semibold',
+              'flex h-8 w-8 items-center justify-center rounded-lg font-semibold',
               isCorrectAnswer ? 'bg-lime-400' : 'bg-slate-950 text-white',
             ]}
           >
@@ -177,9 +178,11 @@
           <span class="font-medium">Correct answer</span>
 
           <div
-            class="flex items-center gap-x-3 rounded-2xl border-2 border-transparent bg-lime-200 px-2.5 py-3.5 shadow-xs"
+            class="flex items-center gap-x-3 rounded-2xl border border-transparent bg-lime-200 px-2.5 py-3.5"
           >
-            <span class="rounded-lg bg-lime-400 px-2.5 py-1 font-semibold">
+            <span
+              class="flex h-8 w-8 items-center justify-center rounded-lg bg-lime-400 font-semibold"
+            >
               {String.fromCharCode(65 + currentQuestionAnswer.answer)}
             </span>
 
@@ -200,6 +203,7 @@
       <input type="hidden" name="csrfToken" value={data.csrfToken} />
 
       <Button
+        class="py-3.75"
         width="full"
         type={isLastQuestionAnswer ? 'submit' : 'button'}
         onclick={handleContinueClick}
@@ -230,7 +234,25 @@
         <div class="flex flex-col items-center gap-y-2">
           <span>You have earned completion status for</span>
 
-          <Badge variant={tagCodeToBadgeVariant(data.tags[0].code)}>{data.tags[0].label}</Badge>
+          {#if data.collectionType === 'BOB'}
+            <Badge variant="blue">Learn with BOB</Badge>
+          {:else if data.collectionType === 'AI'}
+            <Badge variant="cyan">Artificial Intelligence</Badge>
+          {:else if data.collectionType === 'NEWS'}
+            <Badge variant="orange">In the news</Badge>
+          {:else if data.collectionType === 'PROD'}
+            <Badge variant="emerald">Productivity</Badge>
+          {:else if data.collectionType === 'CAREER'}
+            <Badge variant="violet">Career growth</Badge>
+          {:else if data.collectionType === 'INNOV'}
+            <Badge variant="pink">Innovation</Badge>
+          {:else if data.collectionType === 'WELLBEING'}
+            <Badge variant="teal">Wellbeing</Badge>
+          {:else if data.collectionType === 'STU_WELL'}
+            <Badge variant="sky">Student wellbeing</Badge>
+          {:else if data.collectionType === 'STU_DEV'}
+            <Badge variant="green">Student development</Badge>
+          {/if}
 
           <span>Track completed topics on your profile.</span>
         </div>
