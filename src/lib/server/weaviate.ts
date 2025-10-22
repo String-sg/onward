@@ -52,9 +52,9 @@ export async function search(query: string): Promise<string[]> {
     .query.hybrid(query, {
       queryProperties: ['content'],
       targetVector: ['content_vector'],
-      maxVectorDistance: 0.6,
+      maxVectorDistance: 0.7,
       returnProperties: ['content'],
-      limit: 5,
+      limit: 10,
     });
 
   return result.objects.map((obj) => obj.properties.content);
