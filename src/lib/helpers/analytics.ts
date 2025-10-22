@@ -44,3 +44,47 @@ export function trackPodcastPlay(learningUnitId: string) {
     learning_unit_id: learningUnitId,
   });
 }
+
+/**
+ * Tracks when the quiz is clicked.
+ * @param learningUnitId - The ID of the learning unit of the quiz.
+ */
+export function trackQuizClick(learningUnitId: string) {
+  if (!browser) {
+    return;
+  }
+
+  window.gtag('event', 'quiz_click', {
+    learning_unit_id: learningUnitId,
+  });
+}
+
+/**
+ * Tracks when the quiz is attempted.
+ * @param learningUnitId - The ID of the learning unit of the quiz.
+ * @param questionId - The ID of the question being attempted.
+ */
+export function trackQuizAttempt(learningUnitId: string, questionId: string) {
+  if (!browser) {
+    return;
+  }
+
+  window.gtag('event', 'quiz_attempt', {
+    learning_unit_id: learningUnitId,
+    question_id: questionId,
+  });
+}
+
+/**
+ * Tracks quiz completion events when a user finishes a quiz.
+ * @param learningUnitId - The ID of the learning unit associated with the quiz.
+ */
+export function trackQuizCompletion(learningUnitId: string) {
+  if (!browser) {
+    return;
+  }
+
+  window.gtag('event', 'quiz_completion', {
+    learning_unit_id: learningUnitId,
+  });
+}
