@@ -103,7 +103,7 @@ export const POST: RequestHandler = async (event) => {
       {
         role: 'developer',
         content:
-          '# Context: \n\n' +
+          '**CONTEXT**: \n\n' +
           (result.length === 0
             ? 'No relevant context found.'
             : `${result.map((cont) => `- ${cont}`).join('\n\n')}`),
@@ -118,7 +118,6 @@ export const POST: RequestHandler = async (event) => {
       },
     ],
     stream: true,
-    reasoning_effort: 'minimal',
   });
 
   const encoder = new TextEncoder();
