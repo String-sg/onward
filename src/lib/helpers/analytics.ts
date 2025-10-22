@@ -62,20 +62,22 @@ export function trackQuizClick(learningUnitId: string) {
 /**
  * Tracks when the quiz is attempted.
  * @param learningUnitId - The ID of the learning unit of the quiz.
+ * @param questionId - The ID of the question being attempted.
  */
-export function trackQuizAttempt(learningUnitId: string) {
+export function trackQuizAttempt(learningUnitId: string, questionId: string) {
   if (!browser) {
     return;
   }
 
   window.gtag('event', 'quiz_attempt', {
     learning_unit_id: learningUnitId,
+    question_id: questionId,
   });
 }
 
 /**
- * Tracks when the quiz is completed.
- * @param learningUnitId - The ID of the learning unit of the quiz.
+ * Tracks quiz completion events when a user finishes a quiz.
+ * @param learningUnitId - The ID of the learning unit associated with the quiz.
  */
 export function trackQuizCompletion(learningUnitId: string) {
   if (!browser) {

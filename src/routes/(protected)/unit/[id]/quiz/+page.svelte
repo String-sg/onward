@@ -37,7 +37,7 @@
   });
 
   const toggleFeedbackModalVisibility = () => {
-    trackQuizAttempt(params.id.toString());
+    trackQuizAttempt(params.id.toString(), currentQuestionAnswer.id);
 
     isFeedbackModalOpen = !isFeedbackModalOpen;
   };
