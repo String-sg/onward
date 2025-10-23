@@ -2,20 +2,26 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.2.0 (2025-10-23)
+
+- feat: update form link for nps feedback survey ([#407](https://github.com/String-sg/onward/pull/407)) ([5be968f](https://github.com/String-sg/onward/commit/5be968f21776a20f4244372d7e645faf4bda6ddb))
+
+### Features ✨
+
 ## 1.1.0 (2025-10-23)
 
 ### Features ✨
 
 - feat: add nps feedback survey ([#403](https://github.com/String-sg/onward/pull/403)) ([6c5268e](https://github.com/String-sg/onward/commit/6c5268ec969fd277c3a4c09e59477b0f77e0f13d))
 - feat: upgrade AI system prompt ([#401](https://github.com/String-sg/onward/pull/401)) ([87d5481](https://github.com/String-sg/onward/commit/87d5481b9dc35a47d8d1ce42e2dfb6c60d1725f4))
-- feat: add more events for tracking in ga analytics ([#332](https://github.com/String-sg/onward/pull/#332)) ([7a624dc](https://github.com/String-sg/onward/commit/7a624dcfe1fa9892952e7e962a0b9fc0a9baa453))
+- feat: add more events for tracking in ga analytics ([#332](https://github.com/String-sg/onward/pull/332)) ([7a624dc](https://github.com/String-sg/onward/commit/7a624dcfe1fa9892952e7e962a0b9fc0a9baa453))
 - feat: sort collections based on last updated time on learning journey ([#368](https://github.com/String-sg/onward/pull/368)) ([13ec6ae](https://github.com/String-sg/onward/commit/13ec6ae9a3795ccad84ec94c5457379fe35efb68))
 
 ## 1.0.0 (2025-10-22)
 
 ### Features ✨
 
-- feat: update quiz completion modal ([#395](https://github.com/String-sg/onward/pull/#395)) ([85db236](https://github.com/String-sg/onward/commit/85db236727535aededaa42117cf7958114701b26))
+- feat: update quiz completion modal ([#395](https://github.com/String-sg/onward/pull/395)) ([85db236](https://github.com/String-sg/onward/commit/85db236727535aededaa42117cf7958114701b26))
 - feat: new UI changes ([#396](https://github.com/String-sg/onward/pull/396)) ([c5e11dc](https://github.com/String-sg/onward/commit/c5e11dc1ceb50d1a560656795bb7c76b08bf5de2))
 
 ## 0.10.0 (2025-10-21)
