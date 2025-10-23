@@ -24,11 +24,17 @@
   {:else}
     <div class="mt-20 flex flex-col items-center gap-y-8">
       <div class="flex flex-col items-center gap-y-6">
-        <enhanced:img src="$lib/assets/fireworks.png?w=200" alt="No learning journey found" />
+        <enhanced:img
+          src="$lib/assets/bags-of-bites.png?w=708"
+          alt="No learning journeys found"
+          class="w-[354px]"
+        />
 
         <div class="flex flex-col items-center gap-y-2 text-center">
-          <span class="text-2xl font-semibold">Welcome {data.username}</span>
-          Kick off your learning journey by diving into our exciting curated content!
+          <span class="text-xl font-medium">Welcome {data.username}</span>
+          <span>
+            Kick off your learning journey by diving<br /> into our exciting curated content!
+          </span>
         </div>
       </div>
 
