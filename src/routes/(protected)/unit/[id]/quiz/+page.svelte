@@ -116,7 +116,7 @@
               />
 
               <span
-                class="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 font-semibold transition-colors group-has-checked:bg-slate-950 group-has-checked:text-white"
+                class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-slate-100 font-semibold transition-colors group-has-checked:bg-slate-950 group-has-checked:text-white"
               >
                 {String.fromCharCode(65 + oi)}
               </span>
@@ -168,7 +168,7 @@
         >
           <span
             class={[
-              'flex h-8 w-8 items-center justify-center rounded-lg font-semibold',
+              'flex h-8 w-8 shrink-0 items-center justify-center rounded-lg font-semibold',
               isCorrectAnswer ? 'bg-lime-400' : 'bg-slate-950 text-white',
             ]}
           >
@@ -189,7 +189,7 @@
             class="flex items-center gap-x-3 rounded-2xl border border-transparent bg-lime-200 px-2.5 py-3.5"
           >
             <span
-              class="flex h-8 w-8 items-center justify-center rounded-lg bg-lime-400 font-semibold"
+              class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-lime-400 font-semibold"
             >
               {String.fromCharCode(65 + currentQuestionAnswer.answer)}
             </span>
