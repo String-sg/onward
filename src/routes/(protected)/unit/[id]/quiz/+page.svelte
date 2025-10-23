@@ -225,30 +225,14 @@
 <Modal isopen={isCompletionModalOpen} onclose={noop} variant="light">
   <div class="mx-auto flex min-h-svh max-w-5xl flex-col items-center justify-center px-4 py-6">
     <div class="flex flex-col items-center justify-center gap-y-1">
-      <div class="flex flex-col items-center justify-center gap-y-3">
-        <span class="text-2xl font-bold">That was insightful!</span>
-        <span class="text-center text-2xl">You have earned completion status for</span>
-      </div>
+      <div class="flex flex-col items-center justify-center gap-y-2">
+        <div class="flex flex-col items-center justify-center">
+          <span class="text-xl font-medium">Congrats!</span>
+          <span class="text-xl font-medium">You have completed</span>
+        </div>
 
-      {#if data.collectionType === 'BOB'}
-        <Badge variant="blue">Learn with BOB</Badge>
-      {:else if data.collectionType === 'AI'}
-        <Badge variant="cyan">Artificial Intelligence</Badge>
-      {:else if data.collectionType === 'NEWS'}
-        <Badge variant="orange">In the news</Badge>
-      {:else if data.collectionType === 'PROD'}
-        <Badge variant="emerald">Productivity</Badge>
-      {:else if data.collectionType === 'CAREER'}
-        <Badge variant="violet">Career growth</Badge>
-      {:else if data.collectionType === 'INNOV'}
-        <Badge variant="pink">Innovation</Badge>
-      {:else if data.collectionType === 'WELLBEING'}
-        <Badge variant="teal">Wellbeing</Badge>
-      {:else if data.collectionType === 'STU_WELL'}
-        <Badge variant="sky">Student wellbeing</Badge>
-      {:else if data.collectionType === 'STU_DEV'}
-        <Badge variant="green">Student development</Badge>
-      {/if}
+        <span class="max-w-xs text-center text-xl font-bold">'{data.learningUnitTitle}'</span>
+      </div>
     </div>
 
     <div class="mt-2.5">

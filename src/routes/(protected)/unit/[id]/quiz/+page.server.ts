@@ -26,6 +26,7 @@ export const load: PageServerLoad = async (event) => {
 
   const learningUnitArgs = {
     select: {
+      title: true,
       collection: {
         select: {
           type: true,
@@ -71,6 +72,7 @@ export const load: PageServerLoad = async (event) => {
     csrfToken: event.locals.session.csrfToken(),
     questionAnswers: learningUnit.questionAnswers,
     collectionType: learningUnit.collection.type,
+    learningUnitTitle: learningUnit.title,
   };
 };
 
