@@ -91,7 +91,6 @@ export const load: PageServerLoad = async (event) => {
       },
     },
     where: {
-      isRecommended: true,
       NOT: {
         learningJourneys: {
           some: {
@@ -100,9 +99,14 @@ export const load: PageServerLoad = async (event) => {
         },
       },
     },
-    orderBy: {
-      createdAt: 'desc',
-    },
+    orderBy: [
+      {
+        isRecommended: 'desc',
+      },
+      {
+        createdAt: 'desc',
+      },
+    ],
     take: 3,
   } satisfies LearningUnitFindManyArgs;
 
