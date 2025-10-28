@@ -118,13 +118,17 @@
   const handleSendQuery = async () => {
     if (!query.trim()) return;
 
+    error = null;
+
     messages.push({ role: 'USER', content: query });
+
     isAiTyping = true;
 
     const bodyParams = { query };
     query = '';
 
     await tick();
+
     if (chatWindow) {
       chatWindow.scrollTo({
         top: chatWindow.scrollHeight,
@@ -144,19 +148,22 @@
 
       if (!response.ok) {
         isAiTyping = false;
+
         if (response.status === 401) {
           goto('/login');
           return;
         }
 
         error = DEFAULT_ERROR_MESSAGE;
-        return;
+
+        throw new Error('Response not ok');
       }
 
       if (!response.body) {
         isAiTyping = false;
         error = DEFAULT_ERROR_MESSAGE;
-        return;
+
+        throw new Error('Response body is missing');
       }
 
       const reader = response.body.getReader();
@@ -168,6 +175,7 @@
       messages.push({ role: 'ASSISTANT', content: '' });
 
       await tick();
+
       if (chatWindow) {
         chatWindow.scrollTo({
           top: chatWindow.scrollHeight,
@@ -202,11 +210,11 @@
           if (payload.type === 'error') {
             if (payload.message === 'Max number of tokens has been reached.') {
               error = 'Max tokens has been reached, please clear your chat.';
-              break;
-            } else {
-              error = DEFAULT_ERROR_MESSAGE;
-              break;
             }
+
+            error = DEFAULT_ERROR_MESSAGE;
+
+            throw new Error(payload.text);
           }
 
           messages[messages.length - 1].content += payload.message;
@@ -223,6 +231,15 @@
       }
     } catch {
       error = DEFAULT_ERROR_MESSAGE;
+
+      await tick();
+
+      if (chatWindow) {
+        chatWindow.scrollTo({
+          top: chatWindow.scrollHeight,
+          behavior: 'smooth',
+        });
+      }
     }
   };
 
@@ -256,6 +273,8 @@
       messages = [];
     } catch (err) {
       console.error(err);
+    } finally {
+      error = null;
     }
   };
 </script>
