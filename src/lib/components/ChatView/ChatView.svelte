@@ -325,7 +325,7 @@
                   </div>
                 {:else}
                   <div class="flex flex-col">
-                    <span class="prose prose-slate rounded-3xl p-4 text-left break-words">
+                    <span class="prose prose-slate p-4 text-left break-words">
                       <!-- eslint-disable-next-line svelte/no-at-html-tags -->
                       {@html DOMPurify.sanitize(marked.parse(content, { async: false }))}
                     </span>
@@ -334,11 +334,11 @@
               {/each}
 
               {#if isAiTyping}
-                <span class="typing-dots rounded-3xl p-4 text-left">AI is typing</span>
+                <span class="typing-dots p-4 text-left">AI is typing</span>
               {/if}
 
               {#if error}
-                <div class="flex flex-col">
+                <div class="flex flex-col pb-4">
                   <span
                     class="flex w-fit max-w-4/5 flex-row gap-2 rounded-3xl border border-solid border-slate-300 p-4 text-left break-words"
                   >
