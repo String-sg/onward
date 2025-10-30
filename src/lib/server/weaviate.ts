@@ -15,6 +15,7 @@ const client = await Weaviate.connectToCustom({
   grpcSecure: grpcURL.protocol === 'https:',
   authCredentials: new Weaviate.ApiKey(env.WEAVIATE_API_KEY || 'secret'),
   headers: {
+    'X-Glow-Secret': env.WEAVIATE_GLOW_SECRET || '',
     'X-OpenAI-Baseurl': env.WEAVIATE_OPENAI_BASE_URL || '',
     'X-OpenAI-Api-Key': env.WEAVIATE_OPENAI_EMBEDDING_API_KEY || '',
   },
