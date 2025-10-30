@@ -2,11 +2,25 @@
 
 All notable changes to this project will be documented in this file.
 
-## 1.2.0 (2025-10-23)
-
-- feat: update form link for nps feedback survey ([#407](https://github.com/String-sg/onward/pull/407)) ([5be968f](https://github.com/String-sg/onward/commit/5be968f21776a20f4244372d7e645faf4bda6ddb))
+## 1.3.0 (2025-10-30)
 
 ### Features ✨
+
+- feat: add custom header to Weaviate request ([#420](https://github.com/String-sg/onward/pull/420)) ([624b4cc](https://github.com/String-sg/onward/commit/624b4ccd77d0a48ea6c7a2ebde022bb90f0a022f))
+- feat: enhance recommendation of learning units logic ([#415](https://github.com/String-sg/onward/pull/415)) ([4f2e3d0](https://github.com/String-sg/onward/commit/4f2e3d00c123668b8bdde45fe9ea34d9297cb0ef))
+- feat: update text for quiz completion modal ([#413](https://github.com/String-sg/onward/pull/413)) ([d6ee6c3](https://github.com/String-sg/onward/commit/d6ee6c3a2290a3574fc3cd40d02398a5782a201b))
+- feat: add nps feedback survey links on learning and explore page ([#411](https://github.com/String-sg/onward/pull/411)) ([7c89f6e](https://github.com/String-sg/onward/commit/7c89f6e668fed769f110e8beedbaf7624f34ba77))
+- feat: update learning page empty state ([#410](https://github.com/String-sg/onward/pull/410)) ([c2d9084](https://github.com/String-sg/onward/commit/c2d90845801657dfd710285ba2546777958a5d39))
+
+### Bug Fixes 🐛
+
+- fix: prevent shrink on quiz option letters ([#412](https://github.com/String-sg/onward/pull/412)) ([7149469](https://github.com/String-sg/onward/commit/714946997471d406cc37d9299fcfe10d3d5bca80))
+
+## 1.2.0 (2025-10-23)
+
+### Features ✨
+
+- feat: update form link for nps feedback survey ([#407](https://github.com/String-sg/onward/pull/407)) ([5be968f](https://github.com/String-sg/onward/commit/5be968f21776a20f4244372d7e645faf4bda6ddb))
 
 ## 1.1.0 (2025-10-23)
 
