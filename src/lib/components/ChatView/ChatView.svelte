@@ -196,14 +196,14 @@
             break;
           }
 
-          const payload: { type: 'string' | 'error'; text?: string; message?: string } =
-            JSON.parse(data);
+          const payload: { type: 'string' | 'error'; message: string } = JSON.parse(data);
 
           if (payload.type === 'error') {
             if (payload.message === 'Max number of tokens has been reached.') {
               error = 'Max tokens has been reached, please clear your chat.';
               break;
             } else {
+              messages.pop();
               error = DEFAULT_ERROR_MESSAGE;
               break;
             }

@@ -126,14 +126,19 @@ export const POST: RequestHandler = async (event) => {
 
   const answerStream = new ReadableStream({
     async start(controller) {
+      let event: {
+        type: 'chunk' | 'error';
+        message: string;
+      };
+
       try {
         for await (const chunk of completion) {
-          let errorMessage: { type: 'error'; message: string };
-
           if (!('choices' in chunk) || chunk.choices.length === 0 || !chunk.choices[0].delta) {
             logger.error({ chunk: chunk }, 'Invalid stream format');
-            errorMessage = { type: 'error', message: 'Invalid stream format.' };
-            controller.enqueue(encoder.encode(`data: ${JSON.stringify(errorMessage)}\n\n`));
+
+            event = { type: 'error', message: 'Invalid stream format.' };
+            controller.enqueue(encoder.encode(`data: ${JSON.stringify(event)}\n\n`));
+
             break;
           }
 
@@ -142,23 +147,29 @@ export const POST: RequestHandler = async (event) => {
               { refusal: chunk.choices[0].delta.refusal, userId: user.id },
               'Request refused by AI',
             );
-            errorMessage = { type: 'error', message: 'Request refused by AI.' };
-            controller.enqueue(encoder.encode(`data: ${JSON.stringify(errorMessage)}\n\n`));
+
+            event = { type: 'error', message: 'Request refused by AI.' };
+            controller.enqueue(encoder.encode(`data: ${JSON.stringify(event)}\n\n`));
+
             break;
           }
 
           if (chunk.choices[0].finish_reason) {
             if (chunk.choices[0].finish_reason === 'length') {
               logger.warn('Max number of tokens in request has been reached');
-              errorMessage = { type: 'error', message: 'Max number of tokens has been reached.' };
-              controller.enqueue(encoder.encode(`data: ${JSON.stringify(errorMessage)}\n\n`));
+
+              event = { type: 'error', message: 'Max number of tokens has been reached.' };
+              controller.enqueue(encoder.encode(`data: ${JSON.stringify(event)}\n\n`));
+
               break;
             }
 
             if (chunk.choices[0].finish_reason === 'content_filter') {
               logger.warn('Content is flagged');
-              errorMessage = { type: 'error', message: 'Content is flagged.' };
-              controller.enqueue(encoder.encode(`data: ${JSON.stringify(errorMessage)}\n\n`));
+
+              event = { type: 'error', message: 'Content is flagged.' };
+              controller.enqueue(encoder.encode(`data: ${JSON.stringify(event)}\n\n`));
+
               break;
             }
           }
@@ -205,22 +216,26 @@ export const POST: RequestHandler = async (event) => {
 
           if (!chunk.choices[0].delta.content) {
             logger.warn('Content is missing');
-            errorMessage = { type: 'error', message: 'Content is missing.' };
-            controller.enqueue(encoder.encode(`data: ${JSON.stringify(errorMessage)}\n\n`));
+
+            event = { type: 'error', message: 'Content is missing.' };
+            controller.enqueue(encoder.encode(`data: ${JSON.stringify(event)}\n\n`));
+
             break;
           }
 
           fullAnswer += chunk.choices[0].delta.content;
 
-          const chunkMessage: { type: 'chunk'; message: string } = {
-            type: 'chunk',
-            message: chunk.choices[0].delta.content,
-          };
-
-          controller.enqueue(encoder.encode(`data: ${JSON.stringify(chunkMessage)}\n\n`));
+          event = { type: 'chunk', message: chunk.choices[0].delta.content };
+          controller.enqueue(encoder.encode(`data: ${JSON.stringify(event)}\n\n`));
         }
       } catch (err) {
-        controller.enqueue(encoder.encode(`data: ${JSON.stringify({ error: err })}\n\n`));
+        logger.error({ err, userId: user.id }, 'Error in streaming response');
+
+        event = {
+          type: 'error',
+          message: err instanceof Error ? err.message : 'Unknown error occurred',
+        };
+        controller.enqueue(encoder.encode(`data: ${JSON.stringify(event)}\n\n`));
       } finally {
         controller.close();
       }
