@@ -32,8 +32,13 @@ export const load: PageServerLoad = async (event) => {
     ORDER BY MAX(lj.updated_at) DESC;
   `;
 
+  const collection = collections.map((collection) => ({
+    ...collection,
+    numberOfPodcasts: Number(collection.numberOfPodcasts),
+  }));
+
   return {
-    collections,
+    collections: collection,
     username: user.name,
   };
 };
