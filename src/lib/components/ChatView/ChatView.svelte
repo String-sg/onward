@@ -196,8 +196,7 @@
             break;
           }
 
-          const payload: { type: 'string' | 'error'; text?: string; message?: string } =
-            JSON.parse(data);
+          const payload: { type: 'string' | 'error'; message: string } = JSON.parse(data);
 
           if (payload.type === 'error') {
             if (payload.message === 'Max number of tokens has been reached.') {
