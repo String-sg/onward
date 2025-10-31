@@ -203,6 +203,7 @@
               error = 'Max tokens has been reached, please clear your chat.';
               break;
             } else {
+              messages.pop();
               error = DEFAULT_ERROR_MESSAGE;
               break;
             }
