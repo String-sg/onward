@@ -13,5 +13,6 @@ export const load: LayoutServerLoad = async (event) => {
 
   return {
     username: user.name,
+    csrfToken: event.locals.session.csrfToken(),
   };
 };
