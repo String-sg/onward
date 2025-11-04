@@ -136,8 +136,9 @@
       const response = await fetch('/api/messages', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
           Accept: 'text/event-stream',
+          'Content-Type': 'application/json',
+          'x-csrf-token': page.data.csrfToken,
         },
         body: JSON.stringify(bodyParams),
       });

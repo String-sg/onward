@@ -1,5 +1,6 @@
 import { json, type RequestHandler } from '@sveltejs/kit';
 
+import auth from '$lib/server/auth';
 import { db, type MessageFindManyArgs, type MessageGetPayload, Role } from '$lib/server/db.js';
 import { DEVELOPER_MESSAGE, openAI } from '$lib/server/openai.js';
 import { search } from '$lib/server/weaviate';
@@ -37,14 +38,26 @@ export const GET: RequestHandler = async (event) => {
 export const POST: RequestHandler = async (event) => {
   const logger = event.locals.logger.child({ handler: 'api_create_message' });
 
+  if (event.request.headers.get('content-type')?.split(';')[0] !== 'application/json') {
+    return json(null, { status: 415 });
+  }
+
   const { user } = event.locals.session;
   if (!user) {
     logger.warn('User not authenticated');
     return json(null, { status: 401 });
   }
 
-  if (event.request.headers.get('content-type')?.split(';')[0] !== 'application/json') {
-    return json(null, { status: 415 });
+  const csrfToken = event.request.headers.get('x-csrf-token');
+  if (!csrfToken || typeof csrfToken !== 'string') {
+    logger.warn('CSRF token is missing');
+    return json(null, { status: 400 });
+  }
+
+  const isValidCSRFToken = await auth.validateCSRFToken(event, csrfToken);
+  if (!isValidCSRFToken) {
+    logger.warn('CSRF token is invalid');
+    return json(null, { status: 400 });
   }
 
   let params: JSONObject;
