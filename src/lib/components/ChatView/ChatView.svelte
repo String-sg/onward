@@ -40,7 +40,7 @@
 
   let isUserTyping = $derived(query.trim());
 
-  const DEFAULT_ERROR_MESSAGE = 'Something went wrong. Please refresh the page and try again.';
+  const DEFAULT_ERROR_MESSAGE = 'Something went wrong. Please try again.';
   let isMessagesFetched = false;
 
   const isWithinViewport = new IsWithinViewport(() => target);
