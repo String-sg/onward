@@ -3,47 +3,49 @@
   import { LinkButton } from '$lib/components/Button/index.js';
 </script>
 
-<main class="mx-auto flex min-h-svh w-full max-w-5xl flex-col items-center">
-  <!-- <div
-    class={[
-      'absolute bottom-0 left-1/2 h-1/3 w-[150%] -translate-x-1/2 rounded-t-[50%] bg-orange-400',
-    ]}
-  ></div> -->
+<main class="flex min-h-svh flex-col">
+  <div class="relative overflow-hidden">
+    <div class="absolute bottom-0 -left-1/4 z-1 h-2/3 w-[150%] rounded-t-[50%] bg-orange-400"></div>
 
-  <!-- <enhanced:img
-      src="$lib/assets/login-splash.png?w=484.8;808"
-      alt="Login splash"
-      class="w-[242.4px] md:w-[404px]"
-      sizes="(min-width: 768px) 404px, (max-width: 768px) 242.4px"
-    /> -->
-
-  <enhanced:img src="$lib/assets/login-splash.png?w=484.8" alt="Login splash" class="w-[242.4px]" />
-
-  <div class="flex w-full flex-col items-center justify-center gap-y-8 px-4 pb-5">
-    <div class="flex w-full flex-col items-center justify-center gap-y-8">
-      <span class="font-logo text-3xl">Small Bites.<br />Big Growth.</span>
-
-      <LinkButton
-        href={`/auth/google?return_to=${encodeURIComponent(page.url.searchParams.get('return_to') || '/')}`}
-        data-sveltekit-reload
-        variant="primary"
-        width="full"
-        class="max-w-sm gap-x-2"
-      >
-        {@render googleIcon()}
-        <span class="font-medium">Continue with Google</span>
-      </LinkButton>
-    </div>
-
-    <div class="flex flex-col items-center justify-center gap-y-6">
-      <div class="flex flex-col items-center justify-center text-xs">
-        <span>By continuing, you agree to our</span>
-        <span>Terms and Privacy Policy.</span>
+    <div class="relative z-10 mx-auto flex w-full max-w-5xl flex-col">
+      <div class="flex justify-center px-4">
+        <enhanced:img
+          src="$lib/assets/login-splash.png?w=484.8"
+          alt="Login splash"
+          class="w-[242.4px]"
+        />
       </div>
 
-      {@render dxdLogo()}
+      <div class="flex flex-col gap-y-6 px-4 pb-5">
+        <div class="flex flex-col gap-y-8">
+          <span class="font-logo text-center text-3xl">Small Bites.<br />Big Growth.</span>
+
+          <div class="flex flex-col items-center gap-y-4">
+            <LinkButton
+              href={`/auth/google?return_to=${encodeURIComponent(page.url.searchParams.get('return_to') || '/')}`}
+              data-sveltekit-reload
+              variant="primary"
+              width="full"
+              class="max-w-sm gap-x-2"
+            >
+              {@render googleIcon()}
+              <span class="font-medium">Continue with Google</span>
+            </LinkButton>
+
+            <span class="text-center text-xs">
+              By continuing, you agree to our<br />Terms and Privacy Policy.
+            </span>
+          </div>
+        </div>
+
+        <div class="flex flex-col items-center">
+          {@render dxdLogo()}
+        </div>
+      </div>
     </div>
   </div>
+
+  <div class="flex-1 bg-orange-400"></div>
 </main>
 
 {#snippet dxdLogo()}
