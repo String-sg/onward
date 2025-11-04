@@ -28,6 +28,14 @@
     onclose: () => void;
   }
 
+  class MaxTokenError extends Error {
+    constructor() {
+      super('Something went wrong, please clear your chat.');
+
+      this.name = this.constructor.name;
+    }
+  }
+
   const { isopen, onclose }: Props = $props();
 
   let target = $state<HTMLElement | null>(null);
@@ -155,16 +163,13 @@
           return;
         }
 
-        error = DEFAULT_ERROR_MESSAGE;
-
-        throw new Error('Response not ok');
+        throw new Error();
       }
 
       if (!response.body) {
         isAiTyping = false;
-        error = DEFAULT_ERROR_MESSAGE;
 
-        throw new Error('Response body is missing');
+        throw new Error();
       }
 
       const reader = response.body.getReader();
@@ -209,10 +214,10 @@
 
           if (payload.type === 'error') {
             if (payload.message === 'Max number of tokens has been reached.') {
-              throw new Error('Max tokens has been reached, please clear your chat.');
+              throw new MaxTokenError();
             } else {
               messages.pop();
-              throw new Error(DEFAULT_ERROR_MESSAGE);
+              throw new Error();
             }
           }
 
@@ -228,8 +233,8 @@
           }
         }
       }
-    } catch {
-      error = DEFAULT_ERROR_MESSAGE;
+    } catch (err) {
+      error = err instanceof MaxTokenError ? err.message : DEFAULT_ERROR_MESSAGE;
 
       await tick();
 
