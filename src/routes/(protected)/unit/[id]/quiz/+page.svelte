@@ -235,14 +235,14 @@
       </div>
     </div>
 
-    <div class="mt-2.5">
+    <div class="relative mt-2.5 pb-20">
       <enhanced:img
         src="$lib/assets/completion-splash.png?w=644"
         alt="Completion splash"
         class="w-[322px]"
       />
 
-      <div class="flex flex-col gap-y-5">
+      <div class="absolute inset-x-0 bottom-0 flex flex-col gap-y-5">
         <LinkButton href={`/unit/${params.id}`} variant="primary" width="full" class="max-w-sm">
           Done
         </LinkButton>
