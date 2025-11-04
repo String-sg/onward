@@ -33,19 +33,34 @@
 <a
   href={to}
   class={[
-    'relative flex flex-col gap-y-2 overflow-hidden rounded-4xl p-6 transition-shadow hover:ring-1 hover:ring-slate-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed',
-    type === 'BOB' && 'bg-blue-300',
-    type === 'AI' && 'bg-cyan-300',
-    type === 'NEWS' && 'bg-orange-300',
-    type === 'PROD' && 'bg-emerald-300',
-    type === 'CAREER' && 'bg-violet-300',
-    type === 'INNOV' && 'bg-pink-300',
-    type === 'WELLBEING' && 'bg-teal-300',
-    type === 'STU_WELL' && 'bg-sky-300',
-    type === 'STU_DEV' && 'bg-green-300',
+    'relative overflow-hidden rounded-4xl transition-shadow hover:ring-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed',
+    type === 'BOB' && 'bg-blue-300 hover:ring-blue-300',
+    type === 'AI' && 'bg-cyan-300 hover:ring-cyan-300',
+    type === 'NEWS' && 'bg-orange-300 hover:ring-orange-300',
+    type === 'PROD' && 'bg-emerald-300 hover:ring-emerald-300',
+    type === 'CAREER' && 'bg-violet-300 hover:ring-violet-300',
+    type === 'INNOV' && 'bg-pink-300 hover:ring-pink-300',
+    type === 'WELLBEING' && 'bg-teal-300 hover:ring-teal-300',
+    type === 'STU_WELL' && 'bg-sky-300 hover:ring-sky-300',
+    type === 'STU_DEV' && 'bg-green-300 hover:ring-green-300',
   ]}
 >
-  <div class="flex flex-col gap-y-8">
+  <div
+    class={[
+      'absolute left-1/2 h-1/2 w-[110%] -translate-x-1/2 rounded-b-[50%]',
+      type === 'BOB' && 'bg-blue-400',
+      type === 'AI' && 'bg-cyan-400',
+      type === 'NEWS' && 'bg-orange-400',
+      type === 'PROD' && 'bg-emerald-400',
+      type === 'CAREER' && 'bg-violet-400',
+      type === 'INNOV' && 'bg-pink-400',
+      type === 'WELLBEING' && 'bg-teal-400',
+      type === 'STU_WELL' && 'bg-sky-400',
+      type === 'STU_DEV' && 'bg-green-400',
+    ]}
+  ></div>
+
+  <div class="relative z-1 flex flex-col gap-y-8 p-6">
     <div class="flex justify-center">
       {#if type === 'BOB'}
         <enhanced:img
