@@ -9,7 +9,7 @@
   import { Modal } from '$lib/components/Modal/index.js';
   import { NowPlayingBar } from '$lib/components/NowPlayingBar/index.js';
   import { NowPlayingView } from '$lib/components/NowPlayingView/index.js';
-  import { noop } from '$lib/helpers/index.js';
+  import { noop, track80PercentPodcastPlay, trackPodcastCompletion } from '$lib/helpers/index.js';
   import { Player } from '$lib/states/index.js';
 
   const { children } = $props();
@@ -102,14 +102,26 @@
       updateLearningJourney(player.progress);
     };
 
+    const handleEightyPercentPodcast = () => {
+      track80PercentPodcastPlay(player.currentTrack!.id);
+    };
+
+    const handleHundredPercentPodcast = () => {
+      trackPodcastCompletion(player.currentTrack!.id);
+    };
+
     player.addEventListener('pause', handlePause);
     player.addEventListener('ended', handleEnded);
     player.addEventListener('checkpoint', handleCheckpoint);
+    player.addEventListener('eightyPercent', handleEightyPercentPodcast);
+    player.addEventListener('hundredPercent', handleHundredPercentPodcast);
 
     return () => {
       player.removeEventListener('pause', handlePause);
       player.removeEventListener('ended', handleEnded);
       player.removeEventListener('checkpoint', handleCheckpoint);
+      player.removeEventListener('eightyPercent', handleEightyPercentPodcast);
+      player.removeEventListener('hundredPercent', handleHundredPercentPodcast);
     };
   });
 </script>
