@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { Pause, Play } from '@lucide/svelte';
+  import Pause from '@lucide/svelte/icons/pause';
+  import Play from '@lucide/svelte/icons/play';
   import type { MouseEventHandler } from 'svelte/elements';
 
   import playerImage from '$lib/assets/player-image.png';

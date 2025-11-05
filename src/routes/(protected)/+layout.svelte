@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { XIcon } from '@lucide/svelte';
+  import XIcon from '@lucide/svelte/icons/x';
   import { onMount } from 'svelte';
 
   import { page } from '$app/state';

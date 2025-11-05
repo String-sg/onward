@@ -1,15 +1,13 @@
 <script lang="ts">
-  import {
-    ArrowLeft,
-    BookOpenTextIcon,
-    ExternalLink,
-    Lightbulb,
-    Pause,
-    Play,
-    ThumbsDown,
-    ThumbsUp,
-    X,
-  } from '@lucide/svelte';
+  import ArrowLeft from '@lucide/svelte/icons/arrow-left';
+  import BookOpenTextIcon from '@lucide/svelte/icons/book-open-text';
+  import ExternalLink from '@lucide/svelte/icons/external-link';
+  import Lightbulb from '@lucide/svelte/icons/lightbulb';
+  import Pause from '@lucide/svelte/icons/pause';
+  import Play from '@lucide/svelte/icons/play';
+  import ThumbsDown from '@lucide/svelte/icons/thumbs-down';
+  import ThumbsUp from '@lucide/svelte/icons/thumbs-up';
+  import X from '@lucide/svelte/icons/x';
   import { formatDistanceToNow } from 'date-fns';
   import DOMPurify from 'dompurify';
   import { marked } from 'marked';

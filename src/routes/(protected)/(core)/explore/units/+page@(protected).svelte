@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { ArrowLeft } from '@lucide/svelte';
+  import ArrowLeft from '@lucide/svelte/icons/arrow-left';
 
   import { LearningUnit } from '$lib/components/LearningUnit/index.js';
   import { IsWithinViewport } from '$lib/helpers/index.js';

@@ -1,5 +1,7 @@
 <script lang="ts">
-  import { ChevronDown, CircleAlert, SendHorizontal } from '@lucide/svelte';
+  import ChevronDown from '@lucide/svelte/icons/chevron-down';
+  import CircleAlert from '@lucide/svelte/icons/circle-alert';
+  import SendHorizontal from '@lucide/svelte/icons/send-horizontal';
   import DOMPurify from 'dompurify';
   import { marked } from 'marked';
   import { tick } from 'svelte';

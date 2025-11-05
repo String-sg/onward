@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { Pause, Play } from '@lucide/svelte';
+  import Pause from '@lucide/svelte/icons/pause';
+  import Play from '@lucide/svelte/icons/play';
   import { formatDistanceToNow } from 'date-fns';
   import type { MouseEventHandler } from 'svelte/elements';
 

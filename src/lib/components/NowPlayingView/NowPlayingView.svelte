@@ -1,5 +1,9 @@
 <script lang="ts">
-  import { ChevronDown, Pause, Play, RotateCcw, RotateCw } from '@lucide/svelte';
+  import ChevronDown from '@lucide/svelte/icons/chevron-down';
+  import Pause from '@lucide/svelte/icons/pause';
+  import Play from '@lucide/svelte/icons/play';
+  import RotateCcw from '@lucide/svelte/icons/rotate-ccw';
+  import RotateCw from '@lucide/svelte/icons/rotate-cw';
   import DOMPurify from 'dompurify';
   import { marked } from 'marked';
 

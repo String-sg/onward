@@ -1,5 +1,7 @@
 <script lang="ts">
-  import { ArrowLeft, BookOpenCheck, Lightbulb } from '@lucide/svelte';
+  import ArrowLeft from '@lucide/svelte/icons/arrow-left';
+  import BookOpenCheck from '@lucide/svelte/icons/book-open-check';
+  import Lightbulb from '@lucide/svelte/icons/lightbulb';
 
   import { afterNavigate } from '$app/navigation';
   import { Button } from '$lib/components/Button';

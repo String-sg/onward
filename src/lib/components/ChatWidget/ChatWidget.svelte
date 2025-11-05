@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Sparkles } from '@lucide/svelte';
+  import Sparkles from '@lucide/svelte/icons/sparkles';
   import type { MouseEventHandler } from 'svelte/elements';
 
   export interface Props {
