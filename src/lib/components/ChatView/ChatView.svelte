@@ -28,6 +28,14 @@
     onclose: () => void;
   }
 
+  class MaxTokenError extends Error {
+    constructor() {
+      super('Something went wrong, please clear your chat.');
+
+      this.name = this.constructor.name;
+    }
+  }
+
   const { isopen, onclose }: Props = $props();
 
   let target = $state<HTMLElement | null>(null);
@@ -116,8 +124,11 @@
   };
 
   const handleSendQuery = async () => {
-    if (!query.trim()) return;
+    if (!query.trim()) {
+      return;
+    }
 
+    error = null;
     messages.push({ role: 'USER', content: query });
     isAiTyping = true;
 
@@ -125,6 +136,7 @@
     query = '';
 
     await tick();
+
     if (chatWindow) {
       chatWindow.scrollTo({
         top: chatWindow.scrollHeight,
@@ -145,19 +157,19 @@
 
       if (!response.ok) {
         isAiTyping = false;
+
         if (response.status === 401) {
           goto('/login');
           return;
         }
 
-        error = DEFAULT_ERROR_MESSAGE;
-        return;
+        throw new Error();
       }
 
       if (!response.body) {
         isAiTyping = false;
-        error = DEFAULT_ERROR_MESSAGE;
-        return;
+
+        throw new Error();
       }
 
       const reader = response.body.getReader();
@@ -169,6 +181,7 @@
       messages.push({ role: 'ASSISTANT', content: '' });
 
       await tick();
+
       if (chatWindow) {
         chatWindow.scrollTo({
           top: chatWindow.scrollHeight,
@@ -201,12 +214,10 @@
 
           if (payload.type === 'error') {
             if (payload.message === 'Max number of tokens has been reached.') {
-              error = 'Max tokens has been reached, please clear your chat.';
-              break;
+              throw new MaxTokenError();
             } else {
               messages.pop();
-              error = DEFAULT_ERROR_MESSAGE;
-              break;
+              throw new Error();
             }
           }
 
@@ -222,8 +233,17 @@
           }
         }
       }
-    } catch {
-      error = DEFAULT_ERROR_MESSAGE;
+    } catch (err) {
+      error = err instanceof MaxTokenError ? err.message : DEFAULT_ERROR_MESSAGE;
+
+      await tick();
+
+      if (chatWindow) {
+        chatWindow.scrollTo({
+          top: chatWindow.scrollHeight,
+          behavior: 'smooth',
+        });
+      }
     }
   };
 
@@ -257,6 +277,8 @@
       messages = [];
     } catch (err) {
       console.error(err);
+    } finally {
+      error = null;
     }
   };
 </script>
@@ -325,7 +347,7 @@
                   </div>
                 {:else}
                   <div class="flex flex-col">
-                    <span class="prose prose-slate rounded-3xl p-4 text-left break-words">
+                    <span class="prose prose-slate p-4 text-left break-words">
                       <!-- eslint-disable-next-line svelte/no-at-html-tags -->
                       {@html DOMPurify.sanitize(marked.parse(content, { async: false }))}
                     </span>
@@ -334,11 +356,11 @@
               {/each}
 
               {#if isAiTyping}
-                <span class="typing-dots rounded-3xl p-4 text-left">AI is typing</span>
+                <span class="typing-dots p-4 text-left">AI is typing</span>
               {/if}
 
               {#if error}
-                <div class="flex flex-col">
+                <div class="flex flex-col pb-4">
                   <span
                     class="flex w-fit max-w-4/5 flex-row gap-2 rounded-3xl border border-solid border-slate-300 p-4 text-left break-words"
                   >
