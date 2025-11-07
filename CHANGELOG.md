@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.4.0 (2025-11-07)
+
+### Features ✨
+
+- feat: add css positioning to make img touch done button ([#427](https://github.com/String-sg/onward/pull/427)) ([7696746](https://github.com/String-sg/onward/commit/7696746))
+- feat: add background shade to `Collection` component ([#428](https://github.com/String-sg/onward/pull/428)) ([144df62](https://github.com/String-sg/onward/commit/144df62))
+- feat: update error message to be more concise ([#419](https://github.com/String-sg/onward/pull/419)) ([921bafd](https://github.com/String-sg/onward/commit/921bafd))
+- feat: add orange background to login page ([#425](https://github.com/String-sg/onward/pull/425)) ([5bdd788](https://github.com/String-sg/onward/commit/5bdd788))
+- feat: add CSRF protection for chatbot ([#426](https://github.com/String-sg/onward/pull/426)) ([85678df](https://github.com/String-sg/onward/commit/85678df))
+
+### Bug Fixes 🐛
+
+- fix: chat error message padding ([#417](https://github.com/String-sg/onward/pull/417)) ([9689ce5](https://github.com/String-sg/onward/commit/9689ce5))
+- fix: chat error handling ([#423](https://github.com/String-sg/onward/pull/423)) ([819a61c](https://github.com/String-sg/onward/commit/819a61c))
+
+### Chores 🧹
+
+- chore(deps): bump `@sveltejs/vite-plugin-svelte` from `6.1.0` to `6.2.1` ([#430](https://github.com/String-sg/onward/pull/430)) ([cea31b4](https://github.com/String-sg/onward/commit/cea31b4))
+- chore(deps): bump `vite` from `7.1.1` to `7.1.12` ([#429](https://github.com/String-sg/onward/pull/429)) ([b9a98e3](https://github.com/String-sg/onward/commit/b9a98e3))
+- chore: remove unused favicons ([#424](https://github.com/String-sg/onward/pull/424)) ([873372a](https://github.com/String-sg/onward/commit/873372a))
+
 ## 1.3.0 (2025-10-30)
 
 ### Features ✨
