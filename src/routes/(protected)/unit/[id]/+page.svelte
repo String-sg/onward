@@ -4,6 +4,7 @@
     BookOpenTextIcon,
     ExternalLink,
     Lightbulb,
+    MessageCircleWarningIcon,
     Pause,
     Play,
     ThumbsDown,
@@ -253,6 +254,10 @@
   </div>
 
   <div class="flex flex-col gap-y-6">
+    <div class="flex flex-col gap-y-2 rounded-lg bg-slate-100 p-2.5">
+      <MessageCircleWarningIcon></MessageCircleWarningIcon>
+      This bite is mandatory and is due on 30 <br class="sm:hidden" /> September 2025.
+    </div>
     <div class={['prose prose-slate max-w-none text-lg']}>
       {#if browser}
         <!-- eslint-disable-next-line svelte/no-at-html-tags -->
