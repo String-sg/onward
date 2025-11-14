@@ -46,6 +46,34 @@ export function trackPodcastPlay(learningUnitId: string) {
 }
 
 /**
+ * Tracks when a podcast is played at 20% completion.
+ * @param learningUnitId - The ID of the learning unit that was played.
+ */
+export function track20PercentPodcastPlay(learningUnitId: string) {
+  if (!browser) {
+    return;
+  }
+
+  window.gtag('event', 'podcast_play_20_percent', {
+    learning_unit_id: learningUnitId,
+  });
+}
+
+/**
+ * Tracks when a podcast is completed (100%).
+ * @param learningUnitId - The ID of the learning unit that was completed.
+ */
+export function trackPodcastCompletion(learningUnitId: string) {
+  if (!browser) {
+    return;
+  }
+
+  window.gtag('event', 'podcast_completion', {
+    learning_unit_id: learningUnitId,
+  });
+}
+
+/**
  * Tracks when the quiz is clicked.
  * @param learningUnitId - The ID of the learning unit of the quiz.
  */
