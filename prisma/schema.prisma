@@ -131,8 +131,8 @@ model LearningJourney {
   // Domain-Specific Fields.
   isCompleted     Boolean @default(false) @map("is_completed")
   lastCheckpoint  Decimal @map("last_checkpoint")
-  isQuizAttempted Boolean? @map("is_quiz_attempted")
-  isQuizPassed    Boolean? @map("is_quiz_passed")
+  isQuizAttempted Boolean @default(false) @map("is_quiz_attempted")
+  isQuizPassed    Boolean @default(false) @map("is_quiz_passed")
 
   // Relations.
   userId         String @map("user_id") @db.Uuid
