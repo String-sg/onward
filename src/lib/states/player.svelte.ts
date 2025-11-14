@@ -49,7 +49,7 @@ export class Player extends EventTarget {
   #playbackSpeedIndex = $state(1);
   #cumulativePlayTime = 0;
   #trackingTimer: number | null = null;
-  #hasTracked80Percent = $state(false);
+  #hasTracked20Percent = $state(false);
   #hasTracked100Percent = $state(false);
 
   #audio: HTMLAudioElement | null = null;
@@ -63,28 +63,22 @@ export class Player extends EventTarget {
       this.#audio.onloadedmetadata = () => {
         this.#duration = this.#audio?.duration || 0;
         this.#progress = 0;
-        this.#hasTracked80Percent = false;
+        this.#hasTracked20Percent = false;
         this.#hasTracked100Percent = false;
       };
       this.#audio.ontimeupdate = () => {
         this.#progress = this.#audio?.currentTime || 0;
 
-        if (
-          this.#duration > 0 &&
-          this.#progress >= this.#duration * 0.8 &&
-          !this.#hasTracked80Percent &&
-          this.#currentTrack
-        ) {
-          this.#hasTracked80Percent = true;
-          this.dispatchEvent(new Event('eightyPercent'));
+        if (!this.#currentTrack || this.#duration <= 0) {
+          return;
         }
 
-        if (
-          this.#duration > 0 &&
-          this.#progress >= this.#duration &&
-          !this.#hasTracked100Percent &&
-          this.#currentTrack
-        ) {
+        if (this.#progress >= this.#duration * 0.2 && !this.#hasTracked20Percent) {
+          this.#hasTracked20Percent = true;
+          this.dispatchEvent(new Event('twentyPercent'));
+        }
+
+        if (this.#progress >= this.#duration && !this.#hasTracked100Percent) {
           this.#hasTracked100Percent = true;
           this.dispatchEvent(new Event('hundredPercent'));
         }
@@ -98,7 +92,7 @@ export class Player extends EventTarget {
           this.dispatchEvent(new Event('hundredPercent'));
         }
 
-        this.#hasTracked80Percent = false;
+        this.#hasTracked20Percent = false;
         this.#hasTracked100Percent = false;
         this.dispatchEvent(new Event('ended'));
       };
@@ -213,7 +207,7 @@ export class Player extends EventTarget {
       this.#audio.load();
 
       this.#currentTrack = track;
-      this.#hasTracked80Percent = false;
+      this.#hasTracked20Percent = false;
       this.#hasTracked100Percent = false;
 
       if (initialSeekTime !== undefined && initialSeekTime > 0) {
@@ -240,30 +234,7 @@ export class Player extends EventTarget {
     }
 
     // Clamp `time` between 0 and the track's duration.
-    const seekedTime = Math.max(0, Math.min(time, this.#duration));
-    this.#audio.currentTime = seekedTime;
-
-    // Check if seeked position is at or beyond 80% completion
-    if (
-      this.#duration > 0 &&
-      seekedTime >= this.#duration * 0.8 &&
-      !this.#hasTracked80Percent &&
-      this.#currentTrack
-    ) {
-      this.#hasTracked80Percent = true;
-      this.dispatchEvent(new Event('eightyPercent'));
-    }
-
-    // Check if seeked position is at or beyond 100% completion
-    if (
-      this.#duration > 0 &&
-      seekedTime >= this.#duration &&
-      !this.#hasTracked100Percent &&
-      this.#currentTrack
-    ) {
-      this.#hasTracked100Percent = true;
-      this.dispatchEvent(new Event('hundredPercent'));
-    }
+    this.#audio.currentTime = Math.max(0, Math.min(time, this.#duration));
   }
 
   /**

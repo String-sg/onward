@@ -46,15 +46,15 @@ export function trackPodcastPlay(learningUnitId: string) {
 }
 
 /**
- * Tracks when a podcast is played at 80% completion.
+ * Tracks when a podcast is played at 20% completion.
  * @param learningUnitId - The ID of the learning unit that was played.
  */
-export function track80PercentPodcastPlay(learningUnitId: string) {
+export function track20PercentPodcastPlay(learningUnitId: string) {
   if (!browser) {
     return;
   }
 
-  window.gtag('event', 'podcast_play_80_percent', {
+  window.gtag('event', 'podcast_play_20_percent', {
     learning_unit_id: learningUnitId,
   });
 }
