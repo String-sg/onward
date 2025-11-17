@@ -69,6 +69,8 @@ model LearningUnit {
   objectives    String      @map("objectives")
   createdBy     String      @map("created_by")
   isRecommended Boolean     @default(false) @map("is_recommended")
+  isRequired    Boolean     @default(false) @map("is_required")
+  dueDate       DateTime?   @map("due_date") @db.Timestamptz(3)
 
   // Relations.
   collectionId String @map("collection_id") @db.Uuid
