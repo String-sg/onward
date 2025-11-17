@@ -113,6 +113,8 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     summary,
     objectives,
     createdBy: 'DXD Product Team',
+    isRequired: true,
+    dueDate: new Date('2026-02-12'), // Required
     collection: {
       connect: {
         id: collections[0].id,
@@ -141,6 +143,8 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     summary,
     objectives,
     createdBy: 'DXD Product Team',
+    isRequired: true,
+    dueDate: new Date('2025-11-01'), // Overdue
     collection: {
       connect: {
         id: collections[0].id,
@@ -169,6 +173,7 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     summary,
     objectives,
     createdBy: 'DXD Product Team',
+    isRequired: false, // Not required
     collection: {
       connect: {
         id: collections[1].id,
@@ -197,6 +202,8 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     summary,
     objectives,
     createdBy: 'DXD Product Team',
+    isRequired: true,
+    dueDate: new Date('2025-11-20'), // Overdue
     collection: {
       connect: {
         id: collections[1].id,
