@@ -91,7 +91,7 @@ export const load: PageServerLoad = async (event) => {
   const learningJourneyArgs = {
     select: {
       lastCheckpoint: true,
-      isQuizPassed: true,
+      isCompleted: true,
     },
     where: {
       userId_learningUnitId: {
@@ -112,7 +112,7 @@ export const load: PageServerLoad = async (event) => {
   const now = new Date();
   let quizStatus: 'REQUIRED' | 'OVERDUE' | 'COMPLETED' | null = null;
 
-  if (learningJourney?.isQuizPassed) {
+  if (learningJourney?.isCompleted) {
     quizStatus = 'COMPLETED';
   }
 
