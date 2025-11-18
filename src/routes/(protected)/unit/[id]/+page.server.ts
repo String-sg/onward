@@ -52,6 +52,8 @@ export const load: PageServerLoad = async (event) => {
       contentURL: true,
       createdAt: true,
       createdBy: true,
+      isRequired: true,
+      dueDate: true,
       collection: {
         select: {
           type: true,
@@ -89,6 +91,7 @@ export const load: PageServerLoad = async (event) => {
   const learningJourneyArgs = {
     select: {
       lastCheckpoint: true,
+      isCompleted: true,
     },
     where: {
       userId_learningUnitId: {
@@ -104,6 +107,21 @@ export const load: PageServerLoad = async (event) => {
   } catch (err) {
     logger.error({ err }, 'Failed to retrieve learning journey record');
     throw error(500);
+  }
+
+  const now = new Date();
+  let quizStatus: 'REQUIRED' | 'OVERDUE' | 'COMPLETED' | null = null;
+
+  if (learningJourney?.isCompleted) {
+    quizStatus = 'COMPLETED';
+  }
+
+  if (learningUnit.isRequired && quizStatus !== 'COMPLETED') {
+    if (learningUnit.dueDate && (learningUnit.dueDate as Date) < now) {
+      quizStatus = 'OVERDUE';
+    } else {
+      quizStatus = 'REQUIRED';
+    }
   }
 
   const userSentimentArgs = {
@@ -185,6 +203,7 @@ export const load: PageServerLoad = async (event) => {
     collectionType: learningUnit.collection.type,
     isQuizAvailable,
     lastCheckpoint: Number(learningJourney?.lastCheckpoint),
+    quizStatus,
     userSentiment: sentiment?.hasLiked ?? null,
     likesCount: likesAggregate._count.hasLiked,
     learningUnitSources,
