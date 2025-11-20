@@ -281,10 +281,17 @@
   </div>
 
   <div class="flex flex-col gap-y-6">
-    <div class="flex flex-col gap-y-2 rounded-lg bg-slate-100 p-2.5">
-      <MessageCircleWarningIcon />
-      This bite is mandatory and is due on 30 September 2025.
-    </div>
+    {#if data.isRequired && data.dueDate}
+      <div class="flex items-start gap-x-2 rounded-lg bg-slate-100 p-2.5">
+        <MessageCircleWarningIcon class="shrink-0" />
+        This bite is mandatory and is due on {new Date(data.dueDate).toLocaleDateString('en-GB', {
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric',
+        })}.
+      </div>
+    {/if}
+
     <div class={['prose prose-slate max-w-none text-lg']}>
       {#if browser}
         <!-- eslint-disable-next-line svelte/no-at-html-tags -->
