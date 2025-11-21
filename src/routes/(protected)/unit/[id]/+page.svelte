@@ -284,7 +284,7 @@
   </div>
 
   <div class="flex flex-col gap-y-6">
-    {#if data.isRequired && data.dueDate}
+    {#if data.isRequired && data.dueDate && data.quizStatus !== 'COMPLETED'}
       <div class="flex items-start gap-x-2 rounded-lg bg-slate-100 p-2.5">
         <MessageCircleWarningIcon class="shrink-0" />
         This bite is mandatory and is due on {new Date(data.dueDate).toLocaleDateString('en-GB', {
