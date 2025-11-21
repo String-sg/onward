@@ -75,7 +75,11 @@
 
     trackQuizCompletion(params.id.toString());
 
-    isCompletionModalOpen = true;
+    if (data.isRequired && !isQuizPassed) {
+      isQuizFailedModalOpen = true;
+    } else {
+      isCompletionModalOpen = true;
+    }
 
     return async ({ update }) => {
       await update({ invalidateAll: false });
