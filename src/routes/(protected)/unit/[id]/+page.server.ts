@@ -7,6 +7,7 @@ import {
   type GetLearningUnitSentimentsAggregateType,
   type LearningJourneyFindUniqueArgs,
   type LearningJourneyGetPayload,
+  type LearningJourneyUpsertArgs,
   type LearningUnitFindUniqueArgs,
   type LearningUnitGetPayload,
   type LearningUnitSentimentsAggregateArgs,
@@ -279,5 +280,53 @@ export const actions: Actions = {
         throw error(500);
       }
     }
+  },
+  updateQuizAttempt: async (event) => {
+    const logger = event.locals.logger.child({
+      handler: 'page_action_update_quiz_attempt',
+    });
+
+    const { user } = event.locals.session;
+    if (!user) {
+      logger.warn('User not authenticated');
+      return redirect(303, '/login');
+    }
+
+    const data = await event.request.formData();
+    const csrfToken = data.get('csrfToken');
+    if (!csrfToken || typeof csrfToken !== 'string') {
+      logger.warn('CSRF token is missing');
+      throw error(400);
+    }
+
+    const isValidCSRFToken = await auth.validateCSRFToken(event, csrfToken);
+    if (!isValidCSRFToken) {
+      logger.warn('CSRF token is invalid');
+      throw error(400);
+    }
+
+    const learningJourneyArgs = {
+      where: {
+        userId_learningUnitId: { userId: user.id, learningUnitId: event.params.id },
+      },
+      update: {
+        isQuizAttempted: true,
+      },
+      create: {
+        userId: user.id,
+        learningUnitId: event.params.id,
+        lastCheckpoint: 0,
+        isQuizAttempted: true,
+      },
+    } satisfies LearningJourneyUpsertArgs;
+
+    try {
+      await db.learningJourney.upsert(learningJourneyArgs);
+    } catch (err) {
+      logger.error({ err }, 'Failed to update learning journey quiz attempt');
+      throw error(500);
+    }
+
+    return redirect(303, `/unit/${event.params.id}/quiz`);
   },
 };

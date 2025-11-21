@@ -27,6 +27,8 @@ export const load: PageServerLoad = async (event) => {
   const learningUnitArgs = {
     select: {
       title: true,
+      isRequired: true,
+      dueDate: true,
       collection: {
         select: {
           type: true,
@@ -73,6 +75,8 @@ export const load: PageServerLoad = async (event) => {
     questionAnswers: learningUnit.questionAnswers,
     collectionType: learningUnit.collection.type,
     learningUnitTitle: learningUnit.title,
+    isRequired: learningUnit.isRequired,
+    dueDate: learningUnit.dueDate,
   };
 };
 
@@ -101,16 +105,44 @@ export const actions: Actions = {
       return redirect(303, '/login');
     }
 
+    const learningUnitArgs = {
+      where: {
+        id: event.params.id,
+      },
+      select: {
+        id: true,
+        isRequired: true,
+      },
+    } satisfies LearningUnitFindUniqueArgs;
+
+    let learningUnit: LearningUnitGetPayload<typeof learningUnitArgs> | null;
+    try {
+      learningUnit = await db.learningUnit.findUnique(learningUnitArgs);
+    } catch (err) {
+      logger.error({ err }, 'Failed to retrieve learning unit');
+      throw error(500);
+    }
+
+    if (!learningUnit) {
+      throw error(404);
+    }
+
+    const isQuizPassed = learningUnit.isRequired ? data.get('isQuizPassed') === 'true' : null;
+
     const learningJourneyArgs = {
       where: {
-        userId_learningUnitId: { userId: user.id, learningUnitId: event.params.id },
+        userId_learningUnitId: { userId: user.id, learningUnitId: learningUnit.id },
       },
-      update: { isCompleted: true },
+      update: {
+        isCompleted: true,
+        isQuizPassed,
+      },
       create: {
         userId: user.id,
-        learningUnitId: event.params.id,
+        learningUnitId: learningUnit.id,
         isCompleted: true,
         lastCheckpoint: 0,
+        isQuizPassed,
       },
     } satisfies LearningJourneyUpsertArgs;
 

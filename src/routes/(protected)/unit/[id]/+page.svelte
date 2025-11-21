@@ -22,7 +22,7 @@
   import { afterNavigate } from '$app/navigation';
   import { page } from '$app/state';
   import { Badge } from '$lib/components/Badge/index.js';
-  import { Button, LinkButton } from '$lib/components/Button/index.js';
+  import { Button } from '$lib/components/Button/index.js';
   import { Modal } from '$lib/components/Modal/index.js';
   import {
     IsWithinViewport,
@@ -266,16 +266,19 @@
           </Button>
         {/if}
 
-        <LinkButton
-          variant="secondary"
-          width="full"
-          disabled={!data.isQuizAvailable}
-          href={`/unit/${data.id}/quiz`}
-          onclick={handleQuizClick}
-        >
-          <Lightbulb class="h-4 w-4" />
-          <span class="font-medium">Take the quiz</span>
-        </LinkButton>
+        <form method="POST" action="?/updateQuizAttempt" use:enhance>
+          <input type="hidden" name="csrfToken" value={data.csrfToken} />
+
+          <Button
+            variant="secondary"
+            width="full"
+            disabled={!data.isQuizAvailable}
+            onclick={handleQuizClick}
+          >
+            <Lightbulb class="h-4 w-4" />
+            <span class="font-medium">Take the quiz</span>
+          </Button>
+        </form>
       </div>
     </div>
   </div>
