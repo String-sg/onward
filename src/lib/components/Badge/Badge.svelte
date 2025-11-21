@@ -16,6 +16,7 @@
       | 'teal'
       | 'sky'
       | 'green'
+      | 'lime'
       | 'slate'
       | 'slate-dark';
     /**
@@ -39,6 +40,7 @@
     variant === 'teal' && 'border-teal-400 bg-teal-200 text-teal-900',
     variant === 'sky' && 'border-sky-400 bg-sky-200 text-sky-900',
     variant === 'green' && 'border-green-400 bg-green-200 text-green-900',
+    variant === 'lime' && 'border-lime-400 bg-lime-200 text-lime-900',
     variant === 'slate' && 'border-transparent bg-slate-200 text-slate-950',
     variant === 'slate-dark' && 'border-transparent bg-slate-950 text-slate-100',
     clazz,

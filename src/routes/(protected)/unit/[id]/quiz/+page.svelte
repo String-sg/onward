@@ -15,6 +15,8 @@
   } from '$lib/helpers/index.js';
   import { Player } from '$lib/states/index.js';
 
+  const PASSING_SCORE = 80;
+
   const { data, params } = $props();
 
   let target = $state<HTMLElement | null>(null);
@@ -32,6 +34,10 @@
   const player = Player.get();
   const isWithinViewport = new IsWithinViewport(() => target);
 
+  let correctAnswers = 0;
+  let score = 0;
+  let isQuizPassed = false;
+
   onMount(() => {
     player.stop();
   });
@@ -45,6 +51,10 @@
   const handleContinueClick = async () => {
     isFeedbackModalOpen = false;
 
+    if (data.isRequired && isCorrectAnswer) {
+      correctAnswers++;
+    }
+
     if (isLastQuestionAnswer) {
       return;
     }
@@ -54,7 +64,14 @@
     selectedOptionIndex = -1;
   };
 
-  const handleSubmit: SubmitFunction = async () => {
+  const handleSubmit: SubmitFunction = async (event) => {
+    if (data.isRequired) {
+      score = Math.round((correctAnswers / data.questionAnswers.length) * 100);
+      isQuizPassed = score >= PASSING_SCORE;
+
+      event.formData.append('isQuizPassed', isQuizPassed.toString());
+    }
+
     trackQuizCompletion(params.id.toString());
 
     isCompletionModalOpen = true;
