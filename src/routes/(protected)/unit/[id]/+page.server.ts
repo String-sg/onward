@@ -110,7 +110,7 @@ export const load: PageServerLoad = async (event) => {
     throw error(500);
   }
 
-  const now = new Date().toDateString();
+  const now = new Date().setHours(0, 0, 0, 0);
   let quizStatus: 'REQUIRED' | 'OVERDUE' | 'COMPLETED' | null = null;
 
   if (learningJourney?.isCompleted) {
@@ -118,7 +118,7 @@ export const load: PageServerLoad = async (event) => {
   }
 
   if (learningUnit.isRequired && quizStatus !== 'COMPLETED') {
-    if (learningUnit.dueDate && learningUnit.dueDate.toDateString() < now) {
+    if (learningUnit.dueDate && learningUnit.dueDate.setHours(0, 0, 0, 0) < now) {
       quizStatus = 'OVERDUE';
     } else {
       quizStatus = 'REQUIRED';
