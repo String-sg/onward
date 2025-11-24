@@ -283,11 +283,7 @@
 <Modal isopen={isQuizFailedModalOpen} onclose={noop} variant="light">
   <div class="mx-auto flex min-h-svh max-w-5xl flex-col items-center justify-center px-4 py-6">
     <div class="relative mt-2.5 pb-75">
-      <enhanced:img
-        src="$lib/assets/page-not-found.png?w=584"
-        alt="Page not found"
-        class="w-[292px]"
-      />
+      <enhanced:img src="$lib/assets/fail-quiz.png?w=584" alt="Page not found" class="w-[292px]" />
 
       <div
         class="absolute inset-x-0 bottom-0 flex flex-col items-center justify-center gap-y-6 text-xl font-medium"
