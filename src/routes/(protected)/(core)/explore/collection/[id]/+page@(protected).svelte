@@ -95,6 +95,7 @@
           title={learningUnit.title}
           createdat={learningUnit.createdAt}
           createdby={learningUnit.createdBy}
+          status={learningUnit.status}
         />
       {/each}
     </div>
