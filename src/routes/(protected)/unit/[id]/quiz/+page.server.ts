@@ -127,6 +127,17 @@ export const actions: Actions = {
       throw error(404);
     }
 
+    const existing = await db.learningJourney.findUnique({
+      select: { isCompleted: true },
+      where: {
+        userId_learningUnitId: { userId: user.id, learningUnitId: learningUnit.id },
+      },
+    });
+
+    if (existing?.isCompleted) {
+      return;
+    }
+
     const isQuizPassed = learningUnit.isRequired ? data.get('isQuizPassed') === 'true' : null;
 
     const learningJourneyArgs = {
@@ -134,13 +145,13 @@ export const actions: Actions = {
         userId_learningUnitId: { userId: user.id, learningUnitId: learningUnit.id },
       },
       update: {
-        isCompleted: true,
+        isCompleted: isQuizPassed ?? true,
         isQuizPassed,
       },
       create: {
         userId: user.id,
         learningUnitId: learningUnit.id,
-        isCompleted: true,
+        isCompleted: isQuizPassed ?? true,
         lastCheckpoint: 0,
         isQuizPassed,
       },
