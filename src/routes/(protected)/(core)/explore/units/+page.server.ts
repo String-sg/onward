@@ -1,7 +1,7 @@
 import { redirect } from '@sveltejs/kit';
 
+import { getStatus } from '$lib/helpers/learning-unit-status';
 import { db } from '$lib/server/db';
-import { getStatus } from '$lib/server/learning-unit';
 
 import type { PageServerLoad } from './$types';
 

@@ -1,6 +1,7 @@
 import { error, redirect } from '@sveltejs/kit';
 import { validate as uuidValidate } from 'uuid';
 
+import { getStatus } from '$lib/helpers/learning-unit-status';
 import {
   type CollectionFindUniqueArgs,
   type CollectionGetPayload,
@@ -8,7 +9,6 @@ import {
   type LearningUnitFindManyArgs,
   type LearningUnitGetPayload,
 } from '$lib/server/db';
-import { getStatus } from '$lib/server/learning-unit';
 
 import type { PageServerLoad } from './$types';
 

@@ -1,5 +1,6 @@
 import { error, redirect } from '@sveltejs/kit';
 
+import { getStatus } from '$lib/helpers/learning-unit-status';
 import {
   db,
   type LearningJourneyFindManyArgs,
@@ -7,7 +8,6 @@ import {
   type LearningUnitFindManyArgs,
   type LearningUnitGetPayload,
 } from '$lib/server/db';
-import { getStatus } from '$lib/server/learning-unit';
 
 import type { PageServerLoad } from './$types';
 

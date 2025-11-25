@@ -1,3 +1,17 @@
+/**
+ * Determines the status of a required Learning Unit.
+ *
+ * @param learningUnit - The learning unit object and its properties for status calculation.
+ *
+ * @returns The status of the learning unit, which can be 'COMPLETED', 'OVERDUE', 'REQUIRED', or null.
+ *
+ * @example
+ * ```typescript
+ * import { getStatus } from '$lib/helpers/index.js';
+ *
+ * const status = getStatus(learningUnit);
+ * ```
+ */
 export function getStatus(learningUnit: {
   isRequired: boolean;
   dueDate: Date | null;
