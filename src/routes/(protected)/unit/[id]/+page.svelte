@@ -3,6 +3,7 @@
     ArrowLeft,
     BookOpenTextIcon,
     Check,
+    CircleCheck,
     ExternalLink,
     Lightbulb,
     MessageCircleWarningIcon,
@@ -153,12 +154,12 @@
           <Badge variant={tagCodeToBadgeVariant(data.quizStatus)}>
             {#if data.quizStatus === 'OVERDUE'}
               <div class="flex items-center gap-x-1">
-                <TriangleAlert class="h-3 w-3" />
+                <TriangleAlert class="h-3 w-3" color="#F97316" />
                 <span>Overdue</span>
               </div>
             {:else if data.quizStatus === 'COMPLETED'}
               <div class="flex items-center gap-x-1">
-                <Check class="h-3 w-3" />
+                <CircleCheck class="h-3 w-3" color="#84CC16" />
                 <span>Completed</span>
               </div>
             {:else}

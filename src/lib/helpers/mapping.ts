@@ -13,8 +13,8 @@ const TAG_CODE_TO_BADGE_VARIANT: Record<string, BadgeProps['variant']> = {
   PDF: 'slate',
   LINK: 'slate',
   REQUIRED: 'slate',
-  OVERDUE: 'orange',
-  COMPLETED: 'lime',
+  OVERDUE: 'slate',
+  COMPLETED: 'slate',
 };
 
 /**
