@@ -127,22 +127,44 @@ export const actions: Actions = {
       throw error(404);
     }
 
-    const isQuizPassed = learningUnit.isRequired ? data.get('isQuizPassed') === 'true' : null;
+    const learningJourney = await db.learningJourney.findUnique({
+      select: { isCompleted: true },
+      where: {
+        userId_learningUnitId: { userId: user.id, learningUnitId: learningUnit.id },
+      },
+    });
+
+    if (learningJourney && learningJourney.isCompleted) {
+      return;
+    }
+
+    const isQuizPassed = data.get('isQuizPassed');
+    if (
+      learningUnit.isRequired &&
+      (!isQuizPassed ||
+        typeof isQuizPassed !== 'string' ||
+        !['true', 'false'].includes(isQuizPassed))
+    ) {
+      logger.warn('Invalid isQuizPassed value');
+      throw error(400);
+    }
+
+    const isQuizPassedBool = learningUnit.isRequired ? isQuizPassed === 'true' : null;
 
     const learningJourneyArgs = {
       where: {
         userId_learningUnitId: { userId: user.id, learningUnitId: learningUnit.id },
       },
       update: {
-        isCompleted: true,
-        isQuizPassed,
+        isCompleted: isQuizPassedBool ?? true,
+        isQuizPassed: isQuizPassedBool,
       },
       create: {
         userId: user.id,
         learningUnitId: learningUnit.id,
-        isCompleted: true,
+        isCompleted: isQuizPassedBool ?? true,
         lastCheckpoint: 0,
-        isQuizPassed,
+        isQuizPassed: isQuizPassedBool,
       },
     } satisfies LearningJourneyUpsertArgs;
 
