@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Check, CircleCheck, Pause, Play, TriangleAlert } from '@lucide/svelte';
+  import { Check, Pause, Play, TriangleAlert } from '@lucide/svelte';
   import { formatDistanceToNow } from 'date-fns';
   import type { MouseEventHandler } from 'svelte/elements';
 
@@ -94,17 +94,17 @@
         <Badge variant={tagCodeToBadgeVariant(status)}>
           {#if status === 'OVERDUE'}
             <div class="flex items-center gap-x-1">
-              <TriangleAlert class="h-3 w-3" color="#F97316" />
+              <TriangleAlert class="h-3 w-3 text-orange-500" strokeWidth={3} />
               <span>Overdue</span>
             </div>
           {:else if status === 'COMPLETED'}
             <div class="flex items-center gap-x-1">
-              <CircleCheck class="h-3 w-3" color="#84CC16" />
+              <Check class="h-3 w-3 text-lime-600" strokeWidth={4} />
               <span>Completed</span>
             </div>
           {:else}
             <div class="flex items-center gap-x-1">
-              <Check class="h-3 w-3" />
+              <Check class="h-3 w-3 text-slate-600" strokeWidth={4} />
               <span>Required</span>
             </div>
           {/if}
