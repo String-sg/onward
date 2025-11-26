@@ -104,7 +104,6 @@ export const load: PageServerLoad = async (event) => {
           userId: user.id,
           isCompleted: true,
         },
-        take: 1,
       },
     },
     where: {

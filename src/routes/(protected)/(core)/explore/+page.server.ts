@@ -35,13 +35,12 @@ export const load: PageServerLoad = async (event) => {
         },
       },
       learningJourneys: {
-        where: {
-          userId: user.id,
-        },
         select: {
           isCompleted: true,
         },
-        take: 1,
+        where: {
+          userId: user.id,
+        },
       },
     },
     orderBy: {
