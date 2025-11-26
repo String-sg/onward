@@ -1,14 +1,9 @@
 import 'dotenv/config';
 
-import { defineConfig, env } from 'prisma/config';
+import type { PrismaConfig } from 'prisma';
 
-export default defineConfig({
-  schema: 'prisma/schema.prisma',
-  migrations: {
-    path: 'prisma/migrations',
-    seed: 'tsx prisma/seed.ts',
-  },
+export default {
   datasource: {
-    url: env('POSTGRES_URL'),
+    url: process.env.POSTGRES_URL || 'postgresql://root:secret@localhost:5432/onward-dev',
   },
-});
+} satisfies PrismaConfig;
