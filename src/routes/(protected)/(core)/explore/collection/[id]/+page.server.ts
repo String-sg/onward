@@ -1,6 +1,7 @@
 import { error, redirect } from '@sveltejs/kit';
 import { validate as uuidValidate } from 'uuid';
 
+import { getLearningUnitStatus } from '$lib/helpers/index.js';
 import {
   type CollectionFindUniqueArgs,
   type CollectionGetPayload,
@@ -12,7 +13,7 @@ import {
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async (event) => {
-  const logger = event.locals.logger.child({ handler: 'explore_collection' });
+  const logger = event.locals.logger.child({ handler: 'page_load_explore_collection' });
 
   const { user } = event.locals.session;
   if (!user) {
@@ -49,6 +50,13 @@ export const load: PageServerLoad = async (event) => {
   const learningUnitsArgs = {
     select: {
       id: true,
+      createdAt: true,
+      title: true,
+      objectives: true,
+      contentURL: true,
+      createdBy: true,
+      isRequired: true,
+      dueDate: true,
       tags: {
         select: {
           tag: {
@@ -59,11 +67,14 @@ export const load: PageServerLoad = async (event) => {
           },
         },
       },
-      title: true,
-      objectives: true,
-      contentURL: true,
-      createdAt: true,
-      createdBy: true,
+      learningJourneys: {
+        select: {
+          isCompleted: true,
+        },
+        where: {
+          userId: user.id,
+        },
+      },
     },
     where: { collectionId: event.params.id },
     orderBy: {
@@ -84,6 +95,11 @@ export const load: PageServerLoad = async (event) => {
     learningUnits: learningUnits.map((unit) => ({
       ...unit,
       tags: unit.tags.map((t) => t.tag),
+      status: getLearningUnitStatus({
+        isRequired: unit.isRequired,
+        dueDate: unit.dueDate,
+        learningJourney: unit.learningJourneys[0],
+      }),
     })),
   };
 };

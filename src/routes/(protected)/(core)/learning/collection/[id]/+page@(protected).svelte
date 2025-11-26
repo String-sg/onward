@@ -94,6 +94,7 @@
             title={journey.title}
             createdat={journey.createdAt}
             createdby={journey.createdBy}
+            status={journey.status}
           />
         {/each}
       </div>
@@ -114,6 +115,7 @@
             title={journey.title}
             createdat={journey.createdAt}
             createdby={journey.createdBy}
+            status={journey.status}
           />
         {/each}
       </div>

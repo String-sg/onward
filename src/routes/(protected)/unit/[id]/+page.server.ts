@@ -1,6 +1,7 @@
 import { error, redirect } from '@sveltejs/kit';
 import { validate as uuidValidate } from 'uuid';
 
+import { getLearningUnitStatus } from '$lib/helpers/index.js';
 import auth from '$lib/server/auth';
 import {
   db,
@@ -110,20 +111,13 @@ export const load: PageServerLoad = async (event) => {
     throw error(500);
   }
 
-  const now = new Date().setHours(0, 0, 0, 0);
-  let quizStatus: 'REQUIRED' | 'OVERDUE' | 'COMPLETED' | null = null;
-
-  if (learningJourney?.isCompleted) {
-    quizStatus = 'COMPLETED';
-  }
-
-  if (learningUnit.isRequired && quizStatus !== 'COMPLETED') {
-    if (learningUnit.dueDate && learningUnit.dueDate.setHours(0, 0, 0, 0) < now) {
-      quizStatus = 'OVERDUE';
-    } else {
-      quizStatus = 'REQUIRED';
-    }
-  }
+  const quizStatus = getLearningUnitStatus({
+    isRequired: learningUnit.isRequired,
+    dueDate: learningUnit.dueDate,
+    learningJourney: {
+      isCompleted: learningJourney ? learningJourney.isCompleted : false,
+    },
+  });
 
   const userSentimentArgs = {
     select: {

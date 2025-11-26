@@ -153,17 +153,17 @@
           <Badge variant={tagCodeToBadgeVariant(data.quizStatus)}>
             {#if data.quizStatus === 'OVERDUE'}
               <div class="flex items-center gap-x-1">
-                <TriangleAlert class="h-3 w-3" />
+                <TriangleAlert class="h-3 w-3 text-orange-500" strokeWidth={3} />
                 <span>Overdue</span>
               </div>
             {:else if data.quizStatus === 'COMPLETED'}
               <div class="flex items-center gap-x-1">
-                <Check class="h-3 w-3" />
+                <Check class="h-3 w-3 text-lime-600" strokeWidth={4} />
                 <span>Completed</span>
               </div>
             {:else}
               <div class="flex items-center gap-x-1">
-                <Check class="h-3 w-3" />
+                <Check class="h-3 w-3 text-slate-600" strokeWidth={4} />
                 <span>Required</span>
               </div>
             {/if}

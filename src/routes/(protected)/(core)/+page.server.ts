@@ -1,5 +1,6 @@
 import { error, redirect } from '@sveltejs/kit';
 
+import { getLearningUnitStatus } from '$lib/helpers/index.js';
 import {
   db,
   type LearningJourneyFindManyArgs,
@@ -22,6 +23,8 @@ export const load: PageServerLoad = async (event) => {
   const learningJourneyArgs = {
     select: {
       id: true,
+      isCompleted: true,
+      isQuizPassed: true,
       learningUnit: {
         select: {
           id: true,
@@ -30,6 +33,8 @@ export const load: PageServerLoad = async (event) => {
           contentURL: true,
           createdAt: true,
           createdBy: true,
+          isRequired: true,
+          dueDate: true,
           tags: {
             select: {
               tag: {
@@ -50,7 +55,7 @@ export const load: PageServerLoad = async (event) => {
     },
     where: {
       userId: user.id,
-      isCompleted: false,
+      isCompleted: true,
     },
     orderBy: {
       createdAt: 'desc',
@@ -69,11 +74,18 @@ export const load: PageServerLoad = async (event) => {
   const recommendedLearningUnitsArgs = {
     select: {
       id: true,
+      createdAt: true,
       title: true,
       summary: true,
       contentURL: true,
-      createdAt: true,
       createdBy: true,
+      isRequired: true,
+      dueDate: true,
+      collection: {
+        select: {
+          type: true,
+        },
+      },
       tags: {
         select: {
           tag: {
@@ -84,9 +96,13 @@ export const load: PageServerLoad = async (event) => {
           },
         },
       },
-      collection: {
+      learningJourneys: {
         select: {
-          type: true,
+          isCompleted: true,
+        },
+        where: {
+          userId: user.id,
+          isCompleted: true,
         },
       },
     },
@@ -125,10 +141,22 @@ export const load: PageServerLoad = async (event) => {
         ...lj.learningUnit,
         tags: lj.learningUnit.tags.map((t) => t.tag),
         collectionType: lj.learningUnit.collection.type,
+        status: getLearningUnitStatus({
+          isRequired: lj.learningUnit.isRequired,
+          dueDate: lj.learningUnit.dueDate,
+          learningJourney: {
+            isCompleted: lj.isCompleted,
+          },
+        }),
       },
     })),
     recommendedLearningUnits: recommendedLearningUnits.map((lu) => ({
       ...lu,
+      status: getLearningUnitStatus({
+        isRequired: lu.isRequired,
+        dueDate: lu.dueDate,
+        learningJourney: lu.learningJourneys[0],
+      }),
       tags: lu.tags.map((t) => t.tag),
       collectionType: lu.collection.type,
     })),
