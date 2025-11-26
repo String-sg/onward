@@ -20,8 +20,8 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.879.0",
-    "@prisma/adapter-pg": "^6.16.1",
-    "@prisma/client": "^6.16.1",
+    "@prisma/adapter-pg": "^7.0.1",
+    "@prisma/client": "^7.0.1",
     "@valkey/valkey-glide": "2.0.1",
     "openai": "^5.22.0",
     "weaviate-client": "^3.8.1"
@@ -52,7 +52,7 @@
     "prettier": "^3.6.2",
     "prettier-plugin-svelte": "^3.4.0",
     "prettier-plugin-tailwindcss": "^0.6.13",
-    "prisma": "^6.16.1",
+    "prisma": "^7.0.1",
     "svelte": "^5.38.0",
     "svelte-check": "^4.3.0",
     "tailwindcss": "^4.1.11",
