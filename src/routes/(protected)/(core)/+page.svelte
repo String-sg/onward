@@ -59,6 +59,7 @@
             onpause: handleLearningUnitPause,
             onresume: handleLearningUnitResume,
           }}
+          status={learningJourney.learningUnit.status}
         />
       {/each}
     </div>
@@ -91,6 +92,7 @@
             onpause: handleLearningUnitPause,
             onresume: handleLearningUnitResume,
           }}
+          status={learningUnit.status}
         />
       {/each}
     </div>

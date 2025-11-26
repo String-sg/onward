@@ -1,6 +1,7 @@
 import { error, redirect } from '@sveltejs/kit';
 import { validate as uuidValidate } from 'uuid';
 
+import { getLearningUnitStatus } from '$lib/helpers/index.js';
 import {
   db,
   type LearningJourneyModel,
@@ -18,6 +19,7 @@ interface Result {
   createdAt: LearningUnitModel['createdAt'];
   createdBy: LearningUnitModel['createdBy'];
   tags: Pick<TagModel, 'code' | 'label'>[];
+  status: 'COMPLETED' | 'OVERDUE' | 'REQUIRED' | null;
 }
 
 export const load: PageServerLoad = async (event) => {
@@ -53,9 +55,11 @@ export const load: PageServerLoad = async (event) => {
       learningUnit: {
         select: {
           id: true,
-          title: true,
           createdAt: true,
+          title: true,
           createdBy: true,
+          isRequired: true,
+          dueDate: true,
           tags: {
             select: {
               tag: {
@@ -64,6 +68,14 @@ export const load: PageServerLoad = async (event) => {
                   label: true,
                 },
               },
+            },
+          },
+          learningJourneys: {
+            select: {
+              isCompleted: true,
+            },
+            where: {
+              userId: user.id,
             },
           },
         },
@@ -98,6 +110,13 @@ export const load: PageServerLoad = async (event) => {
             code: t.tag.code,
             label: t.tag.label,
           })),
+          status: getLearningUnitStatus({
+            isRequired: journey.learningUnit.isRequired,
+            dueDate: journey.learningUnit.dueDate,
+            learningJourney: {
+              isCompleted: journey.isCompleted,
+            },
+          }),
         });
 
         return acc;

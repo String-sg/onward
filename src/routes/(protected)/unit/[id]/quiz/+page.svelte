@@ -15,6 +15,8 @@
   } from '$lib/helpers/index.js';
   import { Player } from '$lib/states/index.js';
 
+  const PASSING_SCORE = 80;
+
   const { data, params } = $props();
 
   let target = $state<HTMLElement | null>(null);
@@ -22,6 +24,8 @@
   let selectedOptionIndex = $state(-1);
   let isFeedbackModalOpen = $state(false);
   let isCompletionModalOpen = $state(false);
+  let isQuizFailedModalOpen = $state(false);
+  let correctAnswers = $state(0);
 
   const currentQuestionAnswer = $derived(data.questionAnswers[currentQuestionAnswerIndex]);
   const isCorrectAnswer = $derived(selectedOptionIndex === currentQuestionAnswer.answer);
@@ -31,6 +35,9 @@
 
   const player = Player.get();
   const isWithinViewport = new IsWithinViewport(() => target);
+
+  let score = 0;
+  let isQuizPassed = false;
 
   onMount(() => {
     player.stop();
@@ -45,6 +52,10 @@
   const handleContinueClick = async () => {
     isFeedbackModalOpen = false;
 
+    if (data.isRequired && isCorrectAnswer) {
+      correctAnswers++;
+    }
+
     if (isLastQuestionAnswer) {
       return;
     }
@@ -54,10 +65,21 @@
     selectedOptionIndex = -1;
   };
 
-  const handleSubmit: SubmitFunction = async () => {
+  const handleSubmit: SubmitFunction = async (event) => {
+    if (data.isRequired) {
+      score = Math.round((correctAnswers / data.questionAnswers.length) * 100);
+      isQuizPassed = score >= PASSING_SCORE;
+
+      event.formData.append('isQuizPassed', isQuizPassed.toString());
+    }
+
     trackQuizCompletion(params.id.toString());
 
-    isCompletionModalOpen = true;
+    if (data.isRequired && !isQuizPassed) {
+      isQuizFailedModalOpen = true;
+    } else {
+      isCompletionModalOpen = true;
+    }
 
     return async ({ update }) => {
       await update({ invalidateAll: false });
@@ -252,6 +274,27 @@
           class="inline-flex w-full cursor-pointer items-center justify-center rounded-full px-3.75 py-2.75 font-medium hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed"
         >
           Check my profile
+        </a>
+      </div>
+    </div>
+  </div>
+</Modal>
+
+<Modal isopen={isQuizFailedModalOpen} onclose={noop} variant="light">
+  <div class="mx-auto flex min-h-svh max-w-5xl flex-col items-center justify-center px-4 py-6">
+    <div class="relative mt-2.5 pb-75">
+      <enhanced:img src="$lib/assets/fail-quiz.png?w=584" alt="Page not found" class="w-[292px]" />
+
+      <div
+        class="absolute inset-x-0 bottom-0 flex flex-col items-center justify-center gap-y-6 text-xl font-medium"
+      >
+        <span>Failed the quiz</span>
+        <span>{correctAnswers}/{data.questionAnswers.length}</span>
+        <a
+          href="/unit/{params.id}"
+          class="inline-flex w-full cursor-pointer items-center justify-center rounded-full px-3.75 py-2.75 hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed"
+        >
+          Retry
         </a>
       </div>
     </div>

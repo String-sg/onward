@@ -1,12 +1,14 @@
 import { error, redirect } from '@sveltejs/kit';
 import { validate as uuidValidate } from 'uuid';
 
+import { getLearningUnitStatus } from '$lib/helpers/index.js';
 import auth from '$lib/server/auth';
 import {
   db,
   type GetLearningUnitSentimentsAggregateType,
   type LearningJourneyFindUniqueArgs,
   type LearningJourneyGetPayload,
+  type LearningJourneyUpsertArgs,
   type LearningUnitFindUniqueArgs,
   type LearningUnitGetPayload,
   type LearningUnitSentimentsAggregateArgs,
@@ -52,6 +54,8 @@ export const load: PageServerLoad = async (event) => {
       contentURL: true,
       createdAt: true,
       createdBy: true,
+      isRequired: true,
+      dueDate: true,
       collection: {
         select: {
           type: true,
@@ -89,6 +93,7 @@ export const load: PageServerLoad = async (event) => {
   const learningJourneyArgs = {
     select: {
       lastCheckpoint: true,
+      isCompleted: true,
     },
     where: {
       userId_learningUnitId: {
@@ -105,6 +110,14 @@ export const load: PageServerLoad = async (event) => {
     logger.error({ err }, 'Failed to retrieve learning journey record');
     throw error(500);
   }
+
+  const quizStatus = getLearningUnitStatus({
+    isRequired: learningUnit.isRequired,
+    dueDate: learningUnit.dueDate,
+    learningJourney: {
+      isCompleted: learningJourney ? learningJourney.isCompleted : false,
+    },
+  });
 
   const userSentimentArgs = {
     select: {
@@ -184,7 +197,10 @@ export const load: PageServerLoad = async (event) => {
     createdBy: learningUnit.createdBy,
     collectionType: learningUnit.collection.type,
     isQuizAvailable,
+    isRequired: learningUnit.isRequired,
+    dueDate: learningUnit.dueDate,
     lastCheckpoint: Number(learningJourney?.lastCheckpoint),
+    quizStatus,
     userSentiment: sentiment?.hasLiked ?? null,
     likesCount: likesAggregate._count.hasLiked,
     learningUnitSources,
@@ -258,5 +274,53 @@ export const actions: Actions = {
         throw error(500);
       }
     }
+  },
+  updateQuizAttempt: async (event) => {
+    const logger = event.locals.logger.child({
+      handler: 'page_action_update_quiz_attempt',
+    });
+
+    const { user } = event.locals.session;
+    if (!user) {
+      logger.warn('User not authenticated');
+      return redirect(303, '/login');
+    }
+
+    const data = await event.request.formData();
+    const csrfToken = data.get('csrfToken');
+    if (!csrfToken || typeof csrfToken !== 'string') {
+      logger.warn('CSRF token is missing');
+      throw error(400);
+    }
+
+    const isValidCSRFToken = await auth.validateCSRFToken(event, csrfToken);
+    if (!isValidCSRFToken) {
+      logger.warn('CSRF token is invalid');
+      throw error(400);
+    }
+
+    const learningJourneyArgs = {
+      where: {
+        userId_learningUnitId: { userId: user.id, learningUnitId: event.params.id },
+      },
+      update: {
+        isQuizAttempted: true,
+      },
+      create: {
+        userId: user.id,
+        learningUnitId: event.params.id,
+        lastCheckpoint: 0,
+        isQuizAttempted: true,
+      },
+    } satisfies LearningJourneyUpsertArgs;
+
+    try {
+      await db.learningJourney.upsert(learningJourneyArgs);
+    } catch (err) {
+      logger.error({ err }, 'Failed to update learning journey quiz attempt');
+      throw error(500);
+    }
+
+    return redirect(303, `/unit/${event.params.id}/quiz`);
   },
 };

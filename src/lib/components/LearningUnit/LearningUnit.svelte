@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Pause, Play } from '@lucide/svelte';
+  import { Check, Pause, Play, TriangleAlert } from '@lucide/svelte';
   import { formatDistanceToNow } from 'date-fns';
   import type { MouseEventHandler } from 'svelte/elements';
 
@@ -29,6 +29,10 @@
      */
     createdby: string;
     /**
+     * The status for required learning unit.
+     */
+    status: 'REQUIRED' | 'COMPLETED' | 'OVERDUE' | null;
+    /**
      * An optional player object for showing playback controls and progress.
      * If provided, displays the controls and progress.
      */
@@ -56,7 +60,7 @@
     } | null;
   }
 
-  let { to, title, tags, createdat, createdby, player = null }: Props = $props();
+  let { to, title, tags, createdat, createdby, status, player = null }: Props = $props();
 
   const handlePlay: MouseEventHandler<HTMLButtonElement> = (event) => {
     // Prevent default anchor navigation.
@@ -86,6 +90,27 @@
 >
   <div class="flex flex-col gap-y-1">
     <div class="flex flex-wrap gap-1">
+      {#if status}
+        <Badge variant={tagCodeToBadgeVariant(status)}>
+          {#if status === 'OVERDUE'}
+            <div class="flex items-center gap-x-1">
+              <TriangleAlert class="h-3 w-3 text-orange-500" strokeWidth={3} />
+              <span>Overdue</span>
+            </div>
+          {:else if status === 'COMPLETED'}
+            <div class="flex items-center gap-x-1">
+              <Check class="h-3 w-3 text-lime-600" strokeWidth={4} />
+              <span>Completed</span>
+            </div>
+          {:else}
+            <div class="flex items-center gap-x-1">
+              <Check class="h-3 w-3 text-slate-600" strokeWidth={4} />
+              <span>Required</span>
+            </div>
+          {/if}
+        </Badge>
+      {/if}
+
       {#each tags as tag (tag.label)}
         <Badge variant={tagCodeToBadgeVariant(tag.code)}>{tag.label}</Badge>
       {/each}

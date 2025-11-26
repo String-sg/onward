@@ -2,12 +2,15 @@
   import {
     ArrowLeft,
     BookOpenTextIcon,
+    Check,
     ExternalLink,
     Lightbulb,
+    MessageCircleWarningIcon,
     Pause,
     Play,
     ThumbsDown,
     ThumbsUp,
+    TriangleAlert,
     X,
   } from '@lucide/svelte';
   import { formatDistanceToNow } from 'date-fns';
@@ -19,7 +22,7 @@
   import { afterNavigate } from '$app/navigation';
   import { page } from '$app/state';
   import { Badge } from '$lib/components/Badge/index.js';
-  import { Button, LinkButton } from '$lib/components/Button/index.js';
+  import { Button } from '$lib/components/Button/index.js';
   import { Modal } from '$lib/components/Modal/index.js';
   import {
     IsWithinViewport,
@@ -144,25 +147,50 @@
       data.collectionType === 'STU_DEV' && 'bg-green-50',
     ]}
   >
-    {#if data.collectionType === 'BOB'}
-      <Badge variant="blue">Learn with BOB</Badge>
-    {:else if data.collectionType === 'AI'}
-      <Badge variant="cyan">Artificial Intelligence</Badge>
-    {:else if data.collectionType === 'NEWS'}
-      <Badge variant="orange">In the news</Badge>
-    {:else if data.collectionType === 'PROD'}
-      <Badge variant="emerald">Productivity</Badge>
-    {:else if data.collectionType === 'CAREER'}
-      <Badge variant="violet">Career growth</Badge>
-    {:else if data.collectionType === 'INNOV'}
-      <Badge variant="pink">Innovation</Badge>
-    {:else if data.collectionType === 'WELLBEING'}
-      <Badge variant="teal">Wellbeing</Badge>
-    {:else if data.collectionType === 'STU_WELL'}
-      <Badge variant="sky">Student wellbeing</Badge>
-    {:else if data.collectionType === 'STU_DEV'}
-      <Badge variant="green">Student development</Badge>
-    {/if}
+    <div class="flex flex-wrap gap-x-2">
+      {#if data.quizStatus}
+        <div>
+          <Badge variant={tagCodeToBadgeVariant(data.quizStatus)}>
+            {#if data.quizStatus === 'OVERDUE'}
+              <div class="flex items-center gap-x-1">
+                <TriangleAlert class="h-3 w-3 text-orange-500" strokeWidth={3} />
+                <span>Overdue</span>
+              </div>
+            {:else if data.quizStatus === 'COMPLETED'}
+              <div class="flex items-center gap-x-1">
+                <Check class="h-3 w-3 text-lime-600" strokeWidth={4} />
+                <span>Completed</span>
+              </div>
+            {:else}
+              <div class="flex items-center gap-x-1">
+                <Check class="h-3 w-3 text-slate-600" strokeWidth={4} />
+                <span>Required</span>
+              </div>
+            {/if}
+          </Badge>
+        </div>
+      {/if}
+
+      {#if data.collectionType === 'BOB'}
+        <Badge variant="blue">Learn with BOB</Badge>
+      {:else if data.collectionType === 'AI'}
+        <Badge variant="cyan">Artificial Intelligence</Badge>
+      {:else if data.collectionType === 'NEWS'}
+        <Badge variant="orange">In the news</Badge>
+      {:else if data.collectionType === 'PROD'}
+        <Badge variant="emerald">Productivity</Badge>
+      {:else if data.collectionType === 'CAREER'}
+        <Badge variant="violet">Career growth</Badge>
+      {:else if data.collectionType === 'INNOV'}
+        <Badge variant="pink">Innovation</Badge>
+      {:else if data.collectionType === 'WELLBEING'}
+        <Badge variant="teal">Wellbeing</Badge>
+      {:else if data.collectionType === 'STU_WELL'}
+        <Badge variant="sky">Student wellbeing</Badge>
+      {:else if data.collectionType === 'STU_DEV'}
+        <Badge variant="green">Student development</Badge>
+      {/if}
+    </div>
 
     <div class="flex flex-col gap-y-6">
       <div class="flex flex-col gap-y-2">
@@ -238,21 +266,35 @@
           </Button>
         {/if}
 
-        <LinkButton
-          variant="secondary"
-          width="full"
-          disabled={!data.isQuizAvailable}
-          href={`/unit/${data.id}/quiz`}
-          onclick={handleQuizClick}
-        >
-          <Lightbulb class="h-4 w-4" />
-          <span class="font-medium">Take the quiz</span>
-        </LinkButton>
+        <form method="POST" action="?/updateQuizAttempt" use:enhance>
+          <input type="hidden" name="csrfToken" value={data.csrfToken} />
+
+          <Button
+            variant="secondary"
+            width="full"
+            disabled={!data.isQuizAvailable}
+            onclick={handleQuizClick}
+          >
+            <Lightbulb class="h-4 w-4" />
+            <span class="font-medium">Take the quiz</span>
+          </Button>
+        </form>
       </div>
     </div>
   </div>
 
   <div class="flex flex-col gap-y-6">
+    {#if data.isRequired && data.dueDate && data.quizStatus !== 'COMPLETED'}
+      <div class="flex items-start gap-x-2 rounded-lg bg-slate-100 p-2.5">
+        <MessageCircleWarningIcon class="shrink-0" />
+        This bite is mandatory and is due on {new Date(data.dueDate).toLocaleDateString('en-GB', {
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric',
+        })}.
+      </div>
+    {/if}
+
     <div class={['prose prose-slate max-w-none text-lg']}>
       {#if browser}
         <!-- eslint-disable-next-line svelte/no-at-html-tags -->

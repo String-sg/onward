@@ -69,6 +69,8 @@ model LearningUnit {
   objectives    String      @map("objectives")
   createdBy     String      @map("created_by")
   isRecommended Boolean     @default(false) @map("is_recommended")
+  isRequired    Boolean     @default(false) @map("is_required")
+  dueDate       DateTime?   @map("due_date") @db.Date
 
   // Relations.
   collectionId String @map("collection_id") @db.Uuid
@@ -129,8 +131,10 @@ model LearningJourney {
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   // Domain-Specific Fields.
-  isCompleted    Boolean @default(false) @map("is_completed")
-  lastCheckpoint Decimal @map("last_checkpoint")
+  isCompleted     Boolean  @default(false) @map("is_completed")
+  lastCheckpoint  Decimal  @map("last_checkpoint")
+  isQuizAttempted Boolean  @default(false) @map("is_quiz_attempted")
+  isQuizPassed    Boolean? @map("is_quiz_passed")
 
   // Relations.
   userId         String @map("user_id") @db.Uuid
