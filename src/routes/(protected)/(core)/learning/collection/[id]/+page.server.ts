@@ -1,7 +1,7 @@
 import { error, redirect } from '@sveltejs/kit';
 import { validate as uuidValidate } from 'uuid';
 
-import { getStatus } from '$lib/helpers/learning-unit-status';
+import { getLearningUnitStatus } from '$lib/helpers/index.js';
 import {
   db,
   type LearningJourneyModel,
@@ -111,7 +111,7 @@ export const load: PageServerLoad = async (event) => {
             code: t.tag.code,
             label: t.tag.label,
           })),
-          status: getStatus({
+          status: getLearningUnitStatus({
             isRequired: journey.learningUnit.isRequired,
             dueDate: journey.learningUnit.dueDate,
             learningJourney: {

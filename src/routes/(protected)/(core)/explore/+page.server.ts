@@ -1,6 +1,6 @@
 import { redirect } from '@sveltejs/kit';
 
-import { getStatus } from '$lib/helpers/learning-unit-status';
+import { getLearningUnitStatus } from '$lib/helpers/index.js';
 import { db } from '$lib/server/db';
 
 import type { PageServerLoad } from './$types';
@@ -67,7 +67,7 @@ export const load: PageServerLoad = async (event) => {
     learningUnits: learningUnits.map((unit) => ({
       ...unit,
       tags: unit.tags.map((t) => t.tag),
-      status: getStatus({
+      status: getLearningUnitStatus({
         isRequired: unit.isRequired,
         dueDate: unit.dueDate,
         learningJourney: unit.learningJourneys[0],

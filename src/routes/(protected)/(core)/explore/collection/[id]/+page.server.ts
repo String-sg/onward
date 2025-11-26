@@ -1,7 +1,7 @@
 import { error, redirect } from '@sveltejs/kit';
 import { validate as uuidValidate } from 'uuid';
 
-import { getStatus } from '$lib/helpers/learning-unit-status';
+import { getLearningUnitStatus } from '$lib/helpers/index.js';
 import {
   type CollectionFindUniqueArgs,
   type CollectionGetPayload,
@@ -96,7 +96,7 @@ export const load: PageServerLoad = async (event) => {
     learningUnits: learningUnits.map((unit) => ({
       ...unit,
       tags: unit.tags.map((t) => t.tag),
-      status: getStatus({
+      status: getLearningUnitStatus({
         isRequired: unit.isRequired,
         dueDate: unit.dueDate,
         learningJourney: unit.learningJourneys[0],

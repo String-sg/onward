@@ -1,7 +1,7 @@
 import { error, redirect } from '@sveltejs/kit';
 import { validate as uuidValidate } from 'uuid';
 
-import { getStatus } from '$lib/helpers';
+import { getLearningUnitStatus } from '$lib/helpers/index.js';
 import auth from '$lib/server/auth';
 import {
   db,
@@ -111,7 +111,7 @@ export const load: PageServerLoad = async (event) => {
     throw error(500);
   }
 
-  const quizStatus = getStatus({
+  const quizStatus = getLearningUnitStatus({
     isRequired: learningUnit.isRequired,
     dueDate: learningUnit.dueDate,
     learningJourney: {

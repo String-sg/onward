@@ -1,6 +1,6 @@
 import { error, redirect } from '@sveltejs/kit';
 
-import { getStatus } from '$lib/helpers/learning-unit-status';
+import { getLearningUnitStatus } from '$lib/helpers/index.js';
 import {
   db,
   type LearningJourneyFindManyArgs,
@@ -142,7 +142,7 @@ export const load: PageServerLoad = async (event) => {
         ...lj.learningUnit,
         tags: lj.learningUnit.tags.map((t) => t.tag),
         collectionType: lj.learningUnit.collection.type,
-        status: getStatus({
+        status: getLearningUnitStatus({
           isRequired: lj.learningUnit.isRequired,
           dueDate: lj.learningUnit.dueDate,
           learningJourney: {
@@ -153,7 +153,7 @@ export const load: PageServerLoad = async (event) => {
     })),
     recommendedLearningUnits: recommendedLearningUnits.map((lu) => ({
       ...lu,
-      status: getStatus({
+      status: getLearningUnitStatus({
         isRequired: lu.isRequired,
         dueDate: lu.dueDate,
         learningJourney: lu.learningJourneys[0],

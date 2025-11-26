@@ -7,12 +7,12 @@
  *
  * @example
  * ```typescript
- * import { getStatus } from '$lib/helpers/index.js';
+ * import { getLearningUnitStatus } from '$lib/helpers/index.js';
  *
- * const status = getStatus(learningUnit);
+ * const status = getLearningUnitStatus(learningUnit);
  * ```
  */
-export function getStatus(learningUnit: {
+export function getLearningUnitStatus(learningUnit: {
   isRequired: boolean;
   dueDate: Date | null;
   learningJourney: {
@@ -25,7 +25,7 @@ export function getStatus(learningUnit: {
     return 'COMPLETED';
   }
 
-  if (learningUnit.isRequired === false) {
+  if (!learningUnit.isRequired) {
     return null;
   }
 
