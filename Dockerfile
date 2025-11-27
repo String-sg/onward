@@ -67,6 +67,7 @@ COPY --from=build --chown=zero:zero /app/package.json ./package.json
 COPY --from=build --chown=zero:zero /app/node_modules ./node_modules
 COPY --from=build --chown=zero:zero /app/build ./build
 COPY --from=build --chown=zero:zero /app/prisma ./prisma
+COPY --from=build --chown=zero:zero /app/prisma.config.ts ./prisma.config.ts
 
 EXPOSE 3000
 
