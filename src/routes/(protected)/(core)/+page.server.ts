@@ -20,6 +20,78 @@ export const load: PageServerLoad = async (event) => {
     throw redirect(303, '/login');
   }
 
+  const toDoListArgs = {
+    select: {
+      id: true,
+      createdAt: true,
+      title: true,
+      summary: true,
+      contentURL: true,
+      createdBy: true,
+      isRequired: true,
+      dueDate: true,
+      collection: {
+        select: {
+          type: true,
+        },
+      },
+      tags: {
+        select: {
+          tag: {
+            select: {
+              code: true,
+              label: true,
+            },
+          },
+        },
+      },
+      learningJourneys: {
+        select: {
+          isCompleted: true,
+        },
+        where: {
+          userId: user.id,
+        },
+      },
+    },
+    where: {
+      isRequired: true,
+      OR: [
+        {
+          learningJourneys: {
+            some: {
+              userId: user.id,
+              isCompleted: false,
+            },
+          },
+        },
+        {
+          NOT: {
+            learningJourneys: {
+              some: {
+                userId: user.id,
+              },
+            },
+          },
+        },
+      ],
+    },
+    orderBy: [
+      {
+        dueDate: 'asc',
+      },
+    ],
+    take: 10, // To-do: Limit to 2 items
+  } satisfies LearningUnitFindManyArgs;
+
+  let toDoList: LearningUnitGetPayload<typeof toDoListArgs>[];
+  try {
+    toDoList = await db.learningUnit.findMany(toDoListArgs);
+  } catch (err) {
+    logger.error({ err }, 'Failed to retrieve to-do list');
+    throw error(500);
+  }
+
   const learningJourneyArgs = {
     select: {
       id: true,
@@ -135,6 +207,16 @@ export const load: PageServerLoad = async (event) => {
   }
 
   return {
+    toDoList: toDoList.map((lu) => ({
+      ...lu,
+      status: getLearningUnitStatus({
+        isRequired: lu.isRequired,
+        dueDate: lu.dueDate,
+        learningJourney: lu.learningJourneys[0],
+      }),
+      tags: lu.tags.map((t) => t.tag),
+      collectionType: lu.collection.type,
+    })),
     learningJourneys: learningJourneys.map((lj) => ({
       ...lj,
       learningUnit: {
