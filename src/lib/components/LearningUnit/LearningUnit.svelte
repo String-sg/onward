@@ -5,7 +5,7 @@
 
   import { Badge } from '$lib/components/Badge/index.js';
   import { Button } from '$lib/components/Button/index.js';
-  import { tagCodeToBadgeVariant } from '$lib/helpers/index.js';
+  import { getBadgeInfo } from '$lib/helpers/index.js';
 
   export interface Props {
     /**
@@ -91,7 +91,7 @@
   <div class="flex flex-col gap-y-1">
     <div class="flex flex-wrap gap-1">
       {#if status}
-        <Badge variant={tagCodeToBadgeVariant(status)}>
+        <Badge variant={getBadgeInfo(status).variant}>
           {#if status === 'OVERDUE'}
             <div class="flex items-center gap-x-1">
               <TriangleAlert class="h-3 w-3 text-orange-500" strokeWidth={3} />
@@ -111,8 +111,9 @@
         </Badge>
       {/if}
 
-      {#each tags as tag (tag.label)}
-        <Badge variant={tagCodeToBadgeVariant(tag.code)}>{tag.label}</Badge>
+      {#each tags as tag (tag.code)}
+        {@const badgeInfo = getBadgeInfo(tag.code)}
+        <Badge variant={badgeInfo.variant}>{badgeInfo.label}</Badge>
       {/each}
     </div>
 

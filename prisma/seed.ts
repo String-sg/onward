@@ -30,6 +30,26 @@ const tags: Prisma.TagCreateInput[] = [
   },
   {
     id: uuidv7(),
+    code: 'INFRA',
+    label: 'Infrastructure',
+  },
+  {
+    id: uuidv7(),
+    code: 'EDU_TOOLS',
+    label: 'Educator Tools',
+  },
+  {
+    id: uuidv7(),
+    code: 'EDU_VOICES',
+    label: 'Educator Voices',
+  },
+  {
+    id: uuidv7(),
+    code: 'EMP_ENGAGEMENT',
+    label: 'Employee Engagement',
+  },
+  {
+    id: uuidv7(),
     code: 'PDF',
     label: 'PDF',
   },
@@ -54,6 +74,30 @@ const collections: Prisma.CollectionCreateInput[] = [
     description:
       'Discover how AI is transforming education through personalized learning, intelligent tutoring systems, and data-driven insights to enhance teaching effectiveness.',
     type: CollectionType.AI,
+  },
+  {
+    id: uuidv7(),
+    title: 'Infrastructure for Education',
+    description: 'Lorem Ipsum 1',
+    type: CollectionType.INFRA,
+  },
+  {
+    id: uuidv7(),
+    title: 'Educator Tools',
+    description: 'Loren Ipsum 2',
+    type: CollectionType.EDU_TOOLS,
+  },
+  {
+    id: uuidv7(),
+    title: 'Educator Voices',
+    description: 'Loren Ipsum 3',
+    type: CollectionType.EDU_VOICES,
+  },
+  {
+    id: uuidv7(),
+    title: 'Engagement',
+    description: 'Loren Ipsum 4',
+    type: CollectionType.EMP_ENGAGEMENT,
   },
 ];
 
@@ -224,6 +268,126 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
       create: questionAnswers,
     },
   },
+  {
+    id: uuidv7(),
+    title: 'Infra Learning Unit 1',
+    contentType: ContentType.PODCAST,
+    contentURL: 'http://localhost:5173',
+    summary,
+    objectives,
+    createdBy: 'DXD Product Team',
+    isRequired: true,
+    dueDate: new Date('2026-02-12'), // Required
+    collection: {
+      connect: {
+        id: collections[2].id,
+      },
+    },
+    tags: {
+      create: [
+        {
+          tag: {
+            connect: {
+              id: tags[2].id,
+            },
+          },
+        },
+      ],
+    },
+    questionAnswers: {
+      create: questionAnswers,
+    },
+  },
+  {
+    id: uuidv7(),
+    title: 'Educator Tools Learning Unit 1',
+    contentType: ContentType.PODCAST,
+    contentURL: 'http://localhost:5173',
+    summary,
+    objectives,
+    createdBy: 'DXD Product Team',
+    isRequired: true,
+    dueDate: new Date('2026-02-12'), // Required
+    collection: {
+      connect: {
+        id: collections[3].id,
+      },
+    },
+    tags: {
+      create: [
+        {
+          tag: {
+            connect: {
+              id: tags[3].id,
+            },
+          },
+        },
+      ],
+    },
+    questionAnswers: {
+      create: questionAnswers,
+    },
+  },
+  {
+    id: uuidv7(),
+    title: 'Educator Voices Learning Unit 1',
+    contentType: ContentType.PODCAST,
+    contentURL: 'http://localhost:5173',
+    summary,
+    objectives,
+    createdBy: 'DXD Product Team',
+    isRequired: true,
+    dueDate: new Date('2026-02-12'), // Required
+    collection: {
+      connect: {
+        id: collections[4].id,
+      },
+    },
+    tags: {
+      create: [
+        {
+          tag: {
+            connect: {
+              id: tags[4].id,
+            },
+          },
+        },
+      ],
+    },
+    questionAnswers: {
+      create: questionAnswers,
+    },
+  },
+  {
+    id: uuidv7(),
+    title: 'Employee Engagement Learning Unit 1',
+    contentType: ContentType.PODCAST,
+    contentURL: 'http://localhost:5173',
+    summary,
+    objectives,
+    createdBy: 'DXD Product Team',
+    isRequired: true,
+    dueDate: new Date('2026-02-12'), // Required
+    collection: {
+      connect: {
+        id: collections[5].id,
+      },
+    },
+    tags: {
+      create: [
+        {
+          tag: {
+            connect: {
+              id: tags[5].id,
+            },
+          },
+        },
+      ],
+    },
+    questionAnswers: {
+      create: questionAnswers,
+    },
+  },
 ];
 
 const learningUnitSources: Prisma.LearningUnitSourcesCreateInput[] = [
@@ -241,7 +405,7 @@ const learningUnitSources: Prisma.LearningUnitSourcesCreateInput[] = [
         {
           tag: {
             connect: {
-              id: tags[2].id,
+              id: tags[6].id,
             },
           },
         },
@@ -262,7 +426,7 @@ const learningUnitSources: Prisma.LearningUnitSourcesCreateInput[] = [
         {
           tag: {
             connect: {
-              id: tags[3].id,
+              id: tags[7].id,
             },
           },
         },
@@ -283,7 +447,7 @@ const learningUnitSources: Prisma.LearningUnitSourcesCreateInput[] = [
         {
           tag: {
             connect: {
-              id: tags[2].id,
+              id: tags[6].id,
             },
           },
         },
@@ -304,7 +468,7 @@ const learningUnitSources: Prisma.LearningUnitSourcesCreateInput[] = [
         {
           tag: {
             connect: {
-              id: tags[3].id,
+              id: tags[7].id,
             },
           },
         },
@@ -325,7 +489,7 @@ const learningUnitSources: Prisma.LearningUnitSourcesCreateInput[] = [
         {
           tag: {
             connect: {
-              id: tags[2].id,
+              id: tags[6].id,
             },
           },
         },
@@ -346,7 +510,7 @@ const learningUnitSources: Prisma.LearningUnitSourcesCreateInput[] = [
         {
           tag: {
             connect: {
-              id: tags[3].id,
+              id: tags[7].id,
             },
           },
         },
@@ -367,7 +531,7 @@ const learningUnitSources: Prisma.LearningUnitSourcesCreateInput[] = [
         {
           tag: {
             connect: {
-              id: tags[2].id,
+              id: tags[6].id,
             },
           },
         },
@@ -388,7 +552,7 @@ const learningUnitSources: Prisma.LearningUnitSourcesCreateInput[] = [
         {
           tag: {
             connect: {
-              id: tags[3].id,
+              id: tags[7].id,
             },
           },
         },
