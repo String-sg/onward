@@ -8,7 +8,10 @@
   const player = Player.get();
 
   const handleLearningUnitPlay = (
-    item: (typeof data.learningJourneys)[0] | (typeof data.recommendedLearningUnits)[0],
+    item:
+      | (typeof data.toDoList)[0]
+      | (typeof data.learningJourneys)[0]
+      | (typeof data.recommendedLearningUnits)[0],
   ) => {
     const learningUnit = 'learningUnit' in item ? item.learningUnit : item;
 
@@ -32,9 +35,10 @@
 </script>
 
 <main class="relative mx-auto flex min-h-svh max-w-5xl flex-col gap-y-4 px-4 pt-43 pb-28">
-  {#if data.learningJourneys.length > 0}
+  <!-- To-do List -->
+  {#if data.toDoList.length > 0}
     <div class="flex items-center justify-between px-2">
-      <span class="text-xl font-semibold">Recently learned</span>
+      <span class="text-xl font-semibold">To-do</span>
 
       <a
         href="/learning"
@@ -45,21 +49,21 @@
     </div>
 
     <div class="flex flex-col gap-y-4">
-      {#each data.learningJourneys as learningJourney (learningJourney.id)}
+      {#each data.toDoList as learningUnit (learningUnit.id)}
         <LearningUnit
-          to={`/unit/${learningJourney.learningUnit.id}`}
-          tags={learningJourney.learningUnit.tags}
-          title={learningJourney.learningUnit.title}
-          createdat={learningJourney.learningUnit.createdAt}
-          createdby={learningJourney.learningUnit.createdBy}
+          to={`/unit/${learningUnit.id}`}
+          tags={learningUnit.tags}
+          title={learningUnit.title}
+          createdat={learningUnit.createdAt}
+          createdby={learningUnit.createdBy}
           player={{
-            isactive: player.currentTrack?.id === learningJourney.learningUnit.id,
+            isactive: player.currentTrack?.id === learningUnit.id,
             isplaying: player.isPlaying,
-            onplay: () => handleLearningUnitPlay(learningJourney),
+            onplay: () => handleLearningUnitPlay(learningUnit),
             onpause: handleLearningUnitPause,
             onresume: handleLearningUnitResume,
           }}
-          status={learningJourney.learningUnit.status}
+          status={learningUnit.status}
         />
       {/each}
     </div>
