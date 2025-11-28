@@ -24,7 +24,11 @@
       | 'PROD'
       | 'STU_DEV'
       | 'STU_WELL'
-      | 'WELLBEING';
+      | 'WELLBEING'
+      | 'INFRA'
+      | 'EDU_TOOLS'
+      | 'EDU_VOICES'
+      | 'EMP_ENGAGEMENT';
   }
 
   let { to, title, numberofpodcasts, type }: Props = $props();
@@ -43,6 +47,10 @@
     type === 'WELLBEING' && 'bg-teal-300 hover:ring-teal-300',
     type === 'STU_WELL' && 'bg-sky-300 hover:ring-sky-300',
     type === 'STU_DEV' && 'bg-green-300 hover:ring-green-300',
+    type === 'INFRA' && 'bg-blue-300 hover:ring-blue-300',
+    type === 'EDU_TOOLS' && 'bg-emerald-300 hover:ring-emerald-300',
+    type === 'EDU_VOICES' && 'bg-violet-300 hover:ring-violet-300',
+    type === 'EMP_ENGAGEMENT' && 'bg-teal-300 hover:ring-teal-300',
   ]}
 >
   <div
@@ -57,6 +65,10 @@
       type === 'WELLBEING' && 'bg-teal-400',
       type === 'STU_WELL' && 'bg-sky-400',
       type === 'STU_DEV' && 'bg-green-400',
+      type === 'INFRA' && 'bg-blue-400',
+      type === 'EDU_TOOLS' && 'bg-emerald-400',
+      type === 'EDU_VOICES' && 'bg-violet-400',
+      type === 'EMP_ENGAGEMENT' && 'bg-teal-400',
     ]}
   ></div>
 

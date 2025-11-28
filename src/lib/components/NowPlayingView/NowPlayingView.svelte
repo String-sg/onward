@@ -6,7 +6,7 @@
   import { Badge } from '$lib/components/Badge/index.js';
   import { Modal, type ModalProps } from '$lib/components/Modal/index.js';
   import { Slider, type SliderProps } from '$lib/components/Slider/index.js';
-  import { formatTime, tagCodeToBadgeVariant } from '$lib/helpers/index.js';
+  import { formatTime, getBadgeInfo } from '$lib/helpers/index.js';
   import type { Track } from '$lib/states/index.js';
 
   export interface Props {
@@ -107,9 +107,8 @@
       <!-- Badge and Title -->
       <div class="flex flex-col gap-y-3">
         {#each currenttrack.tags as tag (tag.label)}
-          <Badge variant={tagCodeToBadgeVariant(tag.code)}>
-            {tag.label}
-          </Badge>
+          {@const badgeInfo = getBadgeInfo(tag.code)}
+          <Badge variant={badgeInfo.variant}>{badgeInfo.label}</Badge>
         {/each}
 
         <a

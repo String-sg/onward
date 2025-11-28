@@ -25,8 +25,8 @@
   import { Button } from '$lib/components/Button/index.js';
   import { Modal } from '$lib/components/Modal/index.js';
   import {
+    getBadgeInfo,
     IsWithinViewport,
-    tagCodeToBadgeVariant,
     trackPodcastPlay,
     trackQuizClick,
   } from '$lib/helpers/index.js';
@@ -150,7 +150,7 @@
     <div class="flex flex-wrap gap-x-2">
       {#if data.quizStatus}
         <div>
-          <Badge variant={tagCodeToBadgeVariant(data.quizStatus)}>
+          <Badge variant={getBadgeInfo(data.quizStatus).variant}>
             {#if data.quizStatus === 'OVERDUE'}
               <div class="flex items-center gap-x-1">
                 <TriangleAlert class="h-3 w-3 text-orange-500" strokeWidth={3} />
@@ -171,24 +171,9 @@
         </div>
       {/if}
 
-      {#if data.collectionType === 'BOB'}
-        <Badge variant="blue">Learn with BOB</Badge>
-      {:else if data.collectionType === 'AI'}
-        <Badge variant="cyan">Artificial Intelligence</Badge>
-      {:else if data.collectionType === 'NEWS'}
-        <Badge variant="orange">In the news</Badge>
-      {:else if data.collectionType === 'PROD'}
-        <Badge variant="emerald">Productivity</Badge>
-      {:else if data.collectionType === 'CAREER'}
-        <Badge variant="violet">Career growth</Badge>
-      {:else if data.collectionType === 'INNOV'}
-        <Badge variant="pink">Innovation</Badge>
-      {:else if data.collectionType === 'WELLBEING'}
-        <Badge variant="teal">Wellbeing</Badge>
-      {:else if data.collectionType === 'STU_WELL'}
-        <Badge variant="sky">Student wellbeing</Badge>
-      {:else if data.collectionType === 'STU_DEV'}
-        <Badge variant="green">Student development</Badge>
+      {#if data.collectionType}
+        {@const badgeInfo = getBadgeInfo(data.collectionType)}
+        <Badge variant={badgeInfo.variant}>{badgeInfo.label}</Badge>
       {/if}
     </div>
 
@@ -342,7 +327,8 @@
         >
           <div class="flex w-[calc(100%-36px)] flex-col gap-y-1">
             {#each source.tags.map((t) => t.tag) as tag (tag)}
-              <Badge variant={tagCodeToBadgeVariant(tag.code)}>{tag.label}</Badge>
+              {@const badgeInfo = getBadgeInfo(tag.code)}
+              <Badge variant={badgeInfo.variant}>{badgeInfo.label}</Badge>
             {/each}
 
             <span class="truncate">
