@@ -69,9 +69,10 @@
     </div>
   {/if}
 
+  <!-- Recommended Bites -->
   {#if data.recommendedLearningUnits.length > 0}
     <div class="flex items-center justify-between px-2">
-      <span class="text-xl font-semibold">Recommended for you</span>
+      <span class="text-xl font-semibold">Recommended bites</span>
 
       <a
         href="/explore"
@@ -97,6 +98,40 @@
             onresume: handleLearningUnitResume,
           }}
           status={learningUnit.status}
+        />
+      {/each}
+    </div>
+  {/if}
+
+  <!-- Recently Learned -->
+  {#if data.learningJourneys.length > 0}
+    <div class="flex items-center justify-between px-2">
+      <span class="text-xl font-semibold">Recently learned</span>
+
+      <a
+        href="/learning"
+        class="rounded-2xl px-4 py-2 text-sm font-medium hover:bg-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed"
+      >
+        See all
+      </a>
+    </div>
+
+    <div class="flex flex-col gap-y-4">
+      {#each data.learningJourneys as learningJourney (learningJourney.id)}
+        <LearningUnit
+          to={`/unit/${learningJourney.learningUnit.id}`}
+          tags={learningJourney.learningUnit.tags}
+          title={learningJourney.learningUnit.title}
+          createdat={learningJourney.learningUnit.createdAt}
+          createdby={learningJourney.learningUnit.createdBy}
+          player={{
+            isactive: player.currentTrack?.id === learningJourney.learningUnit.id,
+            isplaying: player.isPlaying,
+            onplay: () => handleLearningUnitPlay(learningJourney),
+            onpause: handleLearningUnitPause,
+            onresume: handleLearningUnitResume,
+          }}
+          status={learningJourney.learningUnit.status}
         />
       {/each}
     </div>
