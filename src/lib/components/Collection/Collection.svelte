@@ -128,6 +128,30 @@
           alt={title}
           class="w-[232px]"
         />
+      {:else if type === 'INFRA'}
+        <enhanced:img
+          src="$lib/assets/collections/infrastructure.png?w=464"
+          alt={title}
+          class="w-[232px]"
+        />
+      {:else if type === 'EDU_TOOLS'}
+        <enhanced:img
+          src="$lib/assets/collections/educator-tools.png?w=464"
+          alt={title}
+          class="w-[232px]"
+        />
+      {:else if type === 'EDU_VOICES'}
+        <enhanced:img
+          src="$lib/assets/collections/educator-voices.png?w=464"
+          alt={title}
+          class="w-[232px]"
+        />
+      {:else if type === 'EMP_ENGAGEMENT'}
+        <enhanced:img
+          src="$lib/assets/collections/employee-engagement.png?w=464"
+          alt={title}
+          class="w-[232px]"
+        />
       {/if}
     </div>
 
