@@ -198,6 +198,19 @@ export const load: PageServerLoad = async (event) => {
     throw error(500);
   }
 
+  const collections = await db.collection.findMany({
+    select: {
+      id: true,
+      title: true,
+      type: true,
+      _count: {
+        select: {
+          learningUnit: true,
+        },
+      },
+    },
+  });
+
   return {
     username: user.name,
     toDoList: toDoList.map((lu) => ({
@@ -230,6 +243,10 @@ export const load: PageServerLoad = async (event) => {
           },
         }),
       },
+    })),
+    collections: collections.map((collection) => ({
+      ...collection,
+      numberOfPodcasts: collection._count.learningUnit,
     })),
   };
 };
