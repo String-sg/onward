@@ -92,6 +92,61 @@ export const load: PageServerLoad = async (event) => {
     throw error(500);
   }
 
+  const recommendedLearningUnitsArgs = {
+    select: {
+      id: true,
+      createdAt: true,
+      title: true,
+      summary: true,
+      contentURL: true,
+      createdBy: true,
+      isRequired: true,
+      dueDate: true,
+      collection: {
+        select: {
+          type: true,
+        },
+      },
+      tags: {
+        select: {
+          tag: {
+            select: {
+              code: true,
+              label: true,
+            },
+          },
+        },
+      },
+    },
+    where: {
+      isRequired: false,
+      NOT: {
+        learningJourneys: {
+          some: {
+            userId: user.id,
+          },
+        },
+      },
+    },
+    orderBy: [
+      {
+        isRecommended: 'desc',
+      },
+      {
+        createdAt: 'desc',
+      },
+    ],
+    take: 3,
+  } satisfies LearningUnitFindManyArgs;
+
+  let recommendedLearningUnits: LearningUnitGetPayload<typeof recommendedLearningUnitsArgs>[];
+  try {
+    recommendedLearningUnits = await db.learningUnit.findMany(recommendedLearningUnitsArgs);
+  } catch (err) {
+    logger.error({ err }, 'Failed to retrieve recommended learning units');
+    throw error(500);
+  }
+
   const learningJourneyArgs = {
     select: {
       id: true,
@@ -143,70 +198,8 @@ export const load: PageServerLoad = async (event) => {
     throw error(500);
   }
 
-  const recommendedLearningUnitsArgs = {
-    select: {
-      id: true,
-      createdAt: true,
-      title: true,
-      summary: true,
-      contentURL: true,
-      createdBy: true,
-      isRequired: true,
-      dueDate: true,
-      collection: {
-        select: {
-          type: true,
-        },
-      },
-      tags: {
-        select: {
-          tag: {
-            select: {
-              code: true,
-              label: true,
-            },
-          },
-        },
-      },
-      learningJourneys: {
-        select: {
-          isCompleted: true,
-        },
-        where: {
-          userId: user.id,
-          isCompleted: true,
-        },
-      },
-    },
-    where: {
-      NOT: {
-        learningJourneys: {
-          some: {
-            userId: user.id,
-          },
-        },
-      },
-    },
-    orderBy: [
-      {
-        isRecommended: 'desc',
-      },
-      {
-        createdAt: 'desc',
-      },
-    ],
-    take: 3,
-  } satisfies LearningUnitFindManyArgs;
-
-  let recommendedLearningUnits: LearningUnitGetPayload<typeof recommendedLearningUnitsArgs>[];
-  try {
-    recommendedLearningUnits = await db.learningUnit.findMany(recommendedLearningUnitsArgs);
-  } catch (err) {
-    logger.error({ err }, 'Failed to retrieve recommended learning units');
-    throw error(500);
-  }
-
   return {
+    username: user.name,
     toDoList: toDoList.map((lu) => ({
       ...lu,
       status: getLearningUnitStatus({
@@ -214,6 +207,12 @@ export const load: PageServerLoad = async (event) => {
         dueDate: lu.dueDate,
         learningJourney: lu.learningJourneys[0],
       }),
+      tags: lu.tags.map((t) => t.tag),
+      collectionType: lu.collection.type,
+    })),
+    recommendedLearningUnits: recommendedLearningUnits.map((lu) => ({
+      ...lu,
+      status: null,
       tags: lu.tags.map((t) => t.tag),
       collectionType: lu.collection.type,
     })),
@@ -232,16 +231,5 @@ export const load: PageServerLoad = async (event) => {
         }),
       },
     })),
-    recommendedLearningUnits: recommendedLearningUnits.map((lu) => ({
-      ...lu,
-      status: getLearningUnitStatus({
-        isRequired: lu.isRequired,
-        dueDate: lu.dueDate,
-        learningJourney: lu.learningJourneys[0],
-      }),
-      tags: lu.tags.map((t) => t.tag),
-      collectionType: lu.collection.type,
-    })),
-    username: user.name,
   };
 };
