@@ -145,6 +145,10 @@
       data.collectionType === 'WELLBEING' && 'bg-teal-50',
       data.collectionType === 'STU_WELL' && 'bg-sky-50',
       data.collectionType === 'STU_DEV' && 'bg-green-50',
+      data.collectionType === 'INFRA' && 'bg-blue-50',
+      data.collectionType === 'EDU_TOOLS' && 'bg-orange-50',
+      data.collectionType === 'EDU_VOICES' && 'bg-violet-50',
+      data.collectionType === 'EMP_ENGAGEMENT' && 'bg-teal-50',
     ]}
   >
     <div class="flex flex-wrap gap-x-2">

@@ -45,12 +45,16 @@
       data.collection.type === 'BOB' && 'bg-blue-50',
       data.collection.type === 'AI' && 'bg-cyan-50',
       data.collection.type === 'NEWS' && 'bg-orange-50',
-      data.collection.type === 'PROD' && 'bg-emerald-50',
+      data.collection.type === 'PROD' && 'bg-orange-50',
       data.collection.type === 'CAREER' && 'bg-violet-50',
       data.collection.type === 'INNOV' && 'bg-pink-50',
       data.collection.type === 'WELLBEING' && 'bg-teal-50',
       data.collection.type === 'STU_WELL' && 'bg-sky-50',
       data.collection.type === 'STU_DEV' && 'bg-green-50',
+      data.collection.type === 'INFRA' && 'bg-blue-50',
+      data.collection.type === 'EDU_TOOLS' && 'bg-orange-50',
+      data.collection.type === 'EDU_VOICES' && 'bg-violet-50',
+      data.collection.type === 'EMP_ENGAGEMENT' && 'bg-teal-50',
     ]}
   >
     <span class="text-lg font-medium">About this topic</span>
