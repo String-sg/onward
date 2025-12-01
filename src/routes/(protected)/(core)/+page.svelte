@@ -1,5 +1,6 @@
 <script lang="ts">
   import { LinkButton } from '$lib/components/Button/index.js';
+  import { Collection } from '$lib/components/Collection/index.js';
   import { LearningUnit } from '$lib/components/LearningUnit/index.js';
   import { Player } from '$lib/states/index.js';
 
@@ -136,6 +137,23 @@
       {/each}
     </div>
   {/if}
+
+  <!-- Learning Topics -->
+  <div class="flex flex-row justify-between px-2">
+    <span class="text-xl font-semibold">Learning topics</span>
+  </div>
+  <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
+    {#each data.collections as collection (collection.id)}
+      {#if collection.numberOfPodcasts > 0}
+        <Collection
+          to="/explore/collection/{collection.id}"
+          title={collection.title}
+          type={collection.type}
+          numberofpodcasts={collection.numberOfPodcasts}
+        />
+      {/if}
+    {/each}
+  </div>
 
   {#if data.recommendedLearningUnits.length === 0 && data.learningJourneys.length === 0}
     <div class="mt-8 flex flex-col items-center gap-y-5">
