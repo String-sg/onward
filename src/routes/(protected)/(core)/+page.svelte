@@ -39,10 +39,10 @@
   <!-- To-do List -->
   {#if data.toDoList.length > 0}
     <div class="flex items-center justify-between px-2">
-      <span class="text-xl font-semibold">To-do</span>
+      <span class="text-xl font-semibold">To-dos</span>
 
       <a
-        href="/learning"
+        href="/todos"
         class="rounded-2xl px-4 py-2 text-sm font-medium hover:bg-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed"
       >
         See all
@@ -76,7 +76,7 @@
       <span class="text-xl font-semibold">Recommended bites</span>
 
       <a
-        href="/explore"
+        href="/bites"
         class="rounded-2xl px-4 py-2 text-sm font-medium hover:bg-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed"
       >
         See all
@@ -146,7 +146,7 @@
     {#each data.collections as collection (collection.id)}
       {#if collection.numberOfPodcasts > 0}
         <Collection
-          to="/explore/collection/{collection.id}"
+          to="/collection/{collection.id}"
           title={collection.title}
           type={collection.type}
           numberofpodcasts={collection.numberOfPodcasts}
@@ -173,7 +173,7 @@
       </div>
 
       <div class="flex w-full justify-center px-4">
-        <LinkButton href="/explore" width="full" class="max-w-sm">Go to explore</LinkButton>
+        <LinkButton href="/bites" width="full" class="max-w-sm">Explore our bites</LinkButton>
       </div>
     </div>
   {/if}
