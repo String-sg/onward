@@ -7,6 +7,5 @@
 
 
 ALTER TYPE "CollectionType" ADD VALUE 'INFRA';
-ALTER TYPE "CollectionType" ADD VALUE 'EDU_TOOLS';
 ALTER TYPE "CollectionType" ADD VALUE 'EDU_VOICES';
 ALTER TYPE "CollectionType" ADD VALUE 'EMP_ENGAGEMENT';

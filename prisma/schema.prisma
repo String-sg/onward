@@ -53,7 +53,6 @@ enum CollectionType {
   STU_WELL
   WELLBEING
   INFRA
-  EDU_TOOLS
   EDU_VOICES
   EMP_ENGAGEMENT
 }
