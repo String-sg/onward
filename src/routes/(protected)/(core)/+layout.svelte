@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { BookHeart, Compass, Home } from '@lucide/svelte';
+  import { BookHeart, Home } from '@lucide/svelte';
 
   import { page } from '$app/state';
   import { IsWithinViewport } from '$lib/helpers/index.js';
@@ -10,7 +10,6 @@
 
   const isHomePage = $derived(page.url.pathname === '/');
   const isMyLearningPage = $derived(page.url.pathname === '/learning');
-  const isExplorePage = $derived(page.url.pathname === '/explore');
 
   const isWithinViewport = new IsWithinViewport(() => target);
 </script>
@@ -80,28 +79,6 @@
             ]}
           >
             My Learning
-          </span>
-        </a>
-
-        <a
-          href="/explore"
-          class="group flex flex-1 cursor-pointer flex-col items-center justify-center gap-y-1 pt-3 pb-4"
-        >
-          <div
-            class={[
-              'rounded-[100px] px-5 py-1 transition-colors',
-              isExplorePage && 'bg-slate-950 text-white',
-            ]}
-          >
-            <Compass />
-          </div>
-          <span
-            class={[
-              'text-center text-xs font-semibold',
-              isExplorePage ? 'text-slate-950' : 'text-slate-700',
-            ]}
-          >
-            Explore
           </span>
         </a>
       </div>
