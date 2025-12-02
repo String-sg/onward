@@ -9,7 +9,13 @@
   import { Modal } from '$lib/components/Modal/index.js';
   import { NowPlayingBar } from '$lib/components/NowPlayingBar/index.js';
   import { NowPlayingView } from '$lib/components/NowPlayingView/index.js';
-  import { noop, track20PercentPodcastPlay, trackPodcastCompletion } from '$lib/helpers/index.js';
+  import {
+    noop,
+    track20PercentPodcastPlay,
+    track50PercentPodcastPlay,
+    track80PercentPodcastPlay,
+    trackPodcastCompletion,
+  } from '$lib/helpers/index.js';
   import { Player } from '$lib/states/index.js';
 
   const { children } = $props();
@@ -110,6 +116,22 @@
       track20PercentPodcastPlay(player.currentTrack.id);
     };
 
+    const handleFiftyPercentPodcast = () => {
+      if (!player.currentTrack) {
+        return;
+      }
+
+      track50PercentPodcastPlay(player.currentTrack.id);
+    };
+
+    const handleEightyPercentPodcast = () => {
+      if (!player.currentTrack) {
+        return;
+      }
+
+      track80PercentPodcastPlay(player.currentTrack.id);
+    };
+
     const handleHundredPercentPodcast = () => {
       if (!player.currentTrack) {
         return;
@@ -122,6 +144,8 @@
     player.addEventListener('ended', handleEnded);
     player.addEventListener('checkpoint', handleCheckpoint);
     player.addEventListener('twentyPercent', handleTwentyPercentPodcast);
+    player.addEventListener('fiftyPercent', handleFiftyPercentPodcast);
+    player.addEventListener('eightyPercent', handleEightyPercentPodcast);
     player.addEventListener('hundredPercent', handleHundredPercentPodcast);
 
     return () => {
@@ -129,6 +153,8 @@
       player.removeEventListener('ended', handleEnded);
       player.removeEventListener('checkpoint', handleCheckpoint);
       player.removeEventListener('twentyPercent', handleTwentyPercentPodcast);
+      player.removeEventListener('fiftyPercent', handleFiftyPercentPodcast);
+      player.removeEventListener('eightyPercent', handleEightyPercentPodcast);
       player.removeEventListener('hundredPercent', handleHundredPercentPodcast);
     };
   });

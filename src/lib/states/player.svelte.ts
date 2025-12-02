@@ -50,6 +50,8 @@ export class Player extends EventTarget {
   #cumulativePlayTime = 0;
   #trackingTimer: number | null = null;
   #hasTracked20Percent = $state(false);
+  #hasTracked50Percent = $state(false);
+  #hasTracked80Percent = $state(false);
   #hasTracked100Percent = $state(false);
 
   #audio: HTMLAudioElement | null = null;
@@ -64,6 +66,8 @@ export class Player extends EventTarget {
         this.#duration = this.#audio?.duration || 0;
         this.#progress = 0;
         this.#hasTracked20Percent = false;
+        this.#hasTracked50Percent = false;
+        this.#hasTracked80Percent = false;
         this.#hasTracked100Percent = false;
       };
       this.#audio.ontimeupdate = () => {
@@ -76,6 +80,16 @@ export class Player extends EventTarget {
         if (this.#progress >= this.#duration * 0.2 && !this.#hasTracked20Percent) {
           this.#hasTracked20Percent = true;
           this.dispatchEvent(new Event('twentyPercent'));
+        }
+
+        if (this.#progress >= this.#duration * 0.5 && !this.#hasTracked50Percent) {
+          this.#hasTracked50Percent = true;
+          this.dispatchEvent(new Event('fiftyPercent'));
+        }
+
+        if (this.#progress >= this.#duration * 0.8 && !this.#hasTracked80Percent) {
+          this.#hasTracked80Percent = true;
+          this.dispatchEvent(new Event('eightyPercent'));
         }
 
         if (this.#progress >= this.#duration && !this.#hasTracked100Percent) {
@@ -93,6 +107,8 @@ export class Player extends EventTarget {
         }
 
         this.#hasTracked20Percent = false;
+        this.#hasTracked50Percent = false;
+        this.#hasTracked80Percent = false;
         this.#hasTracked100Percent = false;
         this.dispatchEvent(new Event('ended'));
       };
@@ -208,6 +224,8 @@ export class Player extends EventTarget {
 
       this.#currentTrack = track;
       this.#hasTracked20Percent = false;
+      this.#hasTracked50Percent = false;
+      this.#hasTracked80Percent = false;
       this.#hasTracked100Percent = false;
 
       if (initialSeekTime !== undefined && initialSeekTime > 0) {
