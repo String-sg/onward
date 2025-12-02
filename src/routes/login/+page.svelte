@@ -35,10 +35,11 @@
             </LinkButton>
 
             <span class="text-center text-xs">
-              By continuing, you agree to our<br />
-
-              <a href="/terms" class="underline">Terms</a> and
-              <a href="/privacy" class="underline">Privacy Policy</a>.
+              By continuing, you agree to our
+              <span class="block">
+                <a href="/terms" class="underline">Terms</a> and
+                <a href="/privacy" class="underline">Privacy Policy</a>.
+              </span>
             </span>
 
             <a
