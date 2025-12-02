@@ -28,7 +28,7 @@
 
 <div bind:this={target} class="absolute inset-x-0 top-0 h-px"></div>
 
-<main class="mx-auto flex max-w-5xl flex-col gap-y-5 px-4 py-25">
+<main class="mx-auto flex max-w-5xl flex-col gap-y-5 px-4 py-24">
   <h1 class="text-2xl font-bold">PRIVACY STATEMENT</h1>
 
   <div class="flex flex-col gap-y-3">
@@ -37,7 +37,7 @@
       Ministry of Education.
     </p>
 
-    <b>Authentication and Access</b>
+    <h2 class="mt-5 font-bold">Authentication and Access</h2>
     <p>
       Glow is accessible only to Ministry of Education staff using their ICON email accounts
       (@moe.edu.sg or @moe.gov.sg). Authentication is managed through ICON credentials to ensure
@@ -45,7 +45,7 @@
       password.
     </p>
 
-    <b>Cookies Usage</b>
+    <h2 class="mt-5 font-bold">Cookies Usage</h2>
     <p>
       We may use "cookies", where a small data file is sent to your browser to store and track
       information about you when you enter Glow. The cookie is used to track information such as the
@@ -60,7 +60,7 @@
       that this may prevent you from taking full advantage of Glow's web features.
     </p>
 
-    <b>Personal Data Usage</b>
+    <h2 class="mt-5 font-bold">Personal Data Usage</h2>
     <p>When you access and use Glow with your ICON credentials:</p>
     <ul role="list" class="list-disc pl-5">
       <li>
@@ -74,7 +74,7 @@
       </li>
     </ul>
 
-    <b>Data Security</b>
+    <h2 class="mt-5 font-bold">Data Security</h2>
     <ul role="list" class="list-disc pl-5">
       <li>
         To safeguard your personal data, all electronic storage and transmission of personal data
@@ -89,7 +89,7 @@
       </li>
     </ul>
 
-    <b>Web Application Content and Usage</b>
+    <h2 class="mt-5 font-bold">Web Application Content and Usage</h2>
     <ul role="list" class="list-disc pl-5">
       <li>
         Any personal information or content that you input or upload while using Glow may become
@@ -103,7 +103,7 @@
       </li>
     </ul>
 
-    <b>External Links</b>
+    <h2 class="mt-5 font-bold">External Links</h2>
     <p>
       This web application may contain links to non-Government sites whose data protection and
       privacy practices may differ from ours. We are not responsible for the content and privacy
