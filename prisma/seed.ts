@@ -35,8 +35,8 @@ const tags: Prisma.TagCreateInput[] = [
   },
   {
     id: uuidv7(),
-    code: 'EDU_TOOLS',
-    label: 'Educator Tools',
+    code: 'WELLBEING',
+    label: 'Wellbeing',
   },
   {
     id: uuidv7(),
@@ -83,9 +83,9 @@ const collections: Prisma.CollectionCreateInput[] = [
   },
   {
     id: uuidv7(),
-    title: 'Educator Tools',
+    title: 'Wellbeing 1',
     description: 'Loren Ipsum 2',
-    type: CollectionType.EDU_TOOLS,
+    type: CollectionType.WELLBEING,
   },
   {
     id: uuidv7(),
@@ -300,7 +300,7 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
   },
   {
     id: uuidv7(),
-    title: 'Educator Tools Learning Unit 1',
+    title: 'Wellbeing Learning Unit 1',
     contentType: ContentType.PODCAST,
     contentURL: 'http://localhost:5173',
     summary,
