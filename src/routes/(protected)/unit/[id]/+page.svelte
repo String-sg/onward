@@ -136,19 +136,18 @@
   <div
     class={[
       'flex flex-col gap-y-2 rounded-3xl border border-slate-200 p-6',
+      data.collectionType === 'AI' && 'bg-pink-50',
       data.collectionType === 'BOB' && 'bg-blue-50',
-      data.collectionType === 'AI' && 'bg-cyan-50',
-      data.collectionType === 'NEWS' && 'bg-orange-50',
-      data.collectionType === 'PROD' && 'bg-emerald-50',
       data.collectionType === 'CAREER' && 'bg-violet-50',
-      data.collectionType === 'INNOV' && 'bg-pink-50',
-      data.collectionType === 'WELLBEING' && 'bg-teal-50',
-      data.collectionType === 'STU_WELL' && 'bg-sky-50',
-      data.collectionType === 'STU_DEV' && 'bg-green-50',
+      data.collectionType === 'EDU_VOICES' && 'bg-cyan-50',
+      data.collectionType === 'EMP_ENGAGEMENT' && 'bg-blue-50',
       data.collectionType === 'INFRA' && 'bg-blue-50',
-      data.collectionType === 'EDU_TOOLS' && 'bg-orange-50',
-      data.collectionType === 'EDU_VOICES' && 'bg-violet-50',
-      data.collectionType === 'EMP_ENGAGEMENT' && 'bg-teal-50',
+      data.collectionType === 'INNOV' && 'bg-pink-50',
+      data.collectionType === 'NEWS' && 'bg-cyan-50',
+      data.collectionType === 'PROD' && 'bg-orange-50',
+      data.collectionType === 'STU_WELL' && 'bg-green-50',
+      data.collectionType === 'STU_DEV' && 'bg-green-50',
+      data.collectionType === 'WELLBEING' && 'bg-emerald-50',
     ]}
   >
     <div class="flex flex-wrap gap-x-2">
