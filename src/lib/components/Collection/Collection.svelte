@@ -24,7 +24,11 @@
       | 'PROD'
       | 'STU_DEV'
       | 'STU_WELL'
-      | 'WELLBEING';
+      | 'WELLBEING'
+      | 'INFRA'
+      | 'EDU_TOOLS'
+      | 'EDU_VOICES'
+      | 'EMP_ENGAGEMENT';
   }
 
   let { to, title, numberofpodcasts, type }: Props = $props();
@@ -34,29 +38,35 @@
   href={to}
   class={[
     'relative overflow-hidden rounded-4xl transition-shadow hover:ring-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed',
+    type === 'AI' && 'bg-pink-300 hover:ring-pink-300',
     type === 'BOB' && 'bg-blue-300 hover:ring-blue-300',
-    type === 'AI' && 'bg-cyan-300 hover:ring-cyan-300',
-    type === 'NEWS' && 'bg-orange-300 hover:ring-orange-300',
-    type === 'PROD' && 'bg-emerald-300 hover:ring-emerald-300',
     type === 'CAREER' && 'bg-violet-300 hover:ring-violet-300',
+    type === 'EDU_VOICES' && 'bg-cyan-300 hover:ring-cyan-300',
+    type === 'EMP_ENGAGEMENT' && 'bg-blue-300 hover:ring-blue-300',
+    type === 'INFRA' && 'bg-blue-300 hover:ring-blue-300',
     type === 'INNOV' && 'bg-pink-300 hover:ring-pink-300',
-    type === 'WELLBEING' && 'bg-teal-300 hover:ring-teal-300',
-    type === 'STU_WELL' && 'bg-sky-300 hover:ring-sky-300',
+    type === 'NEWS' && 'bg-cyan-300 hover:ring-cyan-300',
+    type === 'PROD' && 'bg-orange-300 hover:ring-orange-300',
     type === 'STU_DEV' && 'bg-green-300 hover:ring-green-300',
+    type === 'STU_WELL' && 'bg-green-300 hover:ring-green-300',
+    type === 'WELLBEING' && 'bg-emerald-300 hover:ring-emerald-300',
   ]}
 >
   <div
     class={[
       'absolute left-1/2 h-1/2 w-[110%] -translate-x-1/2 rounded-b-[50%]',
+      type === 'AI' && 'bg-pink-400',
       type === 'BOB' && 'bg-blue-400',
-      type === 'AI' && 'bg-cyan-400',
-      type === 'NEWS' && 'bg-orange-400',
-      type === 'PROD' && 'bg-emerald-400',
       type === 'CAREER' && 'bg-violet-400',
+      type === 'EDU_VOICES' && 'bg-cyan-400',
+      type === 'EMP_ENGAGEMENT' && 'bg-blue-400',
+      type === 'INFRA' && 'bg-blue-400',
       type === 'INNOV' && 'bg-pink-400',
-      type === 'WELLBEING' && 'bg-teal-400',
-      type === 'STU_WELL' && 'bg-sky-400',
+      type === 'NEWS' && 'bg-cyan-400',
+      type === 'PROD' && 'bg-orange-400',
       type === 'STU_DEV' && 'bg-green-400',
+      type === 'STU_WELL' && 'bg-green-400',
+      type === 'WELLBEING' && 'bg-emerald-400',
     ]}
   ></div>
 
@@ -113,6 +123,24 @@
       {:else if type === 'STU_DEV'}
         <enhanced:img
           src="$lib/assets/collections/student-development.png?w=464"
+          alt={title}
+          class="w-[232px]"
+        />
+      {:else if type === 'INFRA'}
+        <enhanced:img
+          src="$lib/assets/collections/infrastructure.png?w=464"
+          alt={title}
+          class="w-[232px]"
+        />
+      {:else if type === 'EDU_VOICES'}
+        <enhanced:img
+          src="$lib/assets/collections/educator-voices.png?w=464"
+          alt={title}
+          class="w-[232px]"
+        />
+      {:else if type === 'EMP_ENGAGEMENT'}
+        <enhanced:img
+          src="$lib/assets/collections/employee-engagement.png?w=464"
           alt={title}
           class="w-[232px]"
         />

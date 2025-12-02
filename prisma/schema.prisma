@@ -52,6 +52,9 @@ enum CollectionType {
   STU_DEV
   STU_WELL
   WELLBEING
+  INFRA
+  EDU_VOICES
+  EMP_ENGAGEMENT
 }
 
 model LearningUnit {

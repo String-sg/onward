@@ -3,7 +3,7 @@
 
   import { Badge } from '$lib/components/Badge/index.js';
   import { LearningUnit } from '$lib/components/LearningUnit/index.js';
-  import { IsWithinViewport } from '$lib/helpers/index.js';
+  import { getBadgeInfo, IsWithinViewport } from '$lib/helpers/index.js';
 
   const { data } = $props();
 
@@ -42,37 +42,25 @@
   <div
     class={[
       'flex flex-col gap-y-2 rounded-3xl border border-slate-200 p-6',
+      data.collection.type === 'AI' && 'bg-pink-50',
       data.collection.type === 'BOB' && 'bg-blue-50',
-      data.collection.type === 'AI' && 'bg-cyan-50',
-      data.collection.type === 'NEWS' && 'bg-orange-50',
-      data.collection.type === 'PROD' && 'bg-emerald-50',
       data.collection.type === 'CAREER' && 'bg-violet-50',
+      data.collection.type === 'EDU_VOICES' && 'bg-cyan-50',
+      data.collection.type === 'EMP_ENGAGEMENT' && 'bg-blue-50',
+      data.collection.type === 'INFRA' && 'bg-blue-50',
       data.collection.type === 'INNOV' && 'bg-pink-50',
-      data.collection.type === 'WELLBEING' && 'bg-teal-50',
-      data.collection.type === 'STU_WELL' && 'bg-sky-50',
+      data.collection.type === 'NEWS' && 'bg-cyan-50',
+      data.collection.type === 'PROD' && 'bg-orange-50',
+      data.collection.type === 'STU_WELL' && 'bg-green-50',
       data.collection.type === 'STU_DEV' && 'bg-green-50',
+      data.collection.type === 'WELLBEING' && 'bg-emerald-50',
     ]}
   >
     <span class="text-lg font-medium">About this topic</span>
 
-    {#if data.collection.type === 'BOB'}
-      <Badge variant="blue">Learn with BOB</Badge>
-    {:else if data.collection.type === 'AI'}
-      <Badge variant="cyan">Artificial Intelligence</Badge>
-    {:else if data.collection.type === 'NEWS'}
-      <Badge variant="orange">In the news</Badge>
-    {:else if data.collection.type === 'PROD'}
-      <Badge variant="emerald">Productivity</Badge>
-    {:else if data.collection.type === 'CAREER'}
-      <Badge variant="violet">Career growth</Badge>
-    {:else if data.collection.type === 'INNOV'}
-      <Badge variant="pink">Innovation</Badge>
-    {:else if data.collection.type === 'WELLBEING'}
-      <Badge variant="teal">Wellbeing</Badge>
-    {:else if data.collection.type === 'STU_WELL'}
-      <Badge variant="sky">Student wellbeing</Badge>
-    {:else if data.collection.type === 'STU_DEV'}
-      <Badge variant="green">Student development</Badge>
+    {#if data.collection.type}
+      {@const badgeInfo = getBadgeInfo(data.collection.type)}
+      <Badge variant={badgeInfo.variant}>{badgeInfo.label}</Badge>
     {/if}
 
     <p>
