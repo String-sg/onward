@@ -216,7 +216,6 @@ export const load: PageServerLoad = async (event) => {
       status: getLearningUnitStatus({
         isRequired: lu.isRequired,
         dueDate: lu.dueDate,
-        learningJourney: lu.learningJourneys[0],
       }),
       tags: lu.tags.map((t) => t.tag),
       collectionType: lu.collection.type,
