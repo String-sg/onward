@@ -109,9 +109,16 @@ export const load: PageServerLoad = async (event) => {
           },
         },
       },
+      learningJourneys: {
+        select: {
+          isCompleted: true,
+        },
+        where: {
+          userId: user.id,
+        },
+      },
     },
     where: {
-      isRequired: false,
       NOT: {
         learningJourneys: {
           some: {
@@ -217,7 +224,11 @@ export const load: PageServerLoad = async (event) => {
     })),
     recommendedLearningUnits: recommendedLearningUnits.map((lu) => ({
       ...lu,
-      status: null,
+      status: getLearningUnitStatus({
+        isRequired: lu.isRequired,
+        dueDate: lu.dueDate,
+        learningJourney: lu.learningJourneys[0],
+      }),
       tags: lu.tags.map((t) => t.tag),
       collectionType: lu.collection.type,
     })),
