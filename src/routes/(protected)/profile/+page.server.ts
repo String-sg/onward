@@ -1,5 +1,4 @@
 import { error, redirect } from '@sveltejs/kit';
-import { startOfMonth, startOfWeek } from 'date-fns';
 
 import { getBase64EncodedAvatar } from '$lib/server/cache/index.js';
 import { db } from '$lib/server/db';
@@ -16,31 +15,50 @@ export const load: PageServerLoad = async (event) => {
   }
 
   const now = new Date();
-  const firstOfMonth = startOfMonth(now);
-  const startOfWeekMonday = startOfWeek(now, { weekStartsOn: 1 });
+  const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+  const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+  const oneYearAgo = new Date(now.getTime() - 365 * 24 * 60 * 60 * 1000);
 
   try {
-    const [byWeek, byMonth] = await Promise.all([
+    const [byWeek, byMonth, byYear, byAll] = await Promise.all([
       db.learningJourney.groupBy({
         by: ['isCompleted'],
-        where: { userId: user.id, updatedAt: { gte: startOfWeekMonday } },
+        where: { userId: user.id, updatedAt: { gte: sevenDaysAgo } },
         _count: { _all: true },
       }),
       db.learningJourney.groupBy({
         by: ['isCompleted'],
-        where: { userId: user.id, updatedAt: { gte: firstOfMonth } },
+        where: { userId: user.id, updatedAt: { gte: thirtyDaysAgo } },
         _count: { _all: true },
+      }),
+      db.learningJourney.groupBy({
+        by: ['isCompleted'],
+        where: { userId: user.id, updatedAt: { gte: oneYearAgo } },
+        _count: { _all: true },
+      }),
+      db.learningJourney.groupBy({
+        by: ['isCompleted'],
+        where: { userId: user.id },
+        _count: { _all: true },
+        _min: { updatedAt: true },
       }),
     ]);
+
+    const firstRecordDateAll = byAll.find((g) => g._min.updatedAt)?._min.updatedAt;
 
     return {
       name: user.name,
       email: user.email,
       avatar: await getBase64EncodedAvatar(user.id),
-      learningUnitsConsumedByMonth: byMonth.reduce((total, group) => total + group._count._all, 0),
       learningUnitsConsumedByWeek: byWeek.reduce((total, group) => total + group._count._all, 0),
-      learningUnitsCompletedByMonth: byMonth.find((group) => group.isCompleted)?._count._all ?? 0,
+      learningUnitsConsumedByMonth: byMonth.reduce((total, group) => total + group._count._all, 0),
+      learningUnitsConsumedByYear: byYear.reduce((total, group) => total + group._count._all, 0),
+      learningUnitsConsumedByAll: byAll.reduce((total, group) => total + group._count._all, 0),
       learningUnitsCompletedByWeek: byWeek.find((group) => group.isCompleted)?._count._all ?? 0,
+      learningUnitsCompletedByMonth: byMonth.find((group) => group.isCompleted)?._count._all ?? 0,
+      learningUnitsCompletedByYear: byYear.find((group) => group.isCompleted)?._count._all ?? 0,
+      learningUnitsCompletedByAll: byAll.find((group) => group.isCompleted)?._count._all ?? 0,
+      firstRecordDateAll,
     };
   } catch (err) {
     logger.error({ err, userId: user.id }, 'Failed to retrieve learning journey counts');

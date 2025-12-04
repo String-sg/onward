@@ -1,15 +1,15 @@
 <script lang="ts">
   import { ArrowLeft, BookOpenCheck, Lightbulb } from '@lucide/svelte';
+  import { SvelteDate } from 'svelte/reactivity';
 
   import { afterNavigate } from '$app/navigation';
-  import { Button } from '$lib/components/Button';
   import { IsWithinViewport } from '$lib/helpers/index.js';
 
   const { data } = $props();
 
   let target = $state<HTMLElement | null>(null);
   let returnTo = $state('/');
-  let frequency = $state<'Weekly' | 'Monthly'>('Weekly');
+  let selectedPeriod = $state<'W' | 'M' | 'Y' | 'All'>('W');
 
   const isWithinViewport = new IsWithinViewport(() => target);
 
@@ -22,9 +22,30 @@
     returnTo = '/';
   });
 
-  const handleFrequencyChange = () => {
-    frequency = frequency === 'Weekly' ? 'Monthly' : 'Weekly';
+  type Period = 'W' | 'M' | 'Y' | 'All';
+
+  const periods: Period[] = ['W', 'M', 'Y', 'All'];
+
+  const handlePeriodChange = (period: Period) => {
+    selectedPeriod = period;
   };
+
+  const getDateRange = $derived(() => {
+    const end = new SvelteDate();
+    let start = new SvelteDate();
+
+    if (selectedPeriod === 'W') {
+      start.setDate(end.getDate() - 7);
+    } else if (selectedPeriod === 'M') {
+      start.setMonth(end.getMonth() - 1);
+    } else if (selectedPeriod === 'Y') {
+      start.setFullYear(end.getFullYear() - 1);
+    } else {
+      start = data.firstRecordDateAll ? new SvelteDate(data.firstRecordDateAll) : new SvelteDate();
+    }
+
+    return `${start.getDate()} ${start.toLocaleDateString('en-US', { month: 'short' })} ${start.getFullYear()} - ${end.getDate()} ${end.toLocaleDateString('en-US', { month: 'short' })} ${end.getFullYear()}`;
+  });
 </script>
 
 <header class="fixed inset-x-0 top-0 z-50 bg-white/90 backdrop-blur-sm">
@@ -73,53 +94,73 @@
   <div class="flex flex-1 flex-col gap-y-4">
     <div class="flex items-center justify-between">
       <span class="text-xl font-semibold">Learning Insights</span>
-
-      <Button
-        class="px-4 py-2 text-sm font-medium"
-        variant="secondary"
-        onclick={handleFrequencyChange}
-      >
-        {frequency}
-      </Button>
     </div>
 
-    <div class="flex flex-col gap-y-3">
-      <div class="flex items-center justify-between rounded-3xl bg-white p-4">
-        <div class="flex items-center gap-x-2">
-          <div class="rounded-full bg-black p-2 text-white">
-            <BookOpenCheck class="h-4 w-4" />
-          </div>
-
-          <span>Consumed bites</span>
-        </div>
-
-        <div class="flex items-center gap-x-1">
-          <span class="text-xl font-medium">
-            {frequency === 'Monthly'
-              ? data.learningUnitsConsumedByMonth
-              : data.learningUnitsConsumedByWeek}
-          </span>
-          <span class="text-slate-500">bites</span>
-        </div>
+    <div class="flex flex-col gap-y-2">
+      <div class="flex items-center justify-between gap-x-2.5 rounded-lg bg-slate-200 p-1">
+        {#each periods as period (period)}
+          <button
+            class={[
+              'flex flex-1 cursor-pointer items-center justify-center rounded-md px-3 py-1 text-sm font-medium text-zinc-500 transition-colors hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed',
+              selectedPeriod === period && 'pointer-events-none bg-white !text-slate-950',
+            ]}
+            onclick={() => handlePeriodChange(period)}
+          >
+            {period}
+          </button>
+        {/each}
       </div>
 
-      <div class="flex items-center justify-between rounded-3xl bg-white p-4">
-        <div class="flex items-center gap-x-2">
-          <div class="rounded-full bg-black p-2 text-white">
-            <Lightbulb class="h-4 w-4" />
-          </div>
+      <span class="text-sm text-slate-500">{getDateRange()}</span>
+    </div>
 
-          <span>Completed bites</span>
+    <div class="flex items-center justify-between rounded-3xl bg-white p-4">
+      <div class="flex items-center gap-x-2">
+        <div class="rounded-full bg-black p-2 text-white">
+          <BookOpenCheck class="h-4 w-4" />
         </div>
 
-        <div class="flex items-center gap-x-1">
-          <span class="text-xl font-medium">
-            {frequency === 'Monthly'
-              ? data.learningUnitsCompletedByMonth
-              : data.learningUnitsCompletedByWeek}
-          </span>
-          <span class="text-slate-500">bites</span>
+        <span>Consumed bites</span>
+      </div>
+
+      <div class="flex items-center gap-x-1">
+        <span class="text-xl font-medium">
+          {#if selectedPeriod === 'W'}
+            {data.learningUnitsConsumedByWeek}
+          {:else if selectedPeriod === 'M'}
+            {data.learningUnitsConsumedByMonth}
+          {:else if selectedPeriod === 'Y'}
+            {data.learningUnitsConsumedByYear}
+          {:else}
+            {data.learningUnitsConsumedByAll}
+          {/if}
+        </span>
+        <span class="text-slate-500">bites</span>
+      </div>
+    </div>
+
+    <div class="flex items-center justify-between rounded-3xl bg-white p-4">
+      <div class="flex items-center gap-x-2">
+        <div class="rounded-full bg-black p-2 text-white">
+          <Lightbulb class="h-4 w-4" />
         </div>
+
+        <span>Completed bites</span>
+      </div>
+
+      <div class="flex items-center gap-x-1">
+        <span class="text-xl font-medium">
+          {#if selectedPeriod === 'W'}
+            {data.learningUnitsCompletedByWeek}
+          {:else if selectedPeriod === 'M'}
+            {data.learningUnitsCompletedByMonth}
+          {:else if selectedPeriod === 'Y'}
+            {data.learningUnitsCompletedByYear}
+          {:else}
+            {data.learningUnitsCompletedByAll}
+          {/if}
+        </span>
+        <span class="text-slate-500">bites</span>
       </div>
     </div>
   </div>
