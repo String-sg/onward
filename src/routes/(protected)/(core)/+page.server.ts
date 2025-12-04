@@ -150,7 +150,6 @@ export const load: PageServerLoad = async (event) => {
     select: {
       id: true,
       isCompleted: true,
-      isQuizPassed: true,
       learningUnit: {
         select: {
           id: true,
