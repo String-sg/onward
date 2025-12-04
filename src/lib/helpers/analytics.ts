@@ -60,6 +60,34 @@ export function track20PercentPodcastPlay(learningUnitId: string) {
 }
 
 /**
+ * Tracks when a podcast is played at 50% completion.
+ * @param learningUnitId - The ID of the learning unit that was played.
+ */
+export function track50PercentPodcastPlay(learningUnitId: string) {
+  if (!browser) {
+    return;
+  }
+
+  window.gtag('event', 'podcast_play_50_percent', {
+    learning_unit_id: learningUnitId,
+  });
+}
+
+/**
+ * Tracks when a podcast is played at 80% completion.
+ * @param learningUnitId - The ID of the learning unit that was played.
+ */
+export function track80PercentPodcastPlay(learningUnitId: string) {
+  if (!browser) {
+    return;
+  }
+
+  window.gtag('event', 'podcast_play_80_percent', {
+    learning_unit_id: learningUnitId,
+  });
+}
+
+/**
  * Tracks when a podcast is completed (100%).
  * @param learningUnitId - The ID of the learning unit that was completed.
  */
