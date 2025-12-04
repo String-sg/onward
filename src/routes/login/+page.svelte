@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { SquareArrowOutUpRight } from '@lucide/svelte';
+
   import { page } from '$app/state';
   import { LinkButton } from '$lib/components/Button/index.js';
 </script>
@@ -33,8 +35,22 @@
             </LinkButton>
 
             <span class="text-center text-xs">
-              By continuing, you agree to our<br />Terms and Privacy Policy.
+              By continuing, you agree to our
+              <span class="block">
+                <a href="/terms" class="underline">Terms</a> and
+                <a href="/privacy" class="underline">Privacy Policy</a>.
+              </span>
             </span>
+
+            <a
+              href="https://go.gov.sg/report-vulnerability"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-x-1 text-center text-xs underline"
+            >
+              Report Vulnerability
+              <SquareArrowOutUpRight class="h-3 w-3" />
+            </a>
           </div>
         </div>
 
