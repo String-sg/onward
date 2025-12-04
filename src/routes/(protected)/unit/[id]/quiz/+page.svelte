@@ -282,19 +282,31 @@
 
 <Modal isopen={isQuizFailedModalOpen} onclose={noop} variant="light">
   <div class="mx-auto flex min-h-svh max-w-5xl flex-col items-center justify-center px-4 py-6">
-    <div class="relative mt-2.5 pb-75">
-      <enhanced:img src="$lib/assets/fail-quiz.png?w=584" alt="Page not found" class="w-[292px]" />
+    <div class="flex flex-col items-center justify-center gap-y-1">
+      <span class="text-xl font-medium">Try again!</span>
+      <span class="text-xl font-bold">{correctAnswers}/{data.questionAnswers.length}</span>
+      <span>
+        You need {Math.ceil((data.questionAnswers.length * PASSING_SCORE) / 100)} points to pass
+      </span>
+    </div>
 
-      <div
-        class="absolute inset-x-0 bottom-0 flex flex-col items-center justify-center gap-y-6 text-xl font-medium"
-      >
-        <span>Failed the quiz</span>
-        <span>{correctAnswers}/{data.questionAnswers.length}</span>
-        <a
-          href="/unit/{params.id}"
-          class="inline-flex w-full cursor-pointer items-center justify-center rounded-full px-3.75 py-2.75 hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed"
-        >
+    <div class="relative mt-2.5 pb-20">
+      <enhanced:img
+        src="$lib/assets/failed-splash.png?w=644"
+        alt="Fail quiz splash"
+        class="w-[322px]"
+      />
+
+      <div class="absolute inset-x-0 bottom-0 flex flex-col gap-y-5">
+        <LinkButton href={`/unit/${params.id}`} variant="primary" width="full" class="max-w-sm">
           Retry
+        </LinkButton>
+
+        <a
+          href="/"
+          class="inline-flex w-full cursor-pointer items-center justify-center rounded-full px-3.75 py-2.75 font-medium hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed"
+        >
+          Back to home
         </a>
       </div>
     </div>
