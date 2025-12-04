@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.5.0 (2025-12-04)
+
+### Features ✨
+
+- feat: add ga analytics for 50% and 80% podcast play ([#459](https://github.com/String-sg/onward/pull/459)) ([6a32c9e](https://github.com/String-sg/onward/commit/6a32c9e4a17cd7ad55e4af9c301ca2975a4e83fe))
+- feat: update failed quiz modal ([#457](https://github.com/String-sg/onward/pull/457)) ([3d37252](https://github.com/String-sg/onward/commit/3d37252db771ece6150038307cabaf2239944bf8))
+- feat: add Terms, Privacy, and Report Vulnerability links ([#458](https://github.com/String-sg/onward/pull/458)) ([0427d6e](https://github.com/String-sg/onward/commit/0427d6e041b308e7eed734a471d61ff247b23cd7))
+- feat: add new bites types ([#456](https://github.com/String-sg/onward/pull/456)) ([619824b](https://github.com/String-sg/onward/commit/619824bfd8d8b5f5741c4dda8512e322ce950918))
+- feat: mandatory quiz ([#443](https://github.com/String-sg/onward/pull/443)) ([7a11516](https://github.com/String-sg/onward/commit/7a11516d095615272e8c781e4a4f155e593789cc))
+- feat: add ga events for 20 and 100 percent podcast play ([#432](https://github.com/String-sg/onward/pull/432)) ([ab497e2](https://github.com/String-sg/onward/commit/ab497e21ebdc7a286079b5721d7b7e17f790d4b1))
+
+### Bug Fixes 🐛
+
+- fix: update Dockerfile to copy prisma config ([#454](https://github.com/String-sg/onward/pull/454)) ([064874f](https://github.com/String-sg/onward/commit/064874f1304a250399898c412cf148656cca1795))
+
+### Chores 🧹
+
+- chore: upgrade prisma ([#453](https://github.com/String-sg/onward/pull/453)) ([e0b19f1](https://github.com/String-sg/onward/commit/e0b19f183b2b331df7a31c1c3587ae35a3c28af1))
+
 ## 1.4.0 (2025-11-07)
 
 ### Features ✨
