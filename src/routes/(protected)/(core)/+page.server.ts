@@ -73,7 +73,7 @@ export const load: PageServerLoad = async (event) => {
         dueDate: 'asc',
       },
     ],
-    take: 10, // To-do: Limit to 2 items
+    take: 2,
   } satisfies LearningUnitFindManyArgs;
 
   let toDoList: LearningUnitGetPayload<typeof toDoListArgs>[];
