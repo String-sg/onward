@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { LinkButton } from '$lib/components/Button/index.js';
   import { Collection } from '$lib/components/Collection/index.js';
   import { LearningUnit } from '$lib/components/LearningUnit/index.js';
+  import { NoContentView } from '$lib/components/NoContentView/index.js';
   import { Player } from '$lib/states/index.js';
 
   const { data } = $props();
@@ -160,24 +160,7 @@
 
   {#if data.toDoList.length === 0 && data.recommendedLearningUnits.length === 0 && data.learningJourneys.length === 0 && data.collections.length === 0}
     <div class="mt-8 flex flex-col items-center gap-y-5">
-      <div class="flex flex-col items-center gap-y-6">
-        <enhanced:img
-          src="$lib/assets/bags-of-bites.png?w=708"
-          alt="No bites found"
-          class="w-[354px]"
-        />
-
-        <div class="flex flex-col items-center gap-y-4 text-center">
-          <span class="text-xl font-medium">Welcome {data.username}</span>
-          <span>
-            Kick off your learning journey by diving<br /> into our exciting curated content!
-          </span>
-        </div>
-      </div>
-
-      <div class="flex w-full justify-center px-4">
-        <LinkButton href="/bites" width="full" class="max-w-sm">Explore our bites</LinkButton>
-      </div>
+      <NoContentView username={data.username} imagealt="No bites found" />
     </div>
   {/if}
 
