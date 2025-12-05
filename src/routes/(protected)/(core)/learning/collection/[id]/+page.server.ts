@@ -70,14 +70,6 @@ export const load: PageServerLoad = async (event) => {
               },
             },
           },
-          learningJourneys: {
-            select: {
-              isCompleted: true,
-            },
-            where: {
-              userId: user.id,
-            },
-          },
         },
       },
     },

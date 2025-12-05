@@ -180,7 +180,6 @@ export const load: PageServerLoad = async (event) => {
     },
     where: {
       userId: user.id,
-      isCompleted: true,
     },
     orderBy: {
       createdAt: 'desc',
