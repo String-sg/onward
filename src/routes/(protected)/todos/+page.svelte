@@ -23,11 +23,13 @@
     <div class="flex items-center justify-between gap-x-8">
       <div class="flex items-center gap-x-3">
         <a
-          href="/explore"
+          href="/"
           class="rounded-full p-4 transition-colors hover:bg-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed"
         >
           <ArrowLeft />
         </a>
+
+        <span class="text-xl font-medium">To-dos</span>
       </div>
     </div>
   </div>
@@ -36,22 +38,16 @@
 <div bind:this={target} class="absolute inset-x-0 top-0 h-px"></div>
 
 <main class="relative mx-auto flex min-h-svh max-w-5xl flex-col gap-y-6 px-4 pt-23 pb-28">
-  <div class="flex flex-col gap-y-3">
-    <div class="px-2">
-      <span class="text-xl font-semibold">Learning Units</span>
-    </div>
-
-    <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
-      {#each data.learningUnits as learningUnit (learningUnit.id)}
-        <LearningUnit
-          to="/unit/{learningUnit.id}"
-          tags={learningUnit.tags}
-          title={learningUnit.title}
-          createdat={learningUnit.createdAt}
-          createdby={learningUnit.createdBy}
-          status={learningUnit.status}
-        />
-      {/each}
-    </div>
+  <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
+    {#each data.learningUnits as learningUnit (learningUnit.id)}
+      <LearningUnit
+        to="/unit/{learningUnit.id}"
+        tags={learningUnit.tags}
+        title={learningUnit.title}
+        createdat={learningUnit.createdAt}
+        createdby={learningUnit.createdBy}
+        status={learningUnit.status}
+      />
+    {/each}
   </div>
 </main>

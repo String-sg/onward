@@ -20,54 +20,67 @@ export const load: PageServerLoad = async (event) => {
     throw redirect(303, '/login');
   }
 
-  const learningJourneyArgs = {
+  const toDoListArgs = {
     select: {
       id: true,
-      isCompleted: true,
-      isQuizPassed: true,
-      learningUnit: {
+      createdAt: true,
+      title: true,
+      summary: true,
+      contentURL: true,
+      createdBy: true,
+      isRequired: true,
+      dueDate: true,
+      collection: {
         select: {
-          id: true,
-          title: true,
-          summary: true,
-          contentURL: true,
-          createdAt: true,
-          createdBy: true,
-          isRequired: true,
-          dueDate: true,
-          tags: {
+          type: true,
+        },
+      },
+      tags: {
+        select: {
+          tag: {
             select: {
-              tag: {
-                select: {
-                  code: true,
-                  label: true,
-                },
-              },
-            },
-          },
-          collection: {
-            select: {
-              type: true,
+              code: true,
+              label: true,
             },
           },
         },
       },
     },
     where: {
-      userId: user.id,
-      isCompleted: true,
+      isRequired: true,
+      OR: [
+        {
+          learningJourneys: {
+            some: {
+              userId: user.id,
+              isCompleted: false,
+            },
+          },
+        },
+        {
+          NOT: {
+            learningJourneys: {
+              some: {
+                userId: user.id,
+              },
+            },
+          },
+        },
+      ],
     },
-    orderBy: {
-      createdAt: 'desc',
-    },
-    take: 3,
-  } satisfies LearningJourneyFindManyArgs;
+    orderBy: [
+      {
+        dueDate: 'asc',
+      },
+    ],
+    take: 2,
+  } satisfies LearningUnitFindManyArgs;
 
-  let learningJourneys: LearningJourneyGetPayload<typeof learningJourneyArgs>[];
+  let toDoList: LearningUnitGetPayload<typeof toDoListArgs>[];
   try {
-    learningJourneys = await db.learningJourney.findMany(learningJourneyArgs);
+    toDoList = await db.learningUnit.findMany(toDoListArgs);
   } catch (err) {
-    logger.error({ err }, 'Failed to retrieve learning journeys');
+    logger.error({ err }, 'Failed to retrieve to-do list');
     throw error(500);
   }
 
@@ -102,7 +115,6 @@ export const load: PageServerLoad = async (event) => {
         },
         where: {
           userId: user.id,
-          isCompleted: true,
         },
       },
     },
@@ -134,7 +146,89 @@ export const load: PageServerLoad = async (event) => {
     throw error(500);
   }
 
+  const learningJourneyArgs = {
+    select: {
+      id: true,
+      isCompleted: true,
+      learningUnit: {
+        select: {
+          id: true,
+          title: true,
+          summary: true,
+          contentURL: true,
+          createdAt: true,
+          createdBy: true,
+          isRequired: true,
+          dueDate: true,
+          tags: {
+            select: {
+              tag: {
+                select: {
+                  code: true,
+                  label: true,
+                },
+              },
+            },
+          },
+          collection: {
+            select: {
+              type: true,
+            },
+          },
+        },
+      },
+    },
+    where: {
+      userId: user.id,
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+    take: 3,
+  } satisfies LearningJourneyFindManyArgs;
+
+  let learningJourneys: LearningJourneyGetPayload<typeof learningJourneyArgs>[];
+  try {
+    learningJourneys = await db.learningJourney.findMany(learningJourneyArgs);
+  } catch (err) {
+    logger.error({ err }, 'Failed to retrieve learning journeys');
+    throw error(500);
+  }
+
+  const collections = await db.collection.findMany({
+    select: {
+      id: true,
+      title: true,
+      type: true,
+      _count: {
+        select: {
+          learningUnit: true,
+        },
+      },
+    },
+  });
+
   return {
+    username: user.name,
+    toDoList: toDoList.map((lu) => ({
+      ...lu,
+      status: getLearningUnitStatus({
+        isRequired: lu.isRequired,
+        dueDate: lu.dueDate,
+      }),
+      tags: lu.tags.map((t) => t.tag),
+      collectionType: lu.collection.type,
+    })),
+    recommendedLearningUnits: recommendedLearningUnits.map((lu) => ({
+      ...lu,
+      status: getLearningUnitStatus({
+        isRequired: lu.isRequired,
+        dueDate: lu.dueDate,
+        learningJourney: lu.learningJourneys[0],
+      }),
+      tags: lu.tags.map((t) => t.tag),
+      collectionType: lu.collection.type,
+    })),
     learningJourneys: learningJourneys.map((lj) => ({
       ...lj,
       learningUnit: {
@@ -150,16 +244,9 @@ export const load: PageServerLoad = async (event) => {
         }),
       },
     })),
-    recommendedLearningUnits: recommendedLearningUnits.map((lu) => ({
-      ...lu,
-      status: getLearningUnitStatus({
-        isRequired: lu.isRequired,
-        dueDate: lu.dueDate,
-        learningJourney: lu.learningJourneys[0],
-      }),
-      tags: lu.tags.map((t) => t.tag),
-      collectionType: lu.collection.type,
+    collections: collections.map((collection) => ({
+      ...collection,
+      numberOfPodcasts: collection._count.learningUnit,
     })),
-    username: user.name,
   };
 };
