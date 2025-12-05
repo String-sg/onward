@@ -139,23 +139,26 @@
   {/if}
 
   <!-- Learning Topics -->
-  <div class="flex flex-row justify-between px-2">
-    <span class="text-xl font-semibold">Learning topics</span>
-  </div>
-  <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
-    {#each data.collections as collection (collection.id)}
-      {#if collection.numberOfPodcasts > 0}
-        <Collection
-          to="/collection/{collection.id}"
-          title={collection.title}
-          type={collection.type}
-          numberofpodcasts={collection.numberOfPodcasts}
-        />
-      {/if}
-    {/each}
-  </div>
+  {#if data.collections.length > 0}
+    <div class="flex flex-row justify-between px-2">
+      <span class="text-xl font-semibold">Learning topics</span>
+    </div>
 
-  {#if data.recommendedLearningUnits.length === 0 && data.learningJourneys.length === 0}
+    <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
+      {#each data.collections as collection (collection.id)}
+        {#if collection.numberOfPodcasts > 0}
+          <Collection
+            to="/collection/{collection.id}"
+            title={collection.title}
+            type={collection.type}
+            numberofpodcasts={collection.numberOfPodcasts}
+          />
+        {/if}
+      {/each}
+    </div>
+  {/if}
+
+  {#if data.toDoList.length === 0 && data.recommendedLearningUnits.length === 0 && data.learningJourneys.length === 0 && data.collections.length === 0}
     <div class="mt-8 flex flex-col items-center gap-y-5">
       <div class="flex flex-col items-center gap-y-6">
         <enhanced:img
