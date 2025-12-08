@@ -35,13 +35,13 @@
     let start = new SvelteDate();
 
     if (selectedPeriod === 'W') {
-      start.setDate(end.getDate() - 7);
+      start.setDate(data.sevenDaysAgo.getDate());
     } else if (selectedPeriod === 'M') {
-      start.setMonth(end.getMonth() - 1);
+      start.setDate(data.thirtyDaysAgo.getDate());
     } else if (selectedPeriod === 'Y') {
-      start.setFullYear(end.getFullYear() - 1);
+      start.setDate(data.oneYearAgo.getDate());
     } else {
-      start = data.firstRecordDateAll ? new SvelteDate(data.firstRecordDateAll) : new SvelteDate();
+      start.setDate(data.firstRecordDate?.getDate() ?? end.getDate());
     }
 
     return `${start.getDate()} ${start.toLocaleDateString('en-US', { month: 'short' })} ${start.getFullYear()} - ${end.getDate()} ${end.toLocaleDateString('en-US', { month: 'short' })} ${end.getFullYear()}`;

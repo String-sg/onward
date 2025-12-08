@@ -20,7 +20,7 @@ export const load: PageServerLoad = async (event) => {
   const oneYearAgo = new Date(now.getTime() - 365 * 24 * 60 * 60 * 1000);
 
   try {
-    const [byWeek, byMonth, byYear, byAll] = await Promise.all([
+    const [byWeek, byMonth, byYear, byAllTime] = await Promise.all([
       db.learningJourney.groupBy({
         by: ['isCompleted'],
         where: { userId: user.id, updatedAt: { gte: sevenDaysAgo } },
@@ -41,10 +41,11 @@ export const load: PageServerLoad = async (event) => {
         where: { userId: user.id },
         _count: { _all: true },
         _min: { updatedAt: true },
+        orderBy: { _min: { updatedAt: 'asc' } },
       }),
     ]);
 
-    const firstRecordDateAll = byAll.find((g) => g._min.updatedAt)?._min.updatedAt;
+    const firstRecordDate = byAllTime[0]?._min.updatedAt ?? null;
 
     return {
       name: user.name,
@@ -53,12 +54,15 @@ export const load: PageServerLoad = async (event) => {
       learningUnitsConsumedByWeek: byWeek.reduce((total, group) => total + group._count._all, 0),
       learningUnitsConsumedByMonth: byMonth.reduce((total, group) => total + group._count._all, 0),
       learningUnitsConsumedByYear: byYear.reduce((total, group) => total + group._count._all, 0),
-      learningUnitsConsumedByAll: byAll.reduce((total, group) => total + group._count._all, 0),
+      learningUnitsConsumedByAll: byAllTime.reduce((total, group) => total + group._count._all, 0),
       learningUnitsCompletedByWeek: byWeek.find((group) => group.isCompleted)?._count._all ?? 0,
       learningUnitsCompletedByMonth: byMonth.find((group) => group.isCompleted)?._count._all ?? 0,
       learningUnitsCompletedByYear: byYear.find((group) => group.isCompleted)?._count._all ?? 0,
-      learningUnitsCompletedByAll: byAll.find((group) => group.isCompleted)?._count._all ?? 0,
-      firstRecordDateAll,
+      learningUnitsCompletedByAll: byAllTime.find((group) => group.isCompleted)?._count._all ?? 0,
+      sevenDaysAgo,
+      thirtyDaysAgo,
+      oneYearAgo,
+      firstRecordDate,
     };
   } catch (err) {
     logger.error({ err, userId: user.id }, 'Failed to retrieve learning journey counts');
