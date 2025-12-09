@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Collection } from '$lib/components/Collection/index.js';
+  import { EmptyStateView } from '$lib/components/EmptyStateView/index.js';
   import { LearningUnit } from '$lib/components/LearningUnit/index.js';
-  import { NoContentView } from '$lib/components/NoContentView/index.js';
   import { Player } from '$lib/states/index.js';
 
   const { data } = $props();
@@ -160,7 +160,7 @@
 
   {#if data.toDoList.length === 0 && data.recommendedLearningUnits.length === 0 && data.learningJourneys.length === 0 && data.collections.length === 0}
     <div class="mt-8 flex flex-col items-center gap-y-5">
-      <NoContentView username={data.username} imagealt="No bites found" />
+      <EmptyStateView username={data.username} imagealt="No bites found" />
     </div>
   {/if}
 

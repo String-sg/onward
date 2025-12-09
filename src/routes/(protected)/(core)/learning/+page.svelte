@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Collection } from '$lib/components/Collection/index.js';
-  import { NoContentView } from '$lib/components/NoContentView/index.js';
+  import { EmptyStateView } from '$lib/components/EmptyStateView/index.js';
 
   const { data } = $props();
 </script>
@@ -23,7 +23,7 @@
     </div>
   {:else}
     <div class="mt-8 flex flex-col items-center gap-y-5">
-      <NoContentView username={data.username} imagealt="No learning journeys found" />
+      <EmptyStateView username={data.username} imagealt="No learning journeys found" />
     </div>
   {/if}
 
