@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { LinkButton } from '$lib/components/Button/index.js';
+  import { Collection } from '$lib/components/Collection/index.js';
+  import { EmptyStateView } from '$lib/components/EmptyStateView/index.js';
   import { LearningUnit } from '$lib/components/LearningUnit/index.js';
   import { Player } from '$lib/states/index.js';
 
@@ -8,7 +9,10 @@
   const player = Player.get();
 
   const handleLearningUnitPlay = (
-    item: (typeof data.learningJourneys)[0] | (typeof data.recommendedLearningUnits)[0],
+    item:
+      | (typeof data.toDoList)[0]
+      | (typeof data.learningJourneys)[0]
+      | (typeof data.recommendedLearningUnits)[0],
   ) => {
     const learningUnit = 'learningUnit' in item ? item.learningUnit : item;
 
@@ -32,6 +36,75 @@
 </script>
 
 <main class="relative mx-auto flex min-h-svh max-w-5xl flex-col gap-y-4 px-4 pt-43 pb-28">
+  <!-- To-do List -->
+  {#if data.toDoList.length > 0}
+    <div class="flex items-center justify-between px-2">
+      <span class="text-xl font-semibold">To-dos</span>
+
+      <a
+        href="/todos"
+        class="rounded-2xl px-4 py-2 text-sm font-medium hover:bg-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed"
+      >
+        See all
+      </a>
+    </div>
+
+    <div class="flex flex-col gap-y-4">
+      {#each data.toDoList as learningUnit (learningUnit.id)}
+        <LearningUnit
+          to={`/unit/${learningUnit.id}`}
+          tags={learningUnit.tags}
+          title={learningUnit.title}
+          createdat={learningUnit.createdAt}
+          createdby={learningUnit.createdBy}
+          player={{
+            isactive: player.currentTrack?.id === learningUnit.id,
+            isplaying: player.isPlaying,
+            onplay: () => handleLearningUnitPlay(learningUnit),
+            onpause: handleLearningUnitPause,
+            onresume: handleLearningUnitResume,
+          }}
+          status={learningUnit.status}
+        />
+      {/each}
+    </div>
+  {/if}
+
+  <!-- Recommended Bites -->
+  {#if data.recommendedLearningUnits.length > 0}
+    <div class="flex items-center justify-between px-2">
+      <span class="text-xl font-semibold">Recommended bites</span>
+
+      <a
+        href="/bites"
+        class="rounded-2xl px-4 py-2 text-sm font-medium hover:bg-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed"
+      >
+        See all
+      </a>
+    </div>
+
+    <div class="flex flex-col gap-y-4">
+      {#each data.recommendedLearningUnits as learningUnit (learningUnit.id)}
+        <LearningUnit
+          to={`/unit/${learningUnit.id}`}
+          tags={learningUnit.tags}
+          title={learningUnit.title}
+          createdat={learningUnit.createdAt}
+          createdby={learningUnit.createdBy}
+          player={{
+            isactive: player.currentTrack?.id === learningUnit.id,
+            isplaying: player.isPlaying,
+            onplay: () => handleLearningUnitPlay(learningUnit),
+            onpause: handleLearningUnitPause,
+            onresume: handleLearningUnitResume,
+          }}
+          status={learningUnit.status}
+        />
+      {/each}
+    </div>
+  {/if}
+
+  <!-- Recently Learned -->
   {#if data.learningJourneys.length > 0}
     <div class="flex items-center justify-between px-2">
       <span class="text-xl font-semibold">Recently learned</span>
@@ -65,59 +138,29 @@
     </div>
   {/if}
 
-  {#if data.recommendedLearningUnits.length > 0}
-    <div class="flex items-center justify-between px-2">
-      <span class="text-xl font-semibold">Recommended for you</span>
-
-      <a
-        href="/explore"
-        class="rounded-2xl px-4 py-2 text-sm font-medium hover:bg-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed"
-      >
-        See all
-      </a>
+  <!-- Learning Topics -->
+  {#if data.collections.length > 0}
+    <div class="flex flex-row justify-between px-2">
+      <span class="text-xl font-semibold">Learning topics</span>
     </div>
 
-    <div class="flex flex-col gap-y-4">
-      {#each data.recommendedLearningUnits as learningUnit (learningUnit.id)}
-        <LearningUnit
-          to={`/unit/${learningUnit.id}`}
-          tags={learningUnit.tags}
-          title={learningUnit.title}
-          createdat={learningUnit.createdAt}
-          createdby={learningUnit.createdBy}
-          player={{
-            isactive: player.currentTrack?.id === learningUnit.id,
-            isplaying: player.isPlaying,
-            onplay: () => handleLearningUnitPlay(learningUnit),
-            onpause: handleLearningUnitPause,
-            onresume: handleLearningUnitResume,
-          }}
-          status={learningUnit.status}
-        />
+    <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
+      {#each data.collections as collection (collection.id)}
+        {#if collection.numberOfPodcasts > 0}
+          <Collection
+            to="/collection/{collection.id}"
+            title={collection.title}
+            type={collection.type}
+            numberofpodcasts={collection.numberOfPodcasts}
+          />
+        {/if}
       {/each}
     </div>
   {/if}
 
-  {#if data.recommendedLearningUnits.length === 0 && data.learningJourneys.length === 0}
+  {#if data.toDoList.length === 0 && data.recommendedLearningUnits.length === 0 && data.learningJourneys.length === 0 && data.collections.length === 0}
     <div class="mt-8 flex flex-col items-center gap-y-5">
-      <div class="flex flex-col items-center gap-y-6">
-        <enhanced:img
-          src="$lib/assets/bags-of-bites.png?w=708"
-          alt="No bites found"
-          class="w-[354px]"
-        />
-
-        <div class="flex flex-col items-center gap-y-4 text-center">
-          <span class="text-xl font-medium">Welcome {data.username}</span>
-          <span>
-            Kick off your learning journey by diving<br /> into our exciting curated content!
-          </span>
-        </div>
-      </div>
-
-      <div class="flex w-full justify-center px-4">
-        <LinkButton href="/explore" width="full" class="max-w-sm">Go to explore</LinkButton>
-      </div>
+      <EmptyStateView username={data.username} imagealt="No bites found" />
     </div>
   {/if}
 

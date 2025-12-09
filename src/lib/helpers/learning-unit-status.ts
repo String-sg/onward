@@ -15,7 +15,7 @@
 export function getLearningUnitStatus(learningUnit: {
   isRequired: boolean;
   dueDate: Date | null;
-  learningJourney: {
+  learningJourney?: {
     isCompleted: boolean;
   };
 }): 'COMPLETED' | 'OVERDUE' | 'REQUIRED' | null {

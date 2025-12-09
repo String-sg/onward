@@ -13,7 +13,7 @@ import {
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async (event) => {
-  const logger = event.locals.logger.child({ handler: 'page_load_explore_collection' });
+  const logger = event.locals.logger.child({ handler: 'page_load_collection' });
 
   const { user } = event.locals.session;
   if (!user) {

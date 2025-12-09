@@ -1,8 +1,9 @@
 <script lang="ts">
   import { ArrowLeft } from '@lucide/svelte';
 
+  import { Badge } from '$lib/components/Badge/index.js';
   import { LearningUnit } from '$lib/components/LearningUnit/index.js';
-  import { IsWithinViewport } from '$lib/helpers/index.js';
+  import { getBadgeInfo, IsWithinViewport } from '$lib/helpers/index.js';
 
   const { data } = $props();
 
@@ -23,11 +24,13 @@
     <div class="flex items-center justify-between gap-x-8">
       <div class="flex items-center gap-x-3">
         <a
-          href="/explore"
+          href="/"
           class="rounded-full p-4 transition-colors hover:bg-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed"
         >
           <ArrowLeft />
         </a>
+
+        <span class="text-xl font-medium">{data.collection.title}</span>
       </div>
     </div>
   </div>
@@ -36,9 +39,40 @@
 <div bind:this={target} class="absolute inset-x-0 top-0 h-px"></div>
 
 <main class="relative mx-auto flex min-h-svh max-w-5xl flex-col gap-y-6 px-4 pt-23 pb-28">
+  <div
+    class={[
+      'flex flex-col gap-y-2 rounded-3xl border border-slate-200 p-6',
+      data.collection.type === 'AI' && 'bg-pink-50',
+      data.collection.type === 'BOB' && 'bg-blue-50',
+      data.collection.type === 'CAREER' && 'bg-violet-50',
+      data.collection.type === 'EDU_VOICES' && 'bg-cyan-50',
+      data.collection.type === 'EMP_ENGAGEMENT' && 'bg-blue-50',
+      data.collection.type === 'INFRA' && 'bg-blue-50',
+      data.collection.type === 'INNOV' && 'bg-pink-50',
+      data.collection.type === 'NEWS' && 'bg-cyan-50',
+      data.collection.type === 'PROD' && 'bg-orange-50',
+      data.collection.type === 'STU_WELL' && 'bg-green-50',
+      data.collection.type === 'STU_DEV' && 'bg-green-50',
+      data.collection.type === 'WELLBEING' && 'bg-emerald-50',
+    ]}
+  >
+    <span class="text-lg font-medium">About this topic</span>
+
+    {#if data.collection.type}
+      {@const badgeInfo = getBadgeInfo(data.collection.type)}
+      <Badge variant={badgeInfo.variant}>{badgeInfo.label}</Badge>
+    {/if}
+
+    <p>
+      {data.collection.description}
+    </p>
+  </div>
+
   <div class="flex flex-col gap-y-3">
     <div class="px-2">
-      <span class="text-xl font-semibold">Learning Units</span>
+      <span class="text-xl font-medium">
+        {data.learningUnits.length}&nbsp{data.learningUnits.length === 1 ? 'podcast' : 'podcasts'}
+      </span>
     </div>
 
     <div class="grid grid-cols-1 gap-3 md:grid-cols-2">

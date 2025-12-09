@@ -14,7 +14,7 @@
   const isWithinViewport = new IsWithinViewport(() => target);
 
   afterNavigate(({ from }) => {
-    if (from && (from.url.pathname === '/explore' || from.url.pathname === '/learning')) {
+    if (from && from.url.pathname === '/learning') {
       returnTo = from.url.pathname;
       return;
     }

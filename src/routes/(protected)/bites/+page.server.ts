@@ -6,7 +6,7 @@ import { db } from '$lib/server/db';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async (event) => {
-  const logger = event.locals.logger.child({ handler: 'page_load_explore' });
+  const logger = event.locals.logger.child({ handler: 'page_load_bites' });
 
   const { user } = event.locals.session;
   if (!user) {
@@ -43,23 +43,14 @@ export const load: PageServerLoad = async (event) => {
         },
       },
     },
-    orderBy: {
-      createdAt: 'desc',
-    },
-    take: 4,
-  });
-
-  const collections = await db.collection.findMany({
-    select: {
-      id: true,
-      title: true,
-      type: true,
-      _count: {
-        select: {
-          learningUnit: true,
-        },
+    orderBy: [
+      {
+        isRecommended: 'desc',
       },
-    },
+      {
+        createdAt: 'desc',
+      },
+    ],
   });
 
   return {
@@ -71,10 +62,6 @@ export const load: PageServerLoad = async (event) => {
         dueDate: unit.dueDate,
         learningJourney: unit.learningJourneys[0],
       }),
-    })),
-    collections: collections.map((collection) => ({
-      ...collection,
-      numberOfPodcasts: collection._count.learningUnit,
     })),
   };
 };
