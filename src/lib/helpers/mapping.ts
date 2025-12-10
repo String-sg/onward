@@ -21,6 +21,21 @@ const BADGE_TYPE_INFO: Record<string, { variant: BadgeProps['variant']; label: s
   COMPLETED: { variant: 'slate-light', label: 'Completed' },
 };
 
+export const COLLECTION_BG_COLOR: Record<string, string> = {
+  AI: 'bg-pink-50',
+  BOB: 'bg-blue-50',
+  CAREER: 'bg-violet-50',
+  EDU_VOICES: 'bg-cyan-50',
+  EMP_ENGAGEMENT: 'bg-blue-50',
+  INFRA: 'bg-blue-50',
+  INNOV: 'bg-pink-50',
+  NEWS: 'bg-cyan-50',
+  PROD: 'bg-orange-50',
+  STU_DEV: 'bg-green-50',
+  STU_WELL: 'bg-green-50',
+  WELLBEING: 'bg-emerald-50',
+};
+
 /**
  * Get the badge variant and label for a collection type.
  *
