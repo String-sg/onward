@@ -3,7 +3,7 @@
 
   import { Badge } from '$lib/components/Badge/index.js';
   import { LearningUnit } from '$lib/components/LearningUnit/index.js';
-  import { getBadgeInfo, IsWithinViewport } from '$lib/helpers/index.js';
+  import { COLLECTION_BG_COLOR, getBadgeInfo, IsWithinViewport } from '$lib/helpers/index.js';
 
   let target = $state<HTMLElement | null>(null);
 
@@ -40,18 +40,9 @@
 
 <main class="relative mx-auto flex min-h-svh max-w-5xl flex-col gap-y-6 px-4 pt-23 pb-28">
   <div
-    class={[
-      'flex flex-col gap-y-2 rounded-3xl border border-slate-200 p-6',
-      data.collection.type === 'BOB' && 'bg-blue-50',
-      data.collection.type === 'AI' && 'bg-cyan-50',
-      data.collection.type === 'NEWS' && 'bg-orange-50',
-      data.collection.type === 'PROD' && 'bg-emerald-50',
-      data.collection.type === 'CAREER' && 'bg-violet-50',
-      data.collection.type === 'INNOV' && 'bg-pink-50',
-      data.collection.type === 'WELLBEING' && 'bg-teal-50',
-      data.collection.type === 'STU_WELL' && 'bg-sky-50',
-      data.collection.type === 'STU_DEV' && 'bg-green-50',
-    ]}
+    class="flex flex-col gap-y-2 rounded-3xl border border-slate-200 p-6 {COLLECTION_BG_COLOR[
+      data.collection.type
+    ]}"
   >
     <span class="text-lg font-medium">About this topic</span>
 
