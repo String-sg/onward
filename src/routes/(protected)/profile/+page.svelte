@@ -1,6 +1,5 @@
 <script lang="ts">
   import { ArrowLeft, BookOpenCheck, Lightbulb } from '@lucide/svelte';
-  import { SvelteDate } from 'svelte/reactivity';
 
   import { afterNavigate } from '$app/navigation';
   import { IsWithinViewport } from '$lib/helpers/index.js';
@@ -30,18 +29,18 @@
     selectedPeriod = period;
   };
 
-  const getDateRange = $derived(() => {
-    const end = new SvelteDate();
-    let start = new SvelteDate();
+  const dateRange = $derived.by(() => {
+    const end = new Date();
+    let start: Date;
 
     if (selectedPeriod === 'W') {
-      start.setDate(data.sevenDaysAgo.getDate());
+      start = data.sevenDaysAgo;
     } else if (selectedPeriod === 'M') {
-      start.setDate(data.thirtyDaysAgo.getDate());
+      start = data.thirtyDaysAgo;
     } else if (selectedPeriod === 'Y') {
-      start.setDate(data.oneYearAgo.getDate());
+      start = data.oneYearAgo;
     } else {
-      start.setDate(data.firstRecordDate?.getDate() ?? end.getDate());
+      start = data.firstRecordDate ?? end;
     }
 
     return `${start.getDate()} ${start.toLocaleDateString('en-US', { month: 'short' })} ${start.getFullYear()} - ${end.getDate()} ${end.toLocaleDateString('en-US', { month: 'short' })} ${end.getFullYear()}`;
@@ -111,7 +110,7 @@
         {/each}
       </div>
 
-      <span class="text-sm text-slate-500">{getDateRange()}</span>
+      <span class="text-sm text-slate-500">{dateRange}</span>
     </div>
 
     <div class="flex items-center justify-between rounded-3xl bg-white p-4">
