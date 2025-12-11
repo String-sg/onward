@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.6.0 (2025-12-10)
+
+### Features ✨
+
+- feat: update tracking learning journey ui on profile page ([#461](https://github.com/String-sg/onward/pull/461)) ([490d1d0](https://github.com/String-sg/onward/commit/490d1d046106bc63cdb75d786f2be5f6b3e962df))
+- feat: Homepage UX adjustment ([#455](https://github.com/String-sg/onward/pull/455)) ([8892cc2](https://github.com/String-sg/onward/commit/8892cc23593d4dc0f554fe07f4a2c51f001273c7))
+
+### Bug Fixes 🐛
+
+- fix: get correct date range ([#463](https://github.com/String-sg/onward/pull/463)) ([bc0fb0a](https://github.com/String-sg/onward/commit/bc0fb0a03708503508bd3851a320e2f0e34be52d))
+- fix: update colour mapping for new collections ([#462](https://github.com/String-sg/onward/pull/462)) ([0ee487a](https://github.com/String-sg/onward/commit/0ee487a8442f011954065291f1090ec9756317ef))
+
 ## 1.5.0 (2025-12-04)
 
 ### Features ✨
