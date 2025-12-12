@@ -11,6 +11,6 @@
     "strict": true,
     "moduleResolution": "bundler",
 
-    "types": ["vitest/globals"]
+    "types": ["vitest/globals", "@testing-library/jest-dom"]
   }
 }
