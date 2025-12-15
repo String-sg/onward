@@ -1,6 +1,6 @@
 import { redirect } from '@sveltejs/kit';
 
-import { nanoid } from '$lib/helpers/index.js';
+import { HOME_PATH, nanoid } from '$lib/helpers/index.js';
 import { generateAuthURL } from '$lib/server/auth/index.js';
 
 import type { RequestHandler } from './$types';
@@ -11,7 +11,7 @@ export const GET: RequestHandler = async (event) => {
   const state = Buffer.from(
     JSON.stringify({
       csrf_token: event.locals.session.csrfToken(),
-      return_to: event.url.searchParams.get('return_to') || '/',
+      return_to: event.url.searchParams.get('return_to') || HOME_PATH,
     }),
   ).toString('base64url');
 

@@ -1,6 +1,7 @@
 <script lang="ts">
   import { page } from '$app/state';
   import { LinkButton } from '$lib/components/Button/index.js';
+  import { HOME_PATH } from '$lib/helpers/index.js';
 
   const is404 = page.status === 404;
 </script>
@@ -41,5 +42,5 @@
     </div>
   </div>
 
-  <LinkButton href="/" width="full" class="max-w-sm">Go to Home</LinkButton>
+  <LinkButton href={HOME_PATH} width="full" class="max-w-sm">Go to Home</LinkButton>
 </main>
