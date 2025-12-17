@@ -6,6 +6,7 @@ export default {
   preprocess: vitePreprocess(),
   kit: {
     adapter: adapter(),
+    appDir: 'app',
     typescript: {
       config: (cfg) => {
         cfg.include.push('../prisma/seed.ts');
