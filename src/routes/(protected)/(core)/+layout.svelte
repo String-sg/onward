@@ -26,7 +26,9 @@
     <div class="flex flex-col gap-y-4">
       <div class="flex items-center justify-between px-2">
         <a href="/" class="flex items-center gap-x-1" aria-label="Home">
-          <span class="font-logo text-2xl font-bold">glow</span>
+          <span class="font-logo text-2xl font-bold">
+            glow<span class="text-cyan-400 italic">!</span>
+          </span>
         </a>
         <a
           href="/profile"
