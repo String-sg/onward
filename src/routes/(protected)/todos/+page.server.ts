@@ -74,6 +74,9 @@ export const load: PageServerLoad = async (event) => {
       {
         dueDate: 'asc',
       },
+      {
+        createdAt: 'asc',
+      },
     ],
   } satisfies LearningUnitFindManyArgs;
 
