@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.7.0 (2025-12-23)
+
+### Features ✨
+
+- feat: order by due_date and created_at for To-dos ([#468](https://github.com/String-sg/onward/pull/468)) ([a6f88d0](https://github.com/String-sg/onward/commit/a6f88d0))
+- feat: update logo ([#467](https://github.com/String-sg/onward/pull/467)) ([03bf753](https://github.com/String-sg/onward/commit/03bf753))
+
+### Chores 🧹
+
+- chore: setup svelte testing library ([#465](https://github.com/String-sg/onward/pull/465)) ([487e9a5](https://github.com/String-sg/onward/commit/487e9a5))
+
 ## 1.6.0 (2025-12-10)
 
 ### Features ✨
