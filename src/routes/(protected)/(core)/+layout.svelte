@@ -2,7 +2,7 @@
   import { BookHeart, Home } from '@lucide/svelte';
 
   import { page } from '$app/state';
-  import { IsWithinViewport } from '$lib/helpers/index.js';
+  import { IsWithinViewport, trackProfileClick } from '$lib/helpers/index.js';
 
   const { data, children } = $props();
 
@@ -12,6 +12,10 @@
   const isMyLearningPage = $derived(page.url.pathname === '/learning');
 
   const isWithinViewport = new IsWithinViewport(() => target);
+
+  function handleProfileClick() {
+    trackProfileClick();
+  }
 </script>
 
 <header class="fixed inset-x-0 top-0 z-50 bg-white/90 backdrop-blur-sm">
@@ -31,6 +35,7 @@
           </span>
         </a>
         <a
+          onclick={handleProfileClick}
           href="/profile"
           aria-label="Profile"
           class="h-10 w-10 cursor-pointer overflow-hidden rounded-full"
