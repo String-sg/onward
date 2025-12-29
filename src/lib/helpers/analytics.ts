@@ -99,6 +99,17 @@ export function trackAIChatClick() {
 }
 
 /**
+ * Tracks when the Now Playing Bar is clicked.
+ */
+export function trackNowPlayingBarClick(learning_unit_id: string) {
+  if (!browser) {
+    return;
+  }
+
+  window.gtag('event', 'now_playing_bar_click', { learning_unit_id });
+}
+
+/**
  * Tracks when a podcast is completed (100%).
  * @param learningUnitId - The ID of the learning unit that was completed.
  */
