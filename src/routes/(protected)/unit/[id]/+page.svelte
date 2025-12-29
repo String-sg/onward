@@ -29,6 +29,7 @@
     IsWithinViewport,
     trackPodcastPlay,
     trackQuizClick,
+    trackSourcesClick,
   } from '$lib/helpers/index.js';
   import { Player } from '$lib/states/index.js';
 
@@ -101,6 +102,7 @@
 
   const handleSourcesModal = () => {
     isSourcesModalOpen = true;
+    trackSourcesClick(data.id.toString());
   };
 
   const toggleSourcesModalVisibility = () => {
