@@ -144,3 +144,17 @@ export function trackQuizCompletion(learningUnitId: string) {
     learning_unit_id: learningUnitId,
   });
 }
+
+/**
+ * Tracks when the sources is clicked.
+ * @param learningUnitId - The ID of the learning unit associated with the sources.
+ */
+export function trackSourcesClick(learningUnitId: string) {
+  if (!browser) {
+    return;
+  }
+
+  window.gtag('event', 'sources_click', {
+    learning_unit_id: learningUnitId,
+  });
+}
