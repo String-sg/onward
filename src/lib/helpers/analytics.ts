@@ -88,6 +88,17 @@ export function track80PercentPodcastPlay(learningUnitId: string) {
 }
 
 /**
+ * Tracks when the AI chat is clicked.
+ */
+export function trackAIChatClick() {
+  if (!browser) {
+    return;
+  }
+
+  window.gtag('event', 'ai_chat_click');
+}
+
+/**
  * Tracks when a podcast is completed (100%).
  * @param learningUnitId - The ID of the learning unit that was completed.
  */
