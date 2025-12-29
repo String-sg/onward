@@ -102,6 +102,17 @@ export function trackPodcastCompletion(learningUnitId: string) {
 }
 
 /**
+ * Tracks when the profile is clicked.
+ */
+export function trackProfileClick() {
+  if (!browser) {
+    return;
+  }
+
+  window.gtag('event', 'profile_click');
+}
+
+/**
  * Tracks when the quiz is clicked.
  * @param learningUnitId - The ID of the learning unit of the quiz.
  */
