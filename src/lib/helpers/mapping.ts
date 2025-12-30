@@ -1,4 +1,4 @@
-import type { BadgeProps } from '$lib/components/Badge/index.js';
+import type { BadgeProps } from '$lib/components/ui/badge/index.js';
 
 const BADGE_TYPE_INFO: Record<string, { variant: BadgeProps['variant']; label: string }> = {
   BOB: { variant: 'blue', label: 'Learn with BOB' },

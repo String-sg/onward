@@ -3,9 +3,9 @@
   import DOMPurify from 'dompurify';
   import { marked } from 'marked';
 
-  import { Badge } from '$lib/components/Badge/index.js';
   import { Modal, type ModalProps } from '$lib/components/Modal/index.js';
-  import { Slider, type SliderProps } from '$lib/components/Slider/index.js';
+  import { Badge } from '$lib/components/ui/badge/index.js';
+  import { Slider } from '$lib/components/ui/slider/index.js';
   import { formatTime, getBadgeInfo } from '$lib/helpers/index.js';
   import type { Track } from '$lib/states/index.js';
 
@@ -79,7 +79,7 @@
     onclose();
   };
 
-  const handlePositionChange: SliderProps['onvaluechange'] = (value) => {
+  const handlePositionChange = (value: number) => {
     onseek(value);
   };
 </script>
@@ -124,11 +124,12 @@
         <!-- Slider and Timestamp -->
         <div class="flex flex-col gap-y-2">
           <Slider
+            type="single"
             min={0}
             max={duration}
             step={1}
             value={progress}
-            onvaluechange={handlePositionChange}
+            onValueChange={(vals) => handlePositionChange(vals)}
           />
 
           <div class="flex justify-between">

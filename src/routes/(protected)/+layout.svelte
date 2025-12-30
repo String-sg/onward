@@ -3,12 +3,12 @@
   import { onMount } from 'svelte';
 
   import { page } from '$app/state';
-  import { LinkButton } from '$lib/components/Button/index.js';
   import { ChatView } from '$lib/components/ChatView/index.js';
   import { ChatWidget } from '$lib/components/ChatWidget/index.js';
   import { Modal } from '$lib/components/Modal/index.js';
   import { NowPlayingBar } from '$lib/components/NowPlayingBar/index.js';
   import { NowPlayingView } from '$lib/components/NowPlayingView/index.js';
+  import { Button } from '$lib/components/ui/button/index.js';
   import {
     noop,
     track20PercentPodcastPlay,
@@ -289,14 +289,13 @@
             </span>
           </div>
 
-          <LinkButton
+          <Button
             href={`/unit/${player.currentTrack.id}/quiz`}
-            class="max-w-sm"
-            width="full"
+            class="w-full max-w-sm"
             onclick={handlePodcastCompletedModalClose}
           >
             Take quiz
-          </LinkButton>
+          </Button>
         </div>
       </div>
     </div>

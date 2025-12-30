@@ -31,132 +31,135 @@
       | 'EMP_ENGAGEMENT';
   }
 
+  import * as Card from '$lib/components/ui/card/index.js';
+
   let { to, title, numberofpodcasts, type }: Props = $props();
 </script>
 
-<a
-  href={to}
-  class={[
-    'relative overflow-hidden rounded-4xl transition-shadow hover:ring-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed',
-    type === 'AI' && 'bg-pink-300 hover:ring-pink-300',
-    type === 'BOB' && 'bg-blue-300 hover:ring-blue-300',
-    type === 'CAREER' && 'bg-violet-300 hover:ring-violet-300',
-    type === 'EDU_VOICES' && 'bg-cyan-300 hover:ring-cyan-300',
-    type === 'EMP_ENGAGEMENT' && 'bg-blue-300 hover:ring-blue-300',
-    type === 'INFRA' && 'bg-blue-300 hover:ring-blue-300',
-    type === 'INNOV' && 'bg-pink-300 hover:ring-pink-300',
-    type === 'NEWS' && 'bg-cyan-300 hover:ring-cyan-300',
-    type === 'PROD' && 'bg-orange-300 hover:ring-orange-300',
-    type === 'STU_DEV' && 'bg-green-300 hover:ring-green-300',
-    type === 'STU_WELL' && 'bg-green-300 hover:ring-green-300',
-    type === 'WELLBEING' && 'bg-emerald-300 hover:ring-emerald-300',
-  ]}
->
-  <div
+<a href={to} class="group block rounded-4xl focus:outline-none">
+  <Card.Root
     class={[
-      'absolute left-1/2 h-1/2 w-[110%] -translate-x-1/2 rounded-b-[50%]',
-      type === 'AI' && 'bg-pink-400',
-      type === 'BOB' && 'bg-blue-400',
-      type === 'CAREER' && 'bg-violet-400',
-      type === 'EDU_VOICES' && 'bg-cyan-400',
-      type === 'EMP_ENGAGEMENT' && 'bg-blue-400',
-      type === 'INFRA' && 'bg-blue-400',
-      type === 'INNOV' && 'bg-pink-400',
-      type === 'NEWS' && 'bg-cyan-400',
-      type === 'PROD' && 'bg-orange-400',
-      type === 'STU_DEV' && 'bg-green-400',
-      type === 'STU_WELL' && 'bg-green-400',
-      type === 'WELLBEING' && 'bg-emerald-400',
+      'relative overflow-hidden rounded-4xl border-0 shadow-none transition-shadow group-hover:ring-1 group-focus-visible:outline-2 group-focus-visible:outline-offset-2 group-focus-visible:outline-slate-950 group-focus-visible:outline-dashed',
+      type === 'AI' && 'bg-pink-300 group-hover:ring-pink-300',
+      type === 'BOB' && 'bg-blue-300 group-hover:ring-blue-300',
+      type === 'CAREER' && 'bg-violet-300 group-hover:ring-violet-300',
+      type === 'EDU_VOICES' && 'bg-cyan-300 group-hover:ring-cyan-300',
+      type === 'EMP_ENGAGEMENT' && 'bg-blue-300 group-hover:ring-blue-300',
+      type === 'INFRA' && 'bg-blue-300 group-hover:ring-blue-300',
+      type === 'INNOV' && 'bg-pink-300 group-hover:ring-pink-300',
+      type === 'NEWS' && 'bg-cyan-300 group-hover:ring-cyan-300',
+      type === 'PROD' && 'bg-orange-300 group-hover:ring-orange-300',
+      type === 'STU_DEV' && 'bg-green-300 group-hover:ring-green-300',
+      type === 'STU_WELL' && 'bg-green-300 group-hover:ring-green-300',
+      type === 'WELLBEING' && 'bg-emerald-300 group-hover:ring-emerald-300',
     ]}
-  ></div>
+  >
+    <div
+      class={[
+        'absolute left-1/2 h-1/2 w-[110%] -translate-x-1/2 -translate-y-6 rounded-b-[50%]',
+        type === 'AI' && 'bg-pink-400',
+        type === 'BOB' && 'bg-blue-400',
+        type === 'CAREER' && 'bg-violet-400',
+        type === 'EDU_VOICES' && 'bg-cyan-400',
+        type === 'EMP_ENGAGEMENT' && 'bg-blue-400',
+        type === 'INFRA' && 'bg-blue-400',
+        type === 'INNOV' && 'bg-pink-400',
+        type === 'NEWS' && 'bg-cyan-400',
+        type === 'PROD' && 'bg-orange-400',
+        type === 'STU_DEV' && 'bg-green-400',
+        type === 'STU_WELL' && 'bg-green-400',
+        type === 'WELLBEING' && 'bg-emerald-400',
+      ]}
+    ></div>
 
-  <div class="relative z-1 flex flex-col gap-y-8 p-6">
-    <div class="flex justify-center">
-      {#if type === 'BOB'}
-        <enhanced:img
-          src="$lib/assets/collections/learn-with-bob.png?w=464"
-          alt={title}
-          class="w-[232px]"
-        />
-      {:else if type === 'AI'}
-        <enhanced:img
-          src="$lib/assets/collections/artificial-intelligence.png?w=464"
-          alt={title}
-          class="w-[232px]"
-        />
-      {:else if type === 'NEWS'}
-        <enhanced:img
-          src="$lib/assets/collections/in-the-news.png?w=464"
-          alt={title}
-          class="w-[232px]"
-        />
-      {:else if type === 'PROD'}
-        <enhanced:img
-          src="$lib/assets/collections/productivity.png?w=464"
-          alt={title}
-          class="w-[232px]"
-        />
-      {:else if type === 'CAREER'}
-        <enhanced:img
-          src="$lib/assets/collections/career-growth.png?w=464"
-          alt={title}
-          class="w-[232px]"
-        />
-      {:else if type === 'INNOV'}
-        <enhanced:img
-          src="$lib/assets/collections/innovation.png?w=464"
-          alt={title}
-          class="w-[232px]"
-        />
-      {:else if type === 'WELLBEING'}
-        <enhanced:img
-          src="$lib/assets/collections/wellbeing.png?w=464"
-          alt={title}
-          class="w-[232px]"
-        />
-      {:else if type === 'STU_WELL'}
-        <enhanced:img
-          src="$lib/assets/collections/student-wellbeing.png?w=464"
-          alt={title}
-          class="w-[232px]"
-        />
-      {:else if type === 'STU_DEV'}
-        <enhanced:img
-          src="$lib/assets/collections/student-development.png?w=464"
-          alt={title}
-          class="w-[232px]"
-        />
-      {:else if type === 'INFRA'}
-        <enhanced:img
-          src="$lib/assets/collections/infrastructure.png?w=464"
-          alt={title}
-          class="w-[232px]"
-        />
-      {:else if type === 'EDU_VOICES'}
-        <enhanced:img
-          src="$lib/assets/collections/educator-voices.png?w=464"
-          alt={title}
-          class="w-[232px]"
-        />
-      {:else if type === 'EMP_ENGAGEMENT'}
-        <enhanced:img
-          src="$lib/assets/collections/employee-engagement.png?w=464"
-          alt={title}
-          class="w-[232px]"
-        />
-      {/if}
-    </div>
-
-    <div class="flex flex-col gap-y-2">
-      <span class="text-xl font-semibold">
-        {title}
-      </span>
-
-      <div class="flex flex-col">
-        <span class="text-sm">
-          {numberofpodcasts} podcast(s)
-        </span>
+    <Card.Content class="relative z-1 flex flex-col gap-y-8 px-6">
+      <div class="flex justify-center">
+        {#if type === 'BOB'}
+          <enhanced:img
+            src="$lib/assets/collections/learn-with-bob.png?w=464"
+            alt={title}
+            class="w-[232px]"
+          />
+        {:else if type === 'AI'}
+          <enhanced:img
+            src="$lib/assets/collections/artificial-intelligence.png?w=464"
+            alt={title}
+            class="w-[232px]"
+          />
+        {:else if type === 'NEWS'}
+          <enhanced:img
+            src="$lib/assets/collections/in-the-news.png?w=464"
+            alt={title}
+            class="w-[232px]"
+          />
+        {:else if type === 'PROD'}
+          <enhanced:img
+            src="$lib/assets/collections/productivity.png?w=464"
+            alt={title}
+            class="w-[232px]"
+          />
+        {:else if type === 'CAREER'}
+          <enhanced:img
+            src="$lib/assets/collections/career-growth.png?w=464"
+            alt={title}
+            class="w-[232px]"
+          />
+        {:else if type === 'INNOV'}
+          <enhanced:img
+            src="$lib/assets/collections/innovation.png?w=464"
+            alt={title}
+            class="w-[232px]"
+          />
+        {:else if type === 'WELLBEING'}
+          <enhanced:img
+            src="$lib/assets/collections/wellbeing.png?w=464"
+            alt={title}
+            class="w-[232px]"
+          />
+        {:else if type === 'STU_WELL'}
+          <enhanced:img
+            src="$lib/assets/collections/student-wellbeing.png?w=464"
+            alt={title}
+            class="w-[232px]"
+          />
+        {:else if type === 'STU_DEV'}
+          <enhanced:img
+            src="$lib/assets/collections/student-development.png?w=464"
+            alt={title}
+            class="w-[232px]"
+          />
+        {:else if type === 'INFRA'}
+          <enhanced:img
+            src="$lib/assets/collections/infrastructure.png?w=464"
+            alt={title}
+            class="w-[232px]"
+          />
+        {:else if type === 'EDU_VOICES'}
+          <enhanced:img
+            src="$lib/assets/collections/educator-voices.png?w=464"
+            alt={title}
+            class="w-[232px]"
+          />
+        {:else if type === 'EMP_ENGAGEMENT'}
+          <enhanced:img
+            src="$lib/assets/collections/employee-engagement.png?w=464"
+            alt={title}
+            class="w-[232px]"
+          />
+        {/if}
       </div>
-    </div>
-  </div>
+
+      <div class="flex flex-col gap-y-2">
+        <Card.Title class="text-xl font-semibold">
+          {title}
+        </Card.Title>
+
+        <div class="flex flex-col">
+          <span class="text-sm">
+            {numberofpodcasts} podcast(s)
+          </span>
+        </div>
+      </div>
+    </Card.Content>
+  </Card.Root>
 </a>

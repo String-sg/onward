@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { LinkButton } from '$lib/components/Button/index.js';
+  import { Button } from '$lib/components/ui/button/index.js';
 
   export interface Props {
     /**
@@ -27,5 +27,5 @@
 </div>
 
 <div class="flex w-full justify-center px-4">
-  <LinkButton href="/bites" width="full" class="max-w-sm">Start learning</LinkButton>
+  <Button href="/bites" class="w-full max-w-sm" size="lg">Start learning</Button>
 </div>

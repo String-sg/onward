@@ -4,9 +4,9 @@
   import { onMount } from 'svelte';
 
   import { enhance } from '$app/forms';
-  import { Badge } from '$lib/components/Badge/index.js';
-  import { Button, LinkButton } from '$lib/components/Button/index.js';
   import { Modal } from '$lib/components/Modal/index.js';
+  import { Badge } from '$lib/components/ui/badge/index.js';
+  import { Button } from '$lib/components/ui/button/index.js';
   import {
     IsWithinViewport,
     noop,
@@ -152,7 +152,8 @@
   </div>
 
   <Button
-    class="py-3.75"
+    class="py-7"
+    size="lg"
     width="full"
     disabled={selectedOptionIndex === -1}
     onclick={toggleFeedbackModalVisibility}
@@ -265,9 +266,7 @@
       />
 
       <div class="absolute inset-x-0 bottom-0 flex flex-col gap-y-5">
-        <LinkButton href={`/unit/${params.id}`} variant="primary" width="full" class="max-w-sm">
-          Done
-        </LinkButton>
+        <Button href={`/unit/${params.id}`} variant="primary" class="w-full max-w-sm">Done</Button>
 
         <a
           href="/profile"
@@ -298,9 +297,7 @@
       />
 
       <div class="absolute inset-x-0 bottom-0 flex flex-col gap-y-5">
-        <LinkButton href={`/unit/${params.id}`} variant="primary" width="full" class="max-w-sm">
-          Retry
-        </LinkButton>
+        <Button href={`/unit/${params.id}`} variant="primary" class="w-full max-w-sm">Retry</Button>
 
         <a
           href="/"

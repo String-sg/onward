@@ -8,8 +8,11 @@
 
   import { goto } from '$app/navigation';
   import { page } from '$app/state';
-  import { Badge } from '$lib/components/Badge/index.js';
-  import { Portal } from '$lib/components/Portal/index.js';
+  import * as Avatar from '$lib/components/ui/avatar/index.js';
+  import { Badge } from '$lib/components/ui/badge/index.js';
+  import { Button } from '$lib/components/ui/button/index.js';
+  import { ScrollArea } from '$lib/components/ui/scroll-area/index.js';
+  import { Textarea } from '$lib/components/ui/textarea/index.js';
   import { IsWithinViewport } from '$lib/helpers/index.js';
 
   interface ChatMessage {
@@ -283,131 +286,152 @@
   };
 </script>
 
-<Portal>
-  {#if isopen}
-    <!-- Backdrop -->
-    <div transition:fade={{ duration: 300 }} class="fixed inset-0 z-199 bg-slate-950/50"></div>
+{#if isopen}
+  <!-- Backdrop -->
+  <div transition:fade={{ duration: 300 }} class="fixed inset-0 z-199 bg-slate-950/50"></div>
 
-    <!-- Modal -->
-    <div
-      class="fixed inset-0 z-200 bg-slate-100"
-      transition:fly={{ duration: 300, y: '100%', opacity: 1 }}
-    >
-      <header class="fixed inset-x-0 top-0 z-250 flex backdrop-blur-sm">
-        <div
-          class={[
-            'inset-x-0 top-full h-px bg-transparent transition-colors duration-300',
-            !isWithinViewport.current && '!bg-slate-950/7.5',
-          ]}
-        ></div>
+  <!-- Modal -->
+  <div
+    class="fixed inset-0 z-200 bg-slate-100"
+    transition:fly={{ duration: 300, y: '100%', opacity: 1 }}
+  >
+    <header class="fixed inset-x-0 top-0 z-250 flex backdrop-blur-sm">
+      <div
+        class={[
+          'inset-x-0 top-full h-px bg-transparent transition-colors duration-300',
+          !isWithinViewport.current && '!bg-slate-950/7.5',
+        ]}
+      ></div>
 
-        <div class="mx-auto flex w-full max-w-5xl items-center justify-between px-4 py-3">
-          <div class="flex items-center gap-x-2">
-            <button
-              onclick={handleClose}
-              class="cursor-pointer rounded-full p-4 transition-colors hover:bg-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed"
-            >
-              <ChevronDown />
-            </button>
+      <div class="mx-auto flex w-full max-w-5xl items-center justify-between px-4 py-3">
+        <div class="flex items-center gap-x-2">
+          <button
+            onclick={handleClose}
+            class="cursor-pointer rounded-full p-4 transition-colors hover:bg-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed"
+          >
+            <ChevronDown />
+          </button>
 
-            <Badge variant="slate-dark">Ask AI</Badge>
-          </div>
-
-          {#if messages.length > 0}
-            <button
-              disabled={isAiTyping}
-              onclick={handleClear}
-              class="cursor-pointer rounded-full p-4 font-bold transition-colors hover:bg-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed disabled:pointer-events-none disabled:text-slate-900/50"
-            >
-              Clear
-            </button>
-          {/if}
+          <Badge variant="slate-dark"><span class="font-semibold">Ask AI</span></Badge>
         </div>
-      </header>
 
-      <div class="relative mx-auto min-h-full w-full max-w-5xl pt-23">
-        <div bind:this={target} class="absolute inset-x-0 top-0 h-px"></div>
+        {#if messages.length > 0}
+          <button
+            disabled={isAiTyping}
+            onclick={handleClear}
+            class="cursor-pointer rounded-full p-4 font-bold transition-colors hover:bg-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed disabled:pointer-events-none disabled:text-slate-900/50"
+          >
+            Clear
+          </button>
+        {/if}
+      </div>
+    </header>
 
-        <!-- TODO: temporary hardcode height for now. To relook at how to set this height without hardcoding an arbitrary height -->
-        <div bind:this={chatWindow} class="h-[calc(100svh-180px)] overflow-y-auto px-4 pt-3">
-          <div class="flex flex-col gap-y-4">
-            {#if messages.length === 0}
-              <span class="text-center text-xl font-medium">
-                {`Hi${page.data.username ? ` ${page.data.username}` : ''}! How can I assist you today?`}
-              </span>
-            {/if}
+    <div class="relative mx-auto min-h-full w-full max-w-5xl pt-23">
+      <div bind:this={target} class="absolute inset-x-0 top-0 h-px"></div>
 
-            <div class="flex flex-col gap-y-2.5">
-              {#each messages as { role, content }, index (index)}
-                {#if role === 'USER'}
-                  <div class="flex flex-col items-end">
-                    <span class="max-w-4/5 rounded-3xl bg-white p-4 text-left break-words">
+      <!-- TODO: temporary hardcode height for now. To relook at how to set this height without hardcoding an arbitrary height -->
+      <ScrollArea bind:viewportRef={chatWindow} class="h-[calc(100svh-180px)] px-4 pt-3">
+        <div class="flex flex-col gap-y-4">
+          {#if messages.length === 0}
+            <span class="text-center text-xl font-medium">
+              {`Hi${page.data.username ? ` ${page.data.username}` : ''}! How can I assist you today?`}
+            </span>
+          {/if}
+
+          <div class="flex flex-col gap-y-2.5">
+            {#each messages as { role, content }, index (index)}
+              {#if role === 'USER'}
+                <div class="flex flex-col items-end gap-1">
+                  <div class="flex w-full flex-row items-end justify-end gap-2">
+                    <span class="bg-secondary/10 max-w-4/5 rounded-3xl p-4 text-left break-words">
                       {content}
                     </span>
+                    <Avatar.Root class="size-8">
+                      <Avatar.Fallback class="bg-primary/10 text-primary text-xs"
+                        >ME</Avatar.Fallback
+                      >
+                    </Avatar.Root>
                   </div>
-                {:else}
-                  <div class="flex flex-col">
-                    <span class="prose prose-slate p-4 text-left break-words">
+                </div>
+              {:else}
+                <div class="flex flex-col gap-1">
+                  <div class="flex w-full flex-row items-start gap-2">
+                    <Avatar.Root class="size-8">
+                      <Avatar.Fallback class="bg-primary text-primary-foreground text-xs"
+                        >AI</Avatar.Fallback
+                      >
+                    </Avatar.Root>
+                    <span
+                      class="prose prose-slate bg-muted/30 max-w-[80%] rounded-3xl p-4 text-left break-words"
+                    >
                       <!-- eslint-disable-next-line svelte/no-at-html-tags -->
                       {@html DOMPurify.sanitize(marked.parse(content, { async: false }))}
                     </span>
                   </div>
-                {/if}
-              {/each}
-
-              {#if isAiTyping}
-                <span class="typing-dots p-4 text-left">AI is typing</span>
-              {/if}
-
-              {#if error}
-                <div class="flex flex-col pb-4">
-                  <span
-                    class="flex w-fit max-w-4/5 flex-row gap-2 rounded-3xl border border-solid border-slate-300 p-4 text-left break-words"
-                  >
-                    <CircleAlert />
-                    {error}
-                  </span>
                 </div>
               {/if}
-            </div>
+            {/each}
+
+            {#if isAiTyping}
+              <div class="flex flex-row items-center gap-2 p-4">
+                <Avatar.Root class="size-6">
+                  <Avatar.Fallback class="bg-primary text-primary-foreground text-[10px]"
+                    >AI</Avatar.Fallback
+                  >
+                </Avatar.Root>
+                <span class="typing-dots text-muted-foreground text-sm">AI is typing</span>
+              </div>
+            {/if}
+
+            {#if error}
+              <div class="flex flex-col pb-4">
+                <span
+                  class="border-destructive/50 bg-destructive/10 text-destructive-foreground flex w-fit max-w-4/5 flex-row gap-2 rounded-3xl border p-4 text-left break-words"
+                >
+                  <CircleAlert />
+                  {error}
+                </span>
+              </div>
+            {/if}
           </div>
         </div>
-      </div>
+      </ScrollArea>
+    </div>
 
-      <div class="fixed inset-x-0 bottom-0">
-        <div class="mx-auto w-full max-w-5xl px-4 py-3">
-          <div
-            class={[
-              'pointer-events-auto flex items-center gap-x-3 rounded-4xl border border-slate-100 bg-white/30 p-3 shadow-lg inset-shadow-sm inset-shadow-slate-200 backdrop-blur-sm',
-              !isAiTyping &&
-                'transition-all hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md',
-            ]}
+    <div class="fixed inset-x-0 bottom-0">
+      <div class="mx-auto w-full max-w-5xl px-4 py-3">
+        <div
+          class={[
+            'pointer-events-auto flex items-center gap-x-3 rounded-4xl border border-slate-100 bg-white/30 p-3 shadow-lg inset-shadow-sm inset-shadow-slate-200 backdrop-blur-sm',
+            !isAiTyping &&
+              'transition-all hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md',
+          ]}
+        >
+          <Textarea
+            bind:value={query}
+            bind:ref={textareaElement}
+            name="query"
+            class="min-h-[40px] w-full resize-none items-center border-0 px-3 shadow-none outline-none focus-visible:ring-0"
+            placeholder="Ask questions about a topic"
+            onkeydown={handleKeyDown}
+            rows={1}
+            disabled={isAiTyping}
+          ></Textarea>
+
+          <Button
+            size="icon-lg"
+            disabled={!isUserTyping || isAiTyping}
+            onclick={handleSendQuery}
+            class="rounded-full"
           >
-            <textarea
-              bind:value={query}
-              bind:this={textareaElement}
-              name="query"
-              class="w-full resize-none items-center px-3 outline-0"
-              placeholder="Ask questions about a topic"
-              onkeydown={handleKeyDown}
-              rows="1"
-              disabled={isAiTyping}
-            >
-            </textarea>
-
-            <button
-              class="cursor-pointer rounded-full bg-slate-950 p-4 text-white transition-colors hover:bg-slate-900/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed disabled:pointer-events-none disabled:bg-slate-900/50"
-              disabled={!isUserTyping || isAiTyping}
-              onclick={handleSendQuery}
-            >
-              <SendHorizontal />
-            </button>
-          </div>
+            <SendHorizontal class="size-6" />
+          </Button>
         </div>
       </div>
     </div>
-  {/if}
-</Portal>
+  </div>
+{/if}
 
 <style>
   .typing-dots::after {
