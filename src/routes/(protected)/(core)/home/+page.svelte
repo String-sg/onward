@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { Collection } from '$lib/components/Collection';
-  import { EmptyStateView } from '$lib/components/EmptyStateView';
-  import { LearningUnit } from '$lib/components/LearningUnit';
+  import { Collection } from '$lib/components/Collection/index.js';
+  import { EmptyStateView } from '$lib/components/EmptyStateView/index.js';
+  import { LearningUnit } from '$lib/components/LearningUnit/index.js';
   import { Player } from '$lib/states';
 
   const { data } = $props();
