@@ -1,4 +1,5 @@
 export * from './analytics.js';
+export * from './constants.js';
 export * from './format.js';
 export * from './is-within-viewport.svelte.js';
 export * from './learning-unit-status.js';

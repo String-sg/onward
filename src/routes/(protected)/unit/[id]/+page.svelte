@@ -26,6 +26,7 @@
   import { Modal } from '$lib/components/Modal/index.js';
   import {
     getBadgeInfo,
+    HOME_PATH,
     IsWithinViewport,
     trackPodcastPlay,
     trackQuizClick,
@@ -34,7 +35,7 @@
 
   const { data } = $props();
 
-  let returnTo = $state('/');
+  let returnTo = $state(HOME_PATH);
   let target = $state<HTMLElement | null>(null);
   let isSourcesModalOpen = $state(false);
   let sentiment = $derived(data.userSentiment);
@@ -51,7 +52,7 @@
     }
 
     if (from.route.id && page.route.id && from.route.id.startsWith(page.route.id)) {
-      returnTo = sessionStorage.getItem('unit_origin') || '/';
+      returnTo = sessionStorage.getItem('unit_origin') || HOME_PATH;
       return;
     }
 

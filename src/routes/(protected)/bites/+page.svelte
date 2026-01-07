@@ -2,7 +2,7 @@
   import { ArrowLeft } from '@lucide/svelte';
 
   import { LearningUnit } from '$lib/components/LearningUnit/index.js';
-  import { IsWithinViewport } from '$lib/helpers/index.js';
+  import { HOME_PATH, IsWithinViewport } from '$lib/helpers/index.js';
 
   const { data } = $props();
 
@@ -23,7 +23,7 @@
     <div class="flex items-center justify-between gap-x-8">
       <div class="flex items-center gap-x-3">
         <a
-          href="/"
+          href={HOME_PATH}
           class="rounded-full p-4 transition-colors hover:bg-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed"
         >
           <ArrowLeft />

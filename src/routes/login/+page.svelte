@@ -3,6 +3,7 @@
 
   import { page } from '$app/state';
   import { LinkButton } from '$lib/components/Button/index.js';
+  import { HOME_PATH } from '$lib/helpers/index.js';
 </script>
 
 <main class="flex min-h-svh flex-col">
@@ -24,7 +25,7 @@
 
           <div class="flex flex-col items-center gap-y-4">
             <LinkButton
-              href={`/auth/google?return_to=${encodeURIComponent(page.url.searchParams.get('return_to') || '/')}`}
+              href={`/auth/google?return_to=${encodeURIComponent(page.url.searchParams.get('return_to') || HOME_PATH)}`}
               data-sveltekit-reload
               variant="primary"
               width="full"

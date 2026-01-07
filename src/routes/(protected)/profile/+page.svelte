@@ -2,12 +2,12 @@
   import { ArrowLeft, BookOpenCheck, Lightbulb } from '@lucide/svelte';
 
   import { afterNavigate } from '$app/navigation';
-  import { IsWithinViewport } from '$lib/helpers/index.js';
+  import { HOME_PATH, IsWithinViewport } from '$lib/helpers/index.js';
 
   const { data } = $props();
 
   let target = $state<HTMLElement | null>(null);
-  let returnTo = $state('/');
+  let returnTo = $state(HOME_PATH);
   let selectedPeriod = $state<'W' | 'M' | 'Y' | 'All'>('W');
 
   const isWithinViewport = new IsWithinViewport(() => target);
@@ -18,7 +18,7 @@
       return;
     }
 
-    returnTo = '/';
+    returnTo = HOME_PATH;
   });
 
   type Period = 'W' | 'M' | 'Y' | 'All';

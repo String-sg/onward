@@ -1,7 +1,7 @@
 import { type Handle, redirect } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
 
-import { nanoid } from '$lib/helpers/index.js';
+import { HOME_PATH, nanoid } from '$lib/helpers/index.js';
 import auth from '$lib/server/auth/index.js';
 import { logger } from '$lib/server/logger.js';
 
@@ -31,7 +31,7 @@ const routeProtectionHandle: Handle = async ({ event, resolve }) => {
 
   if (event.locals.session.isAuthenticated) {
     if (event.url.pathname === '/login') {
-      return redirect(302, '/');
+      return redirect(302, HOME_PATH);
     }
 
     return await resolve(event);

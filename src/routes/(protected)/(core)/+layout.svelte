@@ -2,13 +2,13 @@
   import { BookHeart, Home } from '@lucide/svelte';
 
   import { page } from '$app/state';
-  import { IsWithinViewport } from '$lib/helpers/index.js';
+  import { HOME_PATH, IsWithinViewport } from '$lib/helpers/index.js';
 
   const { data, children } = $props();
 
   let target = $state<HTMLElement | null>(null);
 
-  const isHomePage = $derived(page.url.pathname === '/');
+  const isHomePage = $derived(page.url.pathname === HOME_PATH);
   const isMyLearningPage = $derived(page.url.pathname === '/learning');
 
   const isWithinViewport = new IsWithinViewport(() => target);
@@ -25,7 +25,7 @@
   <div class="mx-auto w-full max-w-5xl px-4 py-3">
     <div class="flex flex-col gap-y-4">
       <div class="flex items-center justify-between px-2">
-        <a href="/" class="flex items-center gap-x-1" aria-label="Home">
+        <a href={HOME_PATH} class="flex items-center gap-x-1" aria-label="Home">
           <span class="font-logo text-2xl font-bold">
             glow<span class="text-cyan-400 italic">!</span>
           </span>
@@ -41,7 +41,7 @@
 
       <div class="flex items-center rounded-[80px] bg-slate-100 px-4 shadow-xs">
         <a
-          href="/"
+          href={HOME_PATH}
           class="group flex flex-1 cursor-pointer flex-col items-center justify-center gap-y-1 pt-3 pb-4"
         >
           <div
