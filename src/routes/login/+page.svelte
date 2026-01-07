@@ -2,7 +2,7 @@
   import { SquareArrowOutUpRight } from '@lucide/svelte';
 
   import { page } from '$app/state';
-  import { LinkButton } from '$lib/components/Button/index.js';
+  import { Button } from '$lib/components/ui/button/index.js';
 </script>
 
 <main class="flex min-h-svh flex-col">
@@ -23,16 +23,14 @@
           <span class="font-logo text-center text-3xl">Small Bites.<br />Big Growth.</span>
 
           <div class="flex flex-col items-center gap-y-4">
-            <LinkButton
+            <Button
               href={`/auth/google?return_to=${encodeURIComponent(page.url.searchParams.get('return_to') || '/')}`}
-              data-sveltekit-reload
-              variant="primary"
-              width="full"
-              class="max-w-sm gap-x-2"
+              class="w-full max-w-sm gap-x-2"
+              size="lg"
             >
               {@render googleIcon()}
               <span class="font-medium">Continue with Google</span>
-            </LinkButton>
+            </Button>
 
             <span class="text-center text-xs">
               By continuing, you agree to our

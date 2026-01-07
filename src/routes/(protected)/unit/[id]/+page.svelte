@@ -21,9 +21,9 @@
   import { enhance } from '$app/forms';
   import { afterNavigate } from '$app/navigation';
   import { page } from '$app/state';
-  import { Badge } from '$lib/components/Badge/index.js';
-  import { Button } from '$lib/components/Button/index.js';
   import { Modal } from '$lib/components/Modal/index.js';
+  import { Badge } from '$lib/components/ui/badge/index.js';
+  import { Button } from '$lib/components/ui/button/index.js';
   import {
     getBadgeInfo,
     IsWithinViewport,
@@ -233,22 +233,22 @@
 
       <div class="flex flex-col gap-y-4">
         {#if isActive && player.isPlaying}
-          <Button variant="primary" width="full" onclick={handlePause}>
+          <Button variant="primary" size="lg" width="full" onclick={handlePause}>
             <Pause class="h-4 w-4" />
             <span class="font-medium">Pause</span>
           </Button>
         {:else if isActive && !player.isPlaying}
-          <Button variant="primary" width="full" onclick={handleResume}>
+          <Button variant="primary" size="lg" width="full" onclick={handleResume}>
             <Play class="h-4 w-4" />
             <span class="font-medium">Resume</span>
           </Button>
         {:else if lastCheckpoint && lastCheckpoint > 0}
-          <Button variant="primary" width="full" onclick={handleResume}>
+          <Button variant="primary" size="lg" width="full" onclick={handleResume}>
             <Play class="h-4 w-4" />
             <span class="font-medium">Resume</span>
           </Button>
         {:else}
-          <Button variant="primary" width="full" onclick={handlePlay}>
+          <Button variant="primary" size="lg" width="full" onclick={handlePlay}>
             <Play class="h-4 w-4" />
             <span class="font-medium">Play</span>
           </Button>
@@ -258,10 +258,12 @@
           <input type="hidden" name="csrfToken" value={data.csrfToken} />
 
           <Button
-            variant="secondary"
+            variant="outline"
+            size="lg"
             width="full"
             disabled={!data.isQuizAvailable}
             onclick={handleQuizClick}
+            type="submit"
           >
             <Lightbulb class="h-4 w-4" />
             <span class="font-medium">Take the quiz</span>

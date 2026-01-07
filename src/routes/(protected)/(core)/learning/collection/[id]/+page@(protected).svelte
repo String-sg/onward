@@ -1,8 +1,8 @@
 <script lang="ts">
   import { ArrowLeft } from '@lucide/svelte';
 
-  import { Badge } from '$lib/components/Badge/index.js';
   import { LearningUnit } from '$lib/components/LearningUnit/index.js';
+  import { Badge } from '$lib/components/ui/badge/index.js';
   import { COLLECTION_BG_COLOR, getBadgeInfo, IsWithinViewport } from '$lib/helpers/index.js';
 
   let target = $state<HTMLElement | null>(null);
