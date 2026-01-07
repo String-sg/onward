@@ -2,7 +2,7 @@
   import { Collection } from '$lib/components/Collection/index.js';
   import { EmptyStateView } from '$lib/components/EmptyStateView/index.js';
   import { LearningUnit } from '$lib/components/LearningUnit/index.js';
-  import { Player } from '$lib/states';
+  import { Player } from '$lib/states/index.js';
 
   const { data } = $props();
 
