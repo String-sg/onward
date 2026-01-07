@@ -52,7 +52,7 @@
     }
 
     if (from.route.id && page.route.id && from.route.id.startsWith(page.route.id)) {
-      returnTo = sessionStorage.getItem('unit_origin') || '/';
+      returnTo = sessionStorage.getItem('unit_origin') || HOME_PATH;
       return;
     }
 
