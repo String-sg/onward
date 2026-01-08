@@ -8,13 +8,14 @@
 
 <div class="z-300 bg-gray-100">
   <div class="flex w-full max-w-5xl flex-col">
-    <div class="flex items-center justify-start gap-1 bg-gray-100 px-4 py-1">
+    <div class="flex gap-1 bg-gray-100 px-4 py-1">
       {@render sgCrest()}
-      <div class="flex flex-wrap items-center gap-1 text-[0.625rem] sm:text-xs">
-        <span>A Singapore Government Agency Website. Beware of government impersonation scams.</span
-        >
+      <div class="gap-x-1 text-[0.625rem] sm:text-xs">
+        <span>
+          A Singapore Government Agency Website. Beware of government impersonation scams.
+        </span>
         <button
-          class="flex cursor-pointer items-center text-[#1a56e5] focus:outline-[#1a56e5]"
+          class="inline-flex cursor-pointer items-center text-[#1a56e5] focus:outline-[#1a56e5]"
           tabIndex={0}
           aria-expanded={isMastheadOpen}
           aria-controls="masthead-content"
