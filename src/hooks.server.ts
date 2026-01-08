@@ -40,7 +40,9 @@ const routeProtectionHandle: Handle = async ({ event, resolve }) => {
   if (
     event.url.pathname === '/login' ||
     event.url.pathname === '/auth/google' ||
-    event.url.pathname === '/auth/google/callback'
+    event.url.pathname === '/auth/google/callback' ||
+    event.url.pathname === '/terms' ||
+    event.url.pathname === '/privacy'
   ) {
     return await resolve(event);
   }

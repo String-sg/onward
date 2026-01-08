@@ -1,33 +1,3 @@
-<script lang="ts">
-  import { ArrowLeft } from '@lucide/svelte';
-
-  import { IsWithinViewport } from '$lib/helpers/index.js';
-
-  let target = $state<HTMLElement | null>(null);
-
-  const isWithinViewport = new IsWithinViewport(() => target);
-</script>
-
-<header class="fixed inset-x-0 top-0 z-50 bg-white/90 backdrop-blur-sm">
-  <div
-    class={[
-      'absolute inset-x-0 top-full h-px bg-transparent transition-colors duration-300',
-      !isWithinViewport.current && '!bg-slate-950/7.5',
-    ]}
-  ></div>
-
-  <div class="mx-auto flex max-w-5xl px-4 py-3">
-    <a
-      href="/"
-      class="rounded-full p-4 transition-colors hover:bg-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed"
-    >
-      <ArrowLeft />
-    </a>
-  </div>
-</header>
-
-<div bind:this={target} class="absolute inset-x-0 top-0 h-px"></div>
-
 <main class="mx-auto flex max-w-5xl flex-col gap-y-5 px-4 py-24">
   <h1 class="text-2xl font-bold">PRIVACY STATEMENT</h1>
 
