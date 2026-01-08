@@ -17,7 +17,7 @@
   const isWithinViewport = new IsWithinViewport(() => target);
 </script>
 
-<header class="fixed inset-x-0 top-0 z-50 bg-white/90 backdrop-blur-sm">
+<header class="fixed inset-x-0 z-50 bg-white/90 backdrop-blur-sm">
   <div
     class={[
       'absolute inset-x-0 top-full h-px bg-transparent transition-colors duration-300',
