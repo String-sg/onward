@@ -26,12 +26,4 @@
       <EmptyStateView username={data.username} imagealt="No learning journeys found" />
     </div>
   {/if}
-
-  <a
-    href="https://form.gov.sg/68b7d5099b55d364153be0d5"
-    target="_blank"
-    class="text-sm text-slate-500 underline underline-offset-4 hover:text-slate-800"
-  >
-    share feedback
-  </a>
 </main>

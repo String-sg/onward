@@ -5,10 +5,10 @@
   import faviconSVG from '$lib/assets/favicon.svg';
   import faviconLightPNG from '$lib/assets/favicon-light.png';
   import faviconLightSVG from '$lib/assets/favicon-light.svg';
+  import { Footer } from '$lib/components/Footer/index.js';
+  import { initAnalytics } from '$lib/helpers/index.js';
 
   const { children } = $props();
-
-  import { initAnalytics } from '$lib/helpers/index.js';
 
   initAnalytics();
 </script>
@@ -26,3 +26,5 @@
 </svelte:head>
 
 {@render children()}
+
+<Footer />
