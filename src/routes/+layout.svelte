@@ -6,11 +6,14 @@
   import faviconLightPNG from '$lib/assets/favicon-light.png';
   import faviconLightSVG from '$lib/assets/favicon-light.svg';
   import { Footer } from '$lib/components/Footer/index.js';
+  import { Masthead } from '$lib/components/Masthead/index.js';
   import { initAnalytics } from '$lib/helpers/index.js';
 
   const { children } = $props();
 
   initAnalytics();
+
+  let mastheadHeight = $state(28);
 </script>
 
 <svelte:head>
@@ -25,6 +28,12 @@
   <link rel="icon" type="image/png" href={faviconPNG} media="(prefers-color-scheme: light)" />
 </svelte:head>
 
-{@render children()}
+<div class="fixed inset-x-0 top-0 z-100" bind:clientHeight={mastheadHeight}>
+  <Masthead />
+</div>
+
+<div style="margin-top: {mastheadHeight}px">
+  {@render children()}
+</div>
 
 <Footer />
