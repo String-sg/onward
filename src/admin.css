@@ -1,0 +1,9 @@
+@import 'tailwindcss';
+
+@plugin "@tailwindcss/typography";
+
+@layer base {
+  * {
+    scrollbar-color: color-mix(in oklab, var(--color-slate-950) 20%, transparent) transparent;
+  }
+}
