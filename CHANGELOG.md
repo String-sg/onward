@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.8.0 (2026-01-09)
+
+### Features ✨
+
+- feat: add masthead to root layout ([#472](https://github.com/String-sg/onward/pull/472)) ([d5cc13f](https://github.com/String-sg/onward/commit/d5cc13ffbf22abdf6d9e52ca2dec0f6261bbf942))
+- feat: add footer ([#473](https://github.com/String-sg/onward/pull/473)) ([8f3526b](https://github.com/String-sg/onward/commit/8f3526b3a35c172364c032f8a911cf21e6b23cee))
+- feat: update home page routing ([#466](https://github.com/String-sg/onward/pull/466)) ([c52b7cc](https://github.com/String-sg/onward/commit/c52b7ccd1ec19c924970acf0ce8a1cfb8ff94215))
+
 ## 1.7.0 (2025-12-23)
 
 ### Features ✨
