@@ -38,7 +38,7 @@ export const GET: RequestHandler = async (event) => {
     headers.set(key, value);
   }
 
-  return new Response(podcast.stream, {
+  return new Response(podcast.stream as BodyInit, {
     status: range ? 206 : 200,
     headers,
   });
