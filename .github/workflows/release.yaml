@@ -19,7 +19,7 @@ jobs:
     if: >
       github.event.pull_request.merged == true &&
       startsWith(github.event.pull_request.title, 'release: v')
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
     steps:
       - name: Checkout
         uses: actions/checkout@v4
