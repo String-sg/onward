@@ -50,9 +50,7 @@ export interface FormValidationError {
  * @param data - FormData from the request
  * @returns Validated learning unit data or validation errors
  */
-export function validateLearningUnit(
-  data: FormData,
-):
+export function validateLearningUnit(data: FormData):
   | { success: true; data: LearningUnitFormData }
   | {
       success: false;
