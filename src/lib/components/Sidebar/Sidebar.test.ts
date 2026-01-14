@@ -86,7 +86,7 @@ describe('Sidebar', () => {
     });
 
     const logoutLink = screen.getByText('Logout').closest('a');
-    expect(logoutLink).toHaveAttribute('href', '/logout');
+    expect(logoutLink).toHaveAttribute('href', '/logout?redirect_to=%2Fadmin');
   });
 
   test('navigation items have correct hrefs', () => {
