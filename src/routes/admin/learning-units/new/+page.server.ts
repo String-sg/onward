@@ -86,7 +86,6 @@ export const actions = {
     let contentURL: string;
     try {
       contentURL = await uploadPodcastObject(result.data.podcastFile, nanoid());
-      console.log('Uploaded podcast to URL:', contentURL);
     } catch (err) {
       logger.error({ err }, 'Podcast upload failed');
 

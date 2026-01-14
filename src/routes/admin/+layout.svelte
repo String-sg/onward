@@ -11,7 +11,7 @@
   const navItems = [{ href: '/admin', label: 'Learning Units', icon: BookOpen }];
 </script>
 
-<div class="flex h-screen overflow-hidden bg-white text-slate-950">
+<div class="flex h-screen overflow-hidden">
   <Sidebar title="Glow Admin" currentPath={page.url.pathname} {navItems} />
 
   <main class="flex-1 overflow-y-auto p-6">

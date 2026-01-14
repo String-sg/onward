@@ -47,7 +47,7 @@
   <!-- Sidebar Footer -->
   <div class="pb-4">
     <a
-      href="/logout"
+      href="/logout?redirect_to=%2Fadmin"
       data-sveltekit-noscroll
       class="flex items-center rounded-md px-6 py-2.5 text-sm font-medium transition-colors hover:bg-slate-100"
     >

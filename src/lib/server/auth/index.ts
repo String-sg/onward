@@ -4,7 +4,7 @@ import { valkey } from '../valkey.js';
 import Auth from './auth.js';
 
 export * from './google.js';
-export type { default as Session } from './session.js';
+export type { default as Session, User as UserSession } from './session.js';
 
 export default Auth(valkey, {
   cookies: {
