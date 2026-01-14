@@ -89,6 +89,7 @@
     <!-- Navigation -->
     <div class="flex items-center">
       <button
+        aria-label="Close"
         onclick={handleClose}
         class="cursor-pointer rounded-full p-4 transition-colors hover:bg-white/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white focus-visible:outline-dashed"
       >
@@ -149,16 +150,16 @@
 
         <!-- Playback Controls -->
         <div class="flex justify-evenly py-4">
-          <!-- Skip Back Button -->
           <button
+            aria-label="Skip back"
             onclick={onskipback}
             class="cursor-pointer rounded-full p-3 transition-colors hover:bg-white/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white focus-visible:outline-dashed sm:p-4"
           >
             <RotateCcw />
           </button>
 
-          <!-- Play/Pause Button -->
           <button
+            aria-label="Play/Pause"
             onclick={onplaypause}
             class="cursor-pointer rounded-full bg-white p-3 text-black transition-colors hover:bg-white/75 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white focus-visible:outline-dashed sm:p-4"
           >
@@ -169,8 +170,8 @@
             {/if}
           </button>
 
-          <!-- Skip Forward Button -->
           <button
+            aria-label="Skip forward"
             onclick={onskipforward}
             class="cursor-pointer rounded-full p-3 transition-colors hover:bg-white/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white focus-visible:outline-dashed sm:p-4"
           >
