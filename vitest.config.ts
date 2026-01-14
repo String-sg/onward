@@ -8,5 +8,15 @@ export default {
     environment: 'jsdom',
     include: ['src/**/*.{test,spec}.{js,ts}'],
     setupFiles: ['./vitest.setup.ts'],
+    coverage: {
+      enabled: true,
+      include: ['src/**/*.{ts,js,svelte}'],
+      exclude: [
+        'src/**/*.{test,spec}.{ts,js}',
+        'src/**/*.d.ts',
+        'src/app.html',
+        'src/generated/**/*',
+      ],
+    },
   },
 };
