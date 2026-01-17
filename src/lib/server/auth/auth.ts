@@ -298,14 +298,22 @@ export default function Auth(valkey: GlideClient, options?: PartialDeep<AuthOpti
         });
       }
 
+      // Set shorter session for admin
+      let maxAge: number | undefined;
+      if (session.user && session.user.role === 'admin') {
+        maxAge = parseDuration('1d') ?? undefined;
+      } else {
+        maxAge = session.isAuthenticated
+          ? opts.session.authenticatedTimeout
+          : opts.session.defaultTimeout;
+      }
+
       event.locals.session = session;
 
       // Set the session cookie.
       event.cookies.set(opts.cookies.session.name, event.locals.session.id, {
         ...opts.cookies.session.options,
-        maxAge: event.locals.session.isAuthenticated
-          ? opts.session.authenticatedTimeout
-          : opts.session.defaultTimeout,
+        maxAge,
       });
 
       // Set the CSRF cookie.
@@ -332,12 +340,20 @@ export default function Auth(valkey: GlideClient, options?: PartialDeep<AuthOpti
         generateCSRFToken: opts.generateCSRFToken,
       });
 
+      // Set shorter session for admin
+      let maxAge: number | undefined;
+      if (user.role === 'admin') {
+        maxAge = parseDuration('1d') ?? undefined;
+      } else {
+        maxAge = event.locals.session.isAuthenticated
+          ? opts.session.authenticatedTimeout
+          : opts.session.defaultTimeout;
+      }
+
       // Set the session cookie.
       event.cookies.set(opts.cookies.session.name, event.locals.session.id, {
         ...opts.cookies.session.options,
-        maxAge: event.locals.session.isAuthenticated
-          ? opts.session.authenticatedTimeout
-          : opts.session.defaultTimeout,
+        maxAge,
       });
 
       // Set the CSRF cookie.

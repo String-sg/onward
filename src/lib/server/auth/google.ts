@@ -74,6 +74,7 @@ export function generateAuthURL({
     code_challenge: createHash('sha256').update(codeVerifier).digest('base64url'),
     code_challenge_method: CodeChallengeMethod.S256,
     hd: env.GOOGLE_HOSTED_DOMAIN,
+    prompt: 'consent',
   });
 }
 

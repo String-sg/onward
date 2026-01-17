@@ -11,6 +11,8 @@ export const GET: RequestHandler = async (event) => {
     return redirect(303, '/login');
   }
 
+  const redirectTo = event.url.searchParams.get('redirect_to') || '/login';
+
   try {
     await auth.signOut(event);
   } catch (err) {
@@ -20,5 +22,5 @@ export const GET: RequestHandler = async (event) => {
 
   logger.info({ email: user.email }, 'Successfully signed out user');
 
-  return redirect(302, '/login');
+  return redirect(302, redirectTo);
 };

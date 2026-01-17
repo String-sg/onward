@@ -1,9 +1,11 @@
 import { redirect } from '@sveltejs/kit';
 
+import { env } from '$env/dynamic/private';
 import { HOME_PATH } from '$lib/helpers';
 import auth, {
   exchangeCodeForIdToken,
   type GoogleProfile,
+  type UserSession,
   verifyIdToken,
 } from '$lib/server/auth/index.js';
 import {
@@ -130,19 +132,25 @@ export const GET: RequestHandler = async (event) => {
     }
   }
 
+  const rawState = JSON.parse(Buffer.from(state, 'base64url').toString('utf-8'));
+  const returnTo = rawState['return_to'] || HOME_PATH;
+
+  const admins = env.ADMIN_EMAILS ? env.ADMIN_EMAILS.split(',') : [];
+
+  const role: UserSession['role'] =
+    returnTo === '/admin' && admins.includes(user.email) ? 'admin' : 'user';
+
   try {
     await auth.signIn(event, {
       id: user.id.toString(),
       email: user.email,
       name: user.name,
+      role,
     });
   } catch (err) {
     logger.error({ err, email: user.email }, 'Failed to sign in user');
     return redirect(302, '/login?error=oauth2_callback_failed');
   }
-
-  const rawState = JSON.parse(Buffer.from(state, 'base64url').toString('utf-8'));
-  const returnTo = rawState['return_to'] || HOME_PATH;
 
   logger.info({ email: user.email }, 'Successfully signed in user');
 

@@ -50,4 +50,25 @@ const routeProtectionHandle: Handle = async ({ event, resolve }) => {
   return redirect(303, `/login?return_to=${encodeURIComponent(event.url.pathname)}`);
 };
 
-export const handle: Handle = sequence(requestLoggingHandle, auth.handle, routeProtectionHandle);
+const AdminRouteProtectionHandle: Handle = async ({ event, resolve }) => {
+  if (!event.url.pathname.startsWith('/admin')) {
+    return await resolve(event);
+  }
+
+  if (!event.locals.session.user || !event.locals.session.isAuthenticated) {
+    return redirect(303, `/auth/google?return_to=%2Fadmin`);
+  }
+
+  if (event.locals.session.user.role !== 'admin') {
+    return redirect(303, `/auth/google?return_to=%2Fadmin`);
+  }
+
+  return await resolve(event);
+};
+
+export const handle: Handle = sequence(
+  requestLoggingHandle,
+  auth.handle,
+  AdminRouteProtectionHandle,
+  routeProtectionHandle,
+);
