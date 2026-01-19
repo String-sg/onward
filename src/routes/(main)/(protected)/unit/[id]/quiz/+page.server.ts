@@ -1,7 +1,7 @@
 import { error, redirect } from '@sveltejs/kit';
 import { validate as uuidValidate } from 'uuid';
 
-import auth from '$lib/server/auth/index.js';
+import { learnerAuth } from '$lib/server/auth/index.js';
 import {
   db,
   type LearningJourneyUpsertArgs,
@@ -93,7 +93,7 @@ export const actions: Actions = {
       throw error(400);
     }
 
-    const isValidCSRFToken = await auth.validateCSRFToken(event, csrfToken);
+    const isValidCSRFToken = await learnerAuth.validateCSRFToken(event, csrfToken);
     if (!isValidCSRFToken) {
       logger.warn('CSRF token is invalid');
       throw error(400);
