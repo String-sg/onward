@@ -40,7 +40,7 @@ const routeProtectionHandle: Handle = async ({ event, resolve }) => {
     return redirect(303, '/admin/auth/google?return_to=%2Fadmin');
   }
 
-  if (!event.locals.session.user || event.locals.session.user.role !== 'admin') {
+  if (!event.locals.session.user) {
     return redirect(303, '/admin/auth/google?return_to=%2Fadmin');
   }
 

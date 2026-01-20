@@ -12,13 +12,10 @@ const DEFAULT_SESSION_ID_LENGTH = 32;
  */
 const DEFAULT_CSRF_TOKEN_LENGTH = 32;
 
-type Role = 'user' | 'admin';
-
 export interface User {
   id: string;
   email: string;
   name: string;
-  role: Role;
 }
 
 type JSONPrimitive = string | number | boolean | null;
@@ -139,9 +136,7 @@ export default class Session {
       !payload['user']['email'] ||
       typeof payload['user']['email'] !== 'string' ||
       !payload['user']['name'] ||
-      typeof payload['user']['name'] !== 'string' ||
-      !payload['user']['role'] ||
-      typeof payload['user']['role'] !== 'string'
+      typeof payload['user']['name'] !== 'string'
     ) {
       return null;
     }
@@ -153,7 +148,6 @@ export default class Session {
         id: payload['user']['id'],
         email: payload['user']['email'],
         name: payload['user']['name'],
-        role: payload['user']['role'] as Role,
       },
       data: payload['data'],
     });
