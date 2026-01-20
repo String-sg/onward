@@ -293,6 +293,12 @@ export const actions: Actions = {
       throw error(400);
     }
 
+    const isValidCSRFToken = await learnerAuth.validateCSRFToken(event, csrfToken);
+    if (!isValidCSRFToken) {
+      logger.warn('CSRF token is invalid');
+      throw error(400);
+    }
+
     const learningJourneyArgs = {
       where: {
         userId_learningUnitId: { userId: user.id, learningUnitId: event.params.id },
