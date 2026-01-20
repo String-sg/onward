@@ -25,7 +25,6 @@ export const GET: RequestHandler = async (event) => {
 
   event.locals.session.set('adminCodeVerifier', codeVerifier);
   event.locals.session.set('adminAuthURL', authURL);
-  console.log(authURL);
 
   logger.info('Redirecting to Google OAuth2 authorization URL');
 

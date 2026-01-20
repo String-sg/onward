@@ -151,7 +151,6 @@ export const GET: RequestHandler = async (event) => {
 
   const rawState = JSON.parse(Buffer.from(state, 'base64url').toString('utf-8'));
   const returnTo = rawState['return_to'] || HOME_PATH;
-  console.log(returnTo);
 
   logger.info({ email: user.email }, 'Successfully signed in user');
 
