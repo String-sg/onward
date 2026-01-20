@@ -20,7 +20,6 @@ export const learnerAuth = Auth(valkey, {
 
 export const adminAuth = Auth(valkey, {
   session: {
-    defaultTimeout: '5m',
     authenticatedTimeout: '1d',
   },
   cookies: {
