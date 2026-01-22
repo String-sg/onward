@@ -1,6 +1,6 @@
 import { json, type RequestHandler } from '@sveltejs/kit';
 
-import auth from '$lib/server/auth';
+import { learnerAuth } from '$lib/server/auth';
 import { db, type MessageFindManyArgs, type MessageGetPayload, Role } from '$lib/server/db.js';
 import { DEVELOPER_MESSAGE, openAI } from '$lib/server/openai.js';
 import { search } from '$lib/server/weaviate';
@@ -54,7 +54,7 @@ export const POST: RequestHandler = async (event) => {
     return json(null, { status: 400 });
   }
 
-  const isValidCSRFToken = await auth.validateCSRFToken(event, csrfToken);
+  const isValidCSRFToken = await learnerAuth.validateCSRFToken(event, csrfToken);
   if (!isValidCSRFToken) {
     logger.warn('CSRF token is invalid');
     return json(null, { status: 400 });

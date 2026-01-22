@@ -1,10 +1,10 @@
 import { redirect } from '@sveltejs/kit';
 
-import { HOME_PATH } from '$lib/helpers';
+import { env } from '$env/dynamic/private';
 import {
+  adminAuth,
   exchangeCodeForIdToken,
   type GoogleProfile,
-  learnerAuth,
   verifyIdToken,
 } from '$lib/server/auth/index.js';
 import {
@@ -29,11 +29,11 @@ export const GET: RequestHandler = async (event) => {
       },
       'Missing required OAuth2 parameters from URL',
     );
-    return redirect(302, '/login?error=oauth2_callback_failed');
+    return redirect(302, '/admin');
   }
 
-  const codeVerifier = event.locals.session.get<string>('codeVerifier');
-  const authURL = event.locals.session.get<string>('authURL');
+  const codeVerifier = event.locals.session.get<string>('adminCodeVerifier');
+  const authURL = event.locals.session.get<string>('adminAuthURL');
   if (!codeVerifier || !authURL) {
     logger.error(
       {
@@ -42,30 +42,30 @@ export const GET: RequestHandler = async (event) => {
       },
       'Missing required values from session',
     );
-    return redirect(302, '/login?error=oauth2_callback_failed');
+    return redirect(302, '/admin');
   }
 
   const originalState = new URL(authURL).searchParams.get('state');
   if (!originalState || originalState !== state) {
     logger.error('State mismatch between original and callback');
-    return redirect(302, '/login?error=oauth2_callback_failed');
+    return redirect(302, '/admin');
   }
 
   let idToken: string | null = null;
   try {
     idToken = await exchangeCodeForIdToken({
-      origin: event.url.origin,
+      origin: `${event.url.origin}/admin`,
       code,
       codeVerifier,
     });
 
     if (!idToken) {
       logger.error('Missing ID token');
-      return redirect(302, '/login?error=oauth2_callback_failed');
+      return redirect(302, '/admin');
     }
   } catch (err) {
     logger.error(err, 'Failed to exchange code for ID token');
-    return redirect(302, '/login?error=oauth2_callback_failed');
+    return redirect(302, '/admin');
   }
 
   let profile: GoogleProfile | null = null;
@@ -74,11 +74,17 @@ export const GET: RequestHandler = async (event) => {
 
     if (!profile) {
       logger.error('Invalid Google profile');
-      return redirect(302, '/login?error=oauth2_callback_failed');
+      return redirect(302, '/admin');
     }
   } catch (err) {
     logger.error(err, 'Failed to verify ID token');
-    return redirect(302, '/login?error=oauth2_callback_failed');
+    return redirect(302, '/admin');
+  }
+
+  const adminEmails = env.ADMIN_EMAILS ? env.ADMIN_EMAILS.split(',') : [];
+  if (!adminEmails.includes(profile.email)) {
+    logger.warn({ email: profile.email }, 'Unauthorized email was used to sign in');
+    return redirect(302, '/admin');
   }
 
   const userArgs = {
@@ -98,7 +104,7 @@ export const GET: RequestHandler = async (event) => {
     user = await db.user.findUnique(userArgs);
   } catch (err) {
     logger.error({ err, email: profile.email }, 'Failed to find user');
-    return redirect(302, '/login?error=oauth2_callback_failed');
+    return redirect(302, '/admin');
   }
 
   if (!user) {
@@ -123,27 +129,27 @@ export const GET: RequestHandler = async (event) => {
           { err, email: profile.email },
           'Failed to create user due to duplicate constraint',
         );
-        return redirect(302, '/login?error=oauth2_callback_failed');
+        return redirect(302, '/admin');
       }
 
       logger.error({ err, email: profile.email }, 'Failed to create user');
-      return redirect(302, '/login?error=oauth2_callback_failed');
+      return redirect(302, '/admin');
     }
   }
 
   try {
-    await learnerAuth.signIn(event, {
+    await adminAuth.signIn(event, {
       id: user.id.toString(),
       email: user.email,
       name: user.name,
     });
   } catch (err) {
     logger.error({ err, email: user.email }, 'Failed to sign in user');
-    return redirect(302, '/login?error=oauth2_callback_failed');
+    return redirect(302, '/admin');
   }
 
   const rawState = JSON.parse(Buffer.from(state, 'base64url').toString('utf-8'));
-  const returnTo = rawState['return_to'] || HOME_PATH;
+  const returnTo = rawState['return_to'] || '/admin';
 
   logger.info({ email: user.email }, 'Successfully signed in user');
 

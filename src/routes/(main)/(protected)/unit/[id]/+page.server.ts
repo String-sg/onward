@@ -2,7 +2,7 @@ import { error, redirect } from '@sveltejs/kit';
 import { validate as uuidValidate } from 'uuid';
 
 import { getLearningUnitStatus } from '$lib/helpers/index.js';
-import auth from '$lib/server/auth';
+import { learnerAuth } from '$lib/server/auth';
 import {
   db,
   type GetLearningUnitSentimentsAggregateType,
@@ -220,7 +220,7 @@ export const actions: Actions = {
       throw error(400);
     }
 
-    const isValidCSRFToken = await auth.validateCSRFToken(event, csrfToken);
+    const isValidCSRFToken = await learnerAuth.validateCSRFToken(event, csrfToken);
     if (!isValidCSRFToken) {
       logger.warn('CSRF token is invalid');
       throw error(400);
@@ -293,7 +293,7 @@ export const actions: Actions = {
       throw error(400);
     }
 
-    const isValidCSRFToken = await auth.validateCSRFToken(event, csrfToken);
+    const isValidCSRFToken = await learnerAuth.validateCSRFToken(event, csrfToken);
     if (!isValidCSRFToken) {
       logger.warn('CSRF token is invalid');
       throw error(400);
