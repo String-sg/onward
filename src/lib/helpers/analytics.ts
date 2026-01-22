@@ -88,6 +88,28 @@ export function track80PercentPodcastPlay(learningUnitId: string) {
 }
 
 /**
+ * Tracks when the AI chat is clicked.
+ */
+export function trackAIChatClick() {
+  if (!browser) {
+    return;
+  }
+
+  window.gtag('event', 'ai_chat_click');
+}
+
+/**
+ * Tracks when the Now Playing Bar is clicked.
+ */
+export function trackNowPlayingBarClick(learning_unit_id: string) {
+  if (!browser) {
+    return;
+  }
+
+  window.gtag('event', 'now_playing_bar_click', { learning_unit_id });
+}
+
+/**
  * Tracks when a podcast is completed (100%).
  * @param learningUnitId - The ID of the learning unit that was completed.
  */
@@ -141,6 +163,20 @@ export function trackQuizCompletion(learningUnitId: string) {
   }
 
   window.gtag('event', 'quiz_completion', {
+    learning_unit_id: learningUnitId,
+  });
+}
+
+/**
+ * Tracks when the sources is clicked.
+ * @param learningUnitId - The ID of the learning unit associated with the sources.
+ */
+export function trackSourcesClick(learningUnitId: string) {
+  if (!browser) {
+    return;
+  }
+
+  window.gtag('event', 'sources_click', {
     learning_unit_id: learningUnitId,
   });
 }

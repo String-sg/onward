@@ -14,6 +14,8 @@
     track20PercentPodcastPlay,
     track50PercentPodcastPlay,
     track80PercentPodcastPlay,
+    trackAIChatClick,
+    trackNowPlayingBarClick,
     trackPodcastCompletion,
   } from '$lib/helpers/index.js';
   import { Player } from '$lib/states/index.js';
@@ -31,6 +33,10 @@
 
   const handleNowPlayingBarClick = () => {
     isNowPlayingViewOpen = true;
+
+    if (player.currentTrack) {
+      trackNowPlayingBarClick(player.currentTrack.id);
+    }
   };
 
   const handleNowPlayingBarPlay = () => {
@@ -59,6 +65,7 @@
 
   const handleChatWidgetClick = () => {
     isChatViewOpen = true;
+    trackAIChatClick();
   };
 
   const handleChatViewClose = () => {
