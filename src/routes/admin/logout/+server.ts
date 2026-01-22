@@ -1,6 +1,6 @@
 import { redirect, type RequestHandler } from '@sveltejs/kit';
 
-import { learnerAuth } from '$lib/server/auth/index.js';
+import { adminAuth } from '$lib/server/auth/index.js';
 
 export const GET: RequestHandler = async (event) => {
   const logger = event.locals.logger.child({ handler: 'api_logout' });
@@ -8,17 +8,17 @@ export const GET: RequestHandler = async (event) => {
   const { user } = event.locals.session;
   if (!user) {
     logger.warn('User not authenticated');
-    return redirect(303, '/login');
+    return redirect(303, '/admin');
   }
 
   try {
-    await learnerAuth.signOut(event);
+    await adminAuth.signOut(event);
   } catch (err) {
     logger.error({ err, email: user.email }, 'Failed to sign out user');
-    return redirect(302, '/login?error=logout_failed');
+    return redirect(302, '/admin');
   }
 
   logger.info({ email: user.email }, 'Successfully signed out user');
 
-  return redirect(302, '/login');
+  return redirect(302, '/admin');
 };
