@@ -161,7 +161,7 @@ export interface AuthResult {
 /**
  * The default session timeout for unauthenticated sessions.
  */
-const DEFAULT_SESSION_DEFAULT_TIMEOUT = '3h';
+const DEFAULT_SESSION_DEFAULT_TIMEOUT = '5m';
 /**
  * The default session timeout for authenticated sessions.
  */
