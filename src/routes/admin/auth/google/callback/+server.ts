@@ -1,7 +1,6 @@
 import { redirect } from '@sveltejs/kit';
 
 import { env } from '$env/dynamic/private';
-import { HOME_PATH } from '$lib/helpers';
 import {
   adminAuth,
   exchangeCodeForIdToken,
@@ -150,7 +149,7 @@ export const GET: RequestHandler = async (event) => {
   }
 
   const rawState = JSON.parse(Buffer.from(state, 'base64url').toString('utf-8'));
-  const returnTo = rawState['return_to'] || HOME_PATH;
+  const returnTo = rawState['return_to'] || '/admin';
 
   logger.info({ email: user.email }, 'Successfully signed in user');
 
