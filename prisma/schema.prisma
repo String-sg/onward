@@ -13,15 +13,17 @@ model User {
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   // Domain-Specific Fields.
-  name             String @map("name") @db.VarChar(255)
-  email            String @unique @map("email")
-  googleProviderId String @unique @map("google_provider_id")
-  avatarURL        String @map("avatar_url")
+  name              String             @map("name") @db.VarChar(255)
+  email             String             @unique @map("email")
+  googleProviderId  String             @unique @map("google_provider_id")
+  avatarURL         String             @map("avatar_url")
+  learningFrequency LearningFrequency? @map("learning_frequency")
 
   // Relations.
   learningJourneys LearningJourney[]
   threads          Thread[]
   sentiments       LearningUnitSentiments[]
+  interests        UserInterest[]
 
   @@map("users")
 }
@@ -37,7 +39,8 @@ model Collection {
   type        CollectionType @map("type")
 
   // Relations.
-  learningUnit LearningUnit[]
+  learningUnit  LearningUnit[]
+  userInterests UserInterest[]
 
   @@map("collections")
 }
@@ -246,6 +249,23 @@ model QuestionAnswer {
   learningUnit LearningUnit @relation(fields: [learningUnitId], references: [id])
 
   @@map("question_answers")
+}
+
+enum LearningFrequency {
+  QUICK
+  REGULAR
+  ADVANCED
+}
+
+model UserInterest {
+  userId       String @map("user_id") @db.Uuid
+  collectionId String @map("collection_id") @db.Uuid
+
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  collection Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+
+  @@id([userId, collectionId])
+  @@map("user_interests")
 }
 
 model UserAdmin {
