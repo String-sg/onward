@@ -15,18 +15,18 @@ const requestLoggingHandle: Handle = async ({ event, resolve }) => {
   event.setHeaders({ 'X-Request-Id': requestId });
   event.locals.logger = logger.child({ requestId });
 
-  return await resolve(event);
+  return resolve(event);
 };
 
 /**
  * A handle that enforces authentication on protected routes.
  * - Requests to `/api/*` are always allowed through
- * - Authenticated users visiting `/login` are redirected back to `/`
+ * - Authenticated users visiting `/login` are redirected back to HOME_PATH
  * - Unauthenticated users are redirected to `/login`
  */
 const routeProtectionHandle: Handle = async ({ event, resolve }) => {
   if (event.url.pathname.startsWith('/api/')) {
-    return await resolve(event);
+    return resolve(event);
   }
 
   if (event.locals.session.isAuthenticated) {
@@ -34,7 +34,7 @@ const routeProtectionHandle: Handle = async ({ event, resolve }) => {
       return redirect(302, HOME_PATH);
     }
 
-    return await resolve(event);
+    return resolve(event);
   }
 
   if (
@@ -44,7 +44,7 @@ const routeProtectionHandle: Handle = async ({ event, resolve }) => {
     event.url.pathname === '/terms' ||
     event.url.pathname === '/privacy'
   ) {
-    return await resolve(event);
+    return resolve(event);
   }
 
   return redirect(303, `/login?return_to=${encodeURIComponent(event.url.pathname)}`);
