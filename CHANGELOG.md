@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.9.0 (2026-01-28)
+
+### Features ✨
+
+- feat: Add GA Events ([#470](https://github.com/String-sg/onward/pull/470)) ([baa322f](https://github.com/String-sg/onward/commit/baa322f))
+
+### Bug Fixes 🐛
+
+- fix: align bites page layout ([#481](https://github.com/String-sg/onward/pull/481)) ([b36813b](https://github.com/String-sg/onward/commit/b36813b))
+- fix: use native arm runners for building and pushing image actions ([#475](https://github.com/String-sg/onward/pull/475)) ([dcd3b5b](https://github.com/String-sg/onward/commit/dcd3b5b))
+
+### Chores 🧹
+
+- chore: add unit tests for components ([#477](https://github.com/String-sg/onward/pull/477)) ([8b6c774](https://github.com/String-sg/onward/commit/8b6c774))
+
 ## 1.8.0 (2026-01-09)
 
 ### Features ✨
