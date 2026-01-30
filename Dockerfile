@@ -1,7 +1,7 @@
 # ----------------------------------------
 # Base Stage
 # ----------------------------------------
-FROM node:24.13.0-alpine3.22 AS base
+FROM node:22.22.0-alpine3.22 AS base
 
 RUN mkdir /app
 WORKDIR /app
