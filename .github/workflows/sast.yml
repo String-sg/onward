@@ -1,0 +1,29 @@
+name: SAST
+
+on:
+  pull_request:
+    branches: ['*']
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  security-events: write
+  id-token: write
+
+jobs:
+  codeql:
+    name: CodeQL
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v4
+        with:
+          languages: javascript-typescript
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v4
