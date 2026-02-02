@@ -1,9 +1,12 @@
+import { extname } from 'node:path';
 import { Readable } from 'node:stream';
+import { ReadableStream } from 'node:stream/web';
 
 import {
   GetObjectCommand,
   NoSuchKey,
   NotFound,
+  PutObjectCommand,
   S3Client,
   S3ServiceException,
 } from '@aws-sdk/client-s3';
@@ -85,6 +88,32 @@ export async function getPodcastObject(
 
     throw err;
   }
+}
+
+/**
+ * Uploads a podcast file to S3.
+ *
+ * @param file - The file to upload.
+ * @param key - The key to store the file under.
+ * @returns The URL of the uploaded file.
+ */
+export async function uploadPodcastObject(file: File, key: string): Promise<string> {
+  const fileExt = extname(file.name).slice(1);
+  const path = `podcasts/${key}.${fileExt}`;
+
+  const nodeStream = Readable.fromWeb(file.stream() as ReadableStream<Uint8Array>);
+
+  await client.send(
+    new PutObjectCommand({
+      Bucket: BUCKET,
+      Key: path,
+      Body: nodeStream,
+      ContentType: file.type,
+      ContentLength: file.size,
+    }),
+  );
+
+  return `${env.APP_URL || 'http://localhost:5173'}/${path}`;
 }
 
 /**
