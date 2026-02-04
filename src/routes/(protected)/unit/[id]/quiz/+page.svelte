@@ -8,6 +8,7 @@
   import { Button, LinkButton } from '$lib/components/Button/index.js';
   import { Modal } from '$lib/components/Modal/index.js';
   import {
+    HOME_PATH,
     IsWithinViewport,
     noop,
     trackQuizAttempt,
@@ -303,7 +304,7 @@
         </LinkButton>
 
         <a
-          href="/"
+          href={HOME_PATH}
           class="inline-flex w-full cursor-pointer items-center justify-center rounded-full px-3.75 py-2.75 font-medium hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed"
         >
           Back to home
