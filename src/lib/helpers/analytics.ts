@@ -180,3 +180,14 @@ export function trackSourcesClick(learningUnitId: string) {
     learning_unit_id: learningUnitId,
   });
 }
+
+/**
+ * Tracks when the profile is clicked.
+ */
+export function trackProfileClick() {
+  if (!browser) {
+    return;
+  }
+
+  window.gtag('event', 'profile_click');
+}

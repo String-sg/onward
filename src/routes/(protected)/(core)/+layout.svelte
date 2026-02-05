@@ -1,7 +1,9 @@
 <script lang="ts">
   import { BookHeart, Home } from '@lucide/svelte';
+  import type { MouseEventHandler } from 'svelte/elements';
 
   import { page } from '$app/state';
+  import { trackProfileClick } from '$lib/helpers/analytics.js';
   import { HOME_PATH, IsWithinViewport } from '$lib/helpers/index.js';
 
   const { data, children } = $props();
@@ -12,6 +14,10 @@
   const isMyLearningPage = $derived(page.url.pathname === '/learning');
 
   const isWithinViewport = new IsWithinViewport(() => target);
+
+  const handleProfileClick: MouseEventHandler<HTMLAnchorElement> = () => {
+    trackProfileClick();
+  };
 </script>
 
 <header class="fixed inset-x-0 z-50 bg-white/90 backdrop-blur-sm">
@@ -34,6 +40,7 @@
           href="/profile"
           aria-label="Profile"
           class="h-10 w-10 cursor-pointer overflow-hidden rounded-full"
+          onclick={handleProfileClick}
         >
           <img src={data.avatar} alt="profile" />
         </a>
