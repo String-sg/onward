@@ -6,6 +6,8 @@ ALTER TABLE "users" ADD COLUMN     "learning_frequency" "LearningFrequency";
 
 -- CreateTable
 CREATE TABLE "user_interests" (
+    "created_at" TIMESTAMPTZ(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMPTZ(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "user_id" UUID NOT NULL,
     "collection_id" UUID NOT NULL,
 

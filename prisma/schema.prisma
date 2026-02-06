@@ -258,6 +258,10 @@ enum LearningFrequency {
 }
 
 model UserInterest {
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  // Relations.
   userId       String @map("user_id") @db.Uuid
   collectionId String @map("collection_id") @db.Uuid
 
