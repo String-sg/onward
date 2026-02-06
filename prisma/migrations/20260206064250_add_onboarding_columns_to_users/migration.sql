@@ -1,8 +1,9 @@
 -- CreateEnum
-CREATE TYPE "LearningFrequency" AS ENUM ('QUICK', 'REGULAR', 'ADVANCED');
+CREATE TYPE "LearningFrequency" AS ENUM ('QUICK', 'REGULAR', 'DEEPDIVE');
 
 -- AlterTable
-ALTER TABLE "users" ADD COLUMN     "learning_frequency" "LearningFrequency";
+ALTER TABLE "users" ADD COLUMN     "is_subscribed" BOOLEAN NOT NULL DEFAULT false,
+ADD COLUMN     "learning_frequency" "LearningFrequency";
 
 -- CreateTable
 CREATE TABLE "user_interests" (
