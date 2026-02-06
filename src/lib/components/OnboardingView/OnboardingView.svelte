@@ -53,11 +53,13 @@
   const handleBackToTopic = () => {
     isFrequencySelectionPage = false;
     isTopicSelectionPage = true;
+    selectedTopics = [];
   };
 
   const handleTopicPageNext = () => {
     isTopicSelectionPage = false;
     isFrequencySelectionPage = true;
+    selectedFrequency = null;
   };
 
   const handleClose = async () => {
@@ -401,27 +403,40 @@
                     <input
                       type="radio"
                       name="frequency"
-                      value="ADVANCED"
+                      value="DEEPDIVE"
                       class="sr-only"
                       bind:group={selectedFrequency}
                     />
 
                     <div class="flex w-full items-center justify-between">
-                      <span class="text-lg font-medium">Advanced</span>
+                      <span class="text-lg font-medium">Deep Dive</span>
                       <span class="text-sm text-slate-500">10-15 mins</span>
                     </div>
                   </div>
                 </label>
               </div>
 
-              <div class="rounded-2xl bg-slate-200 p-6">
-                <div class="flex flex-col gap-y-2">
-                  <span>Small bites, big growth!</span>
-                  <span>
-                    5 mins per day sounds small, but that’s actually 70 bites per month!
-                  </span>
+              {#if selectedFrequency}
+                <div class="rounded-2xl bg-slate-200 p-6">
+                  <div class="flex flex-col gap-y-2">
+                    {#if selectedFrequency === 'QUICK'}
+                      <span>
+                        5 mins per day sounds small, but that's actually 30 bites per month!
+                      </span>
+                    {/if}
+                    {#if selectedFrequency === 'REGULAR'}
+                      <span>
+                        10 mins per day sounds small, but that's actually 60 bites per month!
+                      </span>
+                    {/if}
+                    {#if selectedFrequency === 'DEEPDIVE'}
+                      <span>
+                        15 mins per day sounds small, but that's actually 90 bites per month!
+                      </span>
+                    {/if}
+                  </div>
                 </div>
-              </div>
+              {/if}
             </div>
 
             <div class="flex justify-center px-4 pb-13">
