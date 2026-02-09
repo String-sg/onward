@@ -235,11 +235,11 @@
             </div>
           </div>
 
-          <div class="flex flex-1 flex-col items-center justify-center">
+          <div class="flex flex-1 flex-col items-center justify-center overflow-x-hidden">
             <enhanced:img
               src="$lib/assets/bags-of-bites.png"
               alt="Collection Images"
-              class="max-w-[500px]"
+              class="max-w-[700px]"
             />
           </div>
 
