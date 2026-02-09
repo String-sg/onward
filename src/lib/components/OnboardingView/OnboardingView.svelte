@@ -237,9 +237,9 @@
 
           <div class="flex flex-1 flex-col items-center justify-center overflow-x-hidden">
             <enhanced:img
-              src="$lib/assets/bags-of-bites.png"
-              alt="Collection Images"
-              class="max-w-[700px]"
+              src="$lib/assets/onboarding-bites.png"
+              alt="Onboarding bags of chips"
+              class="max-w-[450px]"
             />
           </div>
 
