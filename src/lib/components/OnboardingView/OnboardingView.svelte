@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { ArrowLeft } from '@lucide/svelte';
+  import { ArrowLeft, X } from '@lucide/svelte';
   import { fade, fly } from 'svelte/transition';
 
-  import { invalidateAll } from '$app/navigation';
+  import { goto, invalidateAll } from '$app/navigation';
   import { page } from '$app/state';
   import { Button } from '$lib/components/Button';
   import { Modal } from '$lib/components/Modal/index.js';
@@ -26,6 +26,7 @@
   let isStartPage = $state(true);
   let isTopicSelectionPage = $state(false);
   let isFrequencySelectionPage = $state(false);
+  let isSubscribePage = $state(false);
   let selectedTopics = $state<string[]>([]);
   let selectedFrequency = $state<string | null>(null);
 
@@ -62,25 +63,69 @@
     selectedFrequency = null;
   };
 
-  const handleClose = async () => {
+  const handleConfirm = async () => {
     const payload = {
       topics: selectedTopics,
       frequency: selectedFrequency,
       csrfToken: page.data.csrfToken,
     };
 
-    const response = await fetch('/api/onboarding', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    });
+    try {
+      const response = await fetch('/api/onboarding', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
 
-    if (response.ok) {
-      await invalidateAll();
-      onclose();
+      if (!response.ok) {
+        if (response.status === 401) {
+          return goto('/login');
+        }
+
+        console.error('Failed to onboard user');
+        return;
+      }
+
+      isFrequencySelectionPage = false;
+      isSubscribePage = true;
+    } catch (error) {
+      console.error(error);
     }
+  };
+
+  const handleClose = async () => {
+    onclose();
+    await invalidateAll();
+  };
+
+  const handleSubscribe = async () => {
+    try {
+      const response = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          isSubscribed: true,
+          csrfToken: page.data.csrfToken,
+        }),
+      });
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          return goto('/login');
+        }
+
+        console.error('Failed to onboard user');
+        return;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+
+    await handleClose();
   };
 
   const handleTopicChange = (type: string, checked: boolean) => {
@@ -163,14 +208,14 @@
     <!-- Modal -->
     <Modal
       isopen
-      onclose={handleClose}
+      onclose={handleConfirm}
       variant="light"
       size="full"
       closeonescape={false}
       closeonbackdropclick={false}
     >
       {#if isStartPage}
-        <div class="relative mx-auto flex min-h-svh w-full flex-col pt-3">
+        <div class="relative mx-auto flex min-h-svh w-full flex-col bg-slate-100 pt-3">
           <div bind:this={target} class="absolute inset-x-0 top-0 h-px"></div>
 
           <div class="mx-auto w-full max-w-5xl">
@@ -218,14 +263,12 @@
             ></div>
 
             <div class="mx-auto flex w-full max-w-5xl items-center justify-between px-4 py-3">
-              <div class="flex items-center gap-x-2">
-                <button
-                  onclick={handleBackToStart}
-                  class="cursor-pointer rounded-full p-4 transition-colors hover:bg-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed"
-                >
-                  <ArrowLeft />
-                </button>
-              </div>
+              <button
+                onclick={handleBackToStart}
+                class="cursor-pointer rounded-full p-4 transition-colors hover:bg-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed"
+              >
+                <ArrowLeft />
+              </button>
             </div>
           </header>
 
@@ -307,14 +350,12 @@
             ></div>
 
             <div class="mx-auto flex w-full max-w-5xl items-center justify-between px-4 py-3">
-              <div class="flex items-center gap-x-2">
-                <button
-                  onclick={handleBackToTopic}
-                  class="cursor-pointer rounded-full p-4 transition-colors hover:bg-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed"
-                >
-                  <ArrowLeft />
-                </button>
-              </div>
+              <button
+                onclick={handleBackToTopic}
+                class="cursor-pointer rounded-full p-4 transition-colors hover:bg-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed"
+              >
+                <ArrowLeft />
+              </button>
             </div>
           </header>
 
@@ -443,10 +484,71 @@
               <Button
                 variant="primary"
                 width="full"
-                onclick={handleClose}
+                onclick={handleConfirm}
                 disabled={isConfirmDisabled}
               >
                 Confirm
+              </Button>
+            </div>
+          </div>
+        </div>
+      {:else if isSubscribePage}
+        <div
+          class="fixed inset-0 z-200 bg-slate-100"
+          transition:fly={{ duration: 300, x: '100%', opacity: 1 }}
+        >
+          <header class="fixed inset-x-0 top-0 z-250 flex backdrop-blur-sm">
+            <div
+              class={[
+                'inset-x-0 top-full h-px bg-transparent transition-colors duration-300',
+                !isWithinViewport.current && '!bg-slate-950/7.5',
+              ]}
+            ></div>
+
+            <div class="mx-auto flex w-full max-w-5xl items-center justify-end px-4 py-3">
+              <button
+                onclick={handleClose}
+                class="cursor-pointer rounded-full p-4 transition-colors hover:bg-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed"
+              >
+                <X />
+              </button>
+            </div>
+          </header>
+
+          <div class="relative mx-auto flex h-full w-full max-w-5xl flex-col pt-23">
+            <div bind:this={target} class="absolute inset-x-0 top-0 h-px"></div>
+
+            <div class="flex flex-1 flex-col gap-y-6 px-4 py-3">
+              <div class="flex flex-col items-center">
+                <div class="flex flex-col gap-y-3">
+                  <div class="flex flex-col text-center text-3xl">
+                    <span>One last thing!</span>
+                  </div>
+
+                  <div class="flex flex-col text-center text-slate-600">
+                    <span>Want fresh learning bites delivered to your inbox?</span>
+                    <span
+                      >Get a monthly serving of educator stories, trending topics, and
+                      classroom-ready tips.
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex flex-1 flex-col items-center justify-center">
+                <enhanced:img
+                  src="$lib/assets/cycling-man.png"
+                  alt="Man cycling"
+                  class="max-w-[500px]"
+                />
+              </div>
+            </div>
+
+            <div class="flex flex-col justify-center gap-y-3 px-4 pb-13">
+              <Button variant="primary" width="full" onclick={handleSubscribe}>Subscribe</Button>
+
+              <Button variant="secondary" width="full" onclick={handleClose}>
+                Remind Me Later
               </Button>
             </div>
           </div>
