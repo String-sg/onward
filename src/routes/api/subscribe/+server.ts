@@ -40,11 +40,11 @@ export const POST: RequestHandler = async (event) => {
   const { isSubscribed } = params;
 
   try {
-    await db.user.update({
+    await db.userProfile.update({
       data: {
         isSubscribed,
       },
-      where: { id: user.id },
+      where: { userId: user.id },
     });
   } catch (err) {
     logger.error({ err }, "Failed to update user's subscription");

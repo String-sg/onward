@@ -29,7 +29,7 @@
   let isChatViewOpen = $state(false);
   let isTrackingSession = $state(false);
   let isPodcastCompletedModalOpen = $state(false);
-  let isOnboardingViewOpen = $derived(page.data.onboarding);
+  let isOnboardingViewOpen = $derived(!page.data.onboarded);
 
   const isQuizPage = $derived(page.url.pathname.includes('/quiz'));
 
