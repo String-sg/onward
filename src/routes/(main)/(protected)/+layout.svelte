@@ -30,7 +30,7 @@
   let isTrackingSession = $state(false);
   let isPodcastCompletedModalOpen = $state(false);
   let isQuizAvailable = $derived(page.data?.isQuizAvailable ?? false);
-  let isOnboardingViewOpen = $derived(page.data.onboarding);
+  let isOnboardingViewOpen = $derived(!page.data.onboarding);
 
   const isQuizPage = $derived(page.url.pathname.includes('/quiz'));
 

@@ -15,12 +15,7 @@ export const load: LayoutServerLoad = async (event) => {
 
   const userArgs = {
     select: {
-      learningFrequency: true,
-      interests: {
-        select: {
-          collectionId: true,
-        },
-      },
+      userProfile: true,
     },
     where: { id: user.id },
   } satisfies UserFindUniqueArgs;
@@ -39,12 +34,11 @@ export const load: LayoutServerLoad = async (event) => {
     throw error(404);
   }
 
-  const onboarding =
-    !userData?.learningFrequency || !userData?.interests || userData.interests.length === 0;
+  const onboarded = userData?.userProfile;
 
   return {
     username: user.name,
     csrfToken: event.locals.session.csrfToken(),
-    onboarding,
+    onboarded,
   };
 };

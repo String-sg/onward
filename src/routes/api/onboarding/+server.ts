@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit';
 
-import { db } from '$lib/server/db';
+import { db, type UserProfileUpsertArgs } from '$lib/server/db';
 
 import type { RequestHandler } from './$types';
 
@@ -59,8 +59,17 @@ export const POST: RequestHandler = async (event) => {
       return json(null, { status: 400 });
     }
 
-    await db.user.update({
-      data: {
+    const userProfileArgs = {
+      create: {
+        userId: user.id,
+        learningFrequency: frequency,
+        interests: {
+          create: collections.map((collection) => ({
+            collectionId: collection.id,
+          })),
+        },
+      },
+      update: {
         learningFrequency: frequency,
         interests: {
           deleteMany: {},
@@ -69,8 +78,10 @@ export const POST: RequestHandler = async (event) => {
           })),
         },
       },
-      where: { id: user.id },
-    });
+      where: { userId: user.id },
+    } satisfies UserProfileUpsertArgs;
+
+    await db.userProfile.upsert(userProfileArgs);
   } catch (err) {
     logger.error({ err }, 'Failed to complete onboarding');
     return json(null, { status: 500 });
