@@ -239,7 +239,7 @@
             <enhanced:img
               src="$lib/assets/onboarding-bites.png"
               alt="Onboarding bags of chips"
-              class="max-w-[430px]"
+              class="max-w-[700px]"
             />
           </div>
 
