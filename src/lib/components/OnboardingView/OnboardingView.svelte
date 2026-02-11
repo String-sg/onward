@@ -326,13 +326,15 @@
               </div>
             </div>
 
-            <div class="flex justify-center px-4 pb-13">
+            <div class="flex justify-center px-4 pt-4 pb-13">
               <Button
                 variant="primary"
                 width="full"
                 onclick={handleTopicPageNext}
-                disabled={isNextDisabled}>Next</Button
+                disabled={isNextDisabled}
               >
+                Next
+              </Button>
             </div>
           </div>
         </div>
@@ -362,7 +364,7 @@
           <div class="relative mx-auto flex h-full w-full max-w-5xl flex-col pt-23">
             <div bind:this={target} class="absolute inset-x-0 top-0 h-px"></div>
 
-            <div class="flex flex-1 flex-col gap-y-6 px-4 py-3">
+            <div class="flex flex-1 flex-col gap-y-6 overflow-y-auto px-4 py-3">
               <div class="flex flex-col items-center">
                 <div class="flex flex-col gap-y-3">
                   <div class="flex flex-col text-center text-3xl">
@@ -480,7 +482,7 @@
               {/if}
             </div>
 
-            <div class="flex justify-center px-4 pb-13">
+            <div class="flex justify-center px-4 pt-4 pb-13">
               <Button
                 variant="primary"
                 width="full"
@@ -518,7 +520,7 @@
           <div class="relative mx-auto flex h-full w-full max-w-5xl flex-col pt-23">
             <div bind:this={target} class="absolute inset-x-0 top-0 h-px"></div>
 
-            <div class="flex flex-1 flex-col gap-y-6 px-4 py-3">
+            <div class="flex flex-1 flex-col gap-y-6 overflow-y-auto px-4 py-3">
               <div class="flex flex-col items-center">
                 <div class="flex flex-col gap-y-3">
                   <div class="flex flex-col text-center text-3xl">
@@ -544,7 +546,7 @@
               </div>
             </div>
 
-            <div class="flex flex-col justify-center gap-y-3 px-4 pb-13">
+            <div class="flex flex-col justify-center gap-y-3 px-4 py-3 pb-10">
               <Button variant="primary" width="full" onclick={handleSubscribe}>Subscribe</Button>
 
               <Button variant="secondary" width="full" onclick={handleClose}>
