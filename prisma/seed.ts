@@ -159,9 +159,13 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     createdBy: 'DXD Product Team',
     isRequired: true,
     dueDate: new Date('2026-02-12'), // Required
-    collection: {
-      connect: {
-        id: collections[0].id,
+    collections: {
+      create: {
+        collection: {
+          connect: {
+            id: collections[0].id,
+          },
+        },
       },
     },
     tags: {
@@ -189,9 +193,13 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     createdBy: 'DXD Product Team',
     isRequired: true,
     dueDate: new Date('2025-11-01'), // Overdue
-    collection: {
-      connect: {
-        id: collections[0].id,
+    collections: {
+      create: {
+        collection: {
+          connect: {
+            id: collections[0].id,
+          },
+        },
       },
     },
     tags: {
@@ -218,9 +226,13 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     objectives,
     createdBy: 'DXD Product Team',
     isRequired: false, // Not required
-    collection: {
-      connect: {
-        id: collections[1].id,
+    collections: {
+      create: {
+        collection: {
+          connect: {
+            id: collections[1].id,
+          },
+        },
       },
     },
     tags: {
@@ -248,9 +260,13 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     createdBy: 'DXD Product Team',
     isRequired: true,
     dueDate: new Date('2025-11-20'), // Overdue
-    collection: {
-      connect: {
-        id: collections[1].id,
+    collections: {
+      create: {
+        collection: {
+          connect: {
+            id: collections[1].id,
+          },
+        },
       },
     },
     tags: {
@@ -278,9 +294,13 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     createdBy: 'DXD Product Team',
     isRequired: true,
     dueDate: new Date('2026-02-12'), // Required
-    collection: {
-      connect: {
-        id: collections[2].id,
+    collections: {
+      create: {
+        collection: {
+          connect: {
+            id: collections[2].id,
+          },
+        },
       },
     },
     tags: {
@@ -308,9 +328,13 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     createdBy: 'DXD Product Team',
     isRequired: true,
     dueDate: new Date('2026-02-12'), // Required
-    collection: {
-      connect: {
-        id: collections[3].id,
+    collections: {
+      create: {
+        collection: {
+          connect: {
+            id: collections[3].id,
+          },
+        },
       },
     },
     tags: {
@@ -338,9 +362,13 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     createdBy: 'DXD Product Team',
     isRequired: true,
     dueDate: new Date('2026-02-12'), // Required
-    collection: {
-      connect: {
-        id: collections[4].id,
+    collections: {
+      create: {
+        collection: {
+          connect: {
+            id: collections[4].id,
+          },
+        },
       },
     },
     tags: {
@@ -368,9 +396,13 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     createdBy: 'DXD Product Team',
     isRequired: true,
     dueDate: new Date('2026-02-12'), // Required
-    collection: {
-      connect: {
-        id: collections[5].id,
+    collections: {
+      create: {
+        collection: {
+          connect: {
+            id: collections[5].id,
+          },
+        },
       },
     },
     tags: {
