@@ -25,8 +25,9 @@ export const load: PageServerLoad = async (event) => {
       c.type AS type,
       COUNT(DISTINCT lj.id) AS "numberOfPodcasts"
     FROM learning_journeys lj
-    INNER JOIN learning_units lu ON lu.id = lj.learning_unit_id
-    INNER JOIN collections c ON c.id = lu.collection_id
+           INNER JOIN learning_units lu ON lu.id = lj.learning_unit_id
+           INNER JOIN learning_unit_collections luc ON luc.learning_unit_id = lu.id
+           INNER JOIN collections c ON c.id = luc.collection_id
     WHERE lj.user_id = ${user.id}
     GROUP BY c.id
     ORDER BY MAX(lj.updated_at) DESC;

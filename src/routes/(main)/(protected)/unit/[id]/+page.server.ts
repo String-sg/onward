@@ -56,9 +56,14 @@ export const load: PageServerLoad = async (event) => {
       createdBy: true,
       isRequired: true,
       dueDate: true,
-      collection: {
+      collections: {
+        take: 1,
         select: {
-          type: true,
+          collection: {
+            select: {
+              type: true,
+            },
+          },
         },
       },
     },
@@ -195,7 +200,7 @@ export const load: PageServerLoad = async (event) => {
     url: learningUnit.contentURL,
     createdAt: learningUnit.createdAt,
     createdBy: learningUnit.createdBy,
-    collectionType: learningUnit.collection.type,
+    collectionType: learningUnit.collections[0]?.collection.type,
     isQuizAvailable,
     isRequired: learningUnit.isRequired,
     dueDate: learningUnit.dueDate,

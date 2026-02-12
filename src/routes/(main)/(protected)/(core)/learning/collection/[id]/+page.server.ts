@@ -76,7 +76,11 @@ export const load: PageServerLoad = async (event) => {
     where: {
       userId: user.id,
       learningUnit: {
-        collectionId: event.params.id,
+        collections: {
+          some: {
+            collectionId: event.params.id,
+          },
+        },
       },
     },
     orderBy: {
