@@ -24,9 +24,14 @@ export const load: PageServerLoad = async (event) => {
       createdBy: true,
       isRequired: true,
       dueDate: true,
-      collection: {
+      collections: {
+        take: 1,
         select: {
-          type: true,
+          collection: {
+            select: {
+              type: true,
+            },
+          },
         },
       },
       tags: {
@@ -97,7 +102,7 @@ export const load: PageServerLoad = async (event) => {
         learningJourney: lu.learningJourneys[0],
       }),
       tags: lu.tags.map((t) => t.tag),
-      collectionType: lu.collection.type,
+      collectionType: lu.collections[0]?.collection.type,
     })),
   };
 };

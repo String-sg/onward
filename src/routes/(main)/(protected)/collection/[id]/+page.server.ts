@@ -76,7 +76,7 @@ export const load: PageServerLoad = async (event) => {
         },
       },
     },
-    where: { collectionId: event.params.id },
+    where: { collections: { some: { collectionId: event.params.id } } },
     orderBy: {
       createdAt: 'desc',
     },

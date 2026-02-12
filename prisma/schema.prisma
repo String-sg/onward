@@ -52,7 +52,7 @@ model Collection {
   type        CollectionType @map("type")
 
   // Relations.
-  learningUnit  LearningUnit[]
+  learningUnits LearningUnitCollection[]
   userInterests UserInterest[]
 
   @@map("collections")
@@ -90,9 +90,7 @@ model LearningUnit {
   dueDate       DateTime?   @map("due_date") @db.Date
 
   // Relations.
-  collectionId String @map("collection_id") @db.Uuid
-
-  collection       Collection               @relation(fields: [collectionId], references: [id])
+  collections      LearningUnitCollection[]
   sentiments       LearningUnitSentiments[]
   tags             LearningUnitTag[]
   learningJourneys LearningJourney[]
@@ -100,6 +98,18 @@ model LearningUnit {
   sources          LearningUnitSources[]
 
   @@map("learning_units")
+}
+
+model LearningUnitCollection {
+  // Relations.
+  learningUnitId String @map("learning_unit_id") @db.Uuid
+  collectionId   String @map("collection_id") @db.Uuid
+
+  learningUnit LearningUnit @relation(fields: [learningUnitId], references: [id], onDelete: Cascade)
+  collection   Collection   @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+
+  @@id([learningUnitId, collectionId])
+  @@map("learning_unit_collections")
 }
 
 model LearningUnitSentiments {
