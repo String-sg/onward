@@ -30,16 +30,6 @@ export const load: PageServerLoad = async (event) => {
       createdBy: true,
       isRequired: true,
       dueDate: true,
-      collections: {
-        take: 1,
-        select: {
-          collection: {
-            select: {
-              type: true,
-            },
-          },
-        },
-      },
       tags: {
         select: {
           tag: {
@@ -102,16 +92,6 @@ export const load: PageServerLoad = async (event) => {
       createdBy: true,
       isRequired: true,
       dueDate: true,
-      collections: {
-        take: 1,
-        select: {
-          collection: {
-            select: {
-              type: true,
-            },
-          },
-        },
-      },
       tags: {
         select: {
           tag: {
@@ -183,16 +163,6 @@ export const load: PageServerLoad = async (event) => {
               },
             },
           },
-          collections: {
-            take: 1,
-            select: {
-              collection: {
-                select: {
-                  type: true,
-                },
-              },
-            },
-          },
         },
       },
     },
@@ -217,7 +187,11 @@ export const load: PageServerLoad = async (event) => {
     select: {
       id: true,
       title: true,
-      type: true,
+      tag: {
+        select: {
+          code: true,
+        },
+      },
       _count: {
         select: {
           learningUnits: true,
@@ -235,7 +209,6 @@ export const load: PageServerLoad = async (event) => {
         dueDate: lu.dueDate,
       }),
       tags: lu.tags.map((t) => t.tag),
-      collectionType: lu.collections[0]?.collection.type,
     })),
     recommendedLearningUnits: recommendedLearningUnits.map((lu) => ({
       ...lu,
@@ -245,14 +218,12 @@ export const load: PageServerLoad = async (event) => {
         learningJourney: lu.learningJourneys[0],
       }),
       tags: lu.tags.map((t) => t.tag),
-      collectionType: lu.collections[0]?.collection.type,
     })),
     learningJourneys: learningJourneys.map((lj) => ({
       ...lj,
       learningUnit: {
         ...lj.learningUnit,
         tags: lj.learningUnit.tags.map((t) => t.tag),
-        collectionType: lj.learningUnit.collections[0]?.collection.type,
         status: getLearningUnitStatus({
           isRequired: lj.learningUnit.isRequired,
           dueDate: lj.learningUnit.dueDate,

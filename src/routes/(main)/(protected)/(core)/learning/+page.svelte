@@ -16,7 +16,7 @@
         <Collection
           to={`/learning/collection/${collection.id}`}
           title={collection.title}
-          type={collection.type}
+          type={collection.tagCode}
           numberofpodcasts={collection.numberOfPodcasts}
         />
       {/each}

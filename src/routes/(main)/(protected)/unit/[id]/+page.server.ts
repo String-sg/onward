@@ -56,16 +56,6 @@ export const load: PageServerLoad = async (event) => {
       createdBy: true,
       isRequired: true,
       dueDate: true,
-      collections: {
-        take: 1,
-        select: {
-          collection: {
-            select: {
-              type: true,
-            },
-          },
-        },
-      },
     },
     where: { id: event.params.id },
   } satisfies LearningUnitFindUniqueArgs;
@@ -200,7 +190,6 @@ export const load: PageServerLoad = async (event) => {
     url: learningUnit.contentURL,
     createdAt: learningUnit.createdAt,
     createdBy: learningUnit.createdBy,
-    collectionType: learningUnit.collections[0]?.collection.type,
     isQuizAvailable,
     isRequired: learningUnit.isRequired,
     dueDate: learningUnit.dueDate,

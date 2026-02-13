@@ -22,7 +22,6 @@
       title: learningUnit.title,
       summary: learningUnit.summary,
       url: learningUnit.contentURL,
-      type: learningUnit.collectionType,
     });
   };
 
@@ -150,7 +149,7 @@
           <Collection
             to="/collection/{collection.id}"
             title={collection.title}
-            type={collection.type}
+            type={collection.tag.code}
             numberofpodcasts={collection.numberOfPodcasts}
           />
         {/if}

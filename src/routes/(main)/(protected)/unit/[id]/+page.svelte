@@ -70,7 +70,6 @@
       title: data.title,
       summary: data.summary,
       url: data.url,
-      type: data.collectionType,
     });
   };
 
@@ -90,7 +89,6 @@
           title: data.title,
           summary: data.summary,
           url: data.url,
-          type: data.collectionType,
         },
         initialSeekTime,
       );
@@ -139,18 +137,18 @@
   <div
     class={[
       'flex flex-col gap-y-2 rounded-3xl border border-slate-200 p-6',
-      data.collectionType === 'AI' && 'bg-pink-50',
-      data.collectionType === 'BOB' && 'bg-blue-50',
-      data.collectionType === 'CAREER' && 'bg-violet-50',
-      data.collectionType === 'EDU_VOICES' && 'bg-cyan-50',
-      data.collectionType === 'EMP_ENGAGEMENT' && 'bg-blue-50',
-      data.collectionType === 'INFRA' && 'bg-blue-50',
-      data.collectionType === 'INNOV' && 'bg-pink-50',
-      data.collectionType === 'NEWS' && 'bg-cyan-50',
-      data.collectionType === 'PROD' && 'bg-orange-50',
-      data.collectionType === 'STU_WELL' && 'bg-green-50',
-      data.collectionType === 'STU_DEV' && 'bg-green-50',
-      data.collectionType === 'WELLBEING' && 'bg-emerald-50',
+      data.tags[0].code === 'AI' && 'bg-pink-50',
+      data.tags[0].code === 'BOB' && 'bg-blue-50',
+      data.tags[0].code === 'CAREER' && 'bg-violet-50',
+      data.tags[0].code === 'EDU_VOICES' && 'bg-cyan-50',
+      data.tags[0].code === 'EMP_ENGAGEMENT' && 'bg-blue-50',
+      data.tags[0].code === 'INFRA' && 'bg-blue-50',
+      data.tags[0].code === 'INNOV' && 'bg-pink-50',
+      data.tags[0].code === 'NEWS' && 'bg-cyan-50',
+      data.tags[0].code === 'PROD' && 'bg-orange-50',
+      data.tags[0].code === 'STU_WELL' && 'bg-green-50',
+      data.tags[0].code === 'STU_DEV' && 'bg-green-50',
+      data.tags[0].code === 'WELLBEING' && 'bg-emerald-50',
     ]}
   >
     <div class="flex flex-wrap gap-x-2">
@@ -177,8 +175,8 @@
         </div>
       {/if}
 
-      {#if data.collectionType}
-        {@const badgeInfo = getBadgeInfo(data.collectionType)}
+      {#if data.tags[0]}
+        {@const badgeInfo = getBadgeInfo(data.tags[0].code)}
         <Badge variant={badgeInfo.variant}>{badgeInfo.label}</Badge>
       {/if}
     </div>
