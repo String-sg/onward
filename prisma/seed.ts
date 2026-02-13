@@ -3,12 +3,7 @@ import 'dotenv/config';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { v7 as uuidv7 } from 'uuid';
 
-import {
-  CollectionType,
-  ContentType,
-  type Prisma,
-  PrismaClient,
-} from '../src/generated/prisma/client.js';
+import { ContentType, type Prisma, PrismaClient } from '../src/generated/prisma/client.js';
 
 const db = new PrismaClient({
   adapter: new PrismaPg({
@@ -66,38 +61,62 @@ const collections: Prisma.CollectionCreateInput[] = [
     title: 'SEN Peer Support',
     description:
       'Explore the world of Special Educational Needs (SEN) peer support that indicates Singapore specific peer support knowledge, case studies and more to gain knowledge about SEN.',
-    type: CollectionType.STU_DEV,
+    tag: {
+      connect: {
+        id: tags[0].id, // STU_DEV
+      },
+    },
   },
   {
     id: uuidv7(),
     title: 'Learn to use AI',
     description:
       'Discover how AI is transforming education through personalized learning, intelligent tutoring systems, and data-driven insights to enhance teaching effectiveness.',
-    type: CollectionType.AI,
+    tag: {
+      connect: {
+        id: tags[1].id, // AI
+      },
+    },
   },
   {
     id: uuidv7(),
     title: 'Infrastructure for Education',
     description: 'Lorem Ipsum 1',
-    type: CollectionType.INFRA,
+    tag: {
+      connect: {
+        id: tags[2].id, // INFRA
+      },
+    },
   },
   {
     id: uuidv7(),
     title: 'Wellbeing 1',
     description: 'Loren Ipsum 2',
-    type: CollectionType.WELLBEING,
+    tag: {
+      connect: {
+        id: tags[3].id, // WELLBEING
+      },
+    },
   },
   {
     id: uuidv7(),
     title: 'Educator Voices',
     description: 'Loren Ipsum 3',
-    type: CollectionType.EDU_VOICES,
+    tag: {
+      connect: {
+        id: tags[4].id, // EDU_VOICES
+      },
+    },
   },
   {
     id: uuidv7(),
     title: 'Engagement',
     description: 'Loren Ipsum 4',
-    type: CollectionType.EMP_ENGAGEMENT,
+    tag: {
+      connect: {
+        id: tags[5].id, // EMP_ENGAGEMENT
+      },
+    },
   },
 ];
 
