@@ -1,6 +1,5 @@
 import { redirect } from '@sveltejs/kit';
 
-import { env } from '$env/dynamic/private';
 import {
   adminAuth,
   exchangeCodeForIdToken,
@@ -10,8 +9,8 @@ import {
 import {
   db,
   PrismaClientKnownRequestError,
-  type UserFindUniqueArgs,
-  type UserGetPayload,
+  type UserAdminFindUniqueArgs,
+  type UserAdminGetPayload,
 } from '$lib/server/db.js';
 
 import type { RequestHandler } from './$types';
@@ -29,7 +28,7 @@ export const GET: RequestHandler = async (event) => {
       },
       'Missing required OAuth2 parameters from URL',
     );
-    return redirect(302, '/admin');
+    return redirect(302, '/admin?error=session_expired');
   }
 
   const codeVerifier = event.locals.session.get<string>('adminCodeVerifier');
@@ -42,13 +41,13 @@ export const GET: RequestHandler = async (event) => {
       },
       'Missing required values from session',
     );
-    return redirect(302, '/admin');
+    return redirect(302, '/admin?error=session_expired');
   }
 
   const originalState = new URL(authURL).searchParams.get('state');
   if (!originalState || originalState !== state) {
     logger.error('State mismatch between original and callback');
-    return redirect(302, '/admin');
+    return redirect(302, '/admin?error=auth_failed');
   }
 
   let idToken: string | null = null;
@@ -61,11 +60,11 @@ export const GET: RequestHandler = async (event) => {
 
     if (!idToken) {
       logger.error('Missing ID token');
-      return redirect(302, '/admin');
+      return redirect(302, '/admin?error=auth_failed');
     }
   } catch (err) {
     logger.error(err, 'Failed to exchange code for ID token');
-    return redirect(302, '/admin');
+    return redirect(302, '/admin?error=auth_failed');
   }
 
   let profile: GoogleProfile | null = null;
@@ -74,84 +73,112 @@ export const GET: RequestHandler = async (event) => {
 
     if (!profile) {
       logger.error('Invalid Google profile');
-      return redirect(302, '/admin');
+      return redirect(302, '/admin?error=auth_failed');
     }
   } catch (err) {
     logger.error(err, 'Failed to verify ID token');
-    return redirect(302, '/admin');
+    return redirect(302, '/admin?error=auth_failed');
   }
 
-  const adminEmails = env.ADMIN_EMAILS ? env.ADMIN_EMAILS.split(',') : [];
-  if (!adminEmails.includes(profile.email)) {
-    logger.warn({ email: profile.email }, 'Unauthorized email was used to sign in');
-    return redirect(302, '/admin');
-  }
-
-  const userArgs = {
+  // Look up admin in user_admins table
+  const userAdminArgs = {
     select: {
       id: true,
       email: true,
       name: true,
-      avatarURL: true,
+      googleProviderId: true,
+      isActive: true,
     },
     where: {
       email: profile.email,
     },
-  } satisfies UserFindUniqueArgs;
+  } satisfies UserAdminFindUniqueArgs;
 
-  let user: UserGetPayload<typeof userArgs> | null = null;
+  let userAdmin: UserAdminGetPayload<typeof userAdminArgs>;
   try {
-    user = await db.user.findUnique(userArgs);
+    userAdmin = await db.userAdmin.findUniqueOrThrow(userAdminArgs);
   } catch (err) {
-    logger.error({ err, email: profile.email }, 'Failed to find user');
-    return redirect(302, '/admin');
+    logger.error({ err, email: profile.email }, 'Failed to look up admin user');
+    return redirect(302, '/admin?error=server_error');
   }
 
-  if (!user) {
+  if (!userAdmin) {
+    logger.warn({ email: profile.email }, 'Failure to find admin');
+    return redirect(302, '/admin?error=unauthorized');
+  }
+
+  if (!userAdmin.isActive) {
+    logger.warn({ email: profile.email, id: userAdmin.id }, 'Inactive Admin is trying to log in');
+    return redirect(302, '/admin?error=inactive');
+  }
+
+  if (userAdmin.googleProviderId === null) {
+    logger.info(
+      { adminId: userAdmin.id, email: profile.email },
+      'First login, setting ID and name from google profile',
+    );
+
     try {
-      user = await db.user.create({
+      userAdmin = await db.userAdmin.update({
+        where: { id: userAdmin.id },
         data: {
           name: profile.name,
-          email: profile.email,
           googleProviderId: profile.id,
-          avatarURL: profile.picture,
         },
         select: {
           id: true,
           email: true,
           name: true,
-          avatarURL: true,
+          googleProviderId: true,
+          isActive: true,
         },
       });
     } catch (err) {
       if (err instanceof PrismaClientKnownRequestError && err.code === 'P2002') {
-        logger.error(
-          { err, email: profile.email },
-          'Failed to create user due to duplicate constraint',
-        );
-        return redirect(302, '/admin');
+        logger.error({ err, email: profile.email }, 'googleProviderId already exists');
+        return redirect(302, '/admin?error=server_error');
       }
 
-      logger.error({ err, email: profile.email }, 'Failed to create user');
-      return redirect(302, '/admin');
+      logger.error({ err, email: profile.email }, 'Failed to update admin user');
+      return redirect(302, '/admin?error=server_error');
+    }
+  } else {
+    try {
+      userAdmin = await db.userAdmin.update({
+        where: { id: userAdmin.id },
+        data: {
+          name: profile.name,
+        },
+        select: {
+          id: true,
+          email: true,
+          name: true,
+          googleProviderId: true,
+          isActive: true,
+        },
+      });
+    } catch (err) {
+      logger.error({ err, email: profile.email }, 'Failure to get/update admin');
+      return redirect(302, '/admin?error=server_error');
     }
   }
 
   try {
     await adminAuth.signIn(event, {
-      id: user.id.toString(),
-      email: user.email,
-      name: user.name,
+      id: userAdmin.id,
+      email: userAdmin.email,
+      name: userAdmin.name || '',
+      isActive: userAdmin.isActive,
     });
   } catch (err) {
-    logger.error({ err, email: user.email }, 'Failed to sign in user');
-    return redirect(302, '/admin');
+    logger.error({ err, email: userAdmin.email }, 'Failed to sign in user');
+    return redirect(302, '/admin?error=server_error');
   }
 
   const rawState = JSON.parse(Buffer.from(state, 'base64url').toString('utf-8'));
-  const returnTo = rawState['return_to'] || '/admin';
+  const returnTo = rawState['return_to'] || '/admin/dashboard';
 
-  logger.info({ email: user.email }, 'Successfully signed in user');
+  logger.info({ email: userAdmin.email }, 'Successfully signed in admin');
 
   return redirect(302, returnTo);
 };

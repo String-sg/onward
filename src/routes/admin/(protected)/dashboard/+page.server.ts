@@ -5,12 +5,8 @@ import { db, type LearningUnitFindManyArgs, type LearningUnitGetPayload } from '
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async (event) => {
-  if (!event.locals.session.user) {
-    return error(401, 'Unauthorized');
-  }
-
   const logger = event.locals.logger.child({
-    userID: event.locals.session.user.id,
+    userID: event.locals.session.user!.id,
     handler: 'page_load_admin',
   });
 

@@ -31,17 +31,28 @@ const routeProtectionHandle: Handle = async ({ event, resolve }) => {
 
   if (
     event.url.pathname === '/admin/auth/google' ||
-    event.url.pathname === '/admin/auth/google/callback'
+    event.url.pathname === '/admin/auth/google/callback' ||
+    event.url.pathname === '/admin'
   ) {
     return await resolve(event);
   }
 
   if (!event.locals.session.isAuthenticated) {
-    return redirect(303, '/admin/auth/google?return_to=%2Fadmin');
+    return redirect(303, `/admin/auth/google?return_to=${encodeURIComponent(event.url.pathname)}`);
   }
 
   if (!event.locals.session.user) {
     return redirect(303, '/admin/auth/google?return_to=%2Fadmin');
+  }
+
+  const user = event.locals.session.user;
+  if ('isActive' in user && user.isActive === false) {
+    event.locals.logger.warn(
+      { email: user.email },
+      'Inactive admin attempted to access protected route',
+    );
+    await adminAuth.signOut(event);
+    return redirect(303, '/admin?error=inactive');
   }
 
   return await resolve(event);

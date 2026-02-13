@@ -1,83 +1,45 @@
 <script lang="ts">
-  import { Plus } from '@lucide/svelte';
+  import { AlertCircle } from '@lucide/svelte';
 
-  import { goto } from '$app/navigation';
   import { page } from '$app/state';
-  import { LinkButton } from '$lib/components/Button/index.js';
-  import Paginator from '$lib/components/Paginator/Paginator.svelte';
-  import { Table, type TableColumn } from '$lib/components/Table/index.js';
 
-  import type { PageData } from './$types';
+  const errorCode = $derived(page.url.searchParams.get('error'));
 
-  let { data }: { data: PageData } = $props();
-
-  const handlePageChange = (pageNumber: number) => {
-    const url = new URL(page.url);
-    url.searchParams.set('page', pageNumber.toString());
-    goto(url.toString(), { keepFocus: true });
+  const errorMessages: Record<string, string> = {
+    unauthorized: 'Your email address is not authorized.',
+    inactive: 'Your account has been deactivated.',
+    session_expired: 'Your session has expired.',
+    auth_failed: 'Authentication failed.',
+    server_error: 'An unexpected error occurred.',
+    provider_mismatch:
+      'This Google account is already linked to a different admin account. Please use the correct Google account.',
   };
 
-  const learningUnits = $derived(
-    data.learningUnits.map((unit) => ({
-      ...unit,
-      createdAt: new Date(unit.createdAt).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-      }),
-    })),
-  );
-
-  const columns: TableColumn[] = [
-    {
-      key: 'id',
-      label: 'ID',
-    },
-    {
-      key: 'title',
-      label: 'Title',
-    },
-    {
-      key: 'createdBy',
-      label: 'Created By',
-    },
-    {
-      key: 'createdAt',
-      label: 'Created At',
-    },
-    {
-      key: 'isRecommended',
-      label: 'Recommended',
-    },
-    {
-      key: 'isRequired',
-      label: 'Required',
-    },
-  ];
+  const errorMessage = $derived(errorCode ? errorMessages[errorCode] : null);
 </script>
 
-<div class="mx-auto flex max-w-6xl flex-col gap-6">
-  <div class="flex items-center justify-between">
-    <div class="flex flex-col gap-1">
-      <span class="text-xl font-medium">Learning Units</span>
-      <span class="text-xs text-slate-500">Manage all learning units</span>
+<div class="flex min-h-screen items-center justify-center px-4 py-8">
+  <div class="w-full max-w-md">
+    <div class="flex flex-col rounded-lg border border-slate-200 bg-white p-8 shadow-sm">
+      <div class="mb-8 text-center">
+        <h1 class="mb-2 text-2xl font-medium text-slate-950">Glow</h1>
+      </div>
+
+      {#if errorMessage}
+        <div class="mb-6 flex items-start gap-3 rounded-md border border-red-200 bg-red-50 p-4">
+          <AlertCircle class="mt-0.5 size-5 flex-shrink-0 text-red-600" />
+          <div class="flex-1">
+            <p class="text-sm text-red-800">{errorMessage}</p>
+          </div>
+        </div>
+      {/if}
+
+      <a
+        href="/admin/auth/google?return_to=%2Fadmin%2Fdashboard"
+        class=" w-full cursor-pointer rounded-full border border-slate-300 bg-slate-100 px-4 py-3 text-center text-slate-950 shadow-sm transition-colors hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed"
+      >
+        Sign in
+      </a>
     </div>
-
-    <LinkButton class="size-10 rounded-xl text-sm" href="/admin/unit/new">
-      <Plus size={16} /> Create New Learning Unit
-    </LinkButton>
-  </div>
-
-  <div class="flex flex-col gap-0">
-    <Table {columns} data={learningUnits} emptyMessage="No learning units found" />
-
-    {#if data.totalCount > data.pageSize}
-      <Paginator
-        totalCount={data.totalCount}
-        currentPage={data.currentPage}
-        pageSize={data.pageSize}
-        onpagechange={handlePageChange}
-      />
-    {/if}
   </div>
 </div>

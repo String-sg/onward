@@ -18,6 +18,13 @@ export interface User {
   name: string;
 }
 
+export interface AdminUser {
+  id: string;
+  email: string;
+  name: string;
+  isActive: boolean;
+}
+
 type JSONPrimitive = string | number | boolean | null;
 type JSONValue = JSONPrimitive | JSONValue[] | JSONObject;
 type JSONObject = { [key in string]: JSONValue };
@@ -28,7 +35,7 @@ type JSONObject = { [key in string]: JSONValue };
 export default class Session {
   #id: string;
   #csrfToken: string;
-  #user: User | null;
+  #user: User | AdminUser | null;
   #data: JSONObject;
 
   private constructor({
@@ -39,7 +46,7 @@ export default class Session {
   }: {
     id: string;
     csrfToken: string;
-    user: User | null;
+    user: User | AdminUser | null;
     data: JSONObject;
   }) {
     this.#id = id;
@@ -58,7 +65,7 @@ export default class Session {
    * @returns A {@link Session} with the user associated with it.
    */
   static create(
-    user: User | null,
+    user: User | AdminUser | null,
     options: {
       generateId?: () => string;
       generateCSRFToken?: () => string;
@@ -141,14 +148,24 @@ export default class Session {
       return null;
     }
 
+    const isAdmin = 'isActive' in payload['user'];
+
     return new Session({
       id: payload['id'],
       csrfToken: payload['csrfToken'],
-      user: {
-        id: payload['user']['id'],
-        email: payload['user']['email'],
-        name: payload['user']['name'],
-      },
+      user: isAdmin
+        ? {
+            id: payload['user']['id'],
+            email: payload['user']['email'],
+            name: payload['user']['name'],
+            isActive:
+              typeof payload['user']['isActive'] === 'boolean' ? payload['user']['isActive'] : true,
+          }
+        : {
+            id: payload['user']['id'],
+            email: payload['user']['email'],
+            name: payload['user']['name'],
+          },
       data: payload['data'],
     });
   }
@@ -225,7 +242,7 @@ export default class Session {
   /**
    * Returns the user associated with the session, or `null` if the session is unauthenticated.
    */
-  get user(): User | null {
+  get user(): User | AdminUser | null {
     return this.#user ? { ...this.#user } : null;
   }
 
