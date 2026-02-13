@@ -217,15 +217,15 @@
     <div
       class={[
         'absolute left-1/2 h-1/3 w-[150%] -translate-x-1/2 rounded-b-[50%]',
-        player.currentTrack.type === 'BOB' && 'bg-blue-400',
-        player.currentTrack.type === 'AI' && 'bg-cyan-400',
-        player.currentTrack.type === 'NEWS' && 'bg-orange-400',
-        player.currentTrack.type === 'PROD' && 'bg-emerald-400',
-        player.currentTrack.type === 'CAREER' && 'bg-violet-400',
-        player.currentTrack.type === 'INNOV' && 'bg-pink-400',
-        player.currentTrack.type === 'WELLBEING' && 'bg-teal-400',
-        player.currentTrack.type === 'STU_WELL' && 'bg-sky-400',
-        player.currentTrack.type === 'STU_DEV' && 'bg-green-400',
+        player.currentTrack.tags[0].code === 'BOB' && 'bg-blue-400',
+        player.currentTrack.tags[0].code === 'AI' && 'bg-cyan-400',
+        player.currentTrack.tags[0].code === 'NEWS' && 'bg-orange-400',
+        player.currentTrack.tags[0].code === 'PROD' && 'bg-emerald-400',
+        player.currentTrack.tags[0].code === 'CAREER' && 'bg-violet-400',
+        player.currentTrack.tags[0].code === 'INNOV' && 'bg-pink-400',
+        player.currentTrack.tags[0].code === 'WELLBEING' && 'bg-teal-400',
+        player.currentTrack.tags[0].code === 'STU_WELL' && 'bg-sky-400',
+        player.currentTrack.tags[0].code === 'STU_DEV' && 'bg-green-400',
       ]}
     ></div>
 
@@ -241,55 +241,55 @@
 
       <div class="mx-auto flex min-h-svh max-w-5xl flex-col gap-y-6 px-4 py-3">
         <div class="flex flex-col items-center justify-center">
-          {#if player.currentTrack.type === 'BOB'}
+          {#if player.currentTrack.tags[0].code === 'BOB'}
             <enhanced:img
               src="$lib/assets/collections/learn-with-bob.png?w=464"
               alt="Learn with Bob"
               class="w-[232px]"
             />
-          {:else if player.currentTrack.type === 'AI'}
+          {:else if player.currentTrack.tags[0].code === 'AI'}
             <enhanced:img
               src="$lib/assets/collections/artificial-intelligence.png?w=464"
               alt="Artificial Intelligence"
               class="w-[232px]"
             />
-          {:else if player.currentTrack.type === 'NEWS'}
+          {:else if player.currentTrack.tags[0].code === 'NEWS'}
             <enhanced:img
               src="$lib/assets/collections/in-the-news.png?w=464"
               alt="In the News"
               class="w-[232px]"
             />
-          {:else if player.currentTrack.type === 'PROD'}
+          {:else if player.currentTrack.tags[0].code === 'PROD'}
             <enhanced:img
               src="$lib/assets/collections/productivity.png?w=464"
               alt="Productivity"
               class="w-[232px]"
             />
-          {:else if player.currentTrack.type === 'CAREER'}
+          {:else if player.currentTrack.tags[0].code === 'CAREER'}
             <enhanced:img
               src="$lib/assets/collections/career-growth.png?w=464"
               alt="Career Growth"
               class="w-[232px]"
             />
-          {:else if player.currentTrack.type === 'INNOV'}
+          {:else if player.currentTrack.tags[0].code === 'INNOV'}
             <enhanced:img
               src="$lib/assets/collections/innovation.png?w=464"
               alt="Innovation"
               class="w-[232px]"
             />
-          {:else if player.currentTrack.type === 'WELLBEING'}
+          {:else if player.currentTrack.tags[0].code === 'WELLBEING'}
             <enhanced:img
               src="$lib/assets/collections/wellbeing.png?w=464"
               alt="Wellbeing"
               class="w-[232px]"
             />
-          {:else if player.currentTrack.type === 'STU_WELL'}
+          {:else if player.currentTrack.tags[0].code === 'STU_WELL'}
             <enhanced:img
               src="$lib/assets/collections/student-wellbeing.png?w=464"
               alt="Student Wellbeing"
               class="w-[232px]"
             />
-          {:else if player.currentTrack.type === 'STU_DEV'}
+          {:else if player.currentTrack.tags[0].code === 'STU_DEV'}
             <enhanced:img
               src="$lib/assets/collections/student-development.png?w=464"
               alt="Student Development"

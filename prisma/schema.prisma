@@ -47,30 +47,16 @@ model Collection {
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   // Domain-Specific Fields.
-  title       String         @map("title")
-  description String         @map("description")
-  type        CollectionType @map("type")
+  title       String @map("title")
+  description String @map("description")
+  tagId       String @map("tag_id") @db.Uuid
 
   // Relations.
   learningUnits LearningUnitCollection[]
   userInterests UserInterest[]
+  tag           Tag                      @relation(fields: [tagId], references: [id])
 
   @@map("collections")
-}
-
-enum CollectionType {
-  AI
-  BOB
-  CAREER
-  INNOV
-  NEWS
-  PROD
-  STU_DEV
-  STU_WELL
-  WELLBEING
-  INFRA
-  EDU_VOICES
-  EMP_ENGAGEMENT
 }
 
 model LearningUnit {
@@ -186,6 +172,7 @@ model Tag {
   // Relations.
   learningUnits       LearningUnitTag[]
   LearningUnitSources LearningUnitSourcesTag[]
+  collections         Collection[]
 
   @@map("tags")
 }

@@ -40,7 +40,11 @@ export const load: PageServerLoad = async (event) => {
     select: {
       title: true,
       description: true,
-      type: true,
+      tag: {
+        select: {
+          code: true,
+        },
+      },
     },
   });
 

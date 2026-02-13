@@ -46,7 +46,7 @@
 <main class="relative mx-auto flex min-h-svh max-w-5xl flex-col gap-y-6 px-4 pt-23 pb-28">
   <div
     class="flex flex-col gap-y-2 rounded-3xl border border-slate-200 p-6 {COLLECTION_BG_COLOR[
-      data.collection.type
+      data.collection.tag.code
     ]}
    "
   >
