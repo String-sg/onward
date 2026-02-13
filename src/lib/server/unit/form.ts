@@ -5,8 +5,6 @@ export const ERROR_MESSAGES = {
   INVALID_OPTION: 'Invalid option selected. Please select a valid option.',
   DATE_PAST: 'Due date must be tomorrow or later.',
   INVALID_DATA: (data = 'data') => `Invalid ${data} format.`,
-  FILE_UPLOAD_REQUIRED: (fileType: string) => `Please upload a ${fileType} file`,
-  FILE_TYPE_INVALID: (fileType: string) => `File must be a valid ${fileType} file`,
   ARRAY_MIN: (field: string, min: number) =>
     `At least ${min} ${field.toLowerCase()} ${min === 1 ? 'is' : 'are'} required`,
 };
@@ -14,7 +12,7 @@ export const ERROR_MESSAGES = {
 export interface LearningUnitFormData {
   title: string;
   contentType: ContentType;
-  podcastFile: File;
+  contentURL: string;
   summary: string;
   objectives: string;
   createdBy: string;
@@ -62,11 +60,15 @@ export function validateLearningUnit(data: FormData):
     errors.contentType = { message: ERROR_MESSAGES.INVALID_OPTION };
   }
 
-  const podcastFile = data.get('podcastFile');
-  if (!podcastFile || !(podcastFile instanceof File) || podcastFile.size === 0) {
-    errors.podcastFile = { message: ERROR_MESSAGES.FILE_UPLOAD_REQUIRED('podcast') };
-  } else if (!podcastFile.type.startsWith('audio/')) {
-    errors.podcastFile = { message: ERROR_MESSAGES.FILE_TYPE_INVALID('audio') };
+  const contentURL = data.get('contentURL');
+  if (!contentURL || typeof contentURL !== 'string' || contentURL.trim().length === 0) {
+    errors.contentURL = { message: ERROR_MESSAGES.FIELD_REQUIRED };
+  } else {
+    try {
+      new URL(contentURL);
+    } catch {
+      errors.contentURL = { message: ERROR_MESSAGES.INVALID_DATA('URL') };
+    }
   }
 
   const summary = data.get('summary');
@@ -259,7 +261,7 @@ export function validateLearningUnit(data: FormData):
     data: {
       title: (title as string).trim(),
       contentType: contentType as ContentType,
-      podcastFile: podcastFile as File,
+      contentURL: (contentURL as string).trim(),
       summary: (summary as string).trim(),
       objectives: (objectives as string).trim(),
       createdBy: (createdBy as string).trim(),

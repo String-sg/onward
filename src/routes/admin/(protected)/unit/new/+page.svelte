@@ -4,7 +4,6 @@
   import { Button } from '$lib/components/Button';
   import { Checkbox } from '$lib/components/Checkbox';
   import { DateInput } from '$lib/components/DateInput';
-  import { FileInput } from '$lib/components/FileInput';
   import { FormField } from '$lib/components/FormField';
   import { Select } from '$lib/components/Select';
   import { TextArea } from '$lib/components/TextArea';
@@ -92,13 +91,7 @@
     <span class="text-xs text-slate-500">Add a new learning unit to the system</span>
   </div>
 
-  <form
-    method="POST"
-    novalidate
-    enctype="multipart/form-data"
-    use:enhance
-    class="flex flex-col gap-6"
-  >
+  <form method="POST" novalidate use:enhance class="flex flex-col gap-6">
     <div class="rounded-lg border border-slate-100 p-6 shadow">
       <div class="flex flex-col gap-4">
         <FormField label="Title" id="title" required error={form?.errors?.title?.message}>
@@ -112,12 +105,12 @@
         </FormField>
 
         <FormField
-          label="Podcast File"
-          id="podcastFile"
+          label="Content URL"
+          id="contentURL"
           required
-          error={form?.errors?.podcastFile?.message}
+          error={form?.errors?.contentURL?.message}
         >
-          <FileInput id="podcastFile" name="podcastFile" accept="audio/*" />
+          <TextInput type="url" id="contentURL" name="contentURL" placeholder="https://..." />
         </FormField>
 
         <FormField

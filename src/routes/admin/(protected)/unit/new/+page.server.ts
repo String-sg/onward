@@ -1,6 +1,5 @@
 import { error, fail, redirect } from '@sveltejs/kit';
 
-import { nanoid } from '$lib/helpers/index.js';
 import {
   type CollectionFindManyArgs,
   type CollectionGetPayload,
@@ -10,7 +9,6 @@ import {
   type TagFindManyArgs,
   type TagGetPayload,
 } from '$lib/server/db.js';
-import { uploadPodcastObject } from '$lib/server/s3.js';
 import { validateLearningUnit } from '$lib/server/unit/form.js';
 
 import type { Actions, PageServerLoad } from './$types';
@@ -95,19 +93,11 @@ export const actions = {
       return fail(400, { errors: result.errors });
     }
 
-    let contentURL: string;
-    try {
-      contentURL = await uploadPodcastObject(result.data.podcastFile, nanoid());
-    } catch (err) {
-      logger.error({ err }, 'Podcast upload failed');
-      throw error(500);
-    }
-
     const learningUnitCreateArgs = {
       data: {
         title: result.data.title,
         contentType: result.data.contentType,
-        contentURL,
+        contentURL: result.data.contentURL,
         summary: result.data.summary,
         objectives: result.data.objectives,
         createdBy: result.data.createdBy,
@@ -157,6 +147,6 @@ export const actions = {
     }
     logger.info({ learningUnitId: learningUnit.id }, 'Learning unit created successfully');
 
-    redirect(303, '/admin');
+    redirect(303, '/admin/dashboard');
   },
 } satisfies Actions;
