@@ -6,12 +6,7 @@ import {
   type GoogleProfile,
   verifyIdToken,
 } from '$lib/server/auth/index.js';
-import {
-  db,
-  PrismaClientKnownRequestError,
-  type UserAdminFindUniqueArgs,
-  type UserAdminGetPayload,
-} from '$lib/server/db.js';
+import { db, type UserAdminFindUniqueArgs, type UserAdminGetPayload } from '$lib/server/db.js';
 
 import type { RequestHandler } from './$types';
 
@@ -80,7 +75,6 @@ export const GET: RequestHandler = async (event) => {
     return redirect(302, '/admin?error=auth_failed');
   }
 
-  // Look up admin in user_admins table
   const userAdminArgs = {
     select: {
       id: true,
@@ -110,57 +104,6 @@ export const GET: RequestHandler = async (event) => {
   if (!userAdmin.isActive) {
     logger.warn({ email: profile.email, id: userAdmin.id }, 'Inactive Admin is trying to log in');
     return redirect(302, '/admin?error=inactive');
-  }
-
-  if (userAdmin.googleProviderId === null) {
-    logger.info(
-      { adminId: userAdmin.id, email: profile.email },
-      'First login, setting ID and name from google profile',
-    );
-
-    try {
-      userAdmin = await db.userAdmin.update({
-        where: { id: userAdmin.id },
-        data: {
-          name: profile.name,
-          googleProviderId: profile.id,
-        },
-        select: {
-          id: true,
-          email: true,
-          name: true,
-          googleProviderId: true,
-          isActive: true,
-        },
-      });
-    } catch (err) {
-      if (err instanceof PrismaClientKnownRequestError && err.code === 'P2002') {
-        logger.error({ err, email: profile.email }, 'googleProviderId already exists');
-        return redirect(302, '/admin?error=server_error');
-      }
-
-      logger.error({ err, email: profile.email }, 'Failed to update admin user');
-      return redirect(302, '/admin?error=server_error');
-    }
-  } else {
-    try {
-      userAdmin = await db.userAdmin.update({
-        where: { id: userAdmin.id },
-        data: {
-          name: profile.name,
-        },
-        select: {
-          id: true,
-          email: true,
-          name: true,
-          googleProviderId: true,
-          isActive: true,
-        },
-      });
-    } catch (err) {
-      logger.error({ err, email: profile.email }, 'Failure to get/update admin');
-      return redirect(302, '/admin?error=server_error');
-    }
   }
 
   try {
