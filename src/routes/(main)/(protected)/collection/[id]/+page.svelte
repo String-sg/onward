@@ -52,8 +52,8 @@
   >
     <span class="text-lg font-medium">About this topic</span>
 
-    {#if data.collection.type}
-      {@const badgeInfo = getBadgeInfo(data.collection.type)}
+    {#if data.collection.tag.code}
+      {@const badgeInfo = getBadgeInfo(data.collection.tag.code)}
       <Badge variant={badgeInfo.variant}>{badgeInfo.label}</Badge>
     {/if}
 
