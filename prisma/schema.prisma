@@ -254,9 +254,9 @@ model UserAdmin {
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   // Domain-Specific Fields.
-  name             String? @map("name") @db.VarChar(255)
+  name             String @map("name") @db.VarChar(255)
   email            String  @unique @map("email")
-  googleProviderId String? @unique @map("google_provider_id")
+  googleProviderId String @unique @map("google_provider_id")
   isActive         Boolean @default(true) @map("is_active")
 
   @@map("user_admins")
