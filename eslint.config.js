@@ -37,19 +37,6 @@ export default ts.config(
         ...globals.node,
       },
     },
-  },
-
-  {
-    plugins: {
-      'simple-import-sort': simpleImportStort,
-    },
-    rules: {
-      'simple-import-sort/imports': 'error',
-      'simple-import-sort/exports': 'error',
-    },
-  },
-
-  {
     rules: {
       '@typescript-eslint/no-unused-vars': [
         'error',
@@ -65,6 +52,16 @@ export default ts.config(
         },
       ],
       'no-console': ['error', { allow: ['warn', 'error'] }],
+    },
+  },
+
+  {
+    plugins: {
+      'simple-import-sort': simpleImportStort,
+    },
+    rules: {
+      'simple-import-sort/imports': 'error',
+      'simple-import-sort/exports': 'error',
     },
   },
 );
