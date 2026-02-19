@@ -62,6 +62,7 @@ export default ts.config(
           fixStyle: 'inline-type-imports',
         },
       ],
+      'no-console': ['warn', { allow: ['warn', 'error'] }],
     },
   },
 );
