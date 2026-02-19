@@ -2,6 +2,7 @@
   import { Collection } from '$lib/components/Collection/index.js';
   import { EmptyStateView } from '$lib/components/EmptyStateView/index.js';
   import { LearningUnit } from '$lib/components/LearningUnit/index.js';
+  import { ToDoList } from '$lib/components/ToDoList/index.js';
   import { Player } from '$lib/states/index.js';
 
   const { data } = $props();
@@ -49,23 +50,7 @@
     </div>
 
     <div class="flex flex-col gap-y-4">
-      {#each data.toDoList as learningUnit (learningUnit.id)}
-        <LearningUnit
-          to={`/unit/${learningUnit.id}`}
-          tags={learningUnit.tags}
-          title={learningUnit.title}
-          createdat={learningUnit.createdAt}
-          createdby={learningUnit.createdBy}
-          player={{
-            isactive: player.currentTrack?.id === learningUnit.id,
-            isplaying: player.isPlaying,
-            onplay: () => handleLearningUnitPlay(learningUnit),
-            onpause: handleLearningUnitPause,
-            onresume: handleLearningUnitResume,
-          }}
-          status={learningUnit.status}
-        />
-      {/each}
+      <ToDoList to="/collection/1" title="AI Literacy" type="DATA" numberofpodcasts={12} />
     </div>
   {/if}
 
