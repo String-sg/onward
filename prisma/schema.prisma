@@ -247,3 +247,17 @@ model QuestionAnswer {
 
   @@map("question_answers")
 }
+
+model UserAdmin {
+  id        String   @id @default(dbgenerated("uuid_generate_v7()")) @map("id") @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  // Domain-Specific Fields.
+  name             String @map("name") @db.VarChar(255)
+  email            String  @unique @map("email")
+  googleProviderId String @unique @map("google_provider_id")
+  isActive         Boolean @default(true) @map("is_active")
+
+  @@map("user_admins")
+}

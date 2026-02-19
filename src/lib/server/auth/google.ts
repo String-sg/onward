@@ -41,6 +41,7 @@ function getOAuth2Client() {
  * @param options.origin - The origin of the application. It is used to construct the redirect URI.
  * @param options.state - A random string to prevent CSRF attacks.
  * @param options.codeVerifier - A cryptographically random string used for PKCE verification.
+ * @param options.prompt - A space-delimited list of prompts for authentication.
  * @returns The complete Google OAuth2 authorization URL.
  *
  * @example
@@ -57,10 +58,12 @@ export function generateAuthURL({
   origin,
   state,
   codeVerifier,
+  prompt,
 }: {
   origin: string;
   state: string;
   codeVerifier: string;
+  prompt?: string;
 }): string {
   const client = getOAuth2Client();
 
@@ -74,6 +77,7 @@ export function generateAuthURL({
     code_challenge: createHash('sha256').update(codeVerifier).digest('base64url'),
     code_challenge_method: CodeChallengeMethod.S256,
     hd: env.GOOGLE_HOSTED_DOMAIN,
+    prompt,
   });
 }
 

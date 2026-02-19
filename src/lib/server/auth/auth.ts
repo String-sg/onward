@@ -7,7 +7,7 @@ import { env } from '$env/dynamic/private';
 import { nanoid } from '$lib/helpers/index.js';
 
 import { parseDuration, unmask } from './helpers/index.js';
-import Session, { type User } from './session.js';
+import Session, { type AdminUser, type User } from './session.js';
 
 type PartialDeep<T> = T extends () => unknown
   ? T
@@ -139,7 +139,7 @@ export interface AuthResult {
    * @param event - The SvelteKit request event.
    * @param user - The user to associate with the new session.
    */
-  signIn: (event: RequestEvent, user: User) => Promise<void>;
+  signIn: (event: RequestEvent, user: User | AdminUser) => Promise<void>;
   /**
    * Signs out the user by destroying the current session and creating a new one. The new session
    * will be unauthenticated, replacing `event.locals.session` and updating the session cookies
@@ -161,7 +161,7 @@ export interface AuthResult {
 /**
  * The default session timeout for unauthenticated sessions.
  */
-const DEFAULT_SESSION_DEFAULT_TIMEOUT = '3h';
+const DEFAULT_SESSION_DEFAULT_TIMEOUT = '5m';
 /**
  * The default session timeout for authenticated sessions.
  */
