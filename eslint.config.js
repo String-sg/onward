@@ -20,8 +20,10 @@ export default ts.config(
         ...globals.node,
       },
     },
+    rules: {
+      'no-console': 'off',
+    },
   },
-
   {
     files: ['**/*.svelte', '**/*.svelte.js', '**/*.svelte.ts'],
     languageOptions: {

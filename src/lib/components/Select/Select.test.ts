@@ -18,7 +18,6 @@ describe('Select', () => {
     expect(select.tagName).toBe('SELECT');
 
     const allOptions = screen.getAllByRole('option');
-    console.log(allOptions);
     expect(allOptions).toHaveLength(2);
     expect(allOptions[0]).toHaveTextContent('Option 1');
   });
