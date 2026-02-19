@@ -37,8 +37,6 @@ export const POST: RequestHandler = async (event) => {
     return json(null, { status: 400 });
   }
 
-  console.log('test', params.isCompleted);
-
   const update: { lastCheckpoint: number; isCompleted?: boolean } = {
     lastCheckpoint: params.lastCheckpoint,
   };
