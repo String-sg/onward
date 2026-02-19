@@ -15,7 +15,7 @@ const requestLoggingHandle: Handle = async ({ event, resolve }) => {
   event.setHeaders({ 'X-Request-Id': requestId });
   event.locals.logger = logger.child({ requestId, module: 'admin' });
 
-  return await resolve(event);
+  return resolve(event);
 };
 
 /**
@@ -34,7 +34,7 @@ const routeProtectionHandle: Handle = async ({ event, resolve }) => {
     event.url.pathname === '/admin/auth/google/callback' ||
     event.url.pathname === '/admin'
   ) {
-    return await resolve(event);
+    return resolve(event);
   }
 
   if (!event.locals.session.isAuthenticated) {
@@ -55,7 +55,7 @@ const routeProtectionHandle: Handle = async ({ event, resolve }) => {
     return redirect(303, '/admin?error=inactive');
   }
 
-  return await resolve(event);
+  return resolve(event);
 };
 
 export const handle: Handle = sequence(
