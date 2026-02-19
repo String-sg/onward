@@ -28,6 +28,7 @@
   let isChatViewOpen = $state(false);
   let isTrackingSession = $state(false);
   let isPodcastCompletedModalOpen = $state(false);
+  let isQuizAvailable = $derived(page.data?.isQuizAvailable ?? false);
 
   const isQuizPage = $derived(page.url.pathname.includes('/quiz'));
 
@@ -77,7 +78,7 @@
   };
 
   onMount(() => {
-    const updateLearningJourney = async (progress: number) => {
+    const updateLearningJourney = async (progress: number, isQuizAvailable?: boolean) => {
       await fetch('/api/learningjourney', {
         method: 'POST',
         headers: {
@@ -86,6 +87,7 @@
         body: JSON.stringify({
           id: player.currentTrack?.id,
           lastCheckpoint: progress,
+          ...(isQuizAvailable !== undefined && { isCompleted: isQuizAvailable }),
         }),
       });
     };
@@ -100,10 +102,13 @@
 
     const handleEnded = () => {
       if (isTrackingSession) {
-        updateLearningJourney(0);
+        updateLearningJourney(0, !isQuizAvailable);
       }
 
-      isPodcastCompletedModalOpen = true;
+      if (isQuizAvailable) {
+        isPodcastCompletedModalOpen = true;
+      }
+
       isTrackingSession = false;
     };
 

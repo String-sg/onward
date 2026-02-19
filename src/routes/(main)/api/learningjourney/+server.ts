@@ -27,7 +27,8 @@ export const POST: RequestHandler = async (event) => {
       !('id' in params) ||
       typeof params['id'] !== 'string' ||
       !('lastCheckpoint' in params) ||
-      typeof params['lastCheckpoint'] !== 'number'
+      typeof params['lastCheckpoint'] !== 'number' ||
+      ('isCompleted' in params && typeof params['isCompleted'] !== 'boolean')
     ) {
       return json(null, { status: 422 });
     }
@@ -36,13 +37,21 @@ export const POST: RequestHandler = async (event) => {
     return json(null, { status: 400 });
   }
 
+  console.log('test', params.isCompleted);
+
+  const update: { lastCheckpoint: number; isCompleted?: boolean } = {
+    lastCheckpoint: params.lastCheckpoint,
+  };
+
+  if ('isCompleted' in params && typeof params.isCompleted === 'boolean') {
+    update.isCompleted = params.isCompleted;
+  }
+
   const learningJourneyArgs = {
     where: {
       userId_learningUnitId: { userId: user.id, learningUnitId: params.id },
     },
-    update: {
-      lastCheckpoint: params.lastCheckpoint,
-    },
+    update,
     create: {
       userId: user.id,
       learningUnitId: params.id,
