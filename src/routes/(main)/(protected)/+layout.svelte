@@ -2,6 +2,7 @@
   import { XIcon } from '@lucide/svelte';
   import { onMount } from 'svelte';
 
+  import { invalidateAll } from '$app/navigation';
   import { page } from '$app/state';
   import { LinkButton } from '$lib/components/Button/index.js';
   import { ChatView } from '$lib/components/ChatView/index.js';
@@ -106,9 +107,10 @@
       updateLearningJourney(player.progress);
     };
 
-    const handleEnded = () => {
+    const handleEnded = async () => {
       if (isTrackingSession) {
-        updateLearningJourney(0, !isQuizAvailable);
+        await updateLearningJourney(0, !isQuizAvailable);
+        await invalidateAll();
       }
 
       if (isQuizAvailable) {
