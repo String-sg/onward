@@ -29,3 +29,26 @@ ALTER TABLE "learning_unit_collections" ADD CONSTRAINT "learning_unit_collection
 -- AddForeignKey
 ALTER TABLE "learning_unit_collections" ADD CONSTRAINT "learning_unit_collections_collection_id_fkey" FOREIGN KEY ("collection_id") REFERENCES "collections"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
+-- AlterTable
+ALTER TABLE "collections" ADD COLUMN     "tag_id" UUID;
+
+-- Update tag_id by joining with tags table where tag.code matches collection.type
+UPDATE "collections" c
+SET "tag_id" = t."id"
+    FROM "tags" t
+WHERE t."code" = c."type"::text;
+
+-- Make tag_id NOT NULL after population
+ALTER TABLE "collections" ALTER COLUMN "tag_id" SET NOT NULL;
+
+-- AddForeignKey
+ALTER TABLE "collections" ADD CONSTRAINT "collections_tag_id_fkey" FOREIGN KEY ("tag_id") REFERENCES "tags"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AlterTable
+ALTER TABLE "collections" DROP COLUMN "type";
+
+-- DropEnum
+DROP TYPE "CollectionType";
+
+-- AlterEnum
+ALTER TYPE "ContentType" ADD VALUE 'QUIZ';
