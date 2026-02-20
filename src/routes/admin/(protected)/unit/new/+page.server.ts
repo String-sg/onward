@@ -27,7 +27,6 @@ export const load: PageServerLoad = async (event) => {
     select: {
       id: true,
       title: true,
-      type: true,
     },
     orderBy: {
       title: 'asc',
@@ -101,9 +100,6 @@ export const actions = {
         summary: result.data.summary,
         objectives: result.data.objectives,
         createdBy: result.data.createdBy,
-        collection: {
-          connect: { id: result.data.collectionId },
-        },
         isRecommended: result.data.isRecommended,
         isRequired: result.data.isRequired,
         dueDate: result.data.dueDate,
