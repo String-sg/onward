@@ -45,7 +45,7 @@
   const player = Player.get();
 
   let isActive = $derived(player.currentTrack?.id === data.id && player.progress !== 0);
-  let lastCheckpoint = $state(data.lastCheckpoint);
+  let lastCheckpoint = $derived(data.lastCheckpoint);
 
   afterNavigate(({ from, type }) => {
     if (type === 'enter' || !from) {

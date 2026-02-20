@@ -92,6 +92,7 @@
 
 <Portal>
   {#if isopen}
+    <!-- svelte-ignore a11y_no_static_element_interactions -->
     <!-- Backdrop -->
     <div
       transition:fade={{ duration: 300 }}
