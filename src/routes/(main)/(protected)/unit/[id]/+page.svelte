@@ -233,26 +233,28 @@
       </div>
 
       <div class="flex flex-col gap-y-4">
-        {#if isActive && player.isPlaying}
-          <Button variant="primary" width="full" onclick={handlePause}>
-            <Pause class="h-4 w-4" />
-            <span class="font-medium">Pause</span>
-          </Button>
-        {:else if isActive && !player.isPlaying}
-          <Button variant="primary" width="full" onclick={handleResume}>
-            <Play class="h-4 w-4" />
-            <span class="font-medium">Resume</span>
-          </Button>
-        {:else if lastCheckpoint && lastCheckpoint > 0}
-          <Button variant="primary" width="full" onclick={handleResume}>
-            <Play class="h-4 w-4" />
-            <span class="font-medium">Resume</span>
-          </Button>
-        {:else}
-          <Button variant="primary" width="full" onclick={handlePlay}>
-            <Play class="h-4 w-4" />
-            <span class="font-medium">Play</span>
-          </Button>
+        {#if data.contentType === 'PODCAST'}
+          {#if isActive && player.isPlaying}
+            <Button variant="primary" width="full" onclick={handlePause}>
+              <Pause class="h-4 w-4" />
+              <span class="font-medium">Pause</span>
+            </Button>
+          {:else if isActive && !player.isPlaying}
+            <Button variant="primary" width="full" onclick={handleResume}>
+              <Play class="h-4 w-4" />
+              <span class="font-medium">Resume</span>
+            </Button>
+          {:else if lastCheckpoint && lastCheckpoint > 0}
+            <Button variant="primary" width="full" onclick={handleResume}>
+              <Play class="h-4 w-4" />
+              <span class="font-medium">Resume</span>
+            </Button>
+          {:else}
+            <Button variant="primary" width="full" onclick={handlePlay}>
+              <Play class="h-4 w-4" />
+              <span class="font-medium">Play</span>
+            </Button>
+          {/if}
         {/if}
 
         {#if data.isQuizAvailable}
