@@ -20,8 +20,10 @@ export default ts.config(
         ...globals.node,
       },
     },
+    rules: {
+      'no-console': 'off',
+    },
   },
-
   {
     files: ['**/*.svelte', '**/*.svelte.js', '**/*.svelte.ts'],
     languageOptions: {
@@ -35,19 +37,6 @@ export default ts.config(
         ...globals.node,
       },
     },
-  },
-
-  {
-    plugins: {
-      'simple-import-sort': simpleImportStort,
-    },
-    rules: {
-      'simple-import-sort/imports': 'error',
-      'simple-import-sort/exports': 'error',
-    },
-  },
-
-  {
     rules: {
       '@typescript-eslint/no-unused-vars': [
         'error',
@@ -62,6 +51,17 @@ export default ts.config(
           fixStyle: 'inline-type-imports',
         },
       ],
+      'no-console': ['error', { allow: ['warn', 'error'] }],
+    },
+  },
+
+  {
+    plugins: {
+      'simple-import-sort': simpleImportStort,
+    },
+    rules: {
+      'simple-import-sort/imports': 'error',
+      'simple-import-sort/exports': 'error',
     },
   },
 );
