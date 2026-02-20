@@ -52,3 +52,11 @@ DROP TYPE "CollectionType";
 
 -- AlterEnum
 ALTER TYPE "ContentType" ADD VALUE 'QUIZ';
+
+-- AlterTable
+ALTER TABLE "learning_units" ALTER COLUMN "content_url" DROP NOT NULL;
+
+-- Add constraint: contentURL must be NOT NULL if contentType is PODCAST
+ALTER TABLE "learning_units"
+ADD CONSTRAINT check_podcast_url
+CHECK (("content_type"::text != 'PODCAST') OR ("content_url" IS NOT NULL));

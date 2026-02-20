@@ -67,7 +67,7 @@ model LearningUnit {
   // Domain-Specific Fields.
   title         String      @map("title")
   contentType   ContentType @map("content_type")
-  contentURL    String      @map("content_url")
+  contentURL    String?     @map("content_url")
   summary       String      @map("summary")
   objectives    String      @map("objectives")
   createdBy     String      @map("created_by")
