@@ -112,6 +112,7 @@ export const load: PageServerLoad = async (event) => {
       },
     },
     where: {
+      contentType: 'PODCAST',
       NOT: {
         learningJourneys: {
           some: {
@@ -168,6 +169,11 @@ export const load: PageServerLoad = async (event) => {
     },
     where: {
       userId: user.id,
+      learningUnit: {
+        contentType: {
+          not: 'QUIZ',
+        },
+      },
     },
     orderBy: {
       createdAt: 'desc',
