@@ -10,10 +10,7 @@
   const player = Player.get();
 
   const handleLearningUnitPlay = (
-    item:
-      | (typeof data.toDoList)[0]
-      | (typeof data.learningJourneys)[0]
-      | (typeof data.recommendedLearningUnits)[0],
+    item: (typeof data.learningJourneys)[0] | (typeof data.recommendedLearningUnits)[0],
   ) => {
     const learningUnit = 'learningUnit' in item ? item.learningUnit : item;
 
@@ -22,7 +19,7 @@
       tags: learningUnit.tags,
       title: learningUnit.title,
       summary: learningUnit.summary,
-      url: learningUnit.contentURL,
+      url: learningUnit.contentURL ?? '',
     });
   };
 
@@ -50,7 +47,13 @@
     </div>
 
     <div class="flex flex-col gap-y-4">
-      <ToDoList to="/collection/1" title="AI Literacy" type="DATA" numberofpodcasts={12} />
+      {#each data.toDoList as collection (collection.id)}
+        <ToDoList
+          to={`/collection/${collection.id}`}
+          title={collection.title}
+          numberofpodcasts={collection.numberOfPodcasts}
+        />
+      {/each}
     </div>
   {/if}
 
