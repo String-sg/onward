@@ -123,7 +123,7 @@
             <option value="">Select a collection</option>
             {#each data.collections as collection (collection.id)}
               <option value={collection.id}>
-                {collection.title} ({collection.type})
+                {collection.title}
               </option>
             {/each}
           </Select>
