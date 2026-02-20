@@ -69,7 +69,7 @@
       tags: data.tags,
       title: data.title,
       summary: data.summary,
-      url: data.url,
+      url: data.url ?? '',
     });
   };
 
@@ -88,7 +88,7 @@
           tags: data.tags,
           title: data.title,
           summary: data.summary,
-          url: data.url,
+          url: data.url ?? '',
         },
         initialSeekTime,
       );
