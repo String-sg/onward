@@ -255,19 +255,21 @@
           </Button>
         {/if}
 
-        <form method="POST" action="?/updateQuizAttempt" use:enhance>
-          <input type="hidden" name="csrfToken" value={data.csrfToken} />
+        {#if data.isQuizAvailable}
+          <form method="POST" action="?/updateQuizAttempt" use:enhance>
+            <input type="hidden" name="csrfToken" value={data.csrfToken} />
 
-          <Button
-            variant="secondary"
-            width="full"
-            disabled={!data.isQuizAvailable}
-            onclick={handleQuizClick}
-          >
-            <Lightbulb class="h-4 w-4" />
-            <span class="font-medium">Take the quiz</span>
-          </Button>
-        </form>
+            <Button
+              variant="secondary"
+              width="full"
+              disabled={!data.isQuizAvailable}
+              onclick={handleQuizClick}
+            >
+              <Lightbulb class="h-4 w-4" />
+              <span class="font-medium">Take the quiz</span>
+            </Button>
+          </form>
+        {/if}
       </div>
     </div>
   </div>
