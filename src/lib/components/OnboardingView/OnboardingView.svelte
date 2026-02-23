@@ -138,57 +138,60 @@
   const collectionsList = {
     'artificial-intelligence': {
       title: 'Artificial Intelligence',
-      description: 'Description of the topic',
+      description: 'AI news, use cases and tools to master the changing landscape.',
       type: 'AI',
     },
     'career-growth': {
       title: 'Career Growth',
-      description: 'Description of the topic',
+      description: 'Tips to help you set career goals and transform potential into performance.',
       type: 'CAREER',
     },
     'educator-voices': {
       title: 'Educator Voices',
-      description: 'Description of the topic',
+      description: 'Inspiring stories from fellow educators.',
       type: 'EDU_VOICES',
     },
     'employee-engagement': {
       title: 'Employee Engagement',
-      description: 'Description of the topic',
+      description:
+        'Analyze EES results and get practical tips to maintain workplace staff engagement.',
       type: 'EMP_ENGAGEMENT',
     },
     'in-the-news': {
       title: 'In the News',
-      description: 'Description of the topic',
+      description: 'Education news and survey highlights for ground insights.',
       type: 'NEWS',
     },
     infrastructure: {
       title: 'Infrastructure',
-      description: 'Description of the topic',
+      description: 'Learn about device setups, connectivity, and digital tools for efficient work.',
       type: 'INFRA',
     },
     innovation: {
       title: 'Innovation',
-      description: 'Description of the topic',
+      description: 'Strategies to empower new ideas, innovation, and creative thinking.',
       type: 'INNOV',
     },
     'learn-with-bob': {
       title: 'Learn with Bob',
-      description: 'Description of the topic',
+      description: 'SPACES framework for purposeful work and a sustainable pace.',
       type: 'BOB',
     },
     productivity: {
       title: 'Productivity',
-      description: 'Description of the topic',
+      description:
+        'Master time management and workflows to minimize distractions and reach goals faster.',
       type: 'PROD',
     },
     'student-development': {
       title: 'Student Development',
-      description: 'Description of the topic',
+      description:
+        "Learn ways to develop students' cognitive, affective, physical and aesthetic abilities.",
       type: 'STU_DEV',
     },
     'student-wellbeing': {
       title: 'Student Wellbeing',
-      description: 'Description of the topic',
+      description: 'Learn ways to support students emotional and physical health.',
       type: 'STU_WELL',
     },
     wellbeing: {
