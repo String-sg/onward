@@ -205,7 +205,7 @@
 
 <!-- Modal -->
 <Modal
-  isopen
+  {isopen}
   onclose={handleConfirm}
   variant="light"
   size="full"
