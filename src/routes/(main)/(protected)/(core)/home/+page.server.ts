@@ -223,7 +223,7 @@ export const load: PageServerLoad = async (event) => {
         dueDate: lu.dueDate,
       }),
       tags: lu.tags.map((t) => t.tag),
-      collectionType: lu.collection.type,
+      collectionType: lu.collection!.type,
     })),
     recommendedLearningUnits: recommendedLearningUnits.map((lu) => ({
       ...lu,
@@ -233,14 +233,14 @@ export const load: PageServerLoad = async (event) => {
         learningJourney: lu.learningJourneys[0],
       }),
       tags: lu.tags.map((t) => t.tag),
-      collectionType: lu.collection.type,
+      collectionType: lu.collection!.type,
     })),
     learningJourneys: learningJourneys.map((lj) => ({
       ...lj,
       learningUnit: {
         ...lj.learningUnit,
         tags: lj.learningUnit.tags.map((t) => t.tag),
-        collectionType: lj.learningUnit.collection.type,
+        collectionType: lj.learningUnit.collection!.type,
         status: getLearningUnitStatus({
           isRequired: lj.learningUnit.isRequired,
           dueDate: lj.learningUnit.dueDate,

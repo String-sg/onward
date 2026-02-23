@@ -200,7 +200,7 @@ export const load: PageServerLoad = async (event) => {
     url: learningUnit.contentURL,
     createdAt: learningUnit.createdAt,
     createdBy: learningUnit.createdBy,
-    collectionType: learningUnit.collection.type,
+    collectionType: learningUnit.collection!.type,
     isQuizAvailable,
     isRequired: learningUnit.isRequired,
     dueDate: learningUnit.dueDate,

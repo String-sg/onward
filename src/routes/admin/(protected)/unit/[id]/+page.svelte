@@ -170,7 +170,11 @@
           required
           error={form?.errors?.collectionId?.message}
         >
-          <Select id="collectionId" name="collectionId" value={data.learningUnit.collectionId}>
+          <Select
+            id="collectionId"
+            name="collectionId"
+            value={data.learningUnit.collectionId ?? ''}
+          >
             <option value="">Select a collection</option>
             {#each data.collections as collection (collection.id)}
               <option value={collection.id}>
