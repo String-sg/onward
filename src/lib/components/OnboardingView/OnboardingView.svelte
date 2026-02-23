@@ -196,7 +196,8 @@
     },
     wellbeing: {
       title: 'Wellbeing',
-      description: 'Description of the topic',
+      description:
+        'Identify workplace stress, monitor peer distress, conduct check-ins, and provide support resources.',
       type: 'WELLBEING',
     },
   };
