@@ -7,6 +7,7 @@ import {
   type LearningJourneyUpsertArgs,
   type LearningUnitFindUniqueArgs,
   type LearningUnitGetPayload,
+  type PublishedLearningUnit,
 } from '$lib/server/db';
 
 import type { Actions, PageServerLoad } from './$types';
@@ -71,18 +72,21 @@ export const load: PageServerLoad = async (event) => {
     throw error(404);
   }
 
-  if (!learningUnit.questionAnswers.length) {
+  // Justified cast: status check above guarantees all content fields are populated.
+  const unit = learningUnit as PublishedLearningUnit<typeof learningUnit>;
+
+  if (!unit.questionAnswers.length) {
     logger.warn('No quiz records found');
     return redirect(303, `/unit/${event.params.id}`);
   }
 
   return {
     csrfToken: event.locals.session.csrfToken(),
-    questionAnswers: learningUnit.questionAnswers,
-    collectionType: learningUnit.collection!.type,
-    learningUnitTitle: learningUnit.title,
-    isRequired: learningUnit.isRequired,
-    dueDate: learningUnit.dueDate,
+    questionAnswers: unit.questionAnswers,
+    collectionType: unit.collection.type,
+    learningUnitTitle: unit.title,
+    isRequired: unit.isRequired,
+    dueDate: unit.dueDate,
   };
 };
 

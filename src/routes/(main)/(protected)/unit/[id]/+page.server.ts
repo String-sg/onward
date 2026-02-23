@@ -18,6 +18,7 @@ import {
   type LearningUnitSentimentsUpsertArgs,
   type LearningUnitSourcesFindManyArgs,
   type LearningUnitSourcesGetPayload,
+  type PublishedLearningUnit,
 } from '$lib/server/db';
 
 import type { Actions, PageServerLoad } from './$types';
@@ -82,6 +83,9 @@ export const load: PageServerLoad = async (event) => {
     throw error(404);
   }
 
+  // Justified cast: status check above guarantees all content fields are populated.
+  const unit = learningUnit as PublishedLearningUnit<typeof learningUnit>;
+
   let isQuizAvailable: boolean;
   try {
     isQuizAvailable =
@@ -117,8 +121,8 @@ export const load: PageServerLoad = async (event) => {
   }
 
   const quizStatus = getLearningUnitStatus({
-    isRequired: learningUnit.isRequired,
-    dueDate: learningUnit.dueDate,
+    isRequired: unit.isRequired,
+    dueDate: unit.dueDate,
     learningJourney: {
       isCompleted: learningJourney ? learningJourney.isCompleted : false,
     },
@@ -192,18 +196,18 @@ export const load: PageServerLoad = async (event) => {
 
   return {
     csrfToken: event.locals.session.csrfToken(),
-    id: learningUnit.id,
-    tags: learningUnit.tags.map((t) => t.tag),
-    title: learningUnit.title,
-    summary: learningUnit.summary,
-    objectives: learningUnit.objectives,
-    url: learningUnit.contentURL,
-    createdAt: learningUnit.createdAt,
-    createdBy: learningUnit.createdBy,
-    collectionType: learningUnit.collection!.type,
+    id: unit.id,
+    tags: unit.tags.map((t) => t.tag),
+    title: unit.title,
+    summary: unit.summary,
+    objectives: unit.objectives,
+    url: unit.contentURL,
+    createdAt: unit.createdAt,
+    createdBy: unit.createdBy,
+    collectionType: unit.collection.type,
     isQuizAvailable,
-    isRequired: learningUnit.isRequired,
-    dueDate: learningUnit.dueDate,
+    isRequired: unit.isRequired,
+    dueDate: unit.dueDate,
     lastCheckpoint: Number(learningJourney?.lastCheckpoint),
     quizStatus,
     userSentiment: sentiment?.hasLiked ?? null,

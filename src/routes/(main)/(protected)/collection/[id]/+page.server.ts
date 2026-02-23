@@ -9,6 +9,7 @@ import {
   type LearningUnitFindManyArgs,
   type LearningUnitGetPayload,
   LearningUnitStatus,
+  type PublishedLearningUnit,
 } from '$lib/server/db';
 
 import type { PageServerLoad } from './$types';
@@ -83,9 +84,9 @@ export const load: PageServerLoad = async (event) => {
     },
   } satisfies LearningUnitFindManyArgs;
 
-  let learningUnits: LearningUnitGetPayload<typeof learningUnitsArgs>[];
+  let learningUnits: PublishedLearningUnit<LearningUnitGetPayload<typeof learningUnitsArgs>>[];
   try {
-    learningUnits = await db.learningUnit.findMany(learningUnitsArgs);
+    learningUnits = await db.learningUnit.findPublished(learningUnitsArgs);
   } catch (err) {
     logger.error({ err }, 'Failed to retrieve learning unit records');
     throw error(500);

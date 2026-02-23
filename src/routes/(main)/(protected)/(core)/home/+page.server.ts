@@ -7,7 +7,7 @@ import {
   type LearningJourneyGetPayload,
   type LearningUnitFindManyArgs,
   type LearningUnitGetPayload,
-  LearningUnitStatus,
+  type PublishedLearningUnit,
 } from '$lib/server/db';
 
 import type { PageServerLoad } from './$types';
@@ -48,7 +48,6 @@ export const load: PageServerLoad = async (event) => {
       },
     },
     where: {
-      status: LearningUnitStatus.PUBLISHED,
       isRequired: true,
       OR: [
         {
@@ -81,9 +80,9 @@ export const load: PageServerLoad = async (event) => {
     take: 2,
   } satisfies LearningUnitFindManyArgs;
 
-  let toDoList: LearningUnitGetPayload<typeof toDoListArgs>[];
+  let toDoList: PublishedLearningUnit<LearningUnitGetPayload<typeof toDoListArgs>>[];
   try {
-    toDoList = await db.learningUnit.findMany(toDoListArgs);
+    toDoList = await db.learningUnit.findPublished(toDoListArgs);
   } catch (err) {
     logger.error({ err }, 'Failed to retrieve to-do list');
     throw error(500);
@@ -124,7 +123,6 @@ export const load: PageServerLoad = async (event) => {
       },
     },
     where: {
-      status: LearningUnitStatus.PUBLISHED,
       NOT: {
         learningJourneys: {
           some: {
@@ -144,9 +142,11 @@ export const load: PageServerLoad = async (event) => {
     take: 3,
   } satisfies LearningUnitFindManyArgs;
 
-  let recommendedLearningUnits: LearningUnitGetPayload<typeof recommendedLearningUnitsArgs>[];
+  let recommendedLearningUnits: PublishedLearningUnit<
+    LearningUnitGetPayload<typeof recommendedLearningUnitsArgs>
+  >[];
   try {
-    recommendedLearningUnits = await db.learningUnit.findMany(recommendedLearningUnitsArgs);
+    recommendedLearningUnits = await db.learningUnit.findPublished(recommendedLearningUnitsArgs);
   } catch (err) {
     logger.error({ err }, 'Failed to retrieve recommended learning units');
     throw error(500);
@@ -235,21 +235,24 @@ export const load: PageServerLoad = async (event) => {
       tags: lu.tags.map((t) => t.tag),
       collectionType: lu.collection!.type,
     })),
-    learningJourneys: learningJourneys.map((lj) => ({
-      ...lj,
-      learningUnit: {
-        ...lj.learningUnit,
-        tags: lj.learningUnit.tags.map((t) => t.tag),
-        collectionType: lj.learningUnit.collection!.type,
-        status: getLearningUnitStatus({
-          isRequired: lj.learningUnit.isRequired,
-          dueDate: lj.learningUnit.dueDate,
-          learningJourney: {
-            isCompleted: lj.isCompleted,
-          },
-        }),
-      },
-    })),
+    learningJourneys: learningJourneys.map((lj) => {
+      const lu = lj.learningUnit as PublishedLearningUnit<typeof lj.learningUnit>; // Justified cast: home page only shows journeys with PUBLISHED units, so content fields are guaranteed non-null.
+      return {
+        ...lj,
+        learningUnit: {
+          ...lu,
+          tags: lu.tags.map((t) => t.tag),
+          collectionType: lu.collection.type,
+          status: getLearningUnitStatus({
+            isRequired: lu.isRequired,
+            dueDate: lu.dueDate,
+            learningJourney: {
+              isCompleted: lj.isCompleted,
+            },
+          }),
+        },
+      };
+    }),
     collections: collections.map((collection) => ({
       ...collection,
       numberOfPodcasts: collection._count.learningUnit,

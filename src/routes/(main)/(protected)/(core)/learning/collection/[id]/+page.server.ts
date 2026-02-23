@@ -2,25 +2,9 @@ import { error, redirect } from '@sveltejs/kit';
 import { validate as uuidValidate } from 'uuid';
 
 import { getLearningUnitStatus } from '$lib/helpers/index.js';
-import {
-  db,
-  type LearningJourneyModel,
-  type LearningUnitModel,
-  type TagModel,
-} from '$lib/server/db';
+import { db, type PublishedLearningUnit } from '$lib/server/db';
 
 import type { PageServerLoad } from './$types';
-
-interface Result {
-  id: LearningJourneyModel['id'];
-  isCompleted: LearningJourneyModel['isCompleted'];
-  unitId: LearningUnitModel['id'];
-  title: LearningUnitModel['title'];
-  createdAt: LearningUnitModel['createdAt'];
-  createdBy: LearningUnitModel['createdBy'];
-  tags: Pick<TagModel, 'code' | 'label'>[];
-  status: 'COMPLETED' | 'OVERDUE' | 'REQUIRED' | null;
-}
 
 export const load: PageServerLoad = async (event) => {
   const logger = event.locals.logger.child({ handler: 'page_load_learning_collection' });
@@ -84,6 +68,18 @@ export const load: PageServerLoad = async (event) => {
     },
   });
 
+  type LU = PublishedLearningUnit<(typeof learningJourneys)[number]['learningUnit']>;
+  interface Result {
+    id: LU['id'];
+    isCompleted: boolean;
+    unitId: LU['id'];
+    title: LU['title'];
+    createdAt: LU['createdAt'];
+    createdBy: LU['createdBy'];
+    tags: { code: string; label: string }[];
+    status: ReturnType<typeof getLearningUnitStatus>;
+  }
+
   return {
     collection,
     journeys: learningJourneys.reduce<{
@@ -91,20 +87,21 @@ export const load: PageServerLoad = async (event) => {
       isCompleted: Result[];
     }>(
       (acc, journey) => {
+        const lu = journey.learningUnit as LU;
         acc[journey.isCompleted ? 'isCompleted' : 'inProgress'].push({
           id: journey.id,
           isCompleted: journey.isCompleted,
-          unitId: journey.learningUnit.id,
-          title: journey.learningUnit.title,
-          createdAt: journey.learningUnit.createdAt,
-          createdBy: journey.learningUnit.createdBy,
-          tags: journey.learningUnit.tags.map((t) => ({
+          unitId: lu.id,
+          title: lu.title,
+          createdAt: lu.createdAt,
+          createdBy: lu.createdBy,
+          tags: lu.tags.map((t) => ({
             code: t.tag.code,
             label: t.tag.label,
           })),
           status: getLearningUnitStatus({
-            isRequired: journey.learningUnit.isRequired,
-            dueDate: journey.learningUnit.dueDate,
+            isRequired: lu.isRequired,
+            dueDate: lu.dueDate,
             learningJourney: {
               isCompleted: journey.isCompleted,
             },

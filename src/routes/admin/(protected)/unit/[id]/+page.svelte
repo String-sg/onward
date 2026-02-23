@@ -140,11 +140,11 @@
     <div class="rounded-lg border border-slate-100 p-6 shadow">
       <div class="flex flex-col gap-4">
         <FormField label="Title" id="title" required error={form?.errors?.title?.message}>
-          <TextInput type="text" id="title" name="title" value={data.learningUnit.title} />
+          <TextInput type="text" id="title" name="title" value={data.learningUnit.title ?? ''} />
         </FormField>
 
         <FormField label="Content Type" id="contentType" required>
-          <Select id="contentType" name="contentType" value={data.learningUnit.contentType}>
+          <Select id="contentType" name="contentType" value={data.learningUnit.contentType ?? ''}>
             <option value="PODCAST">Podcast</option>
           </Select>
         </FormField>
@@ -160,7 +160,7 @@
             id="contentURL"
             name="contentURL"
             placeholder="https://..."
-            value={data.learningUnit.contentURL}
+            value={data.learningUnit.contentURL ?? ''}
           />
         </FormField>
 
@@ -186,7 +186,7 @@
 
         <!-- Use Transcript as the label because DB column is uses summary -->
         <FormField id="summary" label="Transcript" required error={form?.errors?.summary?.message}>
-          <TextArea id="summary" name="summary" value={data.learningUnit.summary} />
+          <TextArea id="summary" name="summary" value={data.learningUnit.summary ?? ''} />
         </FormField>
 
         <FormField
@@ -195,7 +195,7 @@
           required
           error={form?.errors?.objectives?.message}
         >
-          <TextArea id="objectives" name="objectives" value={data.learningUnit.objectives} />
+          <TextArea id="objectives" name="objectives" value={data.learningUnit.objectives ?? ''} />
         </FormField>
 
         <FormField
@@ -208,7 +208,7 @@
             type="text"
             id="createdBy"
             name="createdBy"
-            value={data.learningUnit.createdBy}
+            value={data.learningUnit.createdBy ?? ''}
           />
         </FormField>
 

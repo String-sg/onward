@@ -15,37 +15,10 @@ export const actions = {
       handler: 'action_create_empty_draft',
     });
 
-    // Get first available collection (required field)
-    let firstCollection;
-    try {
-      const collections = await db.collection.findMany({
-        take: 1,
-        orderBy: { title: 'asc' },
-      });
-      firstCollection = collections[0];
-    } catch (err) {
-      logger.error({ err }, 'Failed to fetch collection');
-      throw error(500);
-    }
-
-    if (!firstCollection) {
-      logger.error('No collections found in database');
-      throw error(500, 'No collections available');
-    }
-
-    // Create empty draft
+    // Create empty draft — all content fields are nullable so no prefill needed
     const learningUnitCreateArgs = {
       data: {
-        title: '',
-        contentType: 'PODCAST' as const,
-        contentURL: '',
-        summary: '',
-        objectives: '',
-        createdBy: '',
         status: 'DRAFT' as const,
-        collectionId: firstCollection.id,
-        isRecommended: false,
-        isRequired: false,
       },
       select: { id: true },
     } satisfies LearningUnitCreateArgs;
