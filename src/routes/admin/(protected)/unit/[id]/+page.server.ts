@@ -6,6 +6,7 @@ import {
   db,
   type LearningUnitFindUniqueArgs,
   type LearningUnitGetPayload,
+  type LearningUnitUpdateArgs,
   type TagFindManyArgs,
   type TagGetPayload,
 } from '$lib/server/db.js';
@@ -87,7 +88,21 @@ export const load: PageServerLoad = async (event) => {
   }
 
   return {
-    learningUnit,
+    learningUnit: {
+      ...learningUnit,
+      dueDate: learningUnit.dueDate?.toISOString().split('T')[0] ?? null,
+      sources: learningUnit.sources.map((s) => ({
+        title: s.title,
+        sourceURL: s.sourceURL,
+        tagId: s.tags[0]?.tagId ?? '',
+      })),
+      questionAnswers: learningUnit.questionAnswers.map((q) => ({
+        question: q.question,
+        options: [...q.options],
+        answer: q.answer,
+        explanation: q.explanation,
+      })),
+    },
     collections,
     contentTags,
     sourceTags,
@@ -107,19 +122,18 @@ export const actions = {
 
     const formData = await event.request.formData();
 
-    // Parse form data WITHOUT validation
     const tagIds = formData
       .getAll('tags')
       .filter((id): id is string => typeof id === 'string' && id.length > 0);
 
     const data = {
-      title: formData.get('title')?.toString() || '',
-      contentType: (formData.get('contentType')?.toString() || 'PODCAST') as 'PODCAST',
-      contentURL: formData.get('contentURL')?.toString() || '',
-      summary: formData.get('summary')?.toString() || '',
-      objectives: formData.get('objectives')?.toString() || '',
-      createdBy: formData.get('createdBy')?.toString() || '',
-      collectionId: formData.get('collectionId')?.toString() || '',
+      title: formData.get('title')?.toString().trim() || null,
+      contentType: (formData.get('contentType')?.toString() as 'PODCAST') || null,
+      contentURL: formData.get('contentURL')?.toString().trim() || null,
+      summary: formData.get('summary')?.toString().trim() || null,
+      objectives: formData.get('objectives')?.toString().trim() || null,
+      createdBy: formData.get('createdBy')?.toString().trim() || null,
+      collectionId: formData.get('collectionId')?.toString() || null,
       isRecommended: formData.get('isRecommended') === 'on',
       isRequired: formData.get('isRequired') === 'on',
       dueDate: formData.get('dueDate')?.toString() || null,
@@ -137,45 +151,53 @@ export const actions = {
       }[],
     };
 
-    try {
-      await db.learningUnit.update({
-        where: { id: event.params.id },
-        data: {
-          title: data.title,
-          contentType: data.contentType,
-          contentURL: data.contentURL,
-          summary: data.summary,
-          objectives: data.objectives,
-          createdBy: data.createdBy,
-          collectionId: data.collectionId,
-          isRecommended: data.isRecommended,
-          isRequired: data.isRequired,
-          dueDate: data.dueDate ? new Date(data.dueDate) : null,
-          status: 'DRAFT',
-          tags: {
-            deleteMany: {},
-            create: data.tagIds.map((tagId) => ({ tagId })),
-          },
-          sources: {
-            deleteMany: {},
-            create: data.sources.map((s) => ({
-              title: s.title,
-              sourceURL: s.sourceURL,
-              tags: s.tagId ? { create: { tagId: s.tagId } } : undefined,
-            })),
-          },
-          questionAnswers: {
-            deleteMany: {},
-            create: data.questionAnswers.map((q, i) => ({
-              question: q.question,
-              options: q.options,
-              answer: q.answer,
-              explanation: q.explanation,
-              order: i + 1,
-            })),
-          },
+    const learningUnitArgs = {
+      where: { id: event.params.id },
+      data: {
+        title: data.title,
+        contentType: data.contentType,
+        contentURL: data.contentURL,
+        summary: data.summary,
+        objectives: data.objectives,
+        createdBy: data.createdBy,
+        collectionId: data.collectionId,
+        isRecommended: data.isRecommended,
+        isRequired: data.isRequired,
+        dueDate: data.dueDate ? new Date(data.dueDate) : null,
+        status: 'DRAFT',
+        tags: {
+          deleteMany: {},
+          create: data.tagIds.map((tagId) => ({ tagId })),
         },
-      });
+        sources: {
+          deleteMany: {},
+          create: data.sources.map((s) => ({
+            title: s.title,
+            sourceURL: s.sourceURL,
+            tags: s.tagId ? { create: { tagId: s.tagId } } : undefined,
+          })),
+        },
+        questionAnswers: {
+          deleteMany: {},
+          create: data.questionAnswers.map((q, i) => ({
+            question: q.question,
+            options: q.options,
+            answer: q.answer,
+            explanation: q.explanation,
+            order: i + 1,
+          })),
+        },
+      },
+      include: {
+        tags: { include: { tag: true } },
+        sources: { include: { tags: { include: { tag: true } } } },
+        questionAnswers: { orderBy: { order: 'asc' as const } },
+      },
+    } satisfies LearningUnitUpdateArgs;
+
+    let learningUnit: LearningUnitGetPayload<typeof learningUnitArgs>;
+    try {
+      learningUnit = await db.learningUnit.update(learningUnitArgs);
     } catch (err) {
       logger.error({ err }, 'Failed to save draft learning unit');
       throw error(500);
@@ -183,7 +205,23 @@ export const actions = {
 
     logger.info({ learningUnitId: event.params.id }, 'Draft learning unit saved successfully');
 
-    return { success: true, message: 'Draft saved' };
+    return {
+      learningUnit: {
+        ...learningUnit,
+        dueDate: learningUnit.dueDate ? learningUnit.dueDate.toISOString().split('T')[0] : null,
+        sources: learningUnit.sources.map((s) => ({
+          title: s.title,
+          sourceURL: s.sourceURL,
+          tagId: s.tags[0]?.tagId ?? '',
+        })),
+        questionAnswers: learningUnit.questionAnswers.map((q) => ({
+          question: q.question,
+          options: [...q.options],
+          answer: q.answer,
+          explanation: q.explanation,
+        })),
+      },
+    };
   },
 
   publish: async (event) => {
