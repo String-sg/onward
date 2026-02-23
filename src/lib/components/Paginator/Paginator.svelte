@@ -10,7 +10,7 @@
     /** Number of items per page */
     pageSize: number;
     /** Callback when page changes */
-    onpagechange: (page: number) => void;
+    onpagechange: (page: number) => void | Promise<void>;
   }
 
   let { totalCount, currentPage, pageSize, onpagechange }: Props = $props();
