@@ -1,7 +1,12 @@
 import { error, redirect } from '@sveltejs/kit';
 
 import { getLearningUnitStatus } from '$lib/helpers/index.js';
-import { db, type LearningUnitFindManyArgs, type LearningUnitGetPayload } from '$lib/server/db';
+import {
+  db,
+  type LearningUnitFindManyArgs,
+  type LearningUnitGetPayload,
+  LearningUnitStatus,
+} from '$lib/server/db';
 
 import type { PageServerLoad } from './$types';
 
@@ -49,6 +54,7 @@ export const load: PageServerLoad = async (event) => {
       },
     },
     where: {
+      status: LearningUnitStatus.PUBLISHED,
       isRequired: true,
       OR: [
         {

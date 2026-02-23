@@ -7,6 +7,7 @@ import {
   type LearningJourneyGetPayload,
   type LearningUnitFindManyArgs,
   type LearningUnitGetPayload,
+  LearningUnitStatus,
 } from '$lib/server/db';
 
 import type { PageServerLoad } from './$types';
@@ -47,6 +48,7 @@ export const load: PageServerLoad = async (event) => {
       },
     },
     where: {
+      status: LearningUnitStatus.PUBLISHED,
       isRequired: true,
       OR: [
         {
@@ -122,6 +124,7 @@ export const load: PageServerLoad = async (event) => {
       },
     },
     where: {
+      status: LearningUnitStatus.PUBLISHED,
       NOT: {
         learningJourneys: {
           some: {

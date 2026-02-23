@@ -1,7 +1,7 @@
 import { redirect } from '@sveltejs/kit';
 
 import { getLearningUnitStatus } from '$lib/helpers/index.js';
-import { db } from '$lib/server/db';
+import { db, LearningUnitStatus } from '$lib/server/db';
 
 import type { PageServerLoad } from './$types';
 
@@ -15,6 +15,9 @@ export const load: PageServerLoad = async (event) => {
   }
 
   const learningUnits = await db.learningUnit.findMany({
+    where: {
+      status: LearningUnitStatus.PUBLISHED,
+    },
     select: {
       id: true,
       createdAt: true,

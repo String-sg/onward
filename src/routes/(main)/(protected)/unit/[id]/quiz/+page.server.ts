@@ -26,6 +26,7 @@ export const load: PageServerLoad = async (event) => {
 
   const learningUnitArgs = {
     select: {
+      status: true,
       title: true,
       isRequired: true,
       dueDate: true,
@@ -62,6 +63,10 @@ export const load: PageServerLoad = async (event) => {
   }
 
   if (!learningUnit) {
+    throw error(404);
+  }
+
+  if (learningUnit.status !== 'PUBLISHED') {
     throw error(404);
   }
 
