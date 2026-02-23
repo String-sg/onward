@@ -8,6 +8,7 @@ import {
   db,
   type LearningUnitFindManyArgs,
   type LearningUnitGetPayload,
+  LearningUnitStatus,
 } from '$lib/server/db';
 
 import type { PageServerLoad } from './$types';
@@ -81,7 +82,10 @@ export const load: PageServerLoad = async (event) => {
         },
       },
     },
-    where: { collections: { some: { collectionId: event.params.id } } },
+    where: {
+      status: LearningUnitStatus.PUBLISHED,
+      collections: { some: { collectionId: event.params.id } },
+    },
     orderBy: {
       createdAt: 'desc',
     },

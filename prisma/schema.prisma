@@ -56,7 +56,6 @@ model Collection {
   learningUnits LearningUnitCollection[]
   userInterests UserInterest[]
   tag           Tag?                     @relation(fields: [tagId], references: [id])
-  learningUnits LearningUnit[]
 
   @@map("collections")
 }
@@ -79,15 +78,13 @@ model LearningUnit {
   dueDate       DateTime?          @map("due_date") @db.Date
 
   // Relations.
-  collectionId String? @map("collection_id") @db.Uuid
+  collections LearningUnitCollection[]
 
-  collection              Collection?              @relation(fields: [collectionId], references: [id])
-  sentiments              LearningUnitSentiments[]
-  tags                    LearningUnitTag[]
-  learningJourneys        LearningJourney[]
-  questionAnswers         QuestionAnswer[]
-  sources                 LearningUnitSources[]
-  learningUnitCollections LearningUnitCollection[]
+  sentiments       LearningUnitSentiments[]
+  tags             LearningUnitTag[]
+  learningJourneys LearningJourney[]
+  questionAnswers  QuestionAnswer[]
+  sources          LearningUnitSources[]
 
   @@map("learning_units")
 }
