@@ -79,20 +79,21 @@ model LearningUnit {
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   // Domain-Specific Fields.
-  title         String      @map("title")
-  contentType   ContentType @map("content_type")
-  contentURL    String      @map("content_url")
-  summary       String      @map("summary")
-  objectives    String      @map("objectives")
-  createdBy     String      @map("created_by")
-  isRecommended Boolean     @default(false) @map("is_recommended")
-  isRequired    Boolean     @default(false) @map("is_required")
-  dueDate       DateTime?   @map("due_date") @db.Date
+  isRecommended Boolean            @default(false) @map("is_recommended")
+  isRequired    Boolean            @default(false) @map("is_required")
+  status        LearningUnitStatus @default(DRAFT) @map("status")
+  title         String?            @map("title")
+  contentType   ContentType?       @map("content_type")
+  contentURL    String?            @map("content_url")
+  summary       String?            @map("summary")
+  objectives    String?            @map("objectives")
+  createdBy     String?            @map("created_by")
+  dueDate       DateTime?          @map("due_date") @db.Date
 
   // Relations.
-  collectionId String @map("collection_id") @db.Uuid
+  collectionId String? @map("collection_id") @db.Uuid
 
-  collection       Collection               @relation(fields: [collectionId], references: [id])
+  collection       Collection?              @relation(fields: [collectionId], references: [id])
   sentiments       LearningUnitSentiments[]
   tags             LearningUnitTag[]
   learningJourneys LearningJourney[]
@@ -140,6 +141,11 @@ model LearningUnitSources {
 
 enum ContentType {
   PODCAST
+}
+
+enum LearningUnitStatus {
+  DRAFT
+  PUBLISHED
 }
 
 model LearningJourney {
@@ -290,9 +296,9 @@ model UserAdmin {
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   // Domain-Specific Fields.
-  name             String @map("name") @db.VarChar(255)
+  name             String  @map("name") @db.VarChar(255)
   email            String  @unique @map("email")
-  googleProviderId String @unique @map("google_provider_id")
+  googleProviderId String  @unique @map("google_provider_id")
   isActive         Boolean @default(true) @map("is_active")
 
   @@map("user_admins")
