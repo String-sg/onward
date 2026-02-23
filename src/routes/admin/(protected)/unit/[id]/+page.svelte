@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { untrack } from 'svelte';
+
   import { enhance } from '$app/forms';
   import { AddableField } from '$lib/components/AddableField';
   import { Button } from '$lib/components/Button';
@@ -20,13 +22,15 @@
 
   // Pre-populate sources from loaded data
   let sources = $state<{ title: string; sourceURL: string; tagId: string }[]>(
-    data.learningUnit.sources.length > 0
-      ? data.learningUnit.sources.map((s) => ({
-          title: s.title,
-          sourceURL: s.sourceURL,
-          tagId: s.tags[0]?.tagId || '',
-        }))
-      : [],
+    untrack(() =>
+      data.learningUnit.sources.length > 0
+        ? data.learningUnit.sources.map((s) => ({
+            title: s.title,
+            sourceURL: s.sourceURL,
+            tagId: s.tags[0]?.tagId || '',
+          }))
+        : [],
+    ),
   );
 
   // Pre-populate question answers from loaded data
@@ -38,26 +42,30 @@
       explanation: string;
     }[]
   >(
-    data.learningUnit.questionAnswers.length > 0
-      ? data.learningUnit.questionAnswers.map((q) => ({
-          question: q.question,
-          options: q.options,
-          answer: q.answer,
-          explanation: q.explanation,
-        }))
-      : [{ question: '', options: ['', ''], answer: 0, explanation: '' }],
+    untrack(() =>
+      data.learningUnit.questionAnswers.length > 0
+        ? data.learningUnit.questionAnswers.map((q) => ({
+            question: q.question,
+            options: q.options,
+            answer: q.answer,
+            explanation: q.explanation,
+          }))
+        : [{ question: '', options: ['', ''], answer: 0, explanation: '' }],
+    ),
   );
 
-  let isRecommended = $state(data.learningUnit.isRecommended);
-  let isRequired = $state(data.learningUnit.isRequired);
+  let isRecommended = $state(untrack(() => data.learningUnit.isRecommended));
+  let isRequired = $state(untrack(() => data.learningUnit.isRequired));
   let dueDate = $state(
-    data.learningUnit.dueDate
-      ? new Date(data.learningUnit.dueDate).toISOString().split('T')[0]
-      : '',
+    untrack(() =>
+      data.learningUnit.dueDate
+        ? new Date(data.learningUnit.dueDate).toISOString().split('T')[0]
+        : '',
+    ),
   );
 
   // Selected tag IDs from loaded data
-  let selectedTagIds = $state<string[]>(data.learningUnit.tags.map((t) => t.tagId));
+  let selectedTagIds = $state<string[]>(untrack(() => data.learningUnit.tags.map((t) => t.tagId)));
 
   $effect(() => {
     if (!isRequired) {
