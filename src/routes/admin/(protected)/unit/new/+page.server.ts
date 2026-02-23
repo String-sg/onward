@@ -77,65 +77,10 @@ export const actions = {
       handler: 'action_create_empty_draft',
     });
 
-    // Get first available collection (required field)
-    let firstCollection;
-    try {
-      const collections = await db.collection.findMany({
-        take: 1,
-        orderBy: { title: 'asc' },
-      });
-      firstCollection = collections[0];
-    } catch (err) {
-      logger.error({ err }, 'Failed to fetch collection');
-      throw error(500);
-    }
-
-    if (!firstCollection) {
-      logger.error('No collections found in database');
-      throw error(500, 'No collections available');
-    }
-
-
-
-    // Create empty draft
+    // Create empty draft — all content fields are nullable so no prefill needed
     const learningUnitCreateArgs = {
       data: {
-        title: result.data.title,
-        contentType: result.data.contentType,
-        contentURL: result.data.contentURL,
-        summary: result.data.summary,
-        objectives: result.data.objectives,
-        createdBy: result.data.createdBy,
-        isRecommended: result.data.isRecommended,
-        isRequired: result.data.isRequired,
-        dueDate: result.data.dueDate,
-        tags: {
-          create: result.data.tagIds.map((tagId) => ({
-            tagId,
-          })),
-        },
-        sources: {
-          create: result.data.sources.map((source) => ({
-            title: source.title,
-            sourceURL: source.sourceURL,
-            tags: source.tagId
-              ? {
-                create: {
-                  tagId: source.tagId,
-                },
-              }
-              : undefined,
-          })),
-        },
-        questionAnswers: {
-          create: result.data.questionAnswers.map((q, i) => ({
-            question: q.question,
-            options: q.options,
-            answer: q.answer,
-            explanation: q.explanation,
-            order: i + 1,
-          })),
-        },
+        status: 'DRAFT' as const,
       },
       select: { id: true },
     } satisfies LearningUnitCreateArgs;

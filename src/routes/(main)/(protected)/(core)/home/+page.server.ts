@@ -10,6 +10,7 @@ import {
   type LearningUnitFindManyArgs,
   type LearningUnitGetPayload,
   LearningUnitStatus,
+  type PublishedLearningUnit,
 } from '$lib/server/db';
 
 import type { PageServerLoad } from './$types';
@@ -134,9 +135,11 @@ export const load: PageServerLoad = async (event) => {
     take: 3,
   } satisfies LearningUnitFindManyArgs;
 
-  let recommendedLearningUnits: LearningUnitGetPayload<typeof recommendedLearningUnitsArgs>[];
+  let recommendedLearningUnits: PublishedLearningUnit<
+    LearningUnitGetPayload<typeof recommendedLearningUnitsArgs>
+  >[];
   try {
-    recommendedLearningUnits = await db.learningUnit.findMany(recommendedLearningUnitsArgs);
+    recommendedLearningUnits = await db.learningUnit.findPublished(recommendedLearningUnitsArgs);
   } catch (err) {
     logger.error({ err }, 'Failed to retrieve recommended learning units');
     throw error(500);
@@ -237,21 +240,25 @@ export const load: PageServerLoad = async (event) => {
       }),
       tags: lu.tags.map((t) => t.tag),
     })),
-    learningJourneys: learningJourneys.map((lj) => ({
-      ...lj,
-      learningUnit: {
-        ...lj.learningUnit,
-        tags: lj.learningUnit.tags.map((t) => t.tag),
-        status: getLearningUnitStatus({
-          isRequired: lj.learningUnit.isRequired,
-          dueDate: lj.learningUnit.dueDate,
-          learningJourney: {
-            isCompleted: lj.isCompleted,
-          },
-        }),
-      },
-    })),
-    collections: topicalCollections.map((collection) => ({
+    learningJourneys: learningJourneys.map((lj) => {
+      const lu = lj.learningUnit as PublishedLearningUnit<typeof lj.learningUnit>; // Justified cast: home page only shows journeys with PUBLISHED units, so content fields are guaranteed non-null.
+      return {
+        ...lj,
+        learningUnit: {
+          ...lu,
+          tags: lu.tags.map((t) => t.tag),
+          collectionType: lu.collection.type,
+          status: getLearningUnitStatus({
+            isRequired: lu.isRequired,
+            dueDate: lu.dueDate,
+            learningJourney: {
+              isCompleted: lj.isCompleted,
+            },
+          }),
+        },
+      };
+    }),
+    collections: collections.map((collection) => ({
       ...collection,
       numberOfPodcasts: collection._count.learningUnits,
     })),
