@@ -9,6 +9,7 @@
   import { Modal } from '$lib/components/Modal/index.js';
   import { NowPlayingBar } from '$lib/components/NowPlayingBar/index.js';
   import { NowPlayingView } from '$lib/components/NowPlayingView/index.js';
+  import { OnboardingView } from '$lib/components/OnboardingView/index.js';
   import {
     noop,
     track20PercentPodcastPlay,
@@ -29,6 +30,7 @@
   let isTrackingSession = $state(false);
   let isPodcastCompletedModalOpen = $state(false);
   let isQuizAvailable = $derived(page.data?.isQuizAvailable ?? false);
+  let isOnboardingViewOpen = $derived(!page.data.onboarding);
 
   const isQuizPage = $derived(page.url.pathname.includes('/quiz'));
 
@@ -71,6 +73,10 @@
 
   const handleChatViewClose = () => {
     isChatViewOpen = false;
+  };
+
+  const handleOnboardingViewClose = () => {
+    isOnboardingViewOpen = false;
   };
 
   const handlePodcastCompletedModalClose = () => {
@@ -316,3 +322,5 @@
 {/if}
 
 <ChatView isopen={isChatViewOpen} onclose={handleChatViewClose} />
+
+<OnboardingView isopen={isOnboardingViewOpen} onclose={handleOnboardingViewClose} />
