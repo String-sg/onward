@@ -26,6 +26,7 @@ export const load: PageServerLoad = async (event) => {
 
   const learningUnitArgs = {
     select: {
+      id: true,
       status: true,
       title: true,
       isRequired: true,
