@@ -1,16 +1,18 @@
-<script lang="ts">
+<script lang="ts" generics="T extends { id?: unknown }">
   import type { Column } from './types';
 
-  export interface Props {
+  interface Props {
     /** The data to display in the table */
-    data: Record<string, unknown>[];
+    data: T[];
     /** Column configuration */
-    columns: Column[];
+    columns: Column<T>[];
     /** Optional empty state message */
     emptyMessage?: string;
+    /** Optional row click handler */
+    onrowclick?: (row: T) => void | Promise<void>;
   }
 
-  let { data, columns, emptyMessage = 'No data found' }: Props = $props();
+  let { data, columns, emptyMessage = 'No data found', onrowclick }: Props = $props();
 </script>
 
 <div class="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-md">
@@ -27,8 +29,12 @@
       </thead>
 
       <tbody class="divide-y divide-slate-200 bg-white text-xs">
-        {#each data as item, index (index)}
-          <tr class="hover:bg-slate-100">
+        {#each data as item (item.id ?? item)}
+          <tr
+            class="hover:bg-slate-50"
+            class:cursor-pointer={!!onrowclick}
+            onclick={() => onrowclick?.(item)}
+          >
             {#each columns as column (column.key)}
               <td class="px-6 py-4">
                 {item[column.key]}
