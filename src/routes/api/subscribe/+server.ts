@@ -38,7 +38,6 @@ export const POST: RequestHandler = async (event) => {
   }
 
   const { isSubscribed } = params;
-
   try {
     await db.userProfile.update({
       data: {

@@ -21,7 +21,6 @@ export const load: LayoutServerLoad = async (event) => {
   } satisfies UserFindUniqueArgs;
 
   let userData: UserGetPayload<typeof userArgs> | null;
-
   try {
     userData = await db.user.findUnique(userArgs);
   } catch (err) {
