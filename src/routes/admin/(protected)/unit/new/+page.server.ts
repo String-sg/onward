@@ -1,15 +1,6 @@
-import { error, fail, redirect } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 
-import {
-  type CollectionFindManyArgs,
-  type CollectionGetPayload,
-  db,
-  type LearningUnitCreateArgs,
-  type LearningUnitGetPayload,
-  type TagFindManyArgs,
-  type TagGetPayload,
-} from '$lib/server/db.js';
-import { validateLearningUnit } from '$lib/server/unit/form.js';
+import { type CollectionFindManyArgs, type CollectionGetPayload, db, type LearningUnitCreateArgs, type LearningUnitGetPayload, type TagFindManyArgs, type TagGetPayload } from '$lib/server/db.js';
 
 import type { Actions, PageServerLoad } from './$types';
 
@@ -83,15 +74,30 @@ export const actions = {
 
     const logger = event.locals.logger.child({
       userID: event.locals.session.user.id,
-      handler: 'action_create_learning_unit',
+      handler: 'action_create_empty_draft',
     });
 
-    const formData = await event.request.formData();
-    const result = validateLearningUnit(formData);
-    if (!result.success) {
-      return fail(400, { errors: result.errors });
+    // Get first available collection (required field)
+    let firstCollection;
+    try {
+      const collections = await db.collection.findMany({
+        take: 1,
+        orderBy: { title: 'asc' },
+      });
+      firstCollection = collections[0];
+    } catch (err) {
+      logger.error({ err }, 'Failed to fetch collection');
+      throw error(500);
     }
 
+    if (!firstCollection) {
+      logger.error('No collections found in database');
+      throw error(500, 'No collections available');
+    }
+
+
+
+    // Create empty draft
     const learningUnitCreateArgs = {
       data: {
         title: result.data.title,
@@ -114,10 +120,10 @@ export const actions = {
             sourceURL: source.sourceURL,
             tags: source.tagId
               ? {
-                  create: {
-                    tagId: source.tagId,
-                  },
-                }
+                create: {
+                  tagId: source.tagId,
+                },
+              }
               : undefined,
           })),
         },
@@ -134,15 +140,17 @@ export const actions = {
       select: { id: true },
     } satisfies LearningUnitCreateArgs;
 
-    let learningUnit: LearningUnitGetPayload<typeof learningUnitCreateArgs>;
+    let emptyDraft: LearningUnitGetPayload<typeof learningUnitCreateArgs>;
     try {
-      learningUnit = await db.learningUnit.create(learningUnitCreateArgs);
+      emptyDraft = await db.learningUnit.create(learningUnitCreateArgs);
     } catch (err) {
-      logger.error({ err }, 'Failed to create learning unit');
+      logger.error({ err }, 'Failed to create empty draft');
       throw error(500);
     }
-    logger.info({ learningUnitId: learningUnit.id }, 'Learning unit created successfully');
 
-    redirect(303, '/admin/dashboard');
+    logger.info({ learningUnitId: emptyDraft.id }, 'Empty draft created successfully');
+
+    // Redirect to edit page
+    redirect(303, `/admin/unit/${emptyDraft.id}`);
   },
 } satisfies Actions;
