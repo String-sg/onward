@@ -18,8 +18,18 @@
   tomorrow.setDate(tomorrow.getDate() + 1);
   const minDueDate = tomorrow.toISOString().split('T')[0];
 
-  let sources = $state<{ title: string; sourceURL: string; tagId: string }[]>([]);
+  // Pre-populate sources from loaded data
+  let sources = $state<{ title: string; sourceURL: string; tagId: string }[]>(
+    data.learningUnit.sources.length > 0
+      ? data.learningUnit.sources.map((s) => ({
+          title: s.title,
+          sourceURL: s.sourceURL,
+          tagId: s.tags[0]?.tagId || '',
+        }))
+      : [],
+  );
 
+  // Pre-populate question answers from loaded data
   let questionAnswers = $state<
     {
       question: string;
@@ -27,11 +37,27 @@
       answer: number;
       explanation: string;
     }[]
-  >([{ question: '', options: ['', ''], answer: 0, explanation: '' }]);
+  >(
+    data.learningUnit.questionAnswers.length > 0
+      ? data.learningUnit.questionAnswers.map((q) => ({
+          question: q.question,
+          options: q.options,
+          answer: q.answer,
+          explanation: q.explanation,
+        }))
+      : [{ question: '', options: ['', ''], answer: 0, explanation: '' }],
+  );
 
-  let isRecommended = $state(false);
-  let isRequired = $state(false);
-  let dueDate = $state('');
+  let isRecommended = $state(data.learningUnit.isRecommended);
+  let isRequired = $state(data.learningUnit.isRequired);
+  let dueDate = $state(
+    data.learningUnit.dueDate
+      ? new Date(data.learningUnit.dueDate).toISOString().split('T')[0]
+      : '',
+  );
+
+  // Selected tag IDs from loaded data
+  let selectedTagIds = $state<string[]>(data.learningUnit.tags.map((t) => t.tagId));
 
   $effect(() => {
     if (!isRequired) {
@@ -87,19 +113,30 @@
 
 <div class="mx-auto max-w-4xl px-4 py-8">
   <div class="mb-6 flex flex-col gap-1">
-    <span class="text-xl font-medium">Create Learning Unit</span>
-    <span class="text-xs text-slate-500">Add a new learning unit to the system</span>
+    <div class="flex items-center justify-between">
+      <span class="text-xl font-medium">Edit Learning Unit</span>
+      <span
+        class="rounded-full px-3 py-1 text-xs font-medium"
+        class:bg-slate-100={data.learningUnit.status === 'DRAFT'}
+        class:bg-emerald-100={data.learningUnit.status === 'PUBLISHED'}
+        class:text-slate-700={data.learningUnit.status === 'DRAFT'}
+        class:text-emerald-700={data.learningUnit.status === 'PUBLISHED'}
+      >
+        {data.learningUnit.status}
+      </span>
+    </div>
+    <span class="text-xs text-slate-500">Edit learning unit details</span>
   </div>
 
   <form method="POST" novalidate use:enhance class="flex flex-col gap-6">
     <div class="rounded-lg border border-slate-100 p-6 shadow">
       <div class="flex flex-col gap-4">
         <FormField label="Title" id="title" required error={form?.errors?.title?.message}>
-          <TextInput type="text" id="title" name="title" />
+          <TextInput type="text" id="title" name="title" value={data.learningUnit.title} />
         </FormField>
 
         <FormField label="Content Type" id="contentType" required>
-          <Select id="contentType" name="contentType">
+          <Select id="contentType" name="contentType" value={data.learningUnit.contentType}>
             <option value="PODCAST">Podcast</option>
           </Select>
         </FormField>
@@ -110,7 +147,13 @@
           required
           error={form?.errors?.contentURL?.message}
         >
-          <TextInput type="url" id="contentURL" name="contentURL" placeholder="https://..." />
+          <TextInput
+            type="url"
+            id="contentURL"
+            name="contentURL"
+            placeholder="https://..."
+            value={data.learningUnit.contentURL}
+          />
         </FormField>
 
         <FormField
@@ -119,7 +162,7 @@
           required
           error={form?.errors?.collectionId?.message}
         >
-          <Select id="collectionId" name="collectionId">
+          <Select id="collectionId" name="collectionId" value={data.learningUnit.collectionId}>
             <option value="">Select a collection</option>
             {#each data.collections as collection (collection.id)}
               <option value={collection.id}>
@@ -131,7 +174,7 @@
 
         <!-- Use Transcript as the label because DB column is uses summary -->
         <FormField id="summary" label="Transcript" required error={form?.errors?.summary?.message}>
-          <TextArea id="summary" name="summary" />
+          <TextArea id="summary" name="summary" value={data.learningUnit.summary} />
         </FormField>
 
         <FormField
@@ -140,7 +183,7 @@
           required
           error={form?.errors?.objectives?.message}
         >
-          <TextArea id="objectives" name="objectives" />
+          <TextArea id="objectives" name="objectives" value={data.learningUnit.objectives} />
         </FormField>
 
         <FormField
@@ -149,11 +192,16 @@
           required
           error={form?.errors?.createdBy?.message}
         >
-          <TextInput type="text" id="createdBy" name="createdBy" />
+          <TextInput
+            type="text"
+            id="createdBy"
+            name="createdBy"
+            value={data.learningUnit.createdBy}
+          />
         </FormField>
 
         <FormField label="Tag" id="tags" required error={form?.errors?.tags?.message}>
-          <Select id="tags" name="tags">
+          <Select id="tags" name="tags" value={selectedTagIds[0] || ''}>
             <option value="">Select a tag</option>
             {#each data.contentTags as tag (tag.id)}
               <option value={tag.id}>{tag.label}</option>
@@ -283,6 +331,11 @@
       </div>
     </div>
 
-    <Button class="mx-auto w-full" type="submit">Publish</Button>
+    <div class="flex justify-end gap-4">
+      <Button type="submit" formaction="?/publish" variant="primary" class="px-6">Publish</Button>
+      <Button type="submit" formaction="?/saveDraft" variant="secondary" class="px-6">
+        Save Draft
+      </Button>
+    </div>
   </form>
 </div>
