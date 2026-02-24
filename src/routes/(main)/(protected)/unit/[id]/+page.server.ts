@@ -18,7 +18,7 @@ import {
   type LearningUnitSentimentsUpsertArgs,
   type LearningUnitSourcesFindManyArgs,
   type LearningUnitSourcesGetPayload,
-  type PublishedLearningUnit,
+  LearningUnitStatus,
 } from '$lib/server/db';
 
 import type { Actions, PageServerLoad } from './$types';
@@ -64,7 +64,17 @@ export const load: PageServerLoad = async (event) => {
         },
       },
     },
-    where: { id: event.params.id },
+    where: {
+      id: event.params.id,
+      status: LearningUnitStatus.PUBLISHED,
+      title: { not: null },
+      contentType: { not: null },
+      contentURL: { not: null },
+      summary: { not: null },
+      objectives: { not: null },
+      createdBy: { not: null },
+      collectionId: { not: null },
+    },
   } satisfies LearningUnitFindUniqueArgs;
 
   let learningUnit: LearningUnitGetPayload<typeof learningUnitArgs> | null;
@@ -82,9 +92,6 @@ export const load: PageServerLoad = async (event) => {
   if (learningUnit.status !== 'PUBLISHED') {
     throw error(404);
   }
-
-  // Justified cast: status check above guarantees all content fields are populated.
-  const unit = learningUnit as PublishedLearningUnit<typeof learningUnit>;
 
   let isQuizAvailable: boolean;
   try {
@@ -121,8 +128,8 @@ export const load: PageServerLoad = async (event) => {
   }
 
   const quizStatus = getLearningUnitStatus({
-    isRequired: unit.isRequired,
-    dueDate: unit.dueDate,
+    isRequired: learningUnit.isRequired,
+    dueDate: learningUnit.dueDate,
     learningJourney: {
       isCompleted: learningJourney ? learningJourney.isCompleted : false,
     },
@@ -196,18 +203,18 @@ export const load: PageServerLoad = async (event) => {
 
   return {
     csrfToken: event.locals.session.csrfToken(),
-    id: unit.id,
-    tags: unit.tags.map((t) => t.tag),
-    title: unit.title,
-    summary: unit.summary,
-    objectives: unit.objectives,
-    url: unit.contentURL,
-    createdAt: unit.createdAt,
-    createdBy: unit.createdBy,
-    collectionType: unit.collection.type,
+    id: learningUnit.id,
+    tags: learningUnit.tags.map((t) => t.tag),
+    title: learningUnit.title,
+    summary: learningUnit.summary,
+    objectives: learningUnit.objectives,
+    url: learningUnit.contentURL,
+    createdAt: learningUnit.createdAt,
+    createdBy: learningUnit.createdBy,
+    collectionType: learningUnit.collection!.type,
     isQuizAvailable,
-    isRequired: unit.isRequired,
-    dueDate: unit.dueDate,
+    isRequired: learningUnit.isRequired,
+    dueDate: learningUnit.dueDate,
     lastCheckpoint: Number(learningJourney?.lastCheckpoint),
     quizStatus,
     userSentiment: sentiment?.hasLiked ?? null,

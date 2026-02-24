@@ -6,7 +6,6 @@ import {
   type LearningUnitFindManyArgs,
   type LearningUnitGetPayload,
   LearningUnitStatus,
-  type PublishedLearningUnit,
 } from '$lib/server/db';
 
 import type { PageServerLoad } from './$types';
@@ -56,6 +55,13 @@ export const load: PageServerLoad = async (event) => {
     },
     where: {
       status: LearningUnitStatus.PUBLISHED,
+      title: { not: null },
+      contentType: { not: null },
+      contentURL: { not: null },
+      summary: { not: null },
+      objectives: { not: null },
+      createdBy: { not: null },
+      collectionId: { not: null },
       isRequired: true,
       OR: [
         {
@@ -87,9 +93,9 @@ export const load: PageServerLoad = async (event) => {
     ],
   } satisfies LearningUnitFindManyArgs;
 
-  let learningUnits: PublishedLearningUnit<LearningUnitGetPayload<typeof learningUnitsArgs>>[];
+  let learningUnits: LearningUnitGetPayload<typeof learningUnitsArgs>[];
   try {
-    learningUnits = await db.learningUnit.findPublished(learningUnitsArgs);
+    learningUnits = await db.learningUnit.findMany(learningUnitsArgs);
   } catch (err) {
     logger.error({ err }, 'Failed to retrieve To-do Learning Units');
     throw error(500);
