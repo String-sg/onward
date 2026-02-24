@@ -1,10 +1,9 @@
 <script lang="ts">
   import { Plus } from '@lucide/svelte';
 
-  import { enhance } from '$app/forms';
   import { goto } from '$app/navigation';
   import { page } from '$app/state';
-  import { Button } from '$lib/components/Button/index.js';
+  import { LinkButton } from '$lib/components/Button/index.js';
   import Paginator from '$lib/components/Paginator/Paginator.svelte';
   import { Table, type TableColumn } from '$lib/components/Table/index.js';
 
@@ -19,7 +18,7 @@
   };
 
   const onrowclick = async (row: (typeof learningUnits)[number]) => {
-    await goto(`/admin/unit/${row.id}`);
+    await goto(`/admin/unit/${row.id}/edit`);
   };
 
   const learningUnits = $derived(
@@ -72,11 +71,9 @@
       <span class="text-xs text-slate-500">Manage all learning units</span>
     </div>
 
-    <form method="POST" action="/admin/unit/new" use:enhance>
-      <Button type="submit" class="rounded-xl text-sm">
-        <Plus size={16} /> Create New Learning Unit
-      </Button>
-    </form>
+    <LinkButton href="/admin/unit/new" class="rounded-xl text-sm">
+      <Plus size={16} /> Create New Learning Unit
+    </LinkButton>
   </div>
 
   <div class="flex flex-col gap-0">
