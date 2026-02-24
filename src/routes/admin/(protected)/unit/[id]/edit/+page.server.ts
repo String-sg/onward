@@ -10,7 +10,7 @@ import {
   type TagFindManyArgs,
   type TagGetPayload,
 } from '$lib/server/db.js';
-import { validateLearningUnit } from '$lib/server/unit/form.js';
+import { validateLearningUnit, validateLearningUnitDraft } from '$lib/server/unit/validation.js';
 
 import type { Actions, PageServerLoad } from './$types';
 
@@ -121,35 +121,13 @@ export const actions = {
     });
 
     const formData = await event.request.formData();
+    const result = validateLearningUnitDraft(formData);
 
-    const tagIds = formData
-      .getAll('tags')
-      .filter((id): id is string => typeof id === 'string' && id.length > 0);
+    if (!result.success) {
+      return fail(400, { errors: result.errors });
+    }
 
-    const data = {
-      title: formData.get('title')?.toString().trim() || null,
-      contentType: (formData.get('contentType')?.toString() as 'PODCAST') || null,
-      contentURL: formData.get('contentURL')?.toString().trim() || null,
-      summary: formData.get('summary')?.toString().trim() || null,
-      objectives: formData.get('objectives')?.toString().trim() || null,
-      createdBy: formData.get('createdBy')?.toString().trim() || null,
-      collectionId: formData.get('collectionId')?.toString() || null,
-      isRecommended: formData.get('isRecommended') === 'on',
-      isRequired: formData.get('isRequired') === 'on',
-      dueDate: formData.get('dueDate')?.toString() || null,
-      tagIds,
-      sources: JSON.parse(formData.get('sources')?.toString() || '[]') as {
-        title: string;
-        sourceURL: string;
-        tagId?: string;
-      }[],
-      questionAnswers: JSON.parse(formData.get('questionAnswers')?.toString() || '[]') as {
-        question: string;
-        options: string[];
-        answer: number;
-        explanation: string;
-      }[],
-    };
+    const { data } = result;
 
     const learningUnitArgs = {
       where: { id: event.params.id },
@@ -163,8 +141,8 @@ export const actions = {
         collectionId: data.collectionId,
         isRecommended: data.isRecommended,
         isRequired: data.isRequired,
-        dueDate: data.dueDate ? new Date(data.dueDate) : null,
-        status: 'DRAFT',
+        dueDate: data.dueDate,
+        status: 'DRAFT' as const,
         tags: {
           deleteMany: {},
           create: data.tagIds.map((tagId) => ({ tagId })),
@@ -241,45 +219,47 @@ export const actions = {
       return fail(400, { errors: result.errors });
     }
 
-    try {
-      await db.learningUnit.update({
-        where: { id: event.params.id },
-        data: {
-          title: result.data.title,
-          contentType: result.data.contentType,
-          contentURL: result.data.contentURL,
-          summary: result.data.summary,
-          objectives: result.data.objectives,
-          createdBy: result.data.createdBy,
-          collectionId: result.data.collectionId,
-          isRecommended: result.data.isRecommended,
-          isRequired: result.data.isRequired,
-          dueDate: result.data.dueDate,
-          status: 'PUBLISHED',
-          tags: {
-            deleteMany: {},
-            create: result.data.tagIds.map((tagId) => ({ tagId })),
-          },
-          sources: {
-            deleteMany: {},
-            create: result.data.sources.map((s) => ({
-              title: s.title,
-              sourceURL: s.sourceURL,
-              tags: s.tagId ? { create: { tagId: s.tagId } } : undefined,
-            })),
-          },
-          questionAnswers: {
-            deleteMany: {},
-            create: result.data.questionAnswers.map((q, i) => ({
-              question: q.question,
-              options: q.options,
-              answer: q.answer,
-              explanation: q.explanation,
-              order: i + 1,
-            })),
-          },
+    const updateArgs = {
+      where: { id: event.params.id },
+      data: {
+        title: result.data.title,
+        contentType: result.data.contentType,
+        contentURL: result.data.contentURL,
+        summary: result.data.summary,
+        objectives: result.data.objectives,
+        createdBy: result.data.createdBy,
+        collectionId: result.data.collectionId,
+        isRecommended: result.data.isRecommended,
+        isRequired: result.data.isRequired,
+        dueDate: result.data.dueDate,
+        status: 'PUBLISHED' as const,
+        tags: {
+          deleteMany: {},
+          create: result.data.tagIds.map((tagId) => ({ tagId })),
         },
-      });
+        sources: {
+          deleteMany: {},
+          create: result.data.sources.map((s) => ({
+            title: s.title,
+            sourceURL: s.sourceURL,
+            tags: s.tagId ? { create: { tagId: s.tagId } } : undefined,
+          })),
+        },
+        questionAnswers: {
+          deleteMany: {},
+          create: result.data.questionAnswers.map((q, i) => ({
+            question: q.question,
+            options: q.options,
+            answer: q.answer,
+            explanation: q.explanation,
+            order: i + 1,
+          })),
+        },
+      },
+    } satisfies LearningUnitUpdateArgs;
+
+    try {
+      await db.learningUnit.update(updateArgs);
     } catch (err) {
       logger.error({ err }, 'Failed to publish learning unit');
       throw error(500);
