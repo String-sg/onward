@@ -179,7 +179,7 @@ export const load: PageServerLoad = async (event) => {
     throw error(500);
   }
 
-  const collections = await db.collection.findMany({
+  const topicalCollections = await db.collection.findMany({
     select: {
       id: true,
       title: true,
@@ -193,6 +193,9 @@ export const load: PageServerLoad = async (event) => {
           learningUnits: true,
         },
       },
+    },
+    where: {
+      isTopic: true,
     },
   });
 
@@ -225,7 +228,7 @@ export const load: PageServerLoad = async (event) => {
         }),
       },
     })),
-    collections: collections.map((collection) => ({
+    collections: topicalCollections.map((collection) => ({
       ...collection,
       numberOfPodcasts: collection._count.learningUnits,
     })),

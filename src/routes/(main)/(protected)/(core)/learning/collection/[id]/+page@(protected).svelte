@@ -44,7 +44,9 @@
       data.collection.tag.code
     ]}"
   >
-    <span class="text-lg font-medium">About this topic</span>
+    {#if data.collection.isTopic}
+      <span class="text-lg font-medium">About this topic</span>
+    {/if}
 
     {#if data.collection.tag.code}
       {@const badgeInfo = getBadgeInfo(data.collection.tag.code)}

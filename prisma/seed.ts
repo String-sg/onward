@@ -15,23 +15,53 @@ const db = new PrismaClient({
 const tags: Prisma.TagCreateInput[] = [
   {
     id: uuidv7(),
+    code: 'AI',
+    label: 'AI',
+  },
+  {
+    id: uuidv7(),
+    code: 'BOB',
+    label: 'Learn with BOB',
+  },
+  {
+    id: uuidv7(),
+    code: 'CAREER',
+    label: 'Career Growth',
+  },
+  {
+    id: uuidv7(),
+    code: 'INNOV',
+    label: 'Innovation',
+  },
+  {
+    id: uuidv7(),
+    code: 'NEWS',
+    label: 'In The News',
+  },
+  {
+    id: uuidv7(),
+    code: 'PROD',
+    label: 'Productivity',
+  },
+  {
+    id: uuidv7(),
     code: 'STU_DEV',
     label: 'Student Development',
   },
   {
     id: uuidv7(),
-    code: 'AI',
-    label: 'Artificial Intelligence',
-  },
-  {
-    id: uuidv7(),
-    code: 'INFRA',
-    label: 'Infrastructure',
+    code: 'STU_WELL',
+    label: 'Student Wellbeing',
   },
   {
     id: uuidv7(),
     code: 'WELLBEING',
     label: 'Wellbeing',
+  },
+  {
+    id: uuidv7(),
+    code: 'INFRA',
+    label: 'Infrastructure',
   },
   {
     id: uuidv7(),
@@ -58,65 +88,159 @@ const tags: Prisma.TagCreateInput[] = [
 const collections: Prisma.CollectionCreateInput[] = [
   {
     id: uuidv7(),
-    title: 'SEN Peer Support',
+    title: 'AI',
     description:
-      'Explore the world of Special Educational Needs (SEN) peer support that indicates Singapore specific peer support knowledge, case studies and more to gain knowledge about SEN.',
+      'Discover how AI is transforming education, unpack AI use cases, and tool suggestions to help you take charge of this rapidly changing space.',
     tag: {
       connect: {
-        id: tags[0].id, // STU_DEV
+        id: tags[0].id, // AI
       },
     },
+    isTopic: true,
   },
   {
     id: uuidv7(),
-    title: 'Learn to use AI',
+    title: 'Learn with BOB',
     description:
-      'Discover how AI is transforming education through personalized learning, intelligent tutoring systems, and data-driven insights to enhance teaching effectiveness.',
+      'Learn with BOB is a series that illustrates scenarios on how BOB applies the SPACES framework to change his behaviour in order to promote purposeful work at a sustainable pace.',
     tag: {
       connect: {
-        id: tags[1].id, // AI
+        id: tags[1].id,
       },
     },
+    isTopic: true,
   },
   {
     id: uuidv7(),
-    title: 'Infrastructure for Education',
-    description: 'Lorem Ipsum 1',
+    title: 'Career Growth',
+    description:
+      'Explore the world of career growth, where we help you transform potential into performance. Learn to set ambitious yet realistic professional goals, embrace new challenges, and strive towards greater work fulfilment.',
     tag: {
       connect: {
-        id: tags[2].id, // INFRA
+        id: tags[2].id,
       },
     },
+    isTopic: true,
   },
   {
     id: uuidv7(),
-    title: 'Wellbeing 1',
-    description: 'Loren Ipsum 2',
+    title: 'Innovation',
+    description:
+      'Breaking down strategies that can empower you to explore new ideas, invest in innovative projects, and support your creative thinking.',
     tag: {
       connect: {
-        id: tags[3].id, // WELLBEING
+        id: tags[3].id,
       },
     },
+    isTopic: true,
+  },
+  {
+    id: uuidv7(),
+    title: 'In The News',
+    description:
+      'Key highlights from education related news and surveys to provide insights on the ground.',
+    tag: {
+      connect: {
+        id: tags[4].id,
+      },
+    },
+    isTopic: true,
+  },
+  {
+    id: uuidv7(),
+    title: 'Productivity',
+    description:
+      'Learn insights and techniques for mastering time management, optimizing workflows, minimizing distractions, and achieving your goals faster.',
+    tag: {
+      connect: {
+        id: tags[5].id,
+      },
+    },
+    isTopic: true,
+  },
+  {
+    id: uuidv7(),
+    title: 'Student Development',
+    description:
+      "We explore ways to help educators learn to manage students' emotional and physical health, ultimately helping them thrive academically and personally.",
+    tag: {
+      connect: {
+        id: tags[6].id,
+      },
+    },
+    isTopic: true,
+  },
+  {
+    id: uuidv7(),
+    title: 'Student Wellbeing',
+    description:
+      'Explore the world of Special Educational Needs (SEN) peer support that indicates Singapore specific peer support knowledge, case studies and more to gain knowledge about SEN. This topic encompasses a variety of bite-sized content including podcasts, interactive workshops, and expert-led webinars designed to empower educators and caregivers.',
+    tag: {
+      connect: {
+        id: tags[7].id,
+      },
+    },
+    isTopic: true,
+  },
+  {
+    id: uuidv7(),
+    title: 'Wellbeing',
+    description:
+      'This series aims to help officers be aware of potential stressors in the workplace, keep a lookout for signs of distress, have regular check-ins with colleagues, and be aware of resources that we can share with those who need help.',
+    tag: {
+      connect: {
+        id: tags[8].id,
+      },
+    },
+    isTopic: true,
+  },
+  {
+    id: uuidv7(),
+    title: 'Infrastructure',
+    description:
+      'Summary briefs of key infrastructure updates in MOE, including device setups, connectivity and digital integrations, enabling you to work efficiently.',
+    tag: {
+      connect: {
+        id: tags[9].id,
+      },
+    },
+    isTopic: true,
+  },
+  {
+    id: uuidv7(),
+    title: 'Career Growth',
+    description:
+      'Explore the world of career growth, where we help you transform potential into performance. Learn to set ambitious yet realistic professional goals, embrace new challenges, and strive towards greater work fulfilment.',
+    tag: {
+      connect: {
+        id: tags[10].id,
+      },
+    },
+    isTopic: true,
   },
   {
     id: uuidv7(),
     title: 'Educator Voices',
-    description: 'Loren Ipsum 3',
+    description:
+      'Inspiring stories from fellow educators on how to enable learning and development within the workplace and classrooms.',
     tag: {
       connect: {
-        id: tags[4].id, // EDU_VOICES
+        id: tags[11].id,
       },
     },
+    isTopic: true,
   },
   {
     id: uuidv7(),
-    title: 'Engagement',
-    description: 'Loren Ipsum 4',
+    title: 'Employee Engagement',
+    description:
+      'Helping leaders make sense of Employee Engagement Survey (EES) results and practical tips to maintain staff engagement levels in the workplace.',
     tag: {
       connect: {
-        id: tags[5].id, // EMP_ENGAGEMENT
+        id: tags[12].id,
       },
     },
+    isTopic: true,
   },
 ];
 

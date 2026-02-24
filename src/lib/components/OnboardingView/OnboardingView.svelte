@@ -127,11 +127,11 @@
     await handleClose();
   };
 
-  const handleTopicChange = (type: string, checked: boolean) => {
+  const handleTopicChange = (title: string, checked: boolean) => {
     if (checked) {
-      selectedTopics = [...selectedTopics, type];
+      selectedTopics = [...selectedTopics, title];
     } else {
-      selectedTopics = selectedTopics.filter((topic) => topic !== type);
+      selectedTopics = selectedTopics.filter((topic) => topic !== title);
     }
   };
 
@@ -139,66 +139,54 @@
     'artificial-intelligence': {
       title: 'Artificial Intelligence',
       description: 'AI news, use cases and tools to master the changing landscape.',
-      type: 'AI',
     },
     'career-growth': {
       title: 'Career Growth',
       description: 'Tips to help you set career goals and transform potential into performance.',
-      type: 'CAREER',
     },
     'educator-voices': {
       title: 'Educator Voices',
       description: 'Inspiring stories from fellow educators.',
-      type: 'EDU_VOICES',
     },
     'employee-engagement': {
       title: 'Employee Engagement',
       description:
         'Analyze EES results and get practical tips to maintain workplace staff engagement.',
-      type: 'EMP_ENGAGEMENT',
     },
     'in-the-news': {
       title: 'In the News',
       description: 'Education news and survey highlights for ground insights.',
-      type: 'NEWS',
     },
     infrastructure: {
       title: 'Infrastructure',
       description: 'Learn about device setups, connectivity, and digital tools for efficient work.',
-      type: 'INFRA',
     },
     innovation: {
       title: 'Innovation',
       description: 'Strategies to empower new ideas, innovation, and creative thinking.',
-      type: 'INNOV',
     },
     'learn-with-bob': {
       title: 'Learn with Bob',
       description: 'SPACES framework for purposeful work and a sustainable pace.',
-      type: 'BOB',
     },
     productivity: {
       title: 'Productivity',
       description:
         'Master time management and workflows to minimize distractions and reach goals faster.',
-      type: 'PROD',
     },
     'student-development': {
       title: 'Student Development',
       description:
         "Learn ways to develop students' cognitive, affective, physical and aesthetic abilities.",
-      type: 'STU_DEV',
     },
     'student-wellbeing': {
       title: 'Student Wellbeing',
       description: 'Learn ways to support students emotional and physical health.',
-      type: 'STU_WELL',
     },
     wellbeing: {
       title: 'Wellbeing',
       description:
         'Identify workplace stress, monitor peer distress, conduct check-ins, and provide support resources.',
-      type: 'WELLBEING',
     },
   };
 </script>
@@ -288,7 +276,7 @@
 
           <div class="overflow-y-auto pt-6">
             <div class="flex w-full flex-col gap-y-2" role="group" aria-labelledby="topic">
-              {#each Object.entries(collectionsList) as [key, { title, description, type }] (key)}
+              {#each Object.entries(collectionsList) as [key, { title, description }] (key)}
                 <label
                   class={[
                     'group flex cursor-pointer items-center rounded-3xl border border-slate-200 bg-white',
@@ -302,9 +290,9 @@
                     <input
                       type="checkbox"
                       name="topics"
-                      value={type}
+                      value={title}
                       class="sr-only"
-                      onchange={(e) => handleTopicChange(type, e.currentTarget.checked)}
+                      onchange={(e) => handleTopicChange(title, e.currentTarget.checked)}
                     />
 
                     <img

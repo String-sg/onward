@@ -36,7 +36,6 @@ export const load: PageServerLoad = async (event) => {
   }
 
   const collection = await db.collection.findUnique({
-    where: { id: event.params.id },
     select: {
       title: true,
       description: true,
@@ -45,7 +44,9 @@ export const load: PageServerLoad = async (event) => {
           code: true,
         },
       },
+      isTopic: true,
     },
+    where: { id: event.params.id },
   });
 
   if (!collection) {

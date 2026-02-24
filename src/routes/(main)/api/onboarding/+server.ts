@@ -44,13 +44,14 @@ export const POST: RequestHandler = async (event) => {
 
   try {
     const collections = await db.collection.findMany({
-      where: {
-        type: {
-          in: topics,
-        },
-      },
       select: {
         id: true,
+      },
+      where: {
+        title: {
+          in: topics,
+        },
+        isTopic: true,
       },
     });
 

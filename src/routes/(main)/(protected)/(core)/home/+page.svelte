@@ -126,7 +126,7 @@
   {/if}
 
   <!-- Learning Topics -->
-  {#if data.collections.length > 0}
+  {#if data.collections.some((collection) => collection.numberOfPodcasts > 0)}
     <div class="flex flex-row justify-between px-2">
       <span class="text-xl font-semibold">Learning topics</span>
     </div>
@@ -145,7 +145,7 @@
     </div>
   {/if}
 
-  {#if data.toDoList.length === 0 && data.recommendedLearningUnits.length === 0 && data.learningJourneys.length === 0 && data.collections.length === 0}
+  {#if data.toDoList.length === 0 && data.recommendedLearningUnits.length === 0 && data.learningJourneys.length === 0 && data.collections.some((collection) => collection.numberOfPodcasts === 0)}
     <div class="mt-8 flex flex-col items-center gap-y-5">
       <EmptyStateView username={data.username} imagealt="No bites found" />
     </div>
