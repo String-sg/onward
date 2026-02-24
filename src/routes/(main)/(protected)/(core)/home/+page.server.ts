@@ -49,13 +49,6 @@ export const load: PageServerLoad = async (event) => {
     },
     where: {
       status: LearningUnitStatus.PUBLISHED,
-      title: { not: null },
-      contentType: { not: null },
-      contentURL: { not: null },
-      summary: { not: null },
-      objectives: { not: null },
-      createdBy: { not: null },
-      collectionId: { not: null },
       isRequired: true,
       OR: [
         {
@@ -134,13 +127,6 @@ export const load: PageServerLoad = async (event) => {
     },
     where: {
       status: LearningUnitStatus.PUBLISHED,
-      title: { not: null },
-      contentType: { not: null },
-      contentURL: { not: null },
-      summary: { not: null },
-      objectives: { not: null },
-      createdBy: { not: null },
-      collectionId: { not: null },
       NOT: {
         learningJourneys: {
           some: {

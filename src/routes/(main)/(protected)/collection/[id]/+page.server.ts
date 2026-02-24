@@ -79,13 +79,6 @@ export const load: PageServerLoad = async (event) => {
     },
     where: {
       status: LearningUnitStatus.PUBLISHED,
-      title: { not: null },
-      contentType: { not: null },
-      contentURL: { not: null },
-      summary: { not: null },
-      objectives: { not: null },
-      createdBy: { not: null },
-      collectionId: event.params.id,
     },
     orderBy: {
       createdAt: 'desc',

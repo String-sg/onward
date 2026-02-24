@@ -67,13 +67,6 @@ export const load: PageServerLoad = async (event) => {
     where: {
       id: event.params.id,
       status: LearningUnitStatus.PUBLISHED,
-      title: { not: null },
-      contentType: { not: null },
-      contentURL: { not: null },
-      summary: { not: null },
-      objectives: { not: null },
-      createdBy: { not: null },
-      collectionId: { not: null },
     },
   } satisfies LearningUnitFindUniqueArgs;
 
