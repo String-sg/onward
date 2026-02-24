@@ -1,7 +1,8 @@
 import { redirect } from '@sveltejs/kit';
 
 import { getLearningUnitStatus } from '$lib/helpers/index.js';
-import { db } from '$lib/server/db';
+import { db, type LearningUnitFindManyArgs, LearningUnitStatus } from '$lib/server/db';
+import type { PublishedLearningUnit } from '$lib/server/unit/types';
 
 import type { PageServerLoad } from './$types';
 
@@ -14,7 +15,7 @@ export const load: PageServerLoad = async (event) => {
     throw redirect(303, '/login');
   }
 
-  const learningUnits = await db.learningUnit.findPublished({
+  const learningUnitsArgs = {
     select: {
       id: true,
       createdAt: true,
@@ -43,6 +44,15 @@ export const load: PageServerLoad = async (event) => {
         },
       },
     },
+    where: {
+      status: LearningUnitStatus.PUBLISHED,
+      title: { not: null },
+      contentType: { not: null },
+      contentURL: { not: null },
+      summary: { not: null },
+      objectives: { not: null },
+      createdBy: { not: null },
+    },
     orderBy: [
       {
         isRecommended: 'desc',
@@ -51,7 +61,11 @@ export const load: PageServerLoad = async (event) => {
         createdAt: 'desc',
       },
     ],
-  });
+  } satisfies LearningUnitFindManyArgs;
+
+  const learningUnits = (await db.learningUnit.findMany(
+    learningUnitsArgs,
+  )) as PublishedLearningUnit<typeof learningUnitsArgs>[];
 
   return {
     learningUnits: learningUnits.map((unit) => ({

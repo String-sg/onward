@@ -10,7 +10,6 @@ import {
   type LearningJourneyGetPayload,
   type LearningJourneyUpsertArgs,
   type LearningUnitFindUniqueArgs,
-  type LearningUnitGetPayload,
   type LearningUnitSentimentsAggregateArgs,
   type LearningUnitSentimentsDeleteArgs,
   type LearningUnitSentimentsFindUniqueArgs,
@@ -20,6 +19,7 @@ import {
   type LearningUnitSourcesGetPayload,
   LearningUnitStatus,
 } from '$lib/server/db';
+import type { PublishedLearningUnit } from '$lib/server/unit/types';
 
 import type { Actions, PageServerLoad } from './$types';
 
@@ -77,9 +77,11 @@ export const load: PageServerLoad = async (event) => {
     },
   } satisfies LearningUnitFindUniqueArgs;
 
-  let learningUnit: LearningUnitGetPayload<typeof learningUnitArgs> | null;
+  let learningUnit: PublishedLearningUnit<typeof learningUnitArgs> | null;
   try {
-    learningUnit = await db.learningUnit.findUnique(learningUnitArgs);
+    learningUnit = (await db.learningUnit.findUnique(learningUnitArgs)) as PublishedLearningUnit<
+      typeof learningUnitArgs
+    > | null;
   } catch (err) {
     logger.error({ err }, 'Failed to retrieve learning unit');
     throw error(500);

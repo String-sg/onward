@@ -1,12 +1,8 @@
 import { error, redirect } from '@sveltejs/kit';
 
 import { getLearningUnitStatus } from '$lib/helpers/index.js';
-import {
-  db,
-  type LearningUnitFindManyArgs,
-  type LearningUnitGetPayload,
-  LearningUnitStatus,
-} from '$lib/server/db';
+import { db, type LearningUnitFindManyArgs, LearningUnitStatus } from '$lib/server/db';
+import type { PublishedLearningUnit } from '$lib/server/unit/types';
 
 import type { PageServerLoad } from './$types';
 
@@ -93,9 +89,11 @@ export const load: PageServerLoad = async (event) => {
     ],
   } satisfies LearningUnitFindManyArgs;
 
-  let learningUnits: LearningUnitGetPayload<typeof learningUnitsArgs>[];
+  let learningUnits: PublishedLearningUnit<typeof learningUnitsArgs>[];
   try {
-    learningUnits = await db.learningUnit.findMany(learningUnitsArgs);
+    learningUnits = (await db.learningUnit.findMany(learningUnitsArgs)) as PublishedLearningUnit<
+      typeof learningUnitsArgs
+    >[];
   } catch (err) {
     logger.error({ err }, 'Failed to retrieve To-do Learning Units');
     throw error(500);

@@ -3,11 +3,17 @@ import { validate as uuidValidate } from 'uuid';
 
 import { getLearningUnitStatus } from '$lib/helpers/index.js';
 import {
+  type CollectionFindUniqueArgs,
+  type CollectionGetPayload,
   db,
+  type LearningJourneyFindManyArgs,
+  type LearningJourneyGetPayload,
   type LearningJourneyModel,
   type LearningUnitModel,
+  LearningUnitStatus,
   type TagModel,
 } from '$lib/server/db';
+import type { PublishedLearningUnit } from '$lib/server/unit/types';
 
 import type { PageServerLoad } from './$types';
 
@@ -15,9 +21,9 @@ interface Result {
   id: LearningJourneyModel['id'];
   isCompleted: LearningJourneyModel['isCompleted'];
   unitId: LearningUnitModel['id'];
-  title: LearningUnitModel['title'];
+  title: NonNullable<LearningUnitModel['title']>;
   createdAt: LearningUnitModel['createdAt'];
-  createdBy: LearningUnitModel['createdBy'];
+  createdBy: NonNullable<LearningUnitModel['createdBy']>;
   tags: Pick<TagModel, 'code' | 'label'>[];
   status: 'COMPLETED' | 'OVERDUE' | 'REQUIRED' | null;
 }
@@ -35,20 +41,24 @@ export const load: PageServerLoad = async (event) => {
     throw error(404);
   }
 
-  const collection = await db.collection.findUnique({
-    where: { id: event.params.id },
+  const collectionArgs = {
     select: {
       title: true,
       description: true,
       type: true,
     },
-  });
+    where: { id: event.params.id },
+  } satisfies CollectionFindUniqueArgs;
 
-  if (!collection) {
+  let collection: CollectionGetPayload<typeof collectionArgs>;
+  try {
+    collection = await db.collection.findUniqueOrThrow(collectionArgs);
+  } catch (err) {
+    logger.error({ err }, 'Failed to retrieve collection records');
     throw error(404);
   }
 
-  const learningJourneys = await db.learningJourney.findMany({
+  const learningJourneysArgs = {
     select: {
       id: true,
       isCompleted: true,
@@ -76,13 +86,28 @@ export const load: PageServerLoad = async (event) => {
     where: {
       userId: user.id,
       learningUnit: {
-        collectionId: event.params.id,
+        status: LearningUnitStatus.PUBLISHED,
+        title: { not: null },
+        contentType: { not: null },
+        contentURL: { not: null },
+        summary: { not: null },
+        objectives: { not: null },
+        createdBy: { not: null },
+        collectionId: { not: null },
       },
     },
     orderBy: {
       updatedAt: 'desc',
     },
-  });
+  } satisfies LearningJourneyFindManyArgs;
+
+  let learningJourneys: LearningJourneyGetPayload<typeof learningJourneysArgs>[];
+  try {
+    learningJourneys = await db.learningJourney.findMany(learningJourneysArgs);
+  } catch (err) {
+    logger.error({ err }, 'Failed to retrieve learning journeys');
+    throw error(500);
+  }
 
   return {
     collection,
@@ -91,20 +116,23 @@ export const load: PageServerLoad = async (event) => {
       isCompleted: Result[];
     }>(
       (acc, journey) => {
+        const learningUnit = journey.learningUnit as PublishedLearningUnit<
+          typeof learningJourneysArgs.select.learningUnit
+        >;
         acc[journey.isCompleted ? 'isCompleted' : 'inProgress'].push({
           id: journey.id,
           isCompleted: journey.isCompleted,
-          unitId: journey.learningUnit.id,
-          title: journey.learningUnit.title,
-          createdAt: journey.learningUnit.createdAt,
-          createdBy: journey.learningUnit.createdBy,
-          tags: journey.learningUnit.tags.map((t) => ({
+          unitId: learningUnit.id,
+          title: learningUnit.title,
+          createdAt: learningUnit.createdAt,
+          createdBy: learningUnit.createdBy,
+          tags: learningUnit.tags.map((t) => ({
             code: t.tag.code,
             label: t.tag.label,
           })),
           status: getLearningUnitStatus({
-            isRequired: journey.learningUnit.isRequired,
-            dueDate: journey.learningUnit.dueDate,
+            isRequired: learningUnit.isRequired,
+            dueDate: learningUnit.dueDate,
             learningJourney: {
               isCompleted: journey.isCompleted,
             },
