@@ -44,13 +44,6 @@ export const load: PageServerLoad = async (event) => {
     },
     where: {
       status: LearningUnitStatus.PUBLISHED,
-      title: { not: null },
-      contentType: { not: null },
-      contentURL: { not: null },
-      summary: { not: null },
-      objectives: { not: null },
-      createdBy: { not: null },
-      collectionId: { not: null },
       isRequired: true,
       OR: [
         {
@@ -87,62 +80,60 @@ try {
   throw error(500);
 }
 
-const recommendedLearningUnitsArgs = {
-  select: {
-    id: true,
-    createdAt: true,
-    title: true,
-    summary: true,
-    contentURL: true,
-    createdBy: true,
-    isRequired: true,
-    dueDate: true,
-    tags: {
-      select: {
-        tag: {
-          select: {
-            code: true,
-            label: true,
+  const recommendedLearningUnitsArgs = {
+    select: {
+      id: true,
+      createdAt: true,
+      title: true,
+      summary: true,
+      contentURL: true,
+      createdBy: true,
+      isRequired: true,
+      dueDate: true,
+      collection: {
+        select: {
+          type: true,
+        },
+      },
+      tags: {
+        select: {
+          tag: {
+            select: {
+              code: true,
+              label: true,
+            },
           },
         },
       },
-    },
-    learningJourneys: {
-      select: {
-        isCompleted: true,
-      },
-      where: {
-        userId: user.id,
-      },
-    },
-  },
-  where: {
-    status: LearningUnitStatus.PUBLISHED,
-    title: { not: null },
-    contentType: { not: null },
-    contentURL: { not: null },
-    summary: { not: null },
-    objectives: { not: null },
-    createdBy: { not: null },
-    collectionId: { not: null },
-    NOT: {
       learningJourneys: {
-        some: {
+        select: {
+          isCompleted: true,
+        },
+        where: {
           userId: user.id,
         },
       },
     },
-  },
-  orderBy: [
-    {
-      isRecommended: 'desc',
+    where: {
+      status: LearningUnitStatus.PUBLISHED,
+      NOT: {
+        learningJourneys: {
+          some: {
+            userId: user.id,
+          },
+        },
+      },
     },
-    {
-      createdAt: 'desc',
-    },
-  ],
-  take: 3,
-} satisfies LearningUnitFindManyArgs;
+    orderBy: [
+      {
+        isRecommended: 'desc',
+      },
+      {
+        createdAt: 'desc',
+      },
+    ],
+    take: 3,
+  } satisfies LearningUnitFindManyArgs;
 
 let recommendedLearningUnits: LearningUnitGetPayload<typeof recommendedLearningUnitsArgs>[];
 try {
