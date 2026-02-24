@@ -47,9 +47,10 @@ model Collection {
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   // Domain-Specific Fields.
-  title       String @map("title")
-  description String @map("description")
-  tagId       String @map("tag_id") @db.Uuid
+  title       String  @map("title")
+  description String  @map("description")
+  tagId       String  @map("tag_id") @db.Uuid
+  isTopic     Boolean @default(false) @map("is_topic")
 
   // Relations.
   learningUnits LearningUnitCollection[]

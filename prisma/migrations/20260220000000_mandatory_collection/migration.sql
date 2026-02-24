@@ -60,3 +60,6 @@ ALTER TABLE "learning_units" ALTER COLUMN "content_url" DROP NOT NULL;
 ALTER TABLE "learning_units"
 ADD CONSTRAINT check_podcast_url
 CHECK (("content_type"::text != 'PODCAST') OR ("content_url" IS NOT NULL));
+
+-- AlterTable
+ALTER TABLE "collections" ADD COLUMN     "is_topic" BOOLEAN NOT NULL DEFAULT false;
