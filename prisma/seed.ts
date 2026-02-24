@@ -16,7 +16,7 @@ const tags: Prisma.TagCreateInput[] = [
   {
     id: uuidv7(),
     code: 'AI',
-    label: 'AI',
+    label: 'Artificial Intelligence',
   },
   {
     id: uuidv7(),
@@ -88,12 +88,12 @@ const tags: Prisma.TagCreateInput[] = [
 const collections: Prisma.CollectionCreateInput[] = [
   {
     id: uuidv7(),
-    title: 'AI',
+    title: 'Artificial Intelligence',
     description:
       'Discover how AI is transforming education, unpack AI use cases, and tool suggestions to help you take charge of this rapidly changing space.',
     tag: {
       connect: {
-        id: tags[0].id, // AI
+        id: tags[0].id,
       },
     },
     isTopic: true,
@@ -242,6 +242,28 @@ const collections: Prisma.CollectionCreateInput[] = [
     },
     isTopic: true,
   },
+  {
+    id: uuidv7(),
+    title: 'AI Literacy',
+    description: 'Mandatory Mods for AI Literacy',
+    tag: {
+      connect: {
+        id: tags[0].id,
+      },
+    },
+    isTopic: false,
+  },
+  {
+    id: uuidv7(),
+    title: 'Cyber Hygiene',
+    description: 'Mandatory Mods for Cyber Hygiene',
+    tag: {
+      connect: {
+        id: tags[0].id,
+      },
+    },
+    isTopic: false,
+  },
 ];
 
 const questionAnswers: Prisma.QuestionAnswerCreateManyLearningUnitInput[] = [
@@ -294,7 +316,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lacinia odio vi
 const learningUnits: Prisma.LearningUnitCreateInput[] = [
   {
     id: uuidv7(),
-    title: 'SEN Learning Unit 1',
+    title: 'AI Learning Unit 1',
     contentType: ContentType.PODCAST,
     contentURL: 'http://localhost:5173',
     summary,
@@ -303,13 +325,22 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     isRequired: true,
     dueDate: new Date('2026-02-12'), // Required
     collections: {
-      create: {
-        collection: {
-          connect: {
-            id: collections[0].id,
+      create: [
+        {
+          collection: {
+            connect: {
+              id: collections[0].id,
+            },
           },
         },
-      },
+        {
+          collection: {
+            connect: {
+              id: collections[13].id,
+            },
+          },
+        },
+      ],
     },
     tags: {
       create: [
@@ -328,7 +359,7 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
   },
   {
     id: uuidv7(),
-    title: 'SEN Learning Unit 2',
+    title: 'AI Learning Unit 2',
     contentType: ContentType.PODCAST,
     contentURL: 'http://localhost:5173',
     summary,
@@ -362,7 +393,7 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
   },
   {
     id: uuidv7(),
-    title: 'AI Learning Unit 1',
+    title: 'BOB Learning Unit 1',
     contentType: ContentType.PODCAST,
     contentURL: 'http://localhost:5173',
     summary,
@@ -395,7 +426,7 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
   },
   {
     id: uuidv7(),
-    title: 'AI Learning Unit 2',
+    title: 'BOB Learning Unit 2',
     contentType: ContentType.PODCAST,
     contentURL: 'http://localhost:5173',
     summary,
@@ -429,7 +460,7 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
   },
   {
     id: uuidv7(),
-    title: 'Infra Learning Unit 1',
+    title: 'Career Learning Unit 1',
     contentType: ContentType.PODCAST,
     contentURL: 'http://localhost:5173',
     summary,
@@ -463,7 +494,7 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
   },
   {
     id: uuidv7(),
-    title: 'Wellbeing Learning Unit 1',
+    title: 'Innovation Learning Unit 1',
     contentType: ContentType.PODCAST,
     contentURL: 'http://localhost:5173',
     summary,
@@ -497,7 +528,7 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
   },
   {
     id: uuidv7(),
-    title: 'Educator Voices Learning Unit 1',
+    title: 'News Learning Unit 1',
     contentType: ContentType.PODCAST,
     contentURL: 'http://localhost:5173',
     summary,
@@ -531,7 +562,7 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
   },
   {
     id: uuidv7(),
-    title: 'Employee Engagement Learning Unit 1',
+    title: 'Productivity Learning Unit 1',
     contentType: ContentType.PODCAST,
     contentURL: 'http://localhost:5173',
     summary,
@@ -580,7 +611,7 @@ const learningUnitSources: Prisma.LearningUnitSourcesCreateInput[] = [
         {
           tag: {
             connect: {
-              id: tags[6].id,
+              id: tags[13].id,
             },
           },
         },
@@ -601,7 +632,7 @@ const learningUnitSources: Prisma.LearningUnitSourcesCreateInput[] = [
         {
           tag: {
             connect: {
-              id: tags[7].id,
+              id: tags[12].id,
             },
           },
         },
@@ -622,7 +653,7 @@ const learningUnitSources: Prisma.LearningUnitSourcesCreateInput[] = [
         {
           tag: {
             connect: {
-              id: tags[6].id,
+              id: tags[13].id,
             },
           },
         },
@@ -643,7 +674,7 @@ const learningUnitSources: Prisma.LearningUnitSourcesCreateInput[] = [
         {
           tag: {
             connect: {
-              id: tags[7].id,
+              id: tags[12].id,
             },
           },
         },
@@ -685,7 +716,7 @@ const learningUnitSources: Prisma.LearningUnitSourcesCreateInput[] = [
         {
           tag: {
             connect: {
-              id: tags[7].id,
+              id: tags[13].id,
             },
           },
         },
@@ -706,7 +737,7 @@ const learningUnitSources: Prisma.LearningUnitSourcesCreateInput[] = [
         {
           tag: {
             connect: {
-              id: tags[6].id,
+              id: tags[12].id,
             },
           },
         },
@@ -727,7 +758,7 @@ const learningUnitSources: Prisma.LearningUnitSourcesCreateInput[] = [
         {
           tag: {
             connect: {
-              id: tags[7].id,
+              id: tags[13].id,
             },
           },
         },
