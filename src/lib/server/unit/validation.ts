@@ -1,4 +1,4 @@
-import type { ContentType } from '$lib/server/db.js';
+import { ContentType } from '$lib/server/db.js';
 
 export const ERROR_MESSAGES = {
   FIELD_REQUIRED: 'This field is required.',
@@ -15,13 +15,13 @@ export type FormValidationError = Record<
 >;
 
 export interface LearningUnitDraftFormData {
-  title: string | null;
-  contentType: ContentType | null;
-  contentURL: string | null;
-  summary: string | null;
-  objectives: string | null;
-  createdBy: string | null;
-  collectionId: string | null;
+  title: string;
+  contentType: ContentType;
+  contentURL: string;
+  summary: string;
+  objectives: string;
+  createdBy: string;
+  collectionId: string;
   isRecommended: boolean;
   isRequired: boolean;
   dueDate: Date | null;
@@ -70,22 +70,28 @@ export function validateLearningUnitDraft(
   const errors: FormValidationError = {};
 
   const titleRaw = data.get('title');
-  const title =
-    titleRaw && typeof titleRaw === 'string' && titleRaw.trim().length > 0 ? titleRaw.trim() : null;
+  let title: string;
+  if (!titleRaw || typeof titleRaw !== 'string' || titleRaw.trim().length === 0) {
+    errors.title = { message: ERROR_MESSAGES.FIELD_REQUIRED };
+  } else {
+    title = titleRaw.trim();
+  }
 
   const contentTypeRaw = data.get('contentType');
-  let contentType: ContentType | null = null;
-  if (contentTypeRaw && typeof contentTypeRaw === 'string' && contentTypeRaw.trim().length > 0) {
-    if (contentTypeRaw !== 'PODCAST') {
-      errors.contentType = { message: ERROR_MESSAGES.INVALID_OPTION };
-    } else {
-      contentType = contentTypeRaw as ContentType;
-    }
+  let contentType: ContentType;
+  if (!contentTypeRaw || typeof contentTypeRaw !== 'string' || contentTypeRaw.trim().length === 0) {
+    errors.contentType = { message: ERROR_MESSAGES.FIELD_REQUIRED };
+  } else if (contentTypeRaw !== ContentType.PODCAST) {
+    errors.contentType = { message: ERROR_MESSAGES.INVALID_OPTION };
+  } else {
+    contentType = contentTypeRaw as ContentType;
   }
 
   const contentURLRaw = data.get('contentURL');
-  let contentURL: string | null = null;
-  if (contentURLRaw && typeof contentURLRaw === 'string' && contentURLRaw.trim().length > 0) {
+  let contentURL: string;
+  if (!contentURLRaw || typeof contentURLRaw !== 'string' || contentURLRaw.trim().length === 0) {
+    errors.contentURL = { message: ERROR_MESSAGES.FIELD_REQUIRED };
+  } else {
     try {
       new URL(contentURLRaw.trim());
       contentURL = contentURLRaw.trim();
@@ -95,28 +101,40 @@ export function validateLearningUnitDraft(
   }
 
   const summaryRaw = data.get('summary');
-  const summary =
-    summaryRaw && typeof summaryRaw === 'string' && summaryRaw.trim().length > 0
-      ? summaryRaw.trim()
-      : null;
+  let summary: string;
+  if (!summaryRaw || typeof summaryRaw !== 'string' || summaryRaw.trim().length === 0) {
+    errors.summary = { message: ERROR_MESSAGES.FIELD_REQUIRED };
+  } else {
+    summary = summaryRaw.trim();
+  }
 
   const objectivesRaw = data.get('objectives');
-  const objectives =
-    objectivesRaw && typeof objectivesRaw === 'string' && objectivesRaw.trim().length > 0
-      ? objectivesRaw.trim()
-      : null;
+  let objectives: string;
+  if (!objectivesRaw || typeof objectivesRaw !== 'string' || objectivesRaw.trim().length === 0) {
+    errors.objectives = { message: ERROR_MESSAGES.FIELD_REQUIRED };
+  } else {
+    objectives = objectivesRaw.trim();
+  }
 
   const createdByRaw = data.get('createdBy');
-  const createdBy =
-    createdByRaw && typeof createdByRaw === 'string' && createdByRaw.trim().length > 0
-      ? createdByRaw.trim()
-      : null;
+  let createdBy: string;
+  if (!createdByRaw || typeof createdByRaw !== 'string' || createdByRaw.trim().length === 0) {
+    errors.createdBy = { message: ERROR_MESSAGES.FIELD_REQUIRED };
+  } else {
+    createdBy = createdByRaw.trim();
+  }
 
   const collectionIdRaw = data.get('collectionId');
-  const collectionId =
-    collectionIdRaw && typeof collectionIdRaw === 'string' && collectionIdRaw.trim().length > 0
-      ? collectionIdRaw.trim()
-      : null;
+  let collectionId: string;
+  if (
+    !collectionIdRaw ||
+    typeof collectionIdRaw !== 'string' ||
+    collectionIdRaw.trim().length === 0
+  ) {
+    errors.collectionId = { message: ERROR_MESSAGES.FIELD_REQUIRED };
+  } else {
+    collectionId = collectionIdRaw.trim();
+  }
 
   const isRecommended = data.get('isRecommended') === 'on';
   const isRequired = data.get('isRequired') === 'on';
@@ -231,13 +249,13 @@ export function validateLearningUnitDraft(
   return {
     success: true,
     data: {
-      title,
-      contentType,
-      contentURL,
-      summary,
-      objectives,
-      createdBy,
-      collectionId,
+      title: title!,
+      contentType: contentType!,
+      contentURL: contentURL!,
+      summary: summary!,
+      objectives: objectives!,
+      createdBy: createdBy!,
+      collectionId: collectionId!,
       isRecommended,
       isRequired,
       dueDate,
