@@ -1,8 +1,12 @@
 import { redirect } from '@sveltejs/kit';
 
 import { getLearningUnitStatus } from '$lib/helpers/index.js';
-import { db, type LearningUnitFindManyArgs, LearningUnitStatus } from '$lib/server/db';
-import type { PublishedLearningUnit } from '$lib/server/unit/types';
+import {
+  db,
+  type LearningUnitFindManyArgs,
+  type LearningUnitGetPayload,
+  LearningUnitStatus,
+} from '$lib/server/db';
 
 import type { PageServerLoad } from './$types';
 
@@ -59,7 +63,7 @@ export const load: PageServerLoad = async (event) => {
 
   const learningUnits = (await db.learningUnit.findMany(
     learningUnitsArgs,
-  )) as PublishedLearningUnit<typeof learningUnitsArgs>[];
+  )) as LearningUnitGetPayload<typeof learningUnitsArgs>[];
 
   return {
     learningUnits: learningUnits.map((unit) => ({

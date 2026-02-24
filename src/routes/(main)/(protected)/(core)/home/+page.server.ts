@@ -8,9 +8,9 @@ import {
   type LearningJourneyFindManyArgs,
   type LearningJourneyGetPayload,
   type LearningUnitFindManyArgs,
+  type LearningUnitGetPayload,
   LearningUnitStatus,
 } from '$lib/server/db';
-import type { PublishedLearningUnit } from '$lib/server/unit/types';
 
 import type { PageServerLoad } from './$types';
 
