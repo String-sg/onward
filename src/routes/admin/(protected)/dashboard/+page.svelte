@@ -11,10 +11,14 @@
 
   let { data }: { data: PageData } = $props();
 
-  const handlePageChange = (pageNumber: number) => {
+  const handlePageChange = async (pageNumber: number) => {
     const url = new URL(page.url);
     url.searchParams.set('page', pageNumber.toString());
-    goto(url.toString(), { keepFocus: true });
+    await goto(url.toString(), { keepFocus: true });
+  };
+
+  const onrowclick = async (row: (typeof learningUnits)[number]) => {
+    await goto(`/admin/unit/${row.id}/edit`);
   };
 
   const learningUnits = $derived(
@@ -28,7 +32,7 @@
     })),
   );
 
-  const columns: TableColumn[] = [
+  const columns: TableColumn<(typeof learningUnits)[number]>[] = [
     {
       key: 'id',
       label: 'ID',
@@ -36,6 +40,10 @@
     {
       key: 'title',
       label: 'Title',
+    },
+    {
+      key: 'status',
+      label: 'Status',
     },
     {
       key: 'createdBy',
@@ -63,13 +71,13 @@
       <span class="text-xs text-slate-500">Manage all learning units</span>
     </div>
 
-    <LinkButton class="size-10 rounded-xl text-sm" href="/admin/unit/new">
+    <LinkButton href="/admin/unit/new" class="rounded-xl text-sm">
       <Plus size={16} /> Create New Learning Unit
     </LinkButton>
   </div>
 
   <div class="flex flex-col gap-0">
-    <Table {columns} data={learningUnits} emptyMessage="No learning units found" />
+    <Table {columns} data={learningUnits} emptyMessage="No learning units found" {onrowclick} />
 
     {#if data.totalCount > data.pageSize}
       <Paginator

@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { SubmitFunction } from '@sveltejs/kit';
+  import { untrack } from 'svelte';
 
   import { enhance } from '$app/forms';
   import { AddableField } from '$lib/components/AddableField';
@@ -17,26 +18,28 @@
 
   const minDueDate = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().split('T')[0];
 
-  let unit = $state({
-    title: '',
-    contentType: '',
-    contentURL: '',
-    collectionId: '',
-    summary: '',
-    objectives: '',
-    createdBy: '',
-    selectedTagId: '',
-    isRecommended: false,
-    isRequired: false,
-    dueDate: '',
-    sources: [] as { title: string; sourceURL: string; tagId: string }[],
-    questionAnswers: [{ question: '', options: ['', ''], answer: 0, explanation: '' }] as {
-      question: string;
-      options: string[];
-      answer: number;
-      explanation: string;
-    }[],
-  });
+  let unit = $state(
+    untrack(() => {
+      return {
+        title: data.learningUnit.title ?? '',
+        contentType: data.learningUnit.contentType ?? '',
+        contentURL: data.learningUnit.contentURL ?? '',
+        collectionId: data.learningUnit.collectionId ?? '',
+        summary: data.learningUnit.summary ?? '',
+        objectives: data.learningUnit.objectives ?? '',
+        createdBy: data.learningUnit.createdBy ?? '',
+        selectedTagId: data.learningUnit.tags[0]?.tagId ?? '',
+        isRecommended: data.learningUnit.isRecommended,
+        isRequired: data.learningUnit.isRequired,
+        dueDate: data.learningUnit.dueDate ?? '',
+        sources: data.learningUnit.sources,
+        questionAnswers:
+          data.learningUnit.questionAnswers.length > 0
+            ? data.learningUnit.questionAnswers
+            : [{ question: '', options: ['', ''], answer: 0, explanation: '' }],
+      };
+    }),
+  );
 
   $effect(() => {
     if (form && form.errors) {
@@ -46,6 +49,7 @@
         if (!element) {
           return;
         }
+
         element.scrollIntoView({ behavior: 'smooth', block: 'center' });
         element.focus();
       }
@@ -82,15 +86,63 @@
 
   const handleFormSubmit: SubmitFunction =
     () =>
-    async ({ update }) => {
-      await update({ reset: false });
+    async ({ result, update, action }) => {
+      if (action.search === '?/saveDraft' && result.type === 'success') {
+        const data = result.data as ActionData;
+        if (!data) {
+          return;
+        }
+
+        const savedLU = data.learningUnit;
+        if (savedLU) {
+          unit = {
+            title: savedLU.title ?? '',
+            contentType: savedLU.contentType ?? '',
+            contentURL: savedLU.contentURL ?? '',
+            collectionId: savedLU.collectionId ?? '',
+            summary: savedLU.summary ?? '',
+            objectives: savedLU.objectives ?? '',
+            createdBy: savedLU.createdBy ?? '',
+            selectedTagId: savedLU.tags[0]?.tagId ?? '',
+            isRecommended: savedLU.isRecommended,
+            isRequired: savedLU.isRequired,
+            dueDate: savedLU.dueDate ?? '',
+            sources: savedLU.sources,
+            questionAnswers:
+              savedLU.questionAnswers.length > 0
+                ? savedLU.questionAnswers
+                : [{ question: '', options: ['', ''], answer: 0, explanation: '' }],
+          };
+        }
+        await update({ invalidateAll: false, reset: false });
+      } else {
+        await update({ reset: false });
+      }
     };
+
+  export const snapshot = {
+    capture: () => $state.snapshot(unit),
+    restore: (value: typeof unit) => {
+      unit = value;
+    },
+  };
 </script>
 
 <div class="mx-auto max-w-4xl px-4 py-8">
   <div class="mb-6 flex flex-col gap-1">
-    <span class="text-xl font-medium">Create Learning Unit</span>
-    <span class="text-xs text-slate-500">Fill in the details for the new learning unit</span>
+    <div class="flex items-center justify-between">
+      <span class="text-xl font-medium">Edit Learning Unit</span>
+      <span
+        class="rounded-full px-3 py-1 text-xs font-medium"
+        class:bg-slate-100={data.learningUnit.status === 'DRAFT'}
+        class:bg-emerald-100={data.learningUnit.status === 'PUBLISHED'}
+        class:text-slate-700={data.learningUnit.status === 'DRAFT'}
+        class:text-emerald-700={data.learningUnit.status === 'PUBLISHED'}
+      >
+        {data.learningUnit.status}
+      </span>
+    </div>
+    <span class="text-xs text-slate-500">Edit learning unit details</span>
   </div>
 
   <form method="POST" novalidate use:enhance={handleFormSubmit} class="flex flex-col gap-6">
@@ -100,14 +152,8 @@
           <TextInput type="text" id="title" name="title" bind:value={unit.title} />
         </FormField>
 
-        <FormField
-          label="Content Type"
-          id="contentType"
-          required
-          error={form?.errors?.contentType?.message}
-        >
+        <FormField label="Content Type" id="contentType" required>
           <Select id="contentType" name="contentType" bind:value={unit.contentType}>
-            <option value="">Select a content type</option>
             <option value="PODCAST">Podcast</option>
           </Select>
         </FormField>
@@ -143,7 +189,7 @@
           </Select>
         </FormField>
 
-        <!-- Use Transcript as the label because DB column uses summary -->
+        <!-- Use Transcript as the label because DB column is uses summary -->
         <FormField id="summary" label="Transcript" required error={form?.errors?.summary?.message}>
           <TextArea id="summary" name="summary" bind:value={unit.summary} />
         </FormField>
@@ -207,11 +253,21 @@
           itemErrors={form?.errors?.sources?.items}
         >
           {#snippet children(source, index, errors)}
-            <FormField label="Source Title" id="source-title-{index}" error={errors?.title}>
+            <FormField
+              label="Source Title"
+              id="source-title-{index}"
+              required
+              error={errors?.title}
+            >
               <TextInput type="text" bind:value={source.title} />
             </FormField>
 
-            <FormField label="Source URL" id="source-url-{index}" error={errors?.sourceURL}>
+            <FormField
+              label="Source URL"
+              id="source-url-{index}"
+              required
+              error={errors?.sourceURL}
+            >
               <TextInput type="url" bind:value={source.sourceURL} placeholder="https://..." />
             </FormField>
 

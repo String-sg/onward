@@ -7,6 +7,7 @@ import {
   type LearningJourneyGetPayload,
   type LearningUnitFindManyArgs,
   type LearningUnitGetPayload,
+  LearningUnitStatus,
 } from '$lib/server/db';
 
 import type { PageServerLoad } from './$types';
@@ -47,6 +48,7 @@ export const load: PageServerLoad = async (event) => {
       },
     },
     where: {
+      status: LearningUnitStatus.PUBLISHED,
       isRequired: true,
       OR: [
         {
@@ -81,7 +83,9 @@ export const load: PageServerLoad = async (event) => {
 
   let toDoList: LearningUnitGetPayload<typeof toDoListArgs>[];
   try {
-    toDoList = await db.learningUnit.findMany(toDoListArgs);
+    toDoList = (await db.learningUnit.findMany(toDoListArgs)) as LearningUnitGetPayload<
+      typeof toDoListArgs
+    >[];
   } catch (err) {
     logger.error({ err }, 'Failed to retrieve to-do list');
     throw error(500);
@@ -122,6 +126,7 @@ export const load: PageServerLoad = async (event) => {
       },
     },
     where: {
+      status: LearningUnitStatus.PUBLISHED,
       NOT: {
         learningJourneys: {
           some: {
@@ -143,7 +148,9 @@ export const load: PageServerLoad = async (event) => {
 
   let recommendedLearningUnits: LearningUnitGetPayload<typeof recommendedLearningUnitsArgs>[];
   try {
-    recommendedLearningUnits = await db.learningUnit.findMany(recommendedLearningUnitsArgs);
+    recommendedLearningUnits = (await db.learningUnit.findMany(
+      recommendedLearningUnitsArgs,
+    )) as LearningUnitGetPayload<typeof recommendedLearningUnitsArgs>[];
   } catch (err) {
     logger.error({ err }, 'Failed to retrieve recommended learning units');
     throw error(500);
@@ -220,7 +227,7 @@ export const load: PageServerLoad = async (event) => {
         dueDate: lu.dueDate,
       }),
       tags: lu.tags.map((t) => t.tag),
-      collectionType: lu.collection.type,
+      collectionType: lu.collection!.type,
     })),
     recommendedLearningUnits: recommendedLearningUnits.map((lu) => ({
       ...lu,
@@ -230,14 +237,16 @@ export const load: PageServerLoad = async (event) => {
         learningJourney: lu.learningJourneys[0],
       }),
       tags: lu.tags.map((t) => t.tag),
-      collectionType: lu.collection.type,
+      collectionType: lu.collection!.type,
     })),
     learningJourneys: learningJourneys.map((lj) => ({
       ...lj,
       learningUnit: {
-        ...lj.learningUnit,
+        ...(lj.learningUnit as LearningUnitGetPayload<
+          typeof learningJourneyArgs.select.learningUnit
+        >),
         tags: lj.learningUnit.tags.map((t) => t.tag),
-        collectionType: lj.learningUnit.collection.type,
+        collectionType: lj.learningUnit.collection!.type,
         status: getLearningUnitStatus({
           isRequired: lj.learningUnit.isRequired,
           dueDate: lj.learningUnit.dueDate,

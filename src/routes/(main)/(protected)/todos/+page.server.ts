@@ -1,7 +1,12 @@
 import { error, redirect } from '@sveltejs/kit';
 
 import { getLearningUnitStatus } from '$lib/helpers/index.js';
-import { db, type LearningUnitFindManyArgs, type LearningUnitGetPayload } from '$lib/server/db';
+import {
+  db,
+  type LearningUnitFindManyArgs,
+  type LearningUnitGetPayload,
+  LearningUnitStatus,
+} from '$lib/server/db';
 
 import type { PageServerLoad } from './$types';
 
@@ -49,6 +54,7 @@ export const load: PageServerLoad = async (event) => {
       },
     },
     where: {
+      status: LearningUnitStatus.PUBLISHED,
       isRequired: true,
       OR: [
         {
@@ -82,7 +88,9 @@ export const load: PageServerLoad = async (event) => {
 
   let learningUnits: LearningUnitGetPayload<typeof learningUnitsArgs>[];
   try {
-    learningUnits = await db.learningUnit.findMany(learningUnitsArgs);
+    learningUnits = (await db.learningUnit.findMany(learningUnitsArgs)) as LearningUnitGetPayload<
+      typeof learningUnitsArgs
+    >[];
   } catch (err) {
     logger.error({ err }, 'Failed to retrieve To-do Learning Units');
     throw error(500);
@@ -97,7 +105,7 @@ export const load: PageServerLoad = async (event) => {
         learningJourney: lu.learningJourneys[0],
       }),
       tags: lu.tags.map((t) => t.tag),
-      collectionType: lu.collection.type,
+      collectionType: lu.collection!.type,
     })),
   };
 };

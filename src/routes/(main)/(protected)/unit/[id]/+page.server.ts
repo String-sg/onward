@@ -18,6 +18,7 @@ import {
   type LearningUnitSentimentsUpsertArgs,
   type LearningUnitSourcesFindManyArgs,
   type LearningUnitSourcesGetPayload,
+  LearningUnitStatus,
 } from '$lib/server/db';
 
 import type { Actions, PageServerLoad } from './$types';
@@ -38,6 +39,7 @@ export const load: PageServerLoad = async (event) => {
   const learningUnitArgs = {
     select: {
       id: true,
+      status: true,
       tags: {
         select: {
           tag: {
@@ -62,18 +64,27 @@ export const load: PageServerLoad = async (event) => {
         },
       },
     },
-    where: { id: event.params.id },
+    where: {
+      id: event.params.id,
+      status: LearningUnitStatus.PUBLISHED,
+    },
   } satisfies LearningUnitFindUniqueArgs;
 
   let learningUnit: LearningUnitGetPayload<typeof learningUnitArgs> | null;
   try {
-    learningUnit = await db.learningUnit.findUnique(learningUnitArgs);
+    learningUnit = (await db.learningUnit.findUnique(learningUnitArgs)) as LearningUnitGetPayload<
+      typeof learningUnitArgs
+    > | null;
   } catch (err) {
     logger.error({ err }, 'Failed to retrieve learning unit');
     throw error(500);
   }
 
   if (!learningUnit) {
+    throw error(404);
+  }
+
+  if (learningUnit.status !== 'PUBLISHED') {
     throw error(404);
   }
 
@@ -195,7 +206,7 @@ export const load: PageServerLoad = async (event) => {
     url: learningUnit.contentURL,
     createdAt: learningUnit.createdAt,
     createdBy: learningUnit.createdBy,
-    collectionType: learningUnit.collection.type,
+    collectionType: learningUnit.collection!.type,
     isQuizAvailable,
     isRequired: learningUnit.isRequired,
     dueDate: learningUnit.dueDate,

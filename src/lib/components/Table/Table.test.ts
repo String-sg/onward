@@ -1,7 +1,9 @@
 import { render, screen } from '@testing-library/svelte';
+import type { Component } from 'svelte';
 import { describe, expect, it } from 'vitest';
 
 import Table from './Table.svelte';
+import type { Column } from './types';
 
 describe('Table', () => {
   it('renders table with data', () => {
@@ -10,13 +12,16 @@ describe('Table', () => {
       { id: 2, name: 'Jane', age: 25 },
     ];
 
-    const columns = [
+    type Row = (typeof data)[number];
+    const columns: Column<Row>[] = [
       { key: 'id', label: 'ID' },
       { key: 'name', label: 'Name' },
       { key: 'age', label: 'Age' },
     ];
 
-    render(Table, { props: { data, columns } });
+    render(Table as Component<{ data: Row[]; columns: Column<Row>[] }>, {
+      props: { data, columns },
+    });
 
     expect(screen.getByText('ID')).toBeInTheDocument();
     expect(screen.getByText('Name')).toBeInTheDocument();
@@ -26,12 +31,18 @@ describe('Table', () => {
   });
 
   it('renders empty state when no data', () => {
-    const columns = [
+    interface Row {
+      id: number;
+      name: string;
+    }
+    const columns: Column<Row>[] = [
       { key: 'id', label: 'ID' },
       { key: 'name', label: 'Name' },
     ];
 
-    render(Table, { props: { data: [], columns, emptyMessage: 'No items' } });
+    render(Table as Component<{ data: Row[]; columns: Column<Row>[]; emptyMessage?: string }>, {
+      props: { data: [] as Row[], columns, emptyMessage: 'No items' },
+    });
 
     expect(screen.getByText('No items')).toBeInTheDocument();
   });

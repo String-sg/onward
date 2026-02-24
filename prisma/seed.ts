@@ -6,6 +6,7 @@ import { v7 as uuidv7 } from 'uuid';
 import {
   CollectionType,
   ContentType,
+  LearningUnitStatus,
   type Prisma,
   PrismaClient,
 } from '../src/generated/prisma/client.js';
@@ -151,13 +152,14 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lacinia odio vi
 const learningUnits: Prisma.LearningUnitCreateInput[] = [
   {
     id: uuidv7(),
+    isRequired: true,
+    status: LearningUnitStatus.PUBLISHED,
     title: 'SEN Learning Unit 1',
     contentType: ContentType.PODCAST,
     contentURL: 'http://localhost:5173',
     summary,
     objectives,
     createdBy: 'DXD Product Team',
-    isRequired: true,
     dueDate: new Date('2026-02-12'), // Required
     collection: {
       connect: {
@@ -182,6 +184,7 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
   {
     id: uuidv7(),
     title: 'SEN Learning Unit 2',
+    status: LearningUnitStatus.PUBLISHED,
     contentType: ContentType.PODCAST,
     contentURL: 'http://localhost:5173',
     summary,
@@ -212,6 +215,7 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
   {
     id: uuidv7(),
     title: 'AI Learning Unit 1',
+    status: LearningUnitStatus.PUBLISHED,
     contentType: ContentType.PODCAST,
     contentURL: 'http://localhost:5173',
     summary,
@@ -241,6 +245,7 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
   {
     id: uuidv7(),
     title: 'AI Learning Unit 2',
+    status: LearningUnitStatus.PUBLISHED,
     contentType: ContentType.PODCAST,
     contentURL: 'http://localhost:5173',
     summary,
@@ -271,6 +276,7 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
   {
     id: uuidv7(),
     title: 'Infra Learning Unit 1',
+    status: LearningUnitStatus.PUBLISHED,
     contentType: ContentType.PODCAST,
     contentURL: 'http://localhost:5173',
     summary,
@@ -301,6 +307,7 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
   {
     id: uuidv7(),
     title: 'Wellbeing Learning Unit 1',
+    status: LearningUnitStatus.PUBLISHED,
     contentType: ContentType.PODCAST,
     contentURL: 'http://localhost:5173',
     summary,
@@ -331,6 +338,7 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
   {
     id: uuidv7(),
     title: 'Educator Voices Learning Unit 1',
+    status: LearningUnitStatus.PUBLISHED,
     contentType: ContentType.PODCAST,
     contentURL: 'http://localhost:5173',
     summary,
@@ -361,6 +369,7 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
   {
     id: uuidv7(),
     title: 'Employee Engagement Learning Unit 1',
+    status: LearningUnitStatus.PUBLISHED,
     contentType: ContentType.PODCAST,
     contentURL: 'http://localhost:5173',
     summary,

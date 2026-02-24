@@ -7,6 +7,7 @@ import {
   type LearningJourneyUpsertArgs,
   type LearningUnitFindUniqueArgs,
   type LearningUnitGetPayload,
+  LearningUnitStatus,
 } from '$lib/server/db';
 
 import type { Actions, PageServerLoad } from './$types';
@@ -26,6 +27,8 @@ export const load: PageServerLoad = async (event) => {
 
   const learningUnitArgs = {
     select: {
+      id: true,
+      status: true,
       title: true,
       isRequired: true,
       dueDate: true,
@@ -50,12 +53,15 @@ export const load: PageServerLoad = async (event) => {
     },
     where: {
       id: event.params.id,
+      status: LearningUnitStatus.PUBLISHED,
     },
   } satisfies LearningUnitFindUniqueArgs;
 
   let learningUnit: LearningUnitGetPayload<typeof learningUnitArgs> | null;
   try {
-    learningUnit = await db.learningUnit.findUnique(learningUnitArgs);
+    learningUnit = (await db.learningUnit.findUnique(learningUnitArgs)) as LearningUnitGetPayload<
+      typeof learningUnitArgs
+    > | null;
   } catch (err) {
     logger.error({ err }, 'Failed to retrieve learning unit with quiz data');
     throw error(500);
@@ -73,7 +79,7 @@ export const load: PageServerLoad = async (event) => {
   return {
     csrfToken: event.locals.session.csrfToken(),
     questionAnswers: learningUnit.questionAnswers,
-    collectionType: learningUnit.collection.type,
+    collectionType: learningUnit.collection!.type,
     learningUnitTitle: learningUnit.title,
     isRequired: learningUnit.isRequired,
     dueDate: learningUnit.dueDate,
