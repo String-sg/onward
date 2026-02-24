@@ -13,7 +13,6 @@ import {
   LearningUnitStatus,
   type TagModel,
 } from '$lib/server/db';
-import type { PublishedLearningUnit } from '$lib/server/unit/types';
 
 import type { PageServerLoad } from './$types';
 
@@ -109,9 +108,7 @@ export const load: PageServerLoad = async (event) => {
       isCompleted: Result[];
     }>(
       (acc, journey) => {
-        const learningUnit = journey.learningUnit as PublishedLearningUnit<
-          typeof learningJourneysArgs.select.learningUnit
-        >;
+        const learningUnit = journey.learningUnit;
         acc[journey.isCompleted ? 'isCompleted' : 'inProgress'].push({
           id: journey.id,
           isCompleted: journey.isCompleted,

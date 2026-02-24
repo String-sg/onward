@@ -6,9 +6,9 @@ import {
   type LearningJourneyFindManyArgs,
   type LearningJourneyGetPayload,
   type LearningUnitFindManyArgs,
+  type LearningUnitGetPayload,
   LearningUnitStatus,
 } from '$lib/server/db';
-import type { PublishedLearningUnit } from '$lib/server/unit/types';
 
 import type { PageServerLoad } from './$types';
 
@@ -81,9 +81,9 @@ export const load: PageServerLoad = async (event) => {
     take: 2,
   } satisfies LearningUnitFindManyArgs;
 
-  let toDoList: PublishedLearningUnit<typeof toDoListArgs>[];
+  let toDoList: LearningUnitGetPayload<typeof toDoListArgs>[];
   try {
-    toDoList = (await db.learningUnit.findMany(toDoListArgs)) as PublishedLearningUnit<
+    toDoList = (await db.learningUnit.findMany(toDoListArgs)) as LearningUnitGetPayload<
       typeof toDoListArgs
     >[];
   } catch (err) {
@@ -146,11 +146,11 @@ export const load: PageServerLoad = async (event) => {
     take: 3,
   } satisfies LearningUnitFindManyArgs;
 
-  let recommendedLearningUnits: PublishedLearningUnit<typeof recommendedLearningUnitsArgs>[];
+  let recommendedLearningUnits: LearningUnitGetPayload<typeof recommendedLearningUnitsArgs>[];
   try {
     recommendedLearningUnits = (await db.learningUnit.findMany(
       recommendedLearningUnitsArgs,
-    )) as PublishedLearningUnit<typeof recommendedLearningUnitsArgs>[];
+    )) as LearningUnitGetPayload<typeof recommendedLearningUnitsArgs>[];
   } catch (err) {
     logger.error({ err }, 'Failed to retrieve recommended learning units');
     throw error(500);
@@ -242,7 +242,7 @@ export const load: PageServerLoad = async (event) => {
     learningJourneys: learningJourneys.map((lj) => ({
       ...lj,
       learningUnit: {
-        ...(lj.learningUnit as PublishedLearningUnit<
+        ...(lj.learningUnit as LearningUnitGetPayload<
           typeof learningJourneyArgs.select.learningUnit
         >),
         tags: lj.learningUnit.tags.map((t) => t.tag),

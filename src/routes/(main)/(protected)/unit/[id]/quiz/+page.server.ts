@@ -9,7 +9,6 @@ import {
   type LearningUnitGetPayload,
   LearningUnitStatus,
 } from '$lib/server/db';
-import type { PublishedLearningUnit } from '$lib/server/unit/types';
 
 import type { Actions, PageServerLoad } from './$types';
 
@@ -58,9 +57,9 @@ export const load: PageServerLoad = async (event) => {
     },
   } satisfies LearningUnitFindUniqueArgs;
 
-  let learningUnit: PublishedLearningUnit<typeof learningUnitArgs> | null;
+  let learningUnit: LearningUnitGetPayload<typeof learningUnitArgs> | null;
   try {
-    learningUnit = (await db.learningUnit.findUnique(learningUnitArgs)) as PublishedLearningUnit<
+    learningUnit = (await db.learningUnit.findUnique(learningUnitArgs)) as LearningUnitGetPayload<
       typeof learningUnitArgs
     > | null;
   } catch (err) {

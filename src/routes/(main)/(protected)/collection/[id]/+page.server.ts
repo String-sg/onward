@@ -7,9 +7,9 @@ import {
   type CollectionGetPayload,
   db,
   type LearningUnitFindManyArgs,
+  type LearningUnitGetPayload,
   LearningUnitStatus,
 } from '$lib/server/db';
-import type { PublishedLearningUnit } from '$lib/server/unit/types';
 
 import type { PageServerLoad } from './$types';
 
@@ -85,9 +85,9 @@ export const load: PageServerLoad = async (event) => {
     },
   } satisfies LearningUnitFindManyArgs;
 
-  let learningUnits: PublishedLearningUnit<typeof learningUnitsArgs>[];
+  let learningUnits: LearningUnitGetPayload<typeof learningUnitsArgs>[];
   try {
-    learningUnits = (await db.learningUnit.findMany(learningUnitsArgs)) as PublishedLearningUnit<
+    learningUnits = (await db.learningUnit.findMany(learningUnitsArgs)) as LearningUnitGetPayload<
       typeof learningUnitsArgs
     >[];
   } catch (err) {
