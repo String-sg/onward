@@ -34,6 +34,7 @@ export const load: PageServerLoad = async (event) => {
           code: true,
         },
       },
+      isTopic: true,
     },
     where: { id: event.params.id },
   } satisfies CollectionFindUniqueArgs;
