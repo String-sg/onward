@@ -63,3 +63,12 @@ CHECK (("content_type"::text != 'PODCAST') OR ("content_url" IS NOT NULL));
 
 -- AlterTable
 ALTER TABLE "collections" ADD COLUMN     "is_topic" BOOLEAN NOT NULL DEFAULT false;
+
+-- DropForeignKey
+ALTER TABLE "collections" DROP CONSTRAINT "collections_tag_id_fkey";
+
+-- AlterTable
+ALTER TABLE "collections" ALTER COLUMN "tag_id" DROP NOT NULL;
+
+-- AddForeignKey
+ALTER TABLE "collections" ADD CONSTRAINT "collections_tag_id_fkey" FOREIGN KEY ("tag_id") REFERENCES "tags"("id") ON DELETE SET NULL ON UPDATE CASCADE;

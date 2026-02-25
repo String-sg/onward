@@ -103,6 +103,7 @@ export const load: PageServerLoad = async (event) => {
     },
     where: {
       contentType: 'PODCAST',
+      isRequired: false,
       NOT: {
         learningJourneys: {
           some: {

@@ -257,11 +257,6 @@ const collections: Prisma.CollectionCreateInput[] = [
     id: uuidv7(),
     title: 'Cyber Hygiene',
     description: 'Mandatory Mods for Cyber Hygiene',
-    tag: {
-      connect: {
-        id: tags[0].id,
-      },
-    },
     isTopic: false,
   },
 ];
@@ -366,7 +361,6 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     objectives,
     createdBy: 'DXD Product Team',
     isRequired: true,
-    dueDate: new Date('2025-11-01'), // Overdue
     collections: {
       create: {
         collection: {
@@ -433,7 +427,6 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     objectives,
     createdBy: 'DXD Product Team',
     isRequired: true,
-    dueDate: new Date('2025-11-20'), // Overdue
     collections: {
       create: {
         collection: {
@@ -467,7 +460,6 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     objectives,
     createdBy: 'DXD Product Team',
     isRequired: true,
-    dueDate: new Date('2026-02-12'), // Required
     collections: {
       create: {
         collection: {
@@ -501,7 +493,6 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     objectives,
     createdBy: 'DXD Product Team',
     isRequired: true,
-    dueDate: new Date('2026-02-12'), // Required
     collections: {
       create: {
         collection: {
@@ -535,7 +526,6 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     objectives,
     createdBy: 'DXD Product Team',
     isRequired: true,
-    dueDate: new Date('2026-02-12'), // Required
     collections: {
       create: {
         collection: {
@@ -569,7 +559,6 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     objectives,
     createdBy: 'DXD Product Team',
     isRequired: true,
-    dueDate: new Date('2026-02-12'), // Required
     collections: {
       create: {
         collection: {
@@ -589,6 +578,29 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
           },
         },
       ],
+    },
+    questionAnswers: {
+      create: questionAnswers,
+    },
+  },
+  {
+    id: uuidv7(),
+    title: 'Cyber Hygiene Learning Unit 1',
+    contentType: ContentType.PODCAST,
+    contentURL: 'http://localhost:5173',
+    summary,
+    objectives,
+    createdBy: 'DXD Product Team',
+    isRequired: true,
+    dueDate: new Date('2026-02-12'), // Required
+    collections: {
+      create: {
+        collection: {
+          connect: {
+            id: collections[14].id,
+          },
+        },
+      },
     },
     questionAnswers: {
       create: questionAnswers,

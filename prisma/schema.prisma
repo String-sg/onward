@@ -49,13 +49,13 @@ model Collection {
   // Domain-Specific Fields.
   title       String  @map("title")
   description String  @map("description")
-  tagId       String  @map("tag_id") @db.Uuid
+  tagId       String? @map("tag_id") @db.Uuid
   isTopic     Boolean @default(false) @map("is_topic")
 
   // Relations.
   learningUnits LearningUnitCollection[]
   userInterests UserInterest[]
-  tag           Tag                      @relation(fields: [tagId], references: [id])
+  tag           Tag?                     @relation(fields: [tagId], references: [id])
 
   @@map("collections")
 }

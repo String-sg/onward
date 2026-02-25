@@ -137,7 +137,7 @@
           <Collection
             to="/collection/{collection.id}"
             title={collection.title}
-            type={collection.tag.code}
+            type={collection.tag?.code ?? ''}
             numberofpodcasts={collection.numberOfPodcasts}
           />
         {/if}

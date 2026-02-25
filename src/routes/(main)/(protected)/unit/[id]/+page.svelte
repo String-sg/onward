@@ -137,18 +137,19 @@
   <div
     class={[
       'flex flex-col gap-y-2 rounded-3xl border border-slate-200 p-6',
-      data.tags[0].code === 'AI' && 'bg-pink-50',
-      data.tags[0].code === 'BOB' && 'bg-blue-50',
-      data.tags[0].code === 'CAREER' && 'bg-violet-50',
-      data.tags[0].code === 'EDU_VOICES' && 'bg-cyan-50',
-      data.tags[0].code === 'EMP_ENGAGEMENT' && 'bg-blue-50',
-      data.tags[0].code === 'INFRA' && 'bg-blue-50',
-      data.tags[0].code === 'INNOV' && 'bg-pink-50',
-      data.tags[0].code === 'NEWS' && 'bg-cyan-50',
-      data.tags[0].code === 'PROD' && 'bg-orange-50',
-      data.tags[0].code === 'STU_WELL' && 'bg-green-50',
-      data.tags[0].code === 'STU_DEV' && 'bg-green-50',
-      data.tags[0].code === 'WELLBEING' && 'bg-emerald-50',
+      {
+        AI: 'bg-pink-50',
+        BOB: 'bg-blue-50',
+        CAREER: 'bg-violet-50',
+        EDU_VOICES: 'bg-cyan-50',
+        EMP_ENGAGEMENT: 'bg-blue-50',
+        INFRA: 'bg-blue-50',
+        INNOV: 'bg-pink-50',
+        NEWS: 'bg-cyan-50',
+        PROD: 'bg-orange-50',
+        STU_DEV: 'bg-green-50',
+        WELLBEING: 'bg-emerald-50',
+      }[data.tags[0]?.code],
     ]}
   >
     <div class="flex flex-wrap gap-x-2">

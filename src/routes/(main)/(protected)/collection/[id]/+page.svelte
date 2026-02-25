@@ -46,13 +46,13 @@
 <main class="relative mx-auto flex min-h-svh max-w-5xl flex-col gap-y-6 px-4 pt-23 pb-28">
   <div
     class="flex flex-col gap-y-2 rounded-3xl border border-slate-200 p-6 {COLLECTION_BG_COLOR[
-      data.collection.tag.code
+      data.collection.tag?.code ?? ''
     ]}
    "
   >
     <span class="text-lg font-medium">About this topic</span>
 
-    {#if data.collection.tag.code}
+    {#if data.collection.tag?.code}
       {@const badgeInfo = getBadgeInfo(data.collection.tag.code)}
       <Badge variant={badgeInfo.variant}>{badgeInfo.label}</Badge>
     {/if}
