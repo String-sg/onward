@@ -387,6 +387,45 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
   },
   {
     id: uuidv7(),
+    title: 'AI Quiz',
+    contentType: ContentType.QUIZ,
+    summary,
+    objectives,
+    createdBy: 'DXD Product Team',
+    isRequired: true,
+    dueDate: new Date('2026-12-31'), // Required
+    collections: {
+      create: [
+        {
+          collection: {
+            connect: {
+              id: collections[0].id,
+            },
+          },
+        },
+        {
+          collection: {
+            connect: {
+              id: collections[13].id,
+            },
+          },
+        },
+      ],
+    },
+    tags: {
+      create: [
+        {
+          tag: {
+            connect: {
+              id: tags[0].id,
+            },
+          },
+        },
+      ],
+    },
+  },
+  {
+    id: uuidv7(),
     title: 'BOB Learning Unit 1',
     contentType: ContentType.PODCAST,
     contentURL: 'http://localhost:5173',
