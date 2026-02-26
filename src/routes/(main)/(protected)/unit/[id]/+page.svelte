@@ -265,7 +265,7 @@
             <Button
               variant="secondary"
               width="full"
-              disabled={!data.isQuizAvailable}
+              disabled={data.aiLiteracyCompleted !== null && !data.aiLiteracyCompleted}
               onclick={handleQuizClick}
             >
               <Lightbulb class="h-4 w-4" />

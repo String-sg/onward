@@ -9,6 +9,7 @@ import {
   type LearningJourneyFindUniqueArgs,
   type LearningJourneyGetPayload,
   type LearningJourneyUpsertArgs,
+  type LearningUnitCollectionFindFirstArgs,
   type LearningUnitFindUniqueArgs,
   type LearningUnitGetPayload,
   type LearningUnitSentimentsAggregateArgs,
@@ -57,6 +58,17 @@ export const load: PageServerLoad = async (event) => {
       createdBy: true,
       isRequired: true,
       dueDate: true,
+      collections: {
+        select: {
+          collection: {
+            select: {
+              id: true,
+              title: true,
+              description: true,
+            },
+          },
+        },
+      },
     },
     where: { id: event.params.id },
   } satisfies LearningUnitFindUniqueArgs;
@@ -181,6 +193,39 @@ export const load: PageServerLoad = async (event) => {
     throw error(500);
   }
 
+  const inAILiteracyCollection = learningUnit.collections.some(
+    (collection) => collection.collection.title === 'AI Literacy',
+  );
+
+  let aiLiteracyCompleted: boolean | null = null;
+  if (inAILiteracyCollection && learningUnit.contentType === 'QUIZ') {
+    const learningUnitCollectionArg = {
+      where: {
+        collectionId: learningUnit.collections.find(
+          (collection) => collection.collection.title === 'AI Literacy',
+        )?.collection.id,
+        learningUnitId: {
+          not: event.params.id,
+        },
+        learningUnit: {
+          learningJourneys: {
+            none: {
+              userId: user.id,
+              isCompleted: true,
+            },
+          },
+        },
+      },
+    } satisfies LearningUnitCollectionFindFirstArgs;
+
+    try {
+      aiLiteracyCompleted = !(await db.learningUnitCollection.findFirst(learningUnitCollectionArg));
+    } catch (err) {
+      logger.error({ err }, 'Failed to retrieve learning unit collections');
+      throw error(500);
+    }
+  }
+
   return {
     csrfToken: event.locals.session.csrfToken(),
     id: learningUnit.id,
@@ -200,6 +245,7 @@ export const load: PageServerLoad = async (event) => {
     userSentiment: sentiment?.hasLiked ?? null,
     likesCount: likesAggregate._count.hasLiked,
     learningUnitSources,
+    aiLiteracyCompleted,
   };
 };
 
