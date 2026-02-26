@@ -31,6 +31,15 @@ export const load: PageServerLoad = async (event) => {
           learningUnits: true,
         },
       },
+      learningUnits: {
+        select: {
+          learningUnit: {
+            select: {
+              dueDate: true,
+            },
+          },
+        },
+      },
     },
     where: {
       title: {
@@ -205,6 +214,17 @@ export const load: PageServerLoad = async (event) => {
     toDoList: toDoList.map((collection) => ({
       ...collection,
       numberOfPodcasts: collection._count.learningUnits,
+      dueDate: new Date(
+        Math.max(
+          ...collection.learningUnits
+            .map((lu) => lu.learningUnit.dueDate?.getTime() ?? 0)
+            .filter((time) => time > 0),
+        ),
+      ).toLocaleDateString('en-GB', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+      }),
     })),
     recommendedLearningUnits: recommendedLearningUnits.map((lu) => ({
       ...lu,

@@ -14,9 +14,13 @@
      * Total number of podcasts in this collection.
      */
     numberofpodcasts: number;
+    /**
+     * Date to complete the entire collection by
+     */
+    dueDate: string;
   }
 
-  let { to, title, numberofpodcasts }: Props = $props();
+  let { to, title, numberofpodcasts, dueDate }: Props = $props();
 </script>
 
 <a
@@ -50,9 +54,15 @@
 
       <div class="flex flex-col gap-y-1 text-sm">
         <span>
-          {numberofpodcasts} bite(s)
+          {numberofpodcasts} bite{numberofpodcasts === 1 ? '' : 's'}
         </span>
-        <span>Due 31 Dec 2026</span>
+        <span>
+          Due {new Date(dueDate).toLocaleDateString('en-GB', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric',
+          })}
+        </span>
       </div>
     </div>
   </div>

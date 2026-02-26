@@ -52,6 +52,7 @@
           to={`/collection/${collection.id}`}
           title={collection.title}
           numberofpodcasts={collection.numberOfPodcasts}
+          dueDate={collection.dueDate}
         />
       {/each}
     </div>
