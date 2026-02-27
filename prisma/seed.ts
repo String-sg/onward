@@ -423,6 +423,9 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
         },
       ],
     },
+    questionAnswers: {
+      create: questionAnswers,
+    },
   },
   {
     id: uuidv7(),
