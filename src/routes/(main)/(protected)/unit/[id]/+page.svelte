@@ -69,8 +69,7 @@
       tags: data.tags,
       title: data.title,
       summary: data.summary,
-      url: data.url,
-      type: data.collectionType,
+      url: data.url ?? '',
     });
   };
 
@@ -89,8 +88,7 @@
           tags: data.tags,
           title: data.title,
           summary: data.summary,
-          url: data.url,
-          type: data.collectionType,
+          url: data.url ?? '',
         },
         initialSeekTime,
       );
@@ -139,18 +137,19 @@
   <div
     class={[
       'flex flex-col gap-y-2 rounded-3xl border border-slate-200 p-6',
-      data.collectionType === 'AI' && 'bg-pink-50',
-      data.collectionType === 'BOB' && 'bg-blue-50',
-      data.collectionType === 'CAREER' && 'bg-violet-50',
-      data.collectionType === 'EDU_VOICES' && 'bg-cyan-50',
-      data.collectionType === 'EMP_ENGAGEMENT' && 'bg-blue-50',
-      data.collectionType === 'INFRA' && 'bg-blue-50',
-      data.collectionType === 'INNOV' && 'bg-pink-50',
-      data.collectionType === 'NEWS' && 'bg-cyan-50',
-      data.collectionType === 'PROD' && 'bg-orange-50',
-      data.collectionType === 'STU_WELL' && 'bg-green-50',
-      data.collectionType === 'STU_DEV' && 'bg-green-50',
-      data.collectionType === 'WELLBEING' && 'bg-emerald-50',
+      {
+        AI: 'bg-pink-50',
+        BOB: 'bg-blue-50',
+        CAREER: 'bg-violet-50',
+        EDU_VOICES: 'bg-cyan-50',
+        EMP_ENGAGEMENT: 'bg-blue-50',
+        INFRA: 'bg-blue-50',
+        INNOV: 'bg-pink-50',
+        NEWS: 'bg-cyan-50',
+        PROD: 'bg-orange-50',
+        STU_DEV: 'bg-green-50',
+        WELLBEING: 'bg-emerald-50',
+      }[data.tags[0]?.code],
     ]}
   >
     <div class="flex flex-wrap gap-x-2">
@@ -177,8 +176,8 @@
         </div>
       {/if}
 
-      {#if data.collectionType}
-        {@const badgeInfo = getBadgeInfo(data.collectionType)}
+      {#if data.tags[0]}
+        {@const badgeInfo = getBadgeInfo(data.tags[0].code)}
         <Badge variant={badgeInfo.variant}>{badgeInfo.label}</Badge>
       {/if}
     </div>
@@ -235,41 +234,45 @@
       </div>
 
       <div class="flex flex-col gap-y-4">
-        {#if isActive && player.isPlaying}
-          <Button variant="primary" width="full" onclick={handlePause}>
-            <Pause class="h-4 w-4" />
-            <span class="font-medium">Pause</span>
-          </Button>
-        {:else if isActive && !player.isPlaying}
-          <Button variant="primary" width="full" onclick={handleResume}>
-            <Play class="h-4 w-4" />
-            <span class="font-medium">Resume</span>
-          </Button>
-        {:else if lastCheckpoint && lastCheckpoint > 0}
-          <Button variant="primary" width="full" onclick={handleResume}>
-            <Play class="h-4 w-4" />
-            <span class="font-medium">Resume</span>
-          </Button>
-        {:else}
-          <Button variant="primary" width="full" onclick={handlePlay}>
-            <Play class="h-4 w-4" />
-            <span class="font-medium">Play</span>
-          </Button>
+        {#if data.contentType === 'PODCAST'}
+          {#if isActive && player.isPlaying}
+            <Button variant="primary" width="full" onclick={handlePause}>
+              <Pause class="h-4 w-4" />
+              <span class="font-medium">Pause</span>
+            </Button>
+          {:else if isActive && !player.isPlaying}
+            <Button variant="primary" width="full" onclick={handleResume}>
+              <Play class="h-4 w-4" />
+              <span class="font-medium">Resume</span>
+            </Button>
+          {:else if lastCheckpoint && lastCheckpoint > 0}
+            <Button variant="primary" width="full" onclick={handleResume}>
+              <Play class="h-4 w-4" />
+              <span class="font-medium">Resume</span>
+            </Button>
+          {:else}
+            <Button variant="primary" width="full" onclick={handlePlay}>
+              <Play class="h-4 w-4" />
+              <span class="font-medium">Play</span>
+            </Button>
+          {/if}
         {/if}
 
-        <form method="POST" action="?/updateQuizAttempt" use:enhance>
-          <input type="hidden" name="csrfToken" value={data.csrfToken} />
+        {#if data.isQuizAvailable}
+          <form method="POST" action="?/updateQuizAttempt" use:enhance>
+            <input type="hidden" name="csrfToken" value={data.csrfToken} />
 
-          <Button
-            variant="secondary"
-            width="full"
-            disabled={!data.isQuizAvailable}
-            onclick={handleQuizClick}
-          >
-            <Lightbulb class="h-4 w-4" />
-            <span class="font-medium">Take the quiz</span>
-          </Button>
-        </form>
+            <Button
+              variant="secondary"
+              width="full"
+              disabled={data.aiLiteracyCompleted !== null && !data.aiLiteracyCompleted}
+              onclick={handleQuizClick}
+            >
+              <Lightbulb class="h-4 w-4" />
+              <span class="font-medium">Take the quiz</span>
+            </Button>
+          </form>
+        {/if}
       </div>
     </div>
   </div>

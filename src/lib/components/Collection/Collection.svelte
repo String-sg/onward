@@ -15,20 +15,7 @@
     /**
      * Defines the visual theme and icon for the collection.
      */
-    type:
-      | 'AI'
-      | 'BOB'
-      | 'CAREER'
-      | 'INNOV'
-      | 'NEWS'
-      | 'PROD'
-      | 'STU_DEV'
-      | 'STU_WELL'
-      | 'WELLBEING'
-      | 'INFRA'
-      | 'EDU_TOOLS'
-      | 'EDU_VOICES'
-      | 'EMP_ENGAGEMENT';
+    type: string;
   }
 
   let { to, title, numberofpodcasts, type }: Props = $props();

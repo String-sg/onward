@@ -24,11 +24,6 @@ export const load: PageServerLoad = async (event) => {
       createdBy: true,
       isRequired: true,
       dueDate: true,
-      collection: {
-        select: {
-          type: true,
-        },
-      },
       tags: {
         select: {
           tag: {
@@ -97,7 +92,6 @@ export const load: PageServerLoad = async (event) => {
         learningJourney: lu.learningJourneys[0],
       }),
       tags: lu.tags.map((t) => t.tag),
-      collectionType: lu.collection.type,
     })),
   };
 };

@@ -13,8 +13,9 @@ export const load: PageServerLoad = async (event) => {
     throw redirect(303, '/login');
   }
 
-  interface CollectionWithTags extends Pick<CollectionModel, 'id' | 'title' | 'type'> {
+  interface CollectionWithTags extends Pick<CollectionModel, 'id' | 'title'> {
     numberOfPodcasts: number;
+    tagCode: string;
     tags: Pick<TagModel, 'code' | 'label'>[];
   }
 
@@ -22,13 +23,15 @@ export const load: PageServerLoad = async (event) => {
     SELECT
       c.id AS id,
       c.title AS title,
-      c.type AS type,
+      t.code AS "tagCode",
       COUNT(DISTINCT lj.id) AS "numberOfPodcasts"
     FROM learning_journeys lj
-    INNER JOIN learning_units lu ON lu.id = lj.learning_unit_id
-    INNER JOIN collections c ON c.id = lu.collection_id
+           INNER JOIN learning_units lu ON lu.id = lj.learning_unit_id
+           INNER JOIN learning_unit_collections luc ON luc.learning_unit_id = lu.id
+           INNER JOIN collections c ON c.id = luc.collection_id
+           INNER JOIN tags t ON t.id = c.tag_id
     WHERE lj.user_id = ${user.id}
-    GROUP BY c.id
+    GROUP BY c.id, t.code
     ORDER BY MAX(lj.updated_at) DESC;
   `;
 

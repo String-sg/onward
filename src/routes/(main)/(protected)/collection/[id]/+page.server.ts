@@ -29,7 +29,12 @@ export const load: PageServerLoad = async (event) => {
     select: {
       title: true,
       description: true,
-      type: true,
+      tag: {
+        select: {
+          code: true,
+        },
+      },
+      isTopic: true,
     },
     where: { id: event.params.id },
   } satisfies CollectionFindUniqueArgs;
@@ -76,7 +81,7 @@ export const load: PageServerLoad = async (event) => {
         },
       },
     },
-    where: { collectionId: event.params.id },
+    where: { collections: { some: { collectionId: event.params.id } } },
     orderBy: {
       createdAt: 'desc',
     },

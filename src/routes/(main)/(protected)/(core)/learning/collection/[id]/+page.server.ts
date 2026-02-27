@@ -36,12 +36,17 @@ export const load: PageServerLoad = async (event) => {
   }
 
   const collection = await db.collection.findUnique({
-    where: { id: event.params.id },
     select: {
       title: true,
       description: true,
-      type: true,
+      tag: {
+        select: {
+          code: true,
+        },
+      },
+      isTopic: true,
     },
+    where: { id: event.params.id },
   });
 
   if (!collection) {
@@ -76,7 +81,11 @@ export const load: PageServerLoad = async (event) => {
     where: {
       userId: user.id,
       learningUnit: {
-        collectionId: event.params.id,
+        collections: {
+          some: {
+            collectionId: event.params.id,
+          },
+        },
       },
     },
     orderBy: {

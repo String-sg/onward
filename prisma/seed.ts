@@ -3,12 +3,7 @@ import 'dotenv/config';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { v7 as uuidv7 } from 'uuid';
 
-import {
-  CollectionType,
-  ContentType,
-  type Prisma,
-  PrismaClient,
-} from '../src/generated/prisma/client.js';
+import { ContentType, type Prisma, PrismaClient } from '../src/generated/prisma/client.js';
 
 const db = new PrismaClient({
   adapter: new PrismaPg({
@@ -20,23 +15,53 @@ const db = new PrismaClient({
 const tags: Prisma.TagCreateInput[] = [
   {
     id: uuidv7(),
-    code: 'STU_DEV',
-    label: 'Student Development',
-  },
-  {
-    id: uuidv7(),
     code: 'AI',
     label: 'Artificial Intelligence',
   },
   {
     id: uuidv7(),
-    code: 'INFRA',
-    label: 'Infrastructure',
+    code: 'BOB',
+    label: 'Learn with BOB',
+  },
+  {
+    id: uuidv7(),
+    code: 'CAREER',
+    label: 'Career Growth',
+  },
+  {
+    id: uuidv7(),
+    code: 'INNOV',
+    label: 'Innovation',
+  },
+  {
+    id: uuidv7(),
+    code: 'NEWS',
+    label: 'In The News',
+  },
+  {
+    id: uuidv7(),
+    code: 'PROD',
+    label: 'Productivity',
+  },
+  {
+    id: uuidv7(),
+    code: 'STU_DEV',
+    label: 'Student Development',
+  },
+  {
+    id: uuidv7(),
+    code: 'STU_WELL',
+    label: 'Student Wellbeing',
   },
   {
     id: uuidv7(),
     code: 'WELLBEING',
     label: 'Wellbeing',
+  },
+  {
+    id: uuidv7(),
+    code: 'INFRA',
+    label: 'Infrastructure',
   },
   {
     id: uuidv7(),
@@ -63,41 +88,176 @@ const tags: Prisma.TagCreateInput[] = [
 const collections: Prisma.CollectionCreateInput[] = [
   {
     id: uuidv7(),
-    title: 'SEN Peer Support',
+    title: 'Artificial Intelligence',
     description:
-      'Explore the world of Special Educational Needs (SEN) peer support that indicates Singapore specific peer support knowledge, case studies and more to gain knowledge about SEN.',
-    type: CollectionType.STU_DEV,
+      'Discover how AI is transforming education, unpack AI use cases, and tool suggestions to help you take charge of this rapidly changing space.',
+    tag: {
+      connect: {
+        id: tags[0].id,
+      },
+    },
+    isTopic: true,
   },
   {
     id: uuidv7(),
-    title: 'Learn to use AI',
+    title: 'Learn with BOB',
     description:
-      'Discover how AI is transforming education through personalized learning, intelligent tutoring systems, and data-driven insights to enhance teaching effectiveness.',
-    type: CollectionType.AI,
+      'Learn with BOB is a series that illustrates scenarios on how BOB applies the SPACES framework to change his behaviour in order to promote purposeful work at a sustainable pace.',
+    tag: {
+      connect: {
+        id: tags[1].id,
+      },
+    },
+    isTopic: true,
   },
   {
     id: uuidv7(),
-    title: 'Infrastructure for Education',
-    description: 'Lorem Ipsum 1',
-    type: CollectionType.INFRA,
+    title: 'Career Growth',
+    description:
+      'Explore the world of career growth, where we help you transform potential into performance. Learn to set ambitious yet realistic professional goals, embrace new challenges, and strive towards greater work fulfilment.',
+    tag: {
+      connect: {
+        id: tags[2].id,
+      },
+    },
+    isTopic: true,
   },
   {
     id: uuidv7(),
-    title: 'Wellbeing 1',
-    description: 'Loren Ipsum 2',
-    type: CollectionType.WELLBEING,
+    title: 'Innovation',
+    description:
+      'Breaking down strategies that can empower you to explore new ideas, invest in innovative projects, and support your creative thinking.',
+    tag: {
+      connect: {
+        id: tags[3].id,
+      },
+    },
+    isTopic: true,
+  },
+  {
+    id: uuidv7(),
+    title: 'In The News',
+    description:
+      'Key highlights from education related news and surveys to provide insights on the ground.',
+    tag: {
+      connect: {
+        id: tags[4].id,
+      },
+    },
+    isTopic: true,
+  },
+  {
+    id: uuidv7(),
+    title: 'Productivity',
+    description:
+      'Learn insights and techniques for mastering time management, optimizing workflows, minimizing distractions, and achieving your goals faster.',
+    tag: {
+      connect: {
+        id: tags[5].id,
+      },
+    },
+    isTopic: true,
+  },
+  {
+    id: uuidv7(),
+    title: 'Student Development',
+    description:
+      "We explore ways to help educators learn to manage students' emotional and physical health, ultimately helping them thrive academically and personally.",
+    tag: {
+      connect: {
+        id: tags[6].id,
+      },
+    },
+    isTopic: true,
+  },
+  {
+    id: uuidv7(),
+    title: 'Student Wellbeing',
+    description:
+      'Explore the world of Special Educational Needs (SEN) peer support that indicates Singapore specific peer support knowledge, case studies and more to gain knowledge about SEN. This topic encompasses a variety of bite-sized content including podcasts, interactive workshops, and expert-led webinars designed to empower educators and caregivers.',
+    tag: {
+      connect: {
+        id: tags[7].id,
+      },
+    },
+    isTopic: true,
+  },
+  {
+    id: uuidv7(),
+    title: 'Wellbeing',
+    description:
+      'This series aims to help officers be aware of potential stressors in the workplace, keep a lookout for signs of distress, have regular check-ins with colleagues, and be aware of resources that we can share with those who need help.',
+    tag: {
+      connect: {
+        id: tags[8].id,
+      },
+    },
+    isTopic: true,
+  },
+  {
+    id: uuidv7(),
+    title: 'Infrastructure',
+    description:
+      'Summary briefs of key infrastructure updates in MOE, including device setups, connectivity and digital integrations, enabling you to work efficiently.',
+    tag: {
+      connect: {
+        id: tags[9].id,
+      },
+    },
+    isTopic: true,
+  },
+  {
+    id: uuidv7(),
+    title: 'Career Growth',
+    description:
+      'Explore the world of career growth, where we help you transform potential into performance. Learn to set ambitious yet realistic professional goals, embrace new challenges, and strive towards greater work fulfilment.',
+    tag: {
+      connect: {
+        id: tags[10].id,
+      },
+    },
+    isTopic: true,
   },
   {
     id: uuidv7(),
     title: 'Educator Voices',
-    description: 'Loren Ipsum 3',
-    type: CollectionType.EDU_VOICES,
+    description:
+      'Inspiring stories from fellow educators on how to enable learning and development within the workplace and classrooms.',
+    tag: {
+      connect: {
+        id: tags[11].id,
+      },
+    },
+    isTopic: true,
   },
   {
     id: uuidv7(),
-    title: 'Engagement',
-    description: 'Loren Ipsum 4',
-    type: CollectionType.EMP_ENGAGEMENT,
+    title: 'Employee Engagement',
+    description:
+      'Helping leaders make sense of Employee Engagement Survey (EES) results and practical tips to maintain staff engagement levels in the workplace.',
+    tag: {
+      connect: {
+        id: tags[12].id,
+      },
+    },
+    isTopic: true,
+  },
+  {
+    id: uuidv7(),
+    title: 'AI Literacy',
+    description: 'Mandatory Mods for AI Literacy',
+    tag: {
+      connect: {
+        id: tags[0].id,
+      },
+    },
+    isTopic: false,
+  },
+  {
+    id: uuidv7(),
+    title: 'Cyber Hygiene',
+    description: 'Mandatory Mods for Cyber Hygiene',
+    isTopic: false,
   },
 ];
 
@@ -151,7 +311,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lacinia odio vi
 const learningUnits: Prisma.LearningUnitCreateInput[] = [
   {
     id: uuidv7(),
-    title: 'SEN Learning Unit 1',
+    title: 'AI Learning Unit 1',
     contentType: ContentType.PODCAST,
     contentURL: 'http://localhost:5173',
     summary,
@@ -159,10 +319,23 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     createdBy: 'DXD Product Team',
     isRequired: true,
     dueDate: new Date('2026-02-12'), // Required
-    collection: {
-      connect: {
-        id: collections[0].id,
-      },
+    collections: {
+      create: [
+        {
+          collection: {
+            connect: {
+              id: collections[0].id,
+            },
+          },
+        },
+        {
+          collection: {
+            connect: {
+              id: collections[13].id,
+            },
+          },
+        },
+      ],
     },
     tags: {
       create: [
@@ -170,65 +343,6 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
           tag: {
             connect: {
               id: tags[0].id,
-            },
-          },
-        },
-      ],
-    },
-    questionAnswers: {
-      create: questionAnswers,
-    },
-  },
-  {
-    id: uuidv7(),
-    title: 'SEN Learning Unit 2',
-    contentType: ContentType.PODCAST,
-    contentURL: 'http://localhost:5173',
-    summary,
-    objectives,
-    createdBy: 'DXD Product Team',
-    isRequired: true,
-    dueDate: new Date('2025-11-01'), // Overdue
-    collection: {
-      connect: {
-        id: collections[0].id,
-      },
-    },
-    tags: {
-      create: [
-        {
-          tag: {
-            connect: {
-              id: tags[0].id,
-            },
-          },
-        },
-      ],
-    },
-    questionAnswers: {
-      create: questionAnswers,
-    },
-  },
-  {
-    id: uuidv7(),
-    title: 'AI Learning Unit 1',
-    contentType: ContentType.PODCAST,
-    contentURL: 'http://localhost:5173',
-    summary,
-    objectives,
-    createdBy: 'DXD Product Team',
-    isRequired: false, // Not required
-    collection: {
-      connect: {
-        id: collections[1].id,
-      },
-    },
-    tags: {
-      create: [
-        {
-          tag: {
-            connect: {
-              id: tags[1].id,
             },
           },
         },
@@ -247,10 +361,88 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     objectives,
     createdBy: 'DXD Product Team',
     isRequired: true,
-    dueDate: new Date('2025-11-20'), // Overdue
-    collection: {
-      connect: {
-        id: collections[1].id,
+    collections: {
+      create: {
+        collection: {
+          connect: {
+            id: collections[0].id,
+          },
+        },
+      },
+    },
+    tags: {
+      create: [
+        {
+          tag: {
+            connect: {
+              id: tags[0].id,
+            },
+          },
+        },
+      ],
+    },
+    questionAnswers: {
+      create: questionAnswers,
+    },
+  },
+  {
+    id: uuidv7(),
+    title: 'AI Quiz',
+    contentType: ContentType.QUIZ,
+    summary,
+    objectives,
+    createdBy: 'DXD Product Team',
+    isRequired: true,
+    dueDate: new Date('2026-12-31'), // Required
+    collections: {
+      create: [
+        {
+          collection: {
+            connect: {
+              id: collections[0].id,
+            },
+          },
+        },
+        {
+          collection: {
+            connect: {
+              id: collections[13].id,
+            },
+          },
+        },
+      ],
+    },
+    tags: {
+      create: [
+        {
+          tag: {
+            connect: {
+              id: tags[0].id,
+            },
+          },
+        },
+      ],
+    },
+    questionAnswers: {
+      create: questionAnswers,
+    },
+  },
+  {
+    id: uuidv7(),
+    title: 'BOB Learning Unit 1',
+    contentType: ContentType.PODCAST,
+    contentURL: 'http://localhost:5173',
+    summary,
+    objectives,
+    createdBy: 'DXD Product Team',
+    isRequired: false, // Not required
+    collections: {
+      create: {
+        collection: {
+          connect: {
+            id: collections[1].id,
+          },
+        },
       },
     },
     tags: {
@@ -270,17 +462,53 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
   },
   {
     id: uuidv7(),
-    title: 'Infra Learning Unit 1',
+    title: 'BOB Learning Unit 2',
     contentType: ContentType.PODCAST,
     contentURL: 'http://localhost:5173',
     summary,
     objectives,
     createdBy: 'DXD Product Team',
     isRequired: true,
-    dueDate: new Date('2026-02-12'), // Required
-    collection: {
-      connect: {
-        id: collections[2].id,
+    collections: {
+      create: {
+        collection: {
+          connect: {
+            id: collections[1].id,
+          },
+        },
+      },
+    },
+    tags: {
+      create: [
+        {
+          tag: {
+            connect: {
+              id: tags[1].id,
+            },
+          },
+        },
+      ],
+    },
+    questionAnswers: {
+      create: questionAnswers,
+    },
+  },
+  {
+    id: uuidv7(),
+    title: 'Career Learning Unit 1',
+    contentType: ContentType.PODCAST,
+    contentURL: 'http://localhost:5173',
+    summary,
+    objectives,
+    createdBy: 'DXD Product Team',
+    isRequired: true,
+    collections: {
+      create: {
+        collection: {
+          connect: {
+            id: collections[2].id,
+          },
+        },
       },
     },
     tags: {
@@ -300,17 +528,20 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
   },
   {
     id: uuidv7(),
-    title: 'Wellbeing Learning Unit 1',
+    title: 'Innovation Learning Unit 1',
     contentType: ContentType.PODCAST,
     contentURL: 'http://localhost:5173',
     summary,
     objectives,
     createdBy: 'DXD Product Team',
     isRequired: true,
-    dueDate: new Date('2026-02-12'), // Required
-    collection: {
-      connect: {
-        id: collections[3].id,
+    collections: {
+      create: {
+        collection: {
+          connect: {
+            id: collections[3].id,
+          },
+        },
       },
     },
     tags: {
@@ -330,17 +561,20 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
   },
   {
     id: uuidv7(),
-    title: 'Educator Voices Learning Unit 1',
+    title: 'News Learning Unit 1',
     contentType: ContentType.PODCAST,
     contentURL: 'http://localhost:5173',
     summary,
     objectives,
     createdBy: 'DXD Product Team',
     isRequired: true,
-    dueDate: new Date('2026-02-12'), // Required
-    collection: {
-      connect: {
-        id: collections[4].id,
+    collections: {
+      create: {
+        collection: {
+          connect: {
+            id: collections[4].id,
+          },
+        },
       },
     },
     tags: {
@@ -360,17 +594,20 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
   },
   {
     id: uuidv7(),
-    title: 'Employee Engagement Learning Unit 1',
+    title: 'Productivity Learning Unit 1',
     contentType: ContentType.PODCAST,
     contentURL: 'http://localhost:5173',
     summary,
     objectives,
     createdBy: 'DXD Product Team',
     isRequired: true,
-    dueDate: new Date('2026-02-12'), // Required
-    collection: {
-      connect: {
-        id: collections[5].id,
+    collections: {
+      create: {
+        collection: {
+          connect: {
+            id: collections[5].id,
+          },
+        },
       },
     },
     tags: {
@@ -383,6 +620,29 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
           },
         },
       ],
+    },
+    questionAnswers: {
+      create: questionAnswers,
+    },
+  },
+  {
+    id: uuidv7(),
+    title: 'Cyber Hygiene Learning Unit 1',
+    contentType: ContentType.PODCAST,
+    contentURL: 'http://localhost:5173',
+    summary,
+    objectives,
+    createdBy: 'DXD Product Team',
+    isRequired: true,
+    dueDate: new Date('2026-02-12'), // Required
+    collections: {
+      create: {
+        collection: {
+          connect: {
+            id: collections[14].id,
+          },
+        },
+      },
     },
     questionAnswers: {
       create: questionAnswers,
@@ -405,7 +665,7 @@ const learningUnitSources: Prisma.LearningUnitSourcesCreateInput[] = [
         {
           tag: {
             connect: {
-              id: tags[6].id,
+              id: tags[13].id,
             },
           },
         },
@@ -426,7 +686,7 @@ const learningUnitSources: Prisma.LearningUnitSourcesCreateInput[] = [
         {
           tag: {
             connect: {
-              id: tags[7].id,
+              id: tags[12].id,
             },
           },
         },
@@ -447,7 +707,7 @@ const learningUnitSources: Prisma.LearningUnitSourcesCreateInput[] = [
         {
           tag: {
             connect: {
-              id: tags[6].id,
+              id: tags[13].id,
             },
           },
         },
@@ -468,7 +728,7 @@ const learningUnitSources: Prisma.LearningUnitSourcesCreateInput[] = [
         {
           tag: {
             connect: {
-              id: tags[7].id,
+              id: tags[12].id,
             },
           },
         },
@@ -510,7 +770,7 @@ const learningUnitSources: Prisma.LearningUnitSourcesCreateInput[] = [
         {
           tag: {
             connect: {
-              id: tags[7].id,
+              id: tags[13].id,
             },
           },
         },
@@ -531,7 +791,7 @@ const learningUnitSources: Prisma.LearningUnitSourcesCreateInput[] = [
         {
           tag: {
             connect: {
-              id: tags[6].id,
+              id: tags[12].id,
             },
           },
         },
@@ -552,7 +812,7 @@ const learningUnitSources: Prisma.LearningUnitSourcesCreateInput[] = [
         {
           tag: {
             connect: {
-              id: tags[7].id,
+              id: tags[13].id,
             },
           },
         },
