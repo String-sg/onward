@@ -64,6 +64,9 @@ CHECK (("content_type"::text != 'PODCAST') OR ("content_url" IS NOT NULL));
 -- AlterTable
 ALTER TABLE "collections" ADD COLUMN     "is_topic" BOOLEAN NOT NULL DEFAULT false;
 
+-- Update existing collections to be topics
+UPDATE "collections" SET "is_topic" = true;
+
 -- DropForeignKey
 ALTER TABLE "collections" DROP CONSTRAINT "collections_tag_id_fkey";
 
