@@ -22,10 +22,10 @@
   const { isopen, onclose }: Props = $props();
 
   let target = $state<HTMLElement | null>(null);
-  let isStartPage = $state(false);
+  let isStartPage = $state(true);
   let isTopicSelectionPage = $state(false);
   let isFrequencySelectionPage = $state(false);
-  let isSubscribePage = $state(true);
+  let isSubscribePage = $state(false);
   let selectedTopics = $state<string[]>([]);
   let selectedFrequency = $state<string | null>(null);
 
