@@ -2,6 +2,7 @@
   import { Collection } from '$lib/components/Collection/index.js';
   import { EmptyStateView } from '$lib/components/EmptyStateView/index.js';
   import { LearningUnit } from '$lib/components/LearningUnit/index.js';
+  import { ToDoList } from '$lib/components/ToDoList/index.js';
   import { Player } from '$lib/states/index.js';
 
   const { data } = $props();
@@ -9,10 +10,7 @@
   const player = Player.get();
 
   const handleLearningUnitPlay = (
-    item:
-      | (typeof data.toDoList)[0]
-      | (typeof data.learningJourneys)[0]
-      | (typeof data.recommendedLearningUnits)[0],
+    item: (typeof data.learningJourneys)[0] | (typeof data.recommendedLearningUnits)[0],
   ) => {
     const learningUnit = 'learningUnit' in item ? item.learningUnit : item;
 
@@ -21,8 +19,7 @@
       tags: learningUnit.tags,
       title: learningUnit.title,
       summary: learningUnit.summary,
-      url: learningUnit.contentURL,
-      type: learningUnit.collectionType,
+      url: learningUnit.contentURL ?? '',
     });
   };
 
@@ -50,21 +47,12 @@
     </div>
 
     <div class="flex flex-col gap-y-4">
-      {#each data.toDoList as learningUnit (learningUnit.id)}
-        <LearningUnit
-          to={`/unit/${learningUnit.id}`}
-          tags={learningUnit.tags}
-          title={learningUnit.title}
-          createdat={learningUnit.createdAt}
-          createdby={learningUnit.createdBy}
-          player={{
-            isactive: player.currentTrack?.id === learningUnit.id,
-            isplaying: player.isPlaying,
-            onplay: () => handleLearningUnitPlay(learningUnit),
-            onpause: handleLearningUnitPause,
-            onresume: handleLearningUnitResume,
-          }}
-          status={learningUnit.status}
+      {#each data.toDoList as collection (collection.id)}
+        <ToDoList
+          to={`/collection/${collection.id}`}
+          title={collection.title}
+          numberofpodcasts={collection.numberOfPodcasts}
+          dueDate={collection.dueDate}
         />
       {/each}
     </div>
@@ -139,7 +127,7 @@
   {/if}
 
   <!-- Learning Topics -->
-  {#if data.collections.length > 0}
+  {#if data.collections.some((collection) => collection.numberOfPodcasts > 0)}
     <div class="flex flex-row justify-between px-2">
       <span class="text-xl font-semibold">Learning topics</span>
     </div>
@@ -150,7 +138,7 @@
           <Collection
             to="/collection/{collection.id}"
             title={collection.title}
-            type={collection.type}
+            type={collection.tag?.code ?? ''}
             numberofpodcasts={collection.numberOfPodcasts}
           />
         {/if}
@@ -158,7 +146,7 @@
     </div>
   {/if}
 
-  {#if data.toDoList.length === 0 && data.recommendedLearningUnits.length === 0 && data.learningJourneys.length === 0 && data.collections.length === 0}
+  {#if data.toDoList.length === 0 && data.recommendedLearningUnits.length === 0 && data.learningJourneys.length === 0 && data.collections.some((collection) => collection.numberOfPodcasts === 0)}
     <div class="mt-8 flex flex-col items-center gap-y-5">
       <EmptyStateView username={data.username} imagealt="No bites found" />
     </div>

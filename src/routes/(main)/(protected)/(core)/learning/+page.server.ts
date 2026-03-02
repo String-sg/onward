@@ -1,8 +1,25 @@
 import { redirect } from '@sveltejs/kit';
 
-import { type CollectionModel, db, type TagModel } from '$lib/server/db';
+import { getLearningUnitStatus } from '$lib/helpers';
+import {
+  db,
+  type LearningJourneyModel,
+  type LearningUnitModel,
+  type TagModel,
+} from '$lib/server/db';
 
 import type { PageServerLoad } from './$types';
+
+interface Result {
+  id: LearningJourneyModel['id'];
+  isCompleted: LearningJourneyModel['isCompleted'];
+  unitId: LearningUnitModel['id'];
+  title: LearningUnitModel['title'];
+  createdAt: LearningUnitModel['createdAt'];
+  createdBy: LearningUnitModel['createdBy'];
+  tags: Pick<TagModel, 'code' | 'label'>[];
+  status: 'COMPLETED' | 'OVERDUE' | 'REQUIRED' | null;
+}
 
 export const load: PageServerLoad = async (event) => {
   const logger = event.locals.logger.child({ handler: 'page_load_learning' });
@@ -13,27 +30,69 @@ export const load: PageServerLoad = async (event) => {
     throw redirect(303, '/login');
   }
 
-  interface CollectionWithTags extends Pick<CollectionModel, 'id' | 'title' | 'type'> {
-    numberOfPodcasts: number;
-    tags: Pick<TagModel, 'code' | 'label'>[];
-  }
-
-  const collections = await db.$queryRaw<CollectionWithTags[]>`
-    SELECT
-      c.id AS id,
-      c.title AS title,
-      c.type AS type,
-      COUNT(DISTINCT lj.id) AS "numberOfPodcasts"
-    FROM learning_journeys lj
-    INNER JOIN learning_units lu ON lu.id = lj.learning_unit_id
-    INNER JOIN collections c ON c.id = lu.collection_id
-    WHERE lj.user_id = ${user.id}
-    GROUP BY c.id
-    ORDER BY MAX(lj.updated_at) DESC;
-  `;
+  const learningJourneys = await db.learningJourney.findMany({
+    select: {
+      id: true,
+      isCompleted: true,
+      learningUnit: {
+        select: {
+          id: true,
+          createdAt: true,
+          title: true,
+          createdBy: true,
+          isRequired: true,
+          dueDate: true,
+          tags: {
+            select: {
+              tag: {
+                select: {
+                  code: true,
+                  label: true,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    where: {
+      userId: user.id,
+    },
+    orderBy: {
+      updatedAt: 'desc',
+    },
+  });
 
   return {
-    collections,
+    journeys: learningJourneys.reduce<{
+      inProgress: Result[];
+      isCompleted: Result[];
+    }>(
+      (acc, journey) => {
+        acc[journey.isCompleted ? 'isCompleted' : 'inProgress'].push({
+          id: journey.id,
+          isCompleted: journey.isCompleted,
+          unitId: journey.learningUnit.id,
+          title: journey.learningUnit.title,
+          createdAt: journey.learningUnit.createdAt,
+          createdBy: journey.learningUnit.createdBy,
+          tags: journey.learningUnit.tags.map((t) => ({
+            code: t.tag.code,
+            label: t.tag.label,
+          })),
+          status: getLearningUnitStatus({
+            isRequired: journey.learningUnit.isRequired,
+            dueDate: journey.learningUnit.dueDate,
+            learningJourney: {
+              isCompleted: journey.isCompleted,
+            },
+          }),
+        });
+
+        return acc;
+      },
+      { inProgress: [], isCompleted: [] },
+    ),
     username: user.name,
   };
 };

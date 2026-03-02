@@ -31,7 +31,7 @@
     /**
      * The status for required learning unit.
      */
-    status: 'REQUIRED' | 'COMPLETED' | 'OVERDUE' | null;
+    status?: 'REQUIRED' | 'COMPLETED' | 'OVERDUE' | null;
     /**
      * An optional player object for showing playback controls and progress.
      * If provided, displays the controls and progress.

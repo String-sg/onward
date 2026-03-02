@@ -2,6 +2,8 @@ import { error, redirect } from '@sveltejs/kit';
 
 import { getLearningUnitStatus } from '$lib/helpers/index.js';
 import {
+  type CollectionFindManyArgs,
+  type CollectionGetPayload,
   db,
   type LearningJourneyFindManyArgs,
   type LearningJourneyGetPayload,
@@ -23,65 +25,57 @@ export const load: PageServerLoad = async (event) => {
   const toDoListArgs = {
     select: {
       id: true,
-      createdAt: true,
       title: true,
-      summary: true,
-      contentURL: true,
-      createdBy: true,
-      isRequired: true,
-      dueDate: true,
-      collection: {
+      _count: {
         select: {
-          type: true,
+          learningUnits: true,
         },
       },
-      tags: {
+      learningUnits: {
         select: {
-          tag: {
+          learningUnit: {
             select: {
-              code: true,
-              label: true,
+              dueDate: true,
             },
           },
         },
       },
     },
     where: {
-      isRequired: true,
-      OR: [
-        {
-          learningJourneys: {
-            some: {
-              userId: user.id,
-              isCompleted: false,
-            },
-          },
-        },
-        {
-          NOT: {
-            learningJourneys: {
-              some: {
-                userId: user.id,
+      title: {
+        in: ['AI Literacy', 'Cyber Hygiene'],
+      },
+      learningUnits: {
+        some: {
+          learningUnit: {
+            OR: [
+              {
+                learningJourneys: {
+                  some: {
+                    userId: user.id,
+                    isCompleted: false,
+                  },
+                },
               },
-            },
+              {
+                NOT: {
+                  learningJourneys: {
+                    some: {
+                      userId: user.id,
+                    },
+                  },
+                },
+              },
+            ],
           },
         },
-      ],
+      },
     },
-    orderBy: [
-      {
-        dueDate: 'asc',
-      },
-      {
-        createdAt: 'asc',
-      },
-    ],
-    take: 2,
-  } satisfies LearningUnitFindManyArgs;
+  } satisfies CollectionFindManyArgs;
 
-  let toDoList: LearningUnitGetPayload<typeof toDoListArgs>[];
+  let toDoList: CollectionGetPayload<typeof toDoListArgs>[];
   try {
-    toDoList = await db.learningUnit.findMany(toDoListArgs);
+    toDoList = await db.collection.findMany(toDoListArgs);
   } catch (err) {
     logger.error({ err }, 'Failed to retrieve to-do list');
     throw error(500);
@@ -97,11 +91,6 @@ export const load: PageServerLoad = async (event) => {
       createdBy: true,
       isRequired: true,
       dueDate: true,
-      collection: {
-        select: {
-          type: true,
-        },
-      },
       tags: {
         select: {
           tag: {
@@ -122,6 +111,8 @@ export const load: PageServerLoad = async (event) => {
       },
     },
     where: {
+      contentType: 'PODCAST',
+      isRequired: false,
       NOT: {
         learningJourneys: {
           some: {
@@ -173,16 +164,16 @@ export const load: PageServerLoad = async (event) => {
               },
             },
           },
-          collection: {
-            select: {
-              type: true,
-            },
-          },
         },
       },
     },
     where: {
       userId: user.id,
+      learningUnit: {
+        contentType: {
+          not: 'QUIZ',
+        },
+      },
     },
     orderBy: {
       createdAt: 'desc',
@@ -198,29 +189,42 @@ export const load: PageServerLoad = async (event) => {
     throw error(500);
   }
 
-  const collections = await db.collection.findMany({
+  const topicalCollections = await db.collection.findMany({
     select: {
       id: true,
       title: true,
-      type: true,
-      _count: {
+      tag: {
         select: {
-          learningUnit: true,
+          code: true,
         },
       },
+      _count: {
+        select: {
+          learningUnits: true,
+        },
+      },
+    },
+    where: {
+      isTopic: true,
     },
   });
 
   return {
     username: user.name,
-    toDoList: toDoList.map((lu) => ({
-      ...lu,
-      status: getLearningUnitStatus({
-        isRequired: lu.isRequired,
-        dueDate: lu.dueDate,
+    toDoList: toDoList.map((collection) => ({
+      ...collection,
+      numberOfPodcasts: collection._count.learningUnits,
+      dueDate: new Date(
+        Math.max(
+          ...collection.learningUnits
+            .map((lu) => lu.learningUnit.dueDate?.getTime() ?? 0)
+            .filter((time) => time > 0),
+        ),
+      ).toLocaleDateString('en-GB', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
       }),
-      tags: lu.tags.map((t) => t.tag),
-      collectionType: lu.collection.type,
     })),
     recommendedLearningUnits: recommendedLearningUnits.map((lu) => ({
       ...lu,
@@ -230,14 +234,12 @@ export const load: PageServerLoad = async (event) => {
         learningJourney: lu.learningJourneys[0],
       }),
       tags: lu.tags.map((t) => t.tag),
-      collectionType: lu.collection.type,
     })),
     learningJourneys: learningJourneys.map((lj) => ({
       ...lj,
       learningUnit: {
         ...lj.learningUnit,
         tags: lj.learningUnit.tags.map((t) => t.tag),
-        collectionType: lj.learningUnit.collection.type,
         status: getLearningUnitStatus({
           isRequired: lj.learningUnit.isRequired,
           dueDate: lj.learningUnit.dueDate,
@@ -247,9 +249,9 @@ export const load: PageServerLoad = async (event) => {
         }),
       },
     })),
-    collections: collections.map((collection) => ({
+    collections: topicalCollections.map((collection) => ({
       ...collection,
-      numberOfPodcasts: collection._count.learningUnit,
+      numberOfPodcasts: collection._count.learningUnits,
     })),
   };
 };

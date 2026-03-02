@@ -47,30 +47,17 @@ model Collection {
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   // Domain-Specific Fields.
-  title       String         @map("title")
-  description String         @map("description")
-  type        CollectionType @map("type")
+  title       String  @map("title")
+  description String  @map("description")
+  tagId       String? @map("tag_id") @db.Uuid
+  isTopic     Boolean @default(false) @map("is_topic")
 
   // Relations.
-  learningUnit  LearningUnit[]
+  learningUnits LearningUnitCollection[]
   userInterests UserInterest[]
+  tag           Tag?                     @relation(fields: [tagId], references: [id])
 
   @@map("collections")
-}
-
-enum CollectionType {
-  AI
-  BOB
-  CAREER
-  INNOV
-  NEWS
-  PROD
-  STU_DEV
-  STU_WELL
-  WELLBEING
-  INFRA
-  EDU_VOICES
-  EMP_ENGAGEMENT
 }
 
 model LearningUnit {
@@ -81,7 +68,7 @@ model LearningUnit {
   // Domain-Specific Fields.
   title         String      @map("title")
   contentType   ContentType @map("content_type")
-  contentURL    String      @map("content_url")
+  contentURL    String?     @map("content_url")
   summary       String      @map("summary")
   objectives    String      @map("objectives")
   createdBy     String      @map("created_by")
@@ -90,9 +77,7 @@ model LearningUnit {
   dueDate       DateTime?   @map("due_date") @db.Date
 
   // Relations.
-  collectionId String @map("collection_id") @db.Uuid
-
-  collection       Collection               @relation(fields: [collectionId], references: [id])
+  collections      LearningUnitCollection[]
   sentiments       LearningUnitSentiments[]
   tags             LearningUnitTag[]
   learningJourneys LearningJourney[]
@@ -100,6 +85,18 @@ model LearningUnit {
   sources          LearningUnitSources[]
 
   @@map("learning_units")
+}
+
+model LearningUnitCollection {
+  // Relations.
+  learningUnitId String @map("learning_unit_id") @db.Uuid
+  collectionId   String @map("collection_id") @db.Uuid
+
+  learningUnit LearningUnit @relation(fields: [learningUnitId], references: [id], onDelete: Cascade)
+  collection   Collection   @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+
+  @@id([learningUnitId, collectionId])
+  @@map("learning_unit_collections")
 }
 
 model LearningUnitSentiments {
@@ -140,6 +137,7 @@ model LearningUnitSources {
 
 enum ContentType {
   PODCAST
+  QUIZ
 }
 
 model LearningJourney {
@@ -176,6 +174,7 @@ model Tag {
   // Relations.
   learningUnits       LearningUnitTag[]
   LearningUnitSources LearningUnitSourcesTag[]
+  collections         Collection[]
 
   @@map("tags")
 }
@@ -290,9 +289,9 @@ model UserAdmin {
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   // Domain-Specific Fields.
-  name             String @map("name") @db.VarChar(255)
+  name             String  @map("name") @db.VarChar(255)
   email            String  @unique @map("email")
-  googleProviderId String @unique @map("google_provider_id")
+  googleProviderId String  @unique @map("google_provider_id")
   isActive         Boolean @default(true) @map("is_active")
 
   @@map("user_admins")
