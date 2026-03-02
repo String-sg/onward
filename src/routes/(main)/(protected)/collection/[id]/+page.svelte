@@ -67,7 +67,7 @@
   <div class="flex flex-col gap-y-3">
     <div class="px-2">
       <span class="text-xl font-medium">
-        {data.learningUnits.length}&nbsp{data.learningUnits.length === 1 ? 'podcast' : 'podcasts'}
+        {data.learningUnits.length}&nbsp{data.learningUnits.length === 1 ? 'bite' : 'bites'}
       </span>
     </div>
 
