@@ -22,10 +22,10 @@
   const { isopen, onclose }: Props = $props();
 
   let target = $state<HTMLElement | null>(null);
-  let isStartPage = $state(true);
+  let isStartPage = $state(false);
   let isTopicSelectionPage = $state(false);
   let isFrequencySelectionPage = $state(false);
-  let isSubscribePage = $state(false);
+  let isSubscribePage = $state(true);
   let selectedTopics = $state<string[]>([]);
   let selectedFrequency = $state<string | null>(null);
 
@@ -226,9 +226,10 @@
           </div>
 
           <div class="flex flex-col text-center">
-            <span>You are already ahead in personal</span>
-            <span>growth as MOE teacher / staff.</span>
-            <span>Let's get started</span>
+            <span class="max-w-xs sm:max-w-fit">
+              Taking small bites of knowledge consistently leads to big growth over time. Let's get
+              started!
+            </span>
           </div>
         </div>
       </div>
@@ -363,16 +364,15 @@
         <div bind:this={target} class="absolute inset-x-0 top-0 h-px"></div>
 
         <div class="flex flex-1 flex-col gap-y-6 overflow-y-auto px-4 py-3">
-          <div class="flex flex-col items-center">
-            <div class="flex flex-col gap-y-3">
-              <div class="flex flex-col text-center text-3xl">
-                <span>How long can you invest in learning per day?</span>
-              </div>
+          <div class="flex flex-col items-center gap-y-3">
+            <div class="flex flex-col text-center text-3xl">
+              <span>How long can you invest in learning per day?</span>
+            </div>
 
-              <div class="flex flex-col text-center text-slate-600">
-                <span>Before and/or after the long and tiring</span>
-                <span>teaching duties ended!</span>
-              </div>
+            <div class="flex flex-col text-center text-slate-600">
+              <span class="mx-auto max-w-xs text-center sm:max-w-fit">
+                We want to make sure our learning bites fits into your day.
+              </span>
             </div>
           </div>
 
@@ -535,7 +535,7 @@
             </div>
           </div>
 
-          <div class="flex flex-1 flex-col items-center justify-center">
+          <div class="flex w-full flex-1 flex-col items-center justify-center overflow-hidden">
             <enhanced:img
               src="$lib/assets/cycling-man.png"
               alt="Man cycling"
