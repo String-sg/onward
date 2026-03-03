@@ -1,6 +1,16 @@
 import { error, fail, redirect } from '@sveltejs/kit';
 
-import { type CollectionFindManyArgs, type CollectionGetPayload, db, type LearningUnitCreateArgs, type LearningUnitGetPayload, type TagFindManyArgs, type TagGetPayload } from '$lib/server/db.js';
+import {
+  type CollectionFindManyArgs,
+  type CollectionGetPayload,
+  db,
+  type LearningUnitCreateArgs,
+  type LearningUnitGetPayload,
+  LearningUnitStatus,
+  type TagFindManyArgs,
+  type TagGetPayload,
+} from '$lib/server/db.js';
+import { validateLearningUnit, validateLearningUnitDraft } from '$lib/server/unit/validation.js';
 
 import type { Actions, PageServerLoad } from './$types';
 
@@ -88,14 +98,16 @@ export const actions = {
 
     const createArgs = {
       data: {
-        status: 'DRAFT' as const,
+        status: LearningUnitStatus.DRAFT,
         title: data.title,
         contentType: data.contentType,
         contentURL: data.contentURL,
         summary: data.summary,
         objectives: data.objectives,
         createdBy: data.createdBy,
-        collectionId: data.collectionId,
+        collections: data.collectionId
+          ? { create: { collection: { connect: { id: data.collectionId } } } }
+          : undefined,
         isRecommended: data.isRecommended,
         isRequired: data.isRequired,
         dueDate: data.dueDate,
@@ -161,14 +173,16 @@ export const actions = {
 
     const createArgs = {
       data: {
-        status: 'PUBLISHED' as const,
+        status: LearningUnitStatus.PUBLISHED,
         title: data.title,
         contentType: data.contentType,
         contentURL: data.contentURL,
         summary: data.summary,
         objectives: data.objectives,
         createdBy: data.createdBy,
-        collectionId: data.collectionId,
+        collections: data.collectionId
+          ? { create: { collection: { connect: { id: data.collectionId } } } }
+          : undefined,
         isRecommended: data.isRecommended,
         isRequired: data.isRequired,
         dueDate: data.dueDate,

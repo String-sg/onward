@@ -43,42 +43,47 @@ export const load: PageServerLoad = async (event) => {
       },
     },
     where: {
-      status: LearningUnitStatus.PUBLISHED,
-      isRequired: true,
-      OR: [
-        {
-          learningJourneys: {
-            some: {
-              userId: user.id,
-              isCompleted: false,
-            },
+      learningUnits: {
+        every: {
+          learningUnit: {
+            isRequired: true,
+            status: LearningUnitStatus.PUBLISHED,
           },
         },
-        {
-          NOT: {
-            learningJourneys: {
-              some: {
-                userId: user.id,
+        some: {
+          learningUnit: {
+            OR: [
+              {
+                learningJourneys: {
+                  some: {
+                    userId: user.id,
+                    isCompleted: false,
+                  },
+                },
               },
-            },
+              {
+                NOT: {
+                  learningJourneys: {
+                    some: {
+                      userId: user.id,
+                    },
+                  },
+                },
+              },
+            ],
           },
         },
-      ],
-    },
-    orderBy: [
-      {
-        dueDate: 'asc',
       },
     },
-} satisfies CollectionFindManyArgs;
+  } satisfies CollectionFindManyArgs;
 
-let toDoList: LearningUnitGetPayload<typeof toDoListArgs>[];
-try {
-  toDoList = await db.learningUnit.findMany(toDoListArgs);
-} catch (err) {
-  logger.error({ err }, 'Failed to retrieve to-do list');
-  throw error(500);
-}
+  let toDoList: CollectionGetPayload<typeof toDoListArgs>[];
+  try {
+    toDoList = await db.collection.findMany(toDoListArgs);
+  } catch (err) {
+    logger.error({ err }, 'Failed to retrieve to-do list');
+    throw error(500);
+  }
 
   const recommendedLearningUnitsArgs = {
     select: {
@@ -90,11 +95,6 @@ try {
       createdBy: true,
       isRequired: true,
       dueDate: true,
-      collection: {
-        select: {
-          type: true,
-        },
-      },
       tags: {
         select: {
           tag: {
@@ -135,127 +135,126 @@ try {
     take: 3,
   } satisfies LearningUnitFindManyArgs;
 
-let recommendedLearningUnits: LearningUnitGetPayload<typeof recommendedLearningUnitsArgs>[];
-try {
-  recommendedLearningUnits = await db.learningUnit.findMany(recommendedLearningUnitsArgs);
-} catch (err) {
-  logger.error({ err }, 'Failed to retrieve recommended learning units');
-  throw error(500);
-}
+  let recommendedLearningUnits: LearningUnitGetPayload<typeof recommendedLearningUnitsArgs>[];
+  try {
+    recommendedLearningUnits = await db.learningUnit.findMany(recommendedLearningUnitsArgs);
+  } catch (err) {
+    logger.error({ err }, 'Failed to retrieve recommended learning units');
+    throw error(500);
+  }
 
-const learningJourneyArgs = {
-  select: {
-    id: true,
-    isCompleted: true,
-    learningUnit: {
-      select: {
-        id: true,
-        title: true,
-        summary: true,
-        contentURL: true,
-        createdAt: true,
-        createdBy: true,
-        isRequired: true,
-        dueDate: true,
-        tags: {
-          select: {
-            tag: {
-              select: {
-                code: true,
-                label: true,
+  const learningJourneyArgs = {
+    select: {
+      id: true,
+      isCompleted: true,
+      learningUnit: {
+        select: {
+          id: true,
+          title: true,
+          summary: true,
+          contentURL: true,
+          createdAt: true,
+          createdBy: true,
+          isRequired: true,
+          dueDate: true,
+          tags: {
+            select: {
+              tag: {
+                select: {
+                  code: true,
+                  label: true,
+                },
               },
             },
           },
         },
       },
     },
-  },
-  where: {
-    userId: user.id,
-    learningUnit: {
-      contentType: {
-        not: 'QUIZ',
-      },
-    },
-  },
-  orderBy: {
-    createdAt: 'desc',
-  },
-  take: 3,
-} satisfies LearningJourneyFindManyArgs;
-
-let learningJourneys: LearningJourneyGetPayload<typeof learningJourneyArgs>[];
-try {
-  learningJourneys = await db.learningJourney.findMany(learningJourneyArgs);
-} catch (err) {
-  logger.error({ err }, 'Failed to retrieve learning journeys');
-  throw error(500);
-}
-
-const topicalCollections = await db.collection.findMany({
-  select: {
-    id: true,
-    title: true,
-    tag: {
-      select: {
-        code: true,
-      },
-    },
-    _count: {
-      select: {
-        learningUnits: true,
-      },
-    },
-  },
-  where: {
-    isTopic: true,
-  },
-});
-
-return {
-  username: user.name,
-  toDoList: toDoList.map((collection) => ({
-    ...collection,
-    numberOfPodcasts: collection._count.learningUnits,
-    dueDate: new Date(
-      Math.max(
-        ...collection.learningUnits
-          .map((lu) => lu.learningUnit.dueDate?.getTime() ?? 0)
-          .filter((time) => time > 0),
-      ),
-    ).toLocaleDateString('en-GB', {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric',
-    }),
-  })),
-  recommendedLearningUnits: recommendedLearningUnits.map((lu) => ({
-    ...lu,
-    status: getLearningUnitStatus({
-      isRequired: lu.isRequired,
-      dueDate: lu.dueDate,
-      learningJourney: lu.learningJourneys[0],
-    }),
-    tags: lu.tags.map((t) => t.tag),
-  })),
-  learningJourneys: learningJourneys.map((lj) => ({
-    ...lj,
-    learningUnit: {
-      ...lj.learningUnit,
-      tags: lj.learningUnit.tags.map((t) => t.tag),
-      collectionType: lj.learningUnit.collection!.type,
-      status: getLearningUnitStatus({
-        isRequired: lj.learningUnit.isRequired,
-        dueDate: lj.learningUnit.dueDate,
-        learningJourney: {
-          isCompleted: lj.isCompleted,
+    where: {
+      userId: user.id,
+      learningUnit: {
+        contentType: {
+          not: 'QUIZ',
         },
-      }),
+      },
     },
-  })),
-  collections: collections.map((collection) => ({
-    ...collection,
-    numberOfPodcasts: collection._count.learningUnits,
-  })),
-};
+    orderBy: {
+      createdAt: 'desc',
+    },
+    take: 3,
+  } satisfies LearningJourneyFindManyArgs;
+
+  let learningJourneys: LearningJourneyGetPayload<typeof learningJourneyArgs>[];
+  try {
+    learningJourneys = await db.learningJourney.findMany(learningJourneyArgs);
+  } catch (err) {
+    logger.error({ err }, 'Failed to retrieve learning journeys');
+    throw error(500);
+  }
+
+  const topicalCollections = await db.collection.findMany({
+    select: {
+      id: true,
+      title: true,
+      tag: {
+        select: {
+          code: true,
+        },
+      },
+      _count: {
+        select: {
+          learningUnits: true,
+        },
+      },
+    },
+    where: {
+      isTopic: true,
+    },
+  });
+
+  return {
+    username: user.name,
+    toDoList: toDoList.map((collection) => ({
+      ...collection,
+      numberOfPodcasts: collection._count.learningUnits,
+      dueDate: new Date(
+        Math.max(
+          ...collection.learningUnits
+            .map((lu) => lu.learningUnit.dueDate?.getTime() ?? 0)
+            .filter((time) => time > 0),
+        ),
+      ).toLocaleDateString('en-GB', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+      }),
+    })),
+    recommendedLearningUnits: recommendedLearningUnits.map((lu) => ({
+      ...lu,
+      status: getLearningUnitStatus({
+        isRequired: lu.isRequired,
+        dueDate: lu.dueDate,
+        learningJourney: lu.learningJourneys[0],
+      }),
+      tags: lu.tags.map((t) => t.tag),
+    })),
+    learningJourneys: learningJourneys.map((lj) => ({
+      ...lj,
+      learningUnit: {
+        ...lj.learningUnit,
+        tags: lj.learningUnit.tags.map((t) => t.tag),
+        status: getLearningUnitStatus({
+          isRequired: lj.learningUnit.isRequired,
+          dueDate: lj.learningUnit.dueDate,
+          learningJourney: {
+            isCompleted: lj.isCompleted,
+          },
+        }),
+      },
+    })),
+    collections: topicalCollections.map((collection) => ({
+      ...collection,
+      numberOfPodcasts: collection._count.learningUnits,
+    })),
+  };
 };

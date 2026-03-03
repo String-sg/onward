@@ -91,10 +91,6 @@ export const load: PageServerLoad = async (event) => {
     throw error(404);
   }
 
-  if (learningUnit.status !== 'PUBLISHED') {
-    throw error(404);
-  }
-
   let isQuizAvailable: boolean;
   try {
     isQuizAvailable =
@@ -246,7 +242,7 @@ export const load: PageServerLoad = async (event) => {
     url: learningUnit.contentURL,
     createdAt: learningUnit.createdAt,
     createdBy: learningUnit.createdBy,
-    collectionType: learningUnit.collection!.type,
+    contentType: learningUnit.contentType,
     isQuizAvailable,
     isRequired: learningUnit.isRequired,
     dueDate: learningUnit.dueDate,

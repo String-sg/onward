@@ -388,6 +388,7 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     id: uuidv7(),
     title: 'AI Quiz',
     contentType: ContentType.QUIZ,
+    contentURL: null,
     summary,
     objectives,
     createdBy: 'DXD Product Team',

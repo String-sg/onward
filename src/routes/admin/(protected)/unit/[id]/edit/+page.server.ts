@@ -6,6 +6,7 @@ import {
   db,
   type LearningUnitFindUniqueArgs,
   type LearningUnitGetPayload,
+  LearningUnitStatus,
   type LearningUnitUpdateArgs,
   type TagFindManyArgs,
   type TagGetPayload,
@@ -29,8 +30,8 @@ export const load: PageServerLoad = async (event) => {
     include: {
       tags: { include: { tag: true } },
       sources: { include: { tags: { include: { tag: true } } } },
-      questionAnswers: { orderBy: { order: 'asc' as const } },
-      collection: true,
+      questionAnswers: { orderBy: { order: 'asc' } },
+      collections: { include: { collection: true } },
     },
   } satisfies LearningUnitFindUniqueArgs;
 
@@ -38,7 +39,6 @@ export const load: PageServerLoad = async (event) => {
     select: {
       id: true,
       title: true,
-      type: true,
     },
     orderBy: {
       title: 'asc',
@@ -90,6 +90,7 @@ export const load: PageServerLoad = async (event) => {
   return {
     learningUnit: {
       ...learningUnit,
+      collectionId: learningUnit.collections[0]?.collectionId ?? '',
       dueDate: learningUnit.dueDate?.toISOString().split('T')[0] ?? null,
       sources: learningUnit.sources.map((s) => ({
         title: s.title,
@@ -138,11 +139,13 @@ export const actions = {
         summary: data.summary,
         objectives: data.objectives,
         createdBy: data.createdBy,
-        collectionId: data.collectionId,
+        collections: data.collectionId
+          ? { deleteMany: {}, create: { collection: { connect: { id: data.collectionId } } } }
+          : { deleteMany: {} },
         isRecommended: data.isRecommended,
         isRequired: data.isRequired,
         dueDate: data.dueDate,
-        status: 'DRAFT' as const,
+        status: LearningUnitStatus.DRAFT,
         tags: {
           deleteMany: {},
           create: data.tagIds.map((tagId) => ({ tagId })),
@@ -169,7 +172,8 @@ export const actions = {
       include: {
         tags: { include: { tag: true } },
         sources: { include: { tags: { include: { tag: true } } } },
-        questionAnswers: { orderBy: { order: 'asc' as const } },
+        questionAnswers: { orderBy: { order: 'asc' } },
+        collections: true,
       },
     } satisfies LearningUnitUpdateArgs;
 
@@ -186,6 +190,7 @@ export const actions = {
     return {
       learningUnit: {
         ...learningUnit,
+        collectionId: learningUnit.collections[0]?.collectionId ?? '',
         dueDate: learningUnit.dueDate ? learningUnit.dueDate.toISOString().split('T')[0] : null,
         sources: learningUnit.sources.map((s) => ({
           title: s.title,
@@ -228,11 +233,16 @@ export const actions = {
         summary: result.data.summary,
         objectives: result.data.objectives,
         createdBy: result.data.createdBy,
-        collectionId: result.data.collectionId,
+        collections: result.data.collectionId
+          ? {
+              deleteMany: {},
+              create: { collection: { connect: { id: result.data.collectionId } } },
+            }
+          : { deleteMany: {} },
         isRecommended: result.data.isRecommended,
         isRequired: result.data.isRequired,
         dueDate: result.data.dueDate,
-        status: 'PUBLISHED' as const,
+        status: LearningUnitStatus.PUBLISHED,
         tags: {
           deleteMany: {},
           create: result.data.tagIds.map((tagId) => ({ tagId })),
