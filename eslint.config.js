@@ -52,6 +52,7 @@ export default ts.config(
         },
       ],
       'no-console': ['error', { allow: ['warn', 'error'] }],
+      'svelte/no-navigation-without-resolve': 'off',
     },
   },
 
