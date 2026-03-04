@@ -38,11 +38,11 @@ const routeProtectionHandle: Handle = async ({ event, resolve }) => {
   }
 
   if (!event.locals.session.isAuthenticated) {
-    return redirect(303, `/admin/auth/google?return_to=${encodeURIComponent(event.url.pathname)}`);
+    return redirect(303, '/admin');
   }
 
   if (!event.locals.session.user) {
-    return redirect(303, '/admin/auth/google?return_to=%2Fadmin');
+    return redirect(303, '/admin');
   }
 
   const user = event.locals.session.user;
