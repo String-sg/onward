@@ -79,9 +79,7 @@ export const load: PageServerLoad = async (event) => {
 
   let learningUnit: LearningUnitGetPayload<typeof learningUnitArgs> | null;
   try {
-    learningUnit = (await db.learningUnit.findUnique(learningUnitArgs)) as LearningUnitGetPayload<
-      typeof learningUnitArgs
-    > | null;
+    learningUnit = await db.learningUnit.findUnique(learningUnitArgs);
   } catch (err) {
     logger.error({ err }, 'Failed to retrieve learning unit');
     throw error(500);

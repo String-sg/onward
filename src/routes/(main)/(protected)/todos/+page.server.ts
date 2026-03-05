@@ -83,9 +83,7 @@ export const load: PageServerLoad = async (event) => {
 
   let learningUnits: LearningUnitGetPayload<typeof learningUnitsArgs>[];
   try {
-    learningUnits = (await db.learningUnit.findMany(learningUnitsArgs)) as LearningUnitGetPayload<
-      typeof learningUnitsArgs
-    >[];
+    learningUnits = await db.learningUnit.findMany(learningUnitsArgs);
   } catch (err) {
     logger.error({ err }, 'Failed to retrieve To-do Learning Units');
     throw error(500);
