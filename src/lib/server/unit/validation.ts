@@ -423,63 +423,57 @@ export function validateLearningUnit(data: FormData):
     if (!Array.isArray(questionAnswers)) {
       errors.questionAnswers = { message: ERROR_MESSAGES.INVALID_DATA(), items: [] };
     } else {
-      if (questionAnswers.length === 0) {
-        errors.questionAnswers = { message: ERROR_MESSAGES.ARRAY_MIN('question', 1), items: [] };
-      } else {
-        const questionAnswerItemErrors: Record<string, string>[] = [];
-        for (let i = 0; i < questionAnswers.length; i++) {
-          const questionAnswer = questionAnswers[i];
-          const itemError: Record<string, string> = {};
+      const questionAnswerItemErrors: Record<string, string>[] = [];
+      for (let i = 0; i < questionAnswers.length; i++) {
+        const questionAnswer = questionAnswers[i];
+        const itemError: Record<string, string> = {};
 
-          if (
-            !questionAnswer.question ||
-            typeof questionAnswer.question !== 'string' ||
-            questionAnswer.question.trim().length === 0
-          ) {
-            itemError.question = ERROR_MESSAGES.FIELD_REQUIRED;
-          }
+        if (
+          !questionAnswer.question ||
+          typeof questionAnswer.question !== 'string' ||
+          questionAnswer.question.trim().length === 0
+        ) {
+          itemError.question = ERROR_MESSAGES.FIELD_REQUIRED;
+        }
 
-          if (!Array.isArray(questionAnswer.options) || questionAnswer.options.length < 2) {
-            itemError.options = ERROR_MESSAGES.ARRAY_MIN('Option', 2);
-          } else {
-            const hasBlankOptions = questionAnswer.options.some(
-              (opt: string) => !opt || opt.trim().length === 0,
-            );
-            if (hasBlankOptions) {
-              itemError.options = ERROR_MESSAGES.FIELD_REQUIRED;
-            }
-          }
-
-          const answerIndex =
-            typeof questionAnswer.answer === 'string'
-              ? Number(questionAnswer.answer)
-              : questionAnswer.answer;
-          if (typeof answerIndex !== 'number' || isNaN(answerIndex)) {
-            itemError.answer = ERROR_MESSAGES.FIELD_REQUIRED;
-          } else {
-            questionAnswer.answer = answerIndex;
-          }
-
-          if (
-            !questionAnswer.explanation ||
-            typeof questionAnswer.explanation !== 'string' ||
-            questionAnswer.explanation.trim().length === 0
-          ) {
-            itemError.explanation = ERROR_MESSAGES.FIELD_REQUIRED;
-          }
-
-          if (Object.keys(itemError).length > 0) {
-            questionAnswerItemErrors[i] = itemError;
+        if (!Array.isArray(questionAnswer.options) || questionAnswer.options.length < 2) {
+          itemError.options = ERROR_MESSAGES.ARRAY_MIN('Option', 2);
+        } else {
+          const hasBlankOptions = questionAnswer.options.some(
+            (opt: string) => !opt || opt.trim().length === 0,
+          );
+          if (hasBlankOptions) {
+            itemError.options = ERROR_MESSAGES.FIELD_REQUIRED;
           }
         }
 
-        if (questionAnswerItemErrors.length > 0) {
-          errors.questionAnswers = { message: '', items: questionAnswerItemErrors };
+        const answerIndex =
+          typeof questionAnswer.answer === 'string'
+            ? Number(questionAnswer.answer)
+            : questionAnswer.answer;
+        if (typeof answerIndex !== 'number' || isNaN(answerIndex)) {
+          itemError.answer = ERROR_MESSAGES.FIELD_REQUIRED;
+        } else {
+          questionAnswer.answer = answerIndex;
+        }
+
+        if (
+          !questionAnswer.explanation ||
+          typeof questionAnswer.explanation !== 'string' ||
+          questionAnswer.explanation.trim().length === 0
+        ) {
+          itemError.explanation = ERROR_MESSAGES.FIELD_REQUIRED;
+        }
+
+        if (Object.keys(itemError).length > 0) {
+          questionAnswerItemErrors[i] = itemError;
         }
       }
+
+      if (questionAnswerItemErrors.length > 0) {
+        errors.questionAnswers = { message: '', items: questionAnswerItemErrors };
+      }
     }
-  } else {
-    errors.questionAnswers = { message: ERROR_MESSAGES.ARRAY_MIN('Question', 1), items: [] };
   }
 
   if (Object.keys(errors).length > 0) {
