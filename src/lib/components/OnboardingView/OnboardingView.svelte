@@ -296,11 +296,81 @@
                       onchange={(e) => handleTopicChange(title, e.currentTarget.checked)}
                     />
 
-                    <img
-                      src="/src/lib/assets/collections/{key}.png"
-                      alt={title}
-                      class="h-24 w-20"
-                    />
+                    <div class="flex h-24 w-20 shrink-0 items-center justify-center">
+                      {#if key === 'artificial-intelligence'}
+                        <enhanced:img
+                          src="$lib/assets/collections/artificial-intelligence.png"
+                          alt={title}
+                          class="max-h-full max-w-full object-contain"
+                        />
+                      {:else if key === 'career-growth'}
+                        <enhanced:img
+                          src="$lib/assets/collections/career-growth.png"
+                          alt={title}
+                          class="max-h-full max-w-full object-contain"
+                        />
+                      {:else if key === 'educator-voices'}
+                        <enhanced:img
+                          src="$lib/assets/collections/educator-voices.png"
+                          alt={title}
+                          class="max-h-full max-w-full object-contain"
+                        />
+                      {:else if key === 'employee-engagement'}
+                        <enhanced:img
+                          src="$lib/assets/collections/employee-engagement.png"
+                          alt={title}
+                          class="max-h-full max-w-full object-contain"
+                        />
+                      {:else if key === 'in-the-news'}
+                        <enhanced:img
+                          src="$lib/assets/collections/in-the-news.png"
+                          alt={title}
+                          class="max-h-full max-w-full object-contain"
+                        />
+                      {:else if key === 'infrastructure'}
+                        <enhanced:img
+                          src="$lib/assets/collections/infrastructure.png"
+                          alt={title}
+                          class="max-h-full max-w-full object-contain"
+                        />
+                      {:else if key === 'innovation'}
+                        <enhanced:img
+                          src="$lib/assets/collections/innovation.png"
+                          alt={title}
+                          class="max-h-full max-w-full object-contain"
+                        />
+                      {:else if key === 'learn-with-bob'}
+                        <enhanced:img
+                          src="$lib/assets/collections/learn-with-bob.png"
+                          alt={title}
+                          class="max-h-full max-w-full object-contain"
+                        />
+                      {:else if key === 'productivity'}
+                        <enhanced:img
+                          src="$lib/assets/collections/productivity.png"
+                          alt={title}
+                          class="max-h-full max-w-full object-contain"
+                        />
+                      {:else if key === 'student-development'}
+                        <enhanced:img
+                          src="$lib/assets/collections/student-development.png"
+                          alt={title}
+                          class="max-h-full max-w-full object-contain"
+                        />
+                      {:else if key === 'student-wellbeing'}
+                        <enhanced:img
+                          src="$lib/assets/collections/student-wellbeing.png"
+                          alt={title}
+                          class="max-h-full max-w-full object-contain"
+                        />
+                      {:else if key === 'wellbeing'}
+                        <enhanced:img
+                          src="$lib/assets/collections/wellbeing.png"
+                          alt={title}
+                          class="max-h-full max-w-full object-contain"
+                        />
+                      {/if}
+                    </div>
 
                     <div class="flex flex-col gap-y-1 text-left">
                       <span class="text-lg font-medium">{title}</span>
