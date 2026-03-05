@@ -3,6 +3,7 @@ import { error, fail, redirect } from '@sveltejs/kit';
 import {
   type CollectionFindManyArgs,
   type CollectionGetPayload,
+  ContentType,
   db,
   type LearningUnitCreateArgs,
   type LearningUnitGetPayload,
@@ -73,6 +74,7 @@ export const load: PageServerLoad = async (event) => {
     collections,
     contentTags,
     sourceTags,
+    contentTypes: Object.values(ContentType),
   };
 };
 

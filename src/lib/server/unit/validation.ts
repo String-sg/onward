@@ -81,7 +81,7 @@ export function validateLearningUnitDraft(
   let contentType: ContentType;
   if (!contentTypeRaw || typeof contentTypeRaw !== 'string' || contentTypeRaw.trim().length === 0) {
     errors.contentType = { message: ERROR_MESSAGES.FIELD_REQUIRED };
-  } else if (contentTypeRaw !== ContentType.PODCAST) {
+  } else if (!(Object.values(ContentType) as string[]).includes(contentTypeRaw)) {
     errors.contentType = { message: ERROR_MESSAGES.INVALID_OPTION };
   } else {
     contentType = contentTypeRaw as ContentType;
@@ -287,7 +287,7 @@ export function validateLearningUnit(data: FormData):
   const contentType = data.get('contentType');
   if (!contentType || typeof contentType !== 'string') {
     errors.contentType = { message: ERROR_MESSAGES.FIELD_REQUIRED };
-  } else if (contentType !== 'PODCAST') {
+  } else if (!(Object.values(ContentType) as string[]).includes(contentType)) {
     errors.contentType = { message: ERROR_MESSAGES.INVALID_OPTION };
   }
 

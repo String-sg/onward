@@ -7,9 +7,9 @@
   import Paginator from '$lib/components/Paginator/Paginator.svelte';
   import { Table, type TableColumn } from '$lib/components/Table/index.js';
 
-  import type { PageData } from './$types';
+  import type { PageProps } from './$types';
 
-  let { data }: { data: PageData } = $props();
+  let { data }: PageProps = $props();
 
   const handlePageChange = async (pageNumber: number) => {
     const url = new URL(page.url);
