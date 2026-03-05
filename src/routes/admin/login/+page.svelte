@@ -36,7 +36,7 @@
 
       <a
         data-sveltekit-reload
-        href="/admin/auth/google?return_to=%2Fadmin%2Fdashboard"
+        href="/admin/auth/google?return_to=%2Fadmin"
         class=" w-full cursor-pointer rounded-full border border-slate-300 bg-slate-100 px-4 py-3 text-center text-slate-950 shadow-sm transition-colors hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed"
       >
         Sign in

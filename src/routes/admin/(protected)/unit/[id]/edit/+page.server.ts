@@ -279,6 +279,6 @@ export const actions = {
 
     logger.info({ learningUnitId: event.params.id }, 'Learning unit published successfully');
 
-    redirect(303, '/admin/dashboard');
+    redirect(303, '/admin');
   },
 } satisfies Actions;
