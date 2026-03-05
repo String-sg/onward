@@ -1,4 +1,5 @@
 import { redirect } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
 
 import { getLearningUnitStatus } from '$lib/helpers/index.js';
 import {
@@ -61,9 +62,13 @@ export const load: PageServerLoad = async (event) => {
     ],
   } satisfies LearningUnitFindManyArgs;
 
-  const learningUnits = (await db.learningUnit.findMany(
-    learningUnitsArgs,
-  )) as LearningUnitGetPayload<typeof learningUnitsArgs>[];
+  let learningUnits: LearningUnitGetPayload<typeof learningUnitsArgs>[];
+  try {
+    learningUnits = await db.learningUnit.findMany(learningUnitsArgs);
+  } catch (err) {
+    logger.error({ err }, 'Error fetching learning units');
+    throw error(500);
+  }
 
   return {
     learningUnits: learningUnits.map((unit) => ({
