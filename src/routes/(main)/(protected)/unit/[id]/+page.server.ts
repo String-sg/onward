@@ -19,6 +19,7 @@ import {
   type LearningUnitSentimentsUpsertArgs,
   type LearningUnitSourcesFindManyArgs,
   type LearningUnitSourcesGetPayload,
+  LearningUnitStatus,
 } from '$lib/server/db';
 
 import type { Actions, PageServerLoad } from './$types';
@@ -70,7 +71,10 @@ export const load: PageServerLoad = async (event) => {
         },
       },
     },
-    where: { id: event.params.id },
+    where: {
+      id: event.params.id,
+      status: LearningUnitStatus.PUBLISHED,
+    },
   } satisfies LearningUnitFindUniqueArgs;
 
   let learningUnit: LearningUnitGetPayload<typeof learningUnitArgs> | null;
@@ -236,8 +240,8 @@ export const load: PageServerLoad = async (event) => {
     url: learningUnit.contentURL,
     createdAt: learningUnit.createdAt,
     createdBy: learningUnit.createdBy,
-    isQuizAvailable,
     contentType: learningUnit.contentType,
+    isQuizAvailable,
     isRequired: learningUnit.isRequired,
     dueDate: learningUnit.dueDate,
     lastCheckpoint: Number(learningJourney?.lastCheckpoint),

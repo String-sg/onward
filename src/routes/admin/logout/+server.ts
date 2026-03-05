@@ -8,17 +8,17 @@ export const GET: RequestHandler = async (event) => {
   const { user } = event.locals.session;
   if (!user) {
     logger.warn('User not authenticated');
-    return redirect(303, '/admin');
+    return redirect(303, '/admin/login');
   }
 
   try {
     await adminAuth.signOut(event);
   } catch (err) {
     logger.error({ err, email: user.email }, 'Failed to sign out user');
-    return redirect(302, '/admin');
+    return redirect(302, '/admin/login');
   }
 
   logger.info({ email: user.email }, 'Successfully signed out user');
 
-  return redirect(302, '/admin');
+  return redirect(302, '/admin/login');
 };

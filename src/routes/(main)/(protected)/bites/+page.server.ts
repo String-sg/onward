@@ -1,7 +1,13 @@
 import { redirect } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
 
 import { getLearningUnitStatus } from '$lib/helpers/index.js';
-import { db } from '$lib/server/db';
+import {
+  db,
+  type LearningUnitFindManyArgs,
+  type LearningUnitGetPayload,
+  LearningUnitStatus,
+} from '$lib/server/db';
 
 import type { PageServerLoad } from './$types';
 
@@ -14,7 +20,7 @@ export const load: PageServerLoad = async (event) => {
     throw redirect(303, '/login');
   }
 
-  const learningUnits = await db.learningUnit.findMany({
+  const learningUnitsArgs = {
     select: {
       id: true,
       createdAt: true,
@@ -43,6 +49,9 @@ export const load: PageServerLoad = async (event) => {
         },
       },
     },
+    where: {
+      status: LearningUnitStatus.PUBLISHED,
+    },
     orderBy: [
       {
         isRecommended: 'desc',
@@ -51,7 +60,15 @@ export const load: PageServerLoad = async (event) => {
         createdAt: 'desc',
       },
     ],
-  });
+  } satisfies LearningUnitFindManyArgs;
+
+  let learningUnits: LearningUnitGetPayload<typeof learningUnitsArgs>[];
+  try {
+    learningUnits = await db.learningUnit.findMany(learningUnitsArgs);
+  } catch (err) {
+    logger.error({ err }, 'Error fetching learning units');
+    throw error(500);
+  }
 
   return {
     learningUnits: learningUnits.map((unit) => ({

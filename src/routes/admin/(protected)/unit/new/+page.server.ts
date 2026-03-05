@@ -3,13 +3,15 @@ import { error, fail, redirect } from '@sveltejs/kit';
 import {
   type CollectionFindManyArgs,
   type CollectionGetPayload,
+  ContentType,
   db,
   type LearningUnitCreateArgs,
   type LearningUnitGetPayload,
+  LearningUnitStatus,
   type TagFindManyArgs,
   type TagGetPayload,
 } from '$lib/server/db.js';
-import { validateLearningUnit } from '$lib/server/unit/form.js';
+import { validateLearningUnit, validateLearningUnitDraft } from '$lib/server/unit/validation.js';
 
 import type { Actions, PageServerLoad } from './$types';
 
@@ -72,77 +74,158 @@ export const load: PageServerLoad = async (event) => {
     collections,
     contentTags,
     sourceTags,
+    contentTypes: Object.values(ContentType),
   };
 };
 
 export const actions = {
-  default: async (event) => {
+  saveDraft: async (event) => {
     if (!event.locals.session.user) {
       redirect(303, '/admin');
     }
 
     const logger = event.locals.logger.child({
       userID: event.locals.session.user.id,
-      handler: 'action_create_learning_unit',
+      handler: 'action_create_draft_learning_unit',
     });
 
     const formData = await event.request.formData();
-    const result = validateLearningUnit(formData);
+    const result = validateLearningUnitDraft(formData);
+
     if (!result.success) {
       return fail(400, { errors: result.errors });
     }
 
-    const learningUnitCreateArgs = {
+    const { data } = result;
+
+    const createArgs = {
       data: {
-        title: result.data.title,
-        contentType: result.data.contentType,
-        contentURL: result.data.contentURL,
-        summary: result.data.summary,
-        objectives: result.data.objectives,
-        createdBy: result.data.createdBy,
-        isRecommended: result.data.isRecommended,
-        isRequired: result.data.isRequired,
-        dueDate: result.data.dueDate,
-        tags: {
-          create: result.data.tagIds.map((tagId) => ({
-            tagId,
-          })),
-        },
-        sources: {
-          create: result.data.sources.map((source) => ({
-            title: source.title,
-            sourceURL: source.sourceURL,
-            tags: source.tagId
-              ? {
-                  create: {
-                    tagId: source.tagId,
-                  },
-                }
-              : undefined,
-          })),
-        },
-        questionAnswers: {
-          create: result.data.questionAnswers.map((q, i) => ({
-            question: q.question,
-            options: q.options,
-            answer: q.answer,
-            explanation: q.explanation,
-            order: i + 1,
-          })),
-        },
+        status: LearningUnitStatus.DRAFT,
+        title: data.title,
+        contentType: data.contentType,
+        contentURL: data.contentURL,
+        summary: data.summary,
+        objectives: data.objectives,
+        createdBy: data.createdBy,
+        collections: data.collectionId
+          ? { create: { collection: { connect: { id: data.collectionId } } } }
+          : undefined,
+        isRecommended: data.isRecommended,
+        isRequired: data.isRequired,
+        dueDate: data.dueDate,
+        tags:
+          data.tagIds.length > 0 ? { create: data.tagIds.map((tagId) => ({ tagId })) } : undefined,
+        sources:
+          data.sources.length > 0
+            ? {
+                create: data.sources.map((s) => ({
+                  title: s.title,
+                  sourceURL: s.sourceURL,
+                  tags: s.tagId ? { create: { tagId: s.tagId } } : undefined,
+                })),
+              }
+            : undefined,
+        questionAnswers:
+          data.questionAnswers.length > 0
+            ? {
+                create: data.questionAnswers.map((q, i) => ({
+                  question: q.question,
+                  options: q.options,
+                  answer: q.answer,
+                  explanation: q.explanation,
+                  order: i + 1,
+                })),
+              }
+            : undefined,
       },
       select: { id: true },
     } satisfies LearningUnitCreateArgs;
 
-    let learningUnit: LearningUnitGetPayload<typeof learningUnitCreateArgs>;
+    let newUnit: LearningUnitGetPayload<typeof createArgs>;
     try {
-      learningUnit = await db.learningUnit.create(learningUnitCreateArgs);
+      newUnit = await db.learningUnit.create(createArgs);
     } catch (err) {
-      logger.error({ err }, 'Failed to create learning unit');
+      logger.error({ err }, 'Failed to create draft learning unit');
       throw error(500);
     }
-    logger.info({ learningUnitId: learningUnit.id }, 'Learning unit created successfully');
 
-    redirect(303, '/admin/dashboard');
+    logger.info({ learningUnitId: newUnit.id }, 'Draft learning unit created successfully');
+
+    redirect(303, `/admin/unit/${newUnit.id}/edit`);
+  },
+
+  publish: async (event) => {
+    if (!event.locals.session.user) {
+      redirect(303, '/admin');
+    }
+
+    const logger = event.locals.logger.child({
+      userID: event.locals.session.user.id,
+      handler: 'action_create_publish_learning_unit',
+    });
+
+    const formData = await event.request.formData();
+    const result = validateLearningUnit(formData);
+
+    if (!result.success) {
+      return fail(400, { errors: result.errors });
+    }
+
+    const { data } = result;
+
+    const createArgs = {
+      data: {
+        status: LearningUnitStatus.PUBLISHED,
+        title: data.title,
+        contentType: data.contentType,
+        contentURL: data.contentURL,
+        summary: data.summary,
+        objectives: data.objectives,
+        createdBy: data.createdBy,
+        collections: data.collectionId
+          ? { create: { collection: { connect: { id: data.collectionId } } } }
+          : undefined,
+        isRecommended: data.isRecommended,
+        isRequired: data.isRequired,
+        dueDate: data.dueDate,
+        tags:
+          data.tagIds.length > 0 ? { create: data.tagIds.map((tagId) => ({ tagId })) } : undefined,
+        sources:
+          data.sources.length > 0
+            ? {
+                create: data.sources.map((s) => ({
+                  title: s.title,
+                  sourceURL: s.sourceURL,
+                  tags: s.tagId ? { create: { tagId: s.tagId } } : undefined,
+                })),
+              }
+            : undefined,
+        questionAnswers:
+          data.questionAnswers.length > 0
+            ? {
+                create: data.questionAnswers.map((q, i) => ({
+                  question: q.question,
+                  options: q.options,
+                  answer: q.answer,
+                  explanation: q.explanation,
+                  order: i + 1,
+                })),
+              }
+            : undefined,
+      },
+      select: { id: true },
+    } satisfies LearningUnitCreateArgs;
+
+    let publishedUnit: LearningUnitGetPayload<typeof createArgs>;
+    try {
+      publishedUnit = await db.learningUnit.create(createArgs);
+    } catch (err) {
+      logger.error({ err }, 'Failed to publish learning unit');
+      throw error(500);
+    }
+
+    logger.info({ learningUnitId: publishedUnit.id }, 'Learning unit published successfully');
+
+    redirect(303, '/admin');
   },
 } satisfies Actions;

@@ -25,24 +25,20 @@ const requestLoggingHandle: Handle = async ({ event, resolve }) => {
  * - Authenticated users who are not 'admin' are redirected to `/admin/auth/google?return_to=%2Fadmin`.
  */
 const routeProtectionHandle: Handle = async ({ event, resolve }) => {
-  if (!event.url.pathname.startsWith('/admin')) {
-    return redirect(303, '/admin/auth/google?return_to=%2Fadmin');
-  }
-
   if (
     event.url.pathname === '/admin/auth/google' ||
     event.url.pathname === '/admin/auth/google/callback' ||
-    event.url.pathname === '/admin'
+    event.url.pathname === '/admin/login'
   ) {
     return resolve(event);
   }
 
   if (!event.locals.session.isAuthenticated) {
-    return redirect(303, '/admin');
+    return redirect(303, '/admin/login');
   }
 
   if (!event.locals.session.user) {
-    return redirect(303, '/admin');
+    return redirect(303, '/admin/login');
   }
 
   const user = event.locals.session.user;

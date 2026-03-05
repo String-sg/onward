@@ -7,6 +7,7 @@ import {
   type LearningJourneyUpsertArgs,
   type LearningUnitFindUniqueArgs,
   type LearningUnitGetPayload,
+  LearningUnitStatus,
 } from '$lib/server/db';
 
 import type { Actions, PageServerLoad } from './$types';
@@ -26,6 +27,8 @@ export const load: PageServerLoad = async (event) => {
 
   const learningUnitArgs = {
     select: {
+      id: true,
+      status: true,
       title: true,
       isRequired: true,
       dueDate: true,
@@ -45,6 +48,7 @@ export const load: PageServerLoad = async (event) => {
     },
     where: {
       id: event.params.id,
+      status: LearningUnitStatus.PUBLISHED,
     },
   } satisfies LearningUnitFindUniqueArgs;
 
@@ -55,7 +59,6 @@ export const load: PageServerLoad = async (event) => {
     logger.error({ err }, 'Failed to retrieve learning unit with quiz data');
     throw error(500);
   }
-
   if (!learningUnit) {
     throw error(404);
   }

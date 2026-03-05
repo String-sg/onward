@@ -317,7 +317,6 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     summary,
     objectives,
     createdBy: 'DXD Product Team',
-    isRequired: true,
     dueDate: new Date('2026-02-12'), // Required
     collections: {
       create: [
@@ -389,6 +388,7 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     id: uuidv7(),
     title: 'AI Quiz',
     contentType: ContentType.QUIZ,
+    contentURL: null,
     summary,
     objectives,
     createdBy: 'DXD Product Team',

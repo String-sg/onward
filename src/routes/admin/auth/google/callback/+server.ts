@@ -119,7 +119,7 @@ export const GET: RequestHandler = async (event) => {
   }
 
   const rawState = JSON.parse(Buffer.from(state, 'base64url').toString('utf-8'));
-  const returnTo = rawState['return_to'] || '/admin/dashboard';
+  const returnTo = rawState['return_to'] || '/admin';
 
   logger.info({ email: userAdmin.email }, 'Successfully signed in admin');
 

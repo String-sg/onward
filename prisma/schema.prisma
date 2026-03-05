@@ -66,15 +66,16 @@ model LearningUnit {
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
 
   // Domain-Specific Fields.
-  title         String      @map("title")
-  contentType   ContentType @map("content_type")
-  contentURL    String?     @map("content_url")
-  summary       String      @map("summary")
-  objectives    String      @map("objectives")
-  createdBy     String      @map("created_by")
-  isRecommended Boolean     @default(false) @map("is_recommended")
-  isRequired    Boolean     @default(false) @map("is_required")
-  dueDate       DateTime?   @map("due_date") @db.Date
+  title         String             @map("title")
+  contentType   ContentType        @map("content_type")
+  summary       String             @map("summary")
+  objectives    String             @map("objectives")
+  createdBy     String             @map("created_by")
+  isRecommended Boolean            @default(false) @map("is_recommended")
+  isRequired    Boolean            @default(false) @map("is_required")
+  status        LearningUnitStatus @default(DRAFT) @map("status")
+  contentURL    String?            @map("content_url")
+  dueDate       DateTime?          @map("due_date") @db.Date
 
   // Relations.
   collections      LearningUnitCollection[]
@@ -138,6 +139,11 @@ model LearningUnitSources {
 enum ContentType {
   PODCAST
   QUIZ
+}
+
+enum LearningUnitStatus {
+  DRAFT
+  PUBLISHED
 }
 
 model LearningJourney {

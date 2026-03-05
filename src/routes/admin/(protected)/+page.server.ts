@@ -18,6 +18,7 @@ export const load: PageServerLoad = async (event) => {
     select: {
       id: true,
       title: true,
+      status: true,
       createdBy: true,
       createdAt: true,
       isRecommended: true,

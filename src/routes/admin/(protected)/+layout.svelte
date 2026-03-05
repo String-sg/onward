@@ -6,7 +6,7 @@
 
   let { children } = $props();
 
-  const navItems = [{ href: '/admin/dashboard', label: 'Learning Units', icon: BookOpen }];
+  const navItems = [{ href: '/admin', label: 'Learning Units', icon: BookOpen }];
 </script>
 
 <div class="flex h-screen overflow-hidden">
