@@ -119,13 +119,6 @@
         await update({ reset: false });
       }
     };
-
-  export const snapshot = {
-    capture: () => $state.snapshot(unit),
-    restore: (value: typeof unit) => {
-      unit = value;
-    },
-  };
 </script>
 
 <div class="mx-auto max-w-4xl px-4 py-8">
