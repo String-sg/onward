@@ -1,3 +1,28 @@
+<script module lang="ts">
+  export interface UnitState {
+    title: string;
+    contentType: string;
+    contentURL: string;
+    collectionId: string;
+    summary: string;
+    objectives: string;
+    createdBy: string;
+    selectedTagId: string;
+    isRecommended: boolean;
+    isRequired: boolean;
+    dueDate: string;
+    sources: { title: string; sourceURL: string; tagId: string }[];
+    questionAnswers: { question: string; options: string[]; answer: number; explanation: string }[];
+  }
+
+  export interface UnitData {
+    collections: { id: string; title: string }[];
+    contentTags: { id: string; label: string }[];
+    sourceTags: { id: string; label: string }[];
+    contentTypes: string[];
+  }
+</script>
+
 <script lang="ts">
   import type { SubmitFunction } from '@sveltejs/kit';
 
@@ -11,12 +36,10 @@
   import { TextArea } from '$lib/components/TextArea';
   import { TextInput } from '$lib/components/TextInput';
 
-  import type { FormErrors, UnitData, UnitState } from './index.js';
-
-  interface Props {
+  export interface Props {
     unit: UnitState;
     data: UnitData;
-    form: { errors?: FormErrors } | null;
+    form: { errors?: Record<string, { message: string; items?: Record<string, string>[] }> } | null;
     onsubmit: SubmitFunction;
   }
 

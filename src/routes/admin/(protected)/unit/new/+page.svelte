@@ -1,14 +1,13 @@
 <script lang="ts">
   import type { SubmitFunction } from '@sveltejs/kit';
 
-  import type { UnitState } from '$lib/components/LearningUnitForm';
   import { LearningUnitForm } from '$lib/components/LearningUnitForm';
 
   import type { PageProps } from './$types';
 
   let { data, form }: PageProps = $props();
 
-  let unit: UnitState = $state({
+  let unit = $state({
     title: '',
     contentType: '',
     contentURL: '',

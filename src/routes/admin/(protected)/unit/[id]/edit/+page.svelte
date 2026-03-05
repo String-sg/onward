@@ -2,14 +2,13 @@
   import type { SubmitFunction } from '@sveltejs/kit';
   import { untrack } from 'svelte';
 
-  import type { UnitState } from '$lib/components/LearningUnitForm';
   import { LearningUnitForm } from '$lib/components/LearningUnitForm';
 
   import type { ActionData, PageProps } from './$types';
 
   let { data, form }: PageProps = $props();
 
-  let unit: UnitState = $state(
+  let unit = $state(
     untrack(() => {
       return {
         title: data.learningUnit.title ?? '',
