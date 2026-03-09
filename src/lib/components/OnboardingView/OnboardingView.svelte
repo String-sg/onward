@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { ArrowLeft, X } from '@lucide/svelte';
+  import { ArrowLeft } from '@lucide/svelte';
   import { fly } from 'svelte/transition';
 
   import { goto, invalidateAll } from '$app/navigation';
@@ -208,7 +208,7 @@
         <div class="flex flex-col items-center gap-y-3 px-4 pt-3">
           <div class="flex flex-col text-center text-3xl">
             <span>
-              {`Hi${page.data.username ? ` ${page.data.username}` : ''}!`}
+              {`Hi${page.data.username ? ` ${page.data.username}` : ''}, `}
             </span>
             <span>Welcome to Glow!</span>
           </div>
@@ -555,25 +555,7 @@
       class="fixed inset-0 z-200 bg-slate-100"
       transition:fly={{ duration: 300, x: '100%', opacity: 1 }}
     >
-      <header class="fixed inset-x-0 top-0 z-250 flex backdrop-blur-sm">
-        <div
-          class={[
-            'inset-x-0 top-full h-px bg-transparent transition-colors duration-300',
-            !isWithinViewport.current && '!bg-slate-950/7.5',
-          ]}
-        ></div>
-
-        <div class="mx-auto flex w-full max-w-5xl items-center justify-end px-4 py-3">
-          <button
-            onclick={handleClose}
-            class="cursor-pointer rounded-full p-4 transition-colors hover:bg-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed"
-          >
-            <X />
-          </button>
-        </div>
-      </header>
-
-      <div class="relative mx-auto flex h-full w-full max-w-5xl flex-col pt-23">
+      <div class="relative mx-auto flex h-full w-full max-w-5xl flex-col pt-3">
         <div bind:this={target} class="absolute inset-x-0 top-0 h-px"></div>
 
         <div class="flex flex-1 flex-col gap-y-6 overflow-y-auto px-4 py-3">
@@ -593,11 +575,11 @@
             </div>
           </div>
 
-          <div class="flex w-full flex-1 flex-col items-center justify-center overflow-hidden">
+          <div class="flex w-full flex-1 flex-col items-center justify-center overflow-x-hidden">
             <enhanced:img
               src="$lib/assets/cycling-man.png"
               alt="Man cycling"
-              class="max-w-[500px]"
+              class="max-h-[40vh] max-w-[500px] sm:max-h-[45vh] md:max-h-[50vh]"
             />
           </div>
         </div>
