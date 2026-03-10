@@ -240,11 +240,7 @@
       >
         {#snippet children(questionAnswer, index, errors)}
           <FormField label="Question {index + 1}" id="question-{index}" error={errors?.question}>
-            <TextInput
-              type="text"
-              bind:value={questionAnswer.question}
-              placeholder="Enter your question"
-            />
+            <TextArea bind:value={questionAnswer.question} placeholder="Enter your question" />
           </FormField>
 
           <AddableField

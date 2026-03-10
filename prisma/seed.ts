@@ -270,8 +270,9 @@ const questionAnswers: Prisma.QuestionAnswerCreateManyLearningUnitInput[] = [
     order: 0,
   },
   {
-    question:
-      'This is a super long question that is going to wrap around to the next line and then some more text to see how it looks. It should be long enough to wrap around to the next line and then some more text to see how it looks. I want to see how it looks when it wraps around to the next line and then some more text to see how it looks.',
+    question: `This is a super long question that is going to wrap around to the next line and then some more text to see how it looks. 
+- It should be long enough to wrap around to the next line and then some more text to see how it looks.
+- I want to see how it looks when it wraps around to the next line and then some more text to see how it looks.`,
     options: ['Option 1', 'Option 2', 'Option 3', 'Option 4'],
     answer: 1,
     explanation:

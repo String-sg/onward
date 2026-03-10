@@ -1,6 +1,8 @@
 <script lang="ts">
   import { ArrowLeft, X } from '@lucide/svelte';
   import type { SubmitFunction } from '@sveltejs/kit';
+  import DOMPurify from 'dompurify';
+  import { marked } from 'marked';
   import { onMount } from 'svelte';
 
   import { enhance } from '$app/forms';
@@ -118,7 +120,10 @@
 
     {#each data.questionAnswers as q, qi (q.id)}
       <div class={['flex flex-col gap-y-4', currentQuestionAnswerIndex !== qi && 'hidden']}>
-        <span id="question-{qi}" class="text-xl font-medium">{q.question}</span>
+        <span id="question-{qi}" class="prose prose-slate text-xl font-medium">
+          <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+          {@html DOMPurify.sanitize(marked.parse(q.question, { async: false }))}
+        </span>
 
         <div class="flex flex-col gap-y-2" role="radiogroup" aria-labelledby="question-{qi}">
           {#each q.options as o, oi (o)}
