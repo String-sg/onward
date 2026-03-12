@@ -1,0 +1,115 @@
+config:
+  target: '<target-url>'
+  http:
+    defaults:
+      headers:
+        Origin: '<target-url>'
+      cookie:
+        learner.session: '<learner-session-cookie>'
+        learner.csrf: '<learner-csrf-cookie>'
+
+  variables:
+    unitId: '<published-unit-id>'
+    podcastKey: '<unit-podcast-s3-key>'
+
+  phases:
+    - name: 'Warm up'
+      duration: 10
+      arrivalRate: 1
+    - name: 'Ramp up'
+      duration: '2m'
+      arrivalRate: 1
+      rampTo: 3
+    - name: 'Sustained load'
+      duration: '15m'
+      arrivalRate: 3
+
+  plugins:
+    metrics-by-endpoint: {}
+    expect: {}
+
+scenarios:
+  - name: 'Complete a Learning Unit'
+    flow:
+      # Browses the Home page.
+      - get:
+          url: '/home'
+          followRedirect: false
+          expect:
+            - statusCode: 200
+      - think: 3
+
+      # Browses the Todos page.
+      - get:
+          url: '/todos'
+          followRedirect: false
+          expect:
+            - statusCode: 200
+      - think: 3
+
+      # Browses the Bites page.
+      - get:
+          url: '/bites'
+          followRedirect: false
+          expect:
+            - statusCode: 200
+      - think: 3
+
+      # Checks a Learning Unit page.
+      - get:
+          url: '/unit/{{ unitId }}'
+          followRedirect: false
+          capture:
+            - selector: 'input[name="csrfToken"]'
+              attr: value
+              as: csrfToken
+          expect:
+            - statusCode: 200
+      - think: 5
+
+      - get:
+          url: '/podcasts/{{ podcastKey }}'
+          followRedirect: false
+          headers:
+            Range: 'bytes=0-65535'
+          expect:
+            - statusCode:
+                - 206
+
+      # Checkpoint for Learning Journey.
+      - think: 10
+      - post:
+          url: '/api/learningjourney'
+          json:
+            id: '{{ unitId }}'
+            lastCheckpoint: 10
+          expect:
+            - statusCode: 200
+
+      # Wait for the 5 minute podcast to finish
+      - think: 290
+
+      - post:
+          url: '/unit/{{ unitId }}?/updateQuizAttempt'
+          followRedirect: false
+          form:
+            csrfToken: '{{ csrfToken }}'
+          expect:
+            - statusCode: 200
+
+      # Learner reads and answers quiz questions.
+      - get:
+          url: '/unit/{{ unitId }}/quiz'
+          followRedirect: false
+          expect:
+            - statusCode: 200
+      - think: 300
+
+      - post:
+          url: '/unit/{{ unitId }}/quiz?/updateLJCompletionStatus'
+          followRedirect: false
+          form:
+            csrfToken: '{{ csrfToken }}'
+            isQuizPassed: 'true'
+          expect:
+            - statusCode: 200
