@@ -5,6 +5,7 @@
   import { marked } from 'marked';
   import { onMount } from 'svelte';
 
+  import { browser } from '$app/environment';
   import { enhance } from '$app/forms';
   import { Badge } from '$lib/components/Badge/index.js';
   import { Button, LinkButton } from '$lib/components/Button/index.js';
@@ -121,8 +122,10 @@
     {#each data.questionAnswers as q, qi (q.id)}
       <div class={['flex flex-col gap-y-4', currentQuestionAnswerIndex !== qi && 'hidden']}>
         <span id="question-{qi}" class="prose prose-slate text-xl font-medium">
-          <!-- eslint-disable-next-line svelte/no-at-html-tags -->
-          {@html DOMPurify.sanitize(marked.parse(q.question, { async: false }))}
+          {#if browser}
+            <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+            {@html DOMPurify.sanitize(marked.parse(q.question, { async: false }))}
+          {/if}
         </span>
 
         <div class="flex flex-col gap-y-2" role="radiogroup" aria-labelledby="question-{qi}">
