@@ -83,6 +83,7 @@ export const load: PageServerLoad = async (event) => {
       },
     },
     where: {
+      collections: { some: { collectionId: event.params.id } },
       status: LearningUnitStatus.PUBLISHED,
     },
     orderBy: {
