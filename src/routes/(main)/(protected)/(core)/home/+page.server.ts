@@ -203,7 +203,13 @@ export const load: PageServerLoad = async (event) => {
       },
       _count: {
         select: {
-          learningUnits: true,
+          learningUnits: {
+            where: {
+              learningUnit: {
+                status: LearningUnitStatus.PUBLISHED,
+              },
+            },
+          },
         },
       },
     },
