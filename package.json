@@ -16,7 +16,8 @@
     "check": "svelte-kit sync && svelte-check --fail-on-warnings",
     "format": "prettier --check \"**/*.{svelte,js,ts,md,html,css,json,yaml}\"",
     "lint": "eslint \"**/*.{svelte,js,ts}\"",
-    "prepare": "svelte-kit sync || echo '' && node \"./.husky/install.js\""
+    "prepare": "svelte-kit sync || echo '' && node \"./.husky/install.js\"",
+    "load:test": "artillery run tests/load/load-test.yml -o tests/load/report.json"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1000.0",
@@ -40,6 +41,7 @@
     "@testing-library/user-event": "^14.6.1",
     "@types/node": "^24.10.1",
     "@vitest/coverage-v8": "3.1.4",
+    "artillery": "^2.0.30",
     "date-fns": "^4.1.0",
     "dompurify": "^3.2.7",
     "dotenv": "^17.2.2",

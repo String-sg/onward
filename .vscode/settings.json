@@ -10,5 +10,8 @@
   },
   "files.associations": {
     "*.css": "tailwindcss"
+  },
+  "yaml.schemas": {
+    "https://www.artillery.io/schema.json": "tests/load/*.yml"
   }
 }

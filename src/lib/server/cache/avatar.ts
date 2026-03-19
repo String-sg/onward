@@ -34,7 +34,7 @@ export async function getBase64EncodedAvatar(userId: string): Promise<string | n
       id: userId,
     },
   });
-  if (!user) {
+  if (!user || !user.avatarURL) {
     return null;
   }
 
