@@ -1,6 +1,10 @@
 import { json } from '@sveltejs/kit';
 
-import { db, type LearningJourneyUpsertArgs } from '$lib/server/db.js';
+import {
+  db,
+  type LearningJourneyFindUniqueArgs,
+  type LearningJourneyUpsertArgs,
+} from '$lib/server/db.js';
 
 import type { JSONObject } from '../types';
 import type { RequestHandler } from './$types';
@@ -45,20 +49,27 @@ export const POST: RequestHandler = async (event) => {
     update.isCompleted = params.isCompleted;
   }
 
-  const learningJourneyArgs = {
-    where: {
-      userId_learningUnitId: { userId: user.id, learningUnitId: params.id },
-    },
-    update,
-    create: {
-      userId: user.id,
-      learningUnitId: params.id,
-      isCompleted: false,
-      lastCheckpoint: params.lastCheckpoint,
-    },
-  } satisfies LearningJourneyUpsertArgs;
+  const findUniqueArgs = {
+    select: { isCompleted: true },
+    where: { userId_learningUnitId: { userId: user.id, learningUnitId: params.id } },
+  } satisfies LearningJourneyFindUniqueArgs;
 
   try {
+    const existing = await db.learningJourney.findUnique(findUniqueArgs);
+
+    update.isCompleted = existing?.isCompleted ? true : update.isCompleted;
+
+    const learningJourneyArgs = {
+      update,
+      create: {
+        userId: user.id,
+        learningUnitId: params.id,
+        isCompleted: false,
+        lastCheckpoint: params.lastCheckpoint,
+      },
+      where: { userId_learningUnitId: { userId: user.id, learningUnitId: params.id } },
+    } satisfies LearningJourneyUpsertArgs;
+
     await db.learningJourney.upsert(learningJourneyArgs);
   } catch (err) {
     logger.error({ err }, 'Failed to create/update learning journey');
