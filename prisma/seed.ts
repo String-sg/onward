@@ -3,7 +3,12 @@ import 'dotenv/config';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { v7 as uuidv7 } from 'uuid';
 
-import { ContentType, type Prisma, PrismaClient } from '../src/generated/prisma/client.js';
+import {
+  ContentType,
+  LearningUnitStatus,
+  type Prisma,
+  PrismaClient,
+} from '../src/generated/prisma/client.js';
 
 const db = new PrismaClient({
   adapter: new PrismaPg({
@@ -318,6 +323,8 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     summary,
     objectives,
     createdBy: 'DXD Product Team',
+    isRequired: true,
+    status: LearningUnitStatus.PUBLISHED,
     dueDate: new Date('2026-02-12'), // Required
     collections: {
       create: [
@@ -394,6 +401,7 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     objectives,
     createdBy: 'DXD Product Team',
     isRequired: true,
+    status: LearningUnitStatus.PUBLISHED,
     dueDate: new Date('2026-12-31'), // Required
     collections: {
       create: [
@@ -635,6 +643,7 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     objectives,
     createdBy: 'DXD Product Team',
     isRequired: true,
+    status: LearningUnitStatus.PUBLISHED,
     dueDate: new Date('2026-02-12'), // Required
     collections: {
       create: {
