@@ -23,6 +23,7 @@
     "@prisma/adapter-pg": "^7.3.0",
     "@prisma/client": "^7.3.0",
     "@valkey/valkey-glide": "2.0.1",
+    "@vimeo/player": "^2.30.3",
     "openai": "^5.22.0",
     "weaviate-client": "^3.8.1"
   },
