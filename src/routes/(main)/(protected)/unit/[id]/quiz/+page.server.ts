@@ -155,12 +155,14 @@ export const actions: Actions = {
       update: {
         isCompleted: isQuizPassedBool ?? true,
         isQuizPassed: isQuizPassedBool,
+        numberOfAttempts: { increment: 1 },
       },
       create: {
         userId: user.id,
         learningUnitId: learningUnit.id,
         isCompleted: isQuizPassedBool ?? true,
         isQuizPassed: isQuizPassedBool,
+        numberOfAttempts: 1,
       },
     } satisfies LearningJourneyUpsertArgs;
 
