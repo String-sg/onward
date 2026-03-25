@@ -4,13 +4,14 @@
     BookOpenTextIcon,
     Check,
     ExternalLink,
+    Headphones,
     Lightbulb,
     MessageCircleWarningIcon,
     Pause,
-    Play,
     ThumbsDown,
     ThumbsUp,
     TriangleAlert,
+    Video,
     X,
   } from '@lucide/svelte';
   import { formatDistanceToNow } from 'date-fns';
@@ -24,13 +25,18 @@
   import { Badge } from '$lib/components/Badge/index.js';
   import { Button } from '$lib/components/Button/index.js';
   import { Modal } from '$lib/components/Modal/index.js';
+  import { VimeoPlayer } from '$lib/components/VimeoPlayer/index.js';
   import {
     getBadgeInfo,
     HOME_PATH,
     IsWithinViewport,
+    track20PercentVideoPlay,
+    track50PercentVideoPlay,
+    track80PercentVideoPlay,
     trackPodcastPlay,
     trackQuizClick,
     trackSourcesClick,
+    trackVideoCompletion,
   } from '$lib/helpers/index.js';
   import { Player } from '$lib/states/index.js';
 
@@ -44,8 +50,16 @@
   const isWithinViewport = new IsWithinViewport(() => target);
   const player = Player.get();
 
-  let isActive = $derived(player.currentTrack?.id === data.id && player.progress !== 0);
-  let lastCheckpoint = $derived(data.lastCheckpoint);
+  let isActive = $derived(
+    player.currentTrack !== null && player.currentTrack.id === data.id && player.progress !== 0,
+  );
+
+  let videoModalOpen = $state(false);
+  const podcastContent = $derived(data.contentItems.find((c) => c.type === 'PODCAST'));
+  const videoContent = $derived(data.contentItems.find((c) => c.type === 'VIDEO'));
+
+  let podcastCheckpoint = $derived(podcastContent ? (data.checkpoints[podcastContent.id] ?? 0) : 0);
+  let videoCheckpoint = $derived(videoContent ? (data.checkpoints[videoContent.id] ?? 0) : 0);
 
   afterNavigate(({ from, type }) => {
     if (type === 'enter' || !from) {
@@ -61,16 +75,31 @@
     returnTo = from.url.pathname;
   });
 
-  const handlePlay = () => {
-    trackPodcastPlay(data.id.toString());
+  const handleWatch = () => {
+    videoModalOpen = true;
+    if (player.isPlaying) {
+      player.toggle();
+    }
+  };
 
+  const handleCloseVideo = () => {
+    videoModalOpen = false;
+  };
+
+  const handlePlay = () => {
+    if (!podcastContent || !podcastContent.url) {
+      return;
+    }
+    trackPodcastPlay(data.id);
     player.play({
       id: data.id,
       tags: data.tags,
       title: data.title,
       summary: data.summary,
-      url: data.url ?? '',
+      url: podcastContent.url,
+      contentItemId: podcastContent.id,
     });
+    player.isNowPlayingViewOpen = true;
   };
 
   const handlePause = () => {
@@ -78,38 +107,103 @@
   };
 
   const handleResume = () => {
-    trackPodcastPlay(data.id.toString());
+    trackPodcastPlay(data.id);
 
     if (!isActive) {
-      const initialSeekTime = lastCheckpoint;
+      const initialSeekTime = podcastCheckpoint;
       player.play(
         {
           id: data.id,
           tags: data.tags,
           title: data.title,
           summary: data.summary,
-          url: data.url ?? '',
+          url: podcastContent ? (podcastContent.url ?? '') : '',
+          contentItemId: podcastContent ? podcastContent.id : undefined,
         },
         initialSeekTime,
       );
-
-      lastCheckpoint = 0;
     } else {
       player.toggle();
     }
+    player.isNowPlayingViewOpen = true;
+  };
+
+  let tracked20 = false;
+  let tracked50 = false;
+  let tracked80 = false;
+  let tracked100 = false;
+
+  const handleVideoTimeUpdate = (percent: number) => {
+    if (percent >= 20 && !tracked20) {
+      tracked20 = true;
+      track20PercentVideoPlay(data.id);
+    }
+    if (percent >= 50 && !tracked50) {
+      tracked50 = true;
+      track50PercentVideoPlay(data.id);
+    }
+    if (percent >= 80 && !tracked80) {
+      tracked80 = true;
+      track80PercentVideoPlay(data.id);
+    }
+    if (percent >= 100 && !tracked100) {
+      tracked100 = true;
+      handleVideoComplete();
+    }
+  };
+
+  const handleVideoEnded = () => {
+    if (!tracked100) {
+      tracked100 = true;
+      handleVideoComplete();
+    }
+  };
+
+  const handleVideoComplete = () => {
+    if (!videoContent) {
+      return;
+    }
+    fetch('/api/learningjourney', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id: data.id,
+        lastCheckpoint: 0,
+        contentItemId: videoContent.id,
+        csrfToken: data.csrfToken,
+        isCompleted: !data.isQuizAvailable,
+      }),
+    });
+    trackVideoCompletion(data.id);
+  };
+
+  const handleVideoCheckpoint = (currentTime: number) => {
+    if (!videoContent) {
+      return;
+    }
+    fetch('/api/learningjourney', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id: data.id,
+        lastCheckpoint: currentTime,
+        contentItemId: videoContent.id,
+        csrfToken: data.csrfToken,
+      }),
+    });
   };
 
   const handleSourcesModal = () => {
     isSourcesModalOpen = true;
-    trackSourcesClick(data.id.toString());
+    trackSourcesClick(data.id);
   };
 
-  const toggleSourcesModalVisibility = () => {
+  const toggleSourcesModal = () => {
     isSourcesModalOpen = !isSourcesModalOpen;
   };
 
   const handleQuizClick = () => {
-    trackQuizClick(data.id.toString());
+    trackQuizClick(data.id);
   };
 </script>
 
@@ -234,7 +328,7 @@
       </div>
 
       <div class="flex flex-col gap-y-4">
-        {#if data.contentType === 'PODCAST'}
+        {#if podcastContent}
           {#if isActive && player.isPlaying}
             <Button variant="primary" width="full" onclick={handlePause}>
               <Pause class="h-4 w-4" />
@@ -242,23 +336,33 @@
             </Button>
           {:else if isActive && !player.isPlaying}
             <Button variant="primary" width="full" onclick={handleResume}>
-              <Play class="h-4 w-4" />
-              <span class="font-medium">Resume</span>
+              <Headphones class="h-4 w-4" />
+              <span class="font-medium">Listen</span>
             </Button>
-          {:else if lastCheckpoint && lastCheckpoint > 0}
+          {:else if podcastCheckpoint > 0}
             <Button variant="primary" width="full" onclick={handleResume}>
-              <Play class="h-4 w-4" />
-              <span class="font-medium">Resume</span>
+              <Headphones class="h-4 w-4" />
+              <span class="font-medium">Listen</span>
             </Button>
           {:else}
             <Button variant="primary" width="full" onclick={handlePlay}>
-              <Play class="h-4 w-4" />
-              <span class="font-medium">Play</span>
+              <Headphones class="h-4 w-4" />
+              <span class="font-medium">Listen</span>
             </Button>
           {/if}
         {/if}
 
+        {#if videoContent}
+          <Button variant="secondary" width="full" onclick={handleWatch}>
+            <Video class="h-4 w-4" />
+            <span class="font-medium">Watch</span>
+          </Button>
+        {/if}
+
         {#if data.isQuizAvailable}
+          {#if podcastContent && videoContent}
+            <div role="separator" class="h-px shrink-0 bg-slate-200"></div>
+          {/if}
           <form method="POST" action="?/updateQuizAttempt" use:enhance>
             <input type="hidden" name="csrfToken" value={data.csrfToken} />
 
@@ -308,13 +412,13 @@
   </div>
 </main>
 
-<Modal isopen={isSourcesModalOpen} onclose={toggleSourcesModalVisibility} size="partial">
+<Modal isopen={isSourcesModalOpen} onclose={toggleSourcesModal} size="partial">
   <header class="sticky inset-x-0 top-0 bg-white/90 backdrop-blur-sm">
     <div class="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
       <span class="text-xl font-medium">Sources</span>
 
       <button
-        onclick={toggleSourcesModalVisibility}
+        onclick={toggleSourcesModal}
         class="cursor-pointer rounded-full p-3 transition-colors hover:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed"
       >
         <X />
@@ -353,3 +457,39 @@
     </div>
   </main>
 </Modal>
+
+{#if videoContent}
+  <Modal
+    isopen={videoModalOpen}
+    onclose={handleCloseVideo}
+    variant="dark"
+    class="pointer-events-none"
+    closeonbackdropclick={false}
+  />
+
+  <div
+    class={[
+      'fixed inset-0 z-202 flex items-center justify-center transition-opacity duration-300',
+      videoModalOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0',
+    ]}
+  >
+    <button
+      onclick={handleCloseVideo}
+      class="absolute top-4 right-4 z-10 cursor-pointer rounded-full p-3 text-white transition-colors hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white focus-visible:outline-dashed"
+    >
+      <X />
+    </button>
+
+    <div class="w-full max-w-4xl px-4 landscape:max-w-[calc((100svh-2rem)*16/9)]">
+      <VimeoPlayer
+        url={videoContent.url ?? ''}
+        startTime={videoCheckpoint || undefined}
+        active={videoModalOpen}
+        ontimeupdate={handleVideoTimeUpdate}
+        onended={handleVideoEnded}
+        oncheckpoint={handleVideoCheckpoint}
+        onpause={handleVideoCheckpoint}
+      />
+    </div>
+  </div>
+{/if}

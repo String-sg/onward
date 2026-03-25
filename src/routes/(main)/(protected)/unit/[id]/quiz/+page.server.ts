@@ -160,7 +160,6 @@ export const actions: Actions = {
         userId: user.id,
         learningUnitId: learningUnit.id,
         isCompleted: isQuizPassedBool ?? true,
-        lastCheckpoint: 0,
         isQuizPassed: isQuizPassedBool,
       },
     } satisfies LearningJourneyUpsertArgs;

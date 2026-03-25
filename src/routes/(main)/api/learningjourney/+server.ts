@@ -1,8 +1,10 @@
 import { json } from '@sveltejs/kit';
 
+import { learnerAuth } from '$lib/server/auth';
 import {
   db,
   type LearningJourneyFindUniqueArgs,
+  type LearningJourneyGetPayload,
   type LearningJourneyUpsertArgs,
 } from '$lib/server/db.js';
 
@@ -32,7 +34,10 @@ export const POST: RequestHandler = async (event) => {
       typeof params['id'] !== 'string' ||
       !('lastCheckpoint' in params) ||
       typeof params['lastCheckpoint'] !== 'number' ||
-      ('isCompleted' in params && typeof params['isCompleted'] !== 'boolean')
+      !('contentItemId' in params) ||
+      typeof params['contentItemId'] !== 'string' ||
+      !('csrfToken' in params) ||
+      typeof params['csrfToken'] !== 'string'
     ) {
       return json(null, { status: 422 });
     }
@@ -41,36 +46,66 @@ export const POST: RequestHandler = async (event) => {
     return json(null, { status: 400 });
   }
 
-  const update: { lastCheckpoint: number; isCompleted?: boolean } = {
-    lastCheckpoint: params.lastCheckpoint,
-  };
-
-  if ('isCompleted' in params && typeof params.isCompleted === 'boolean') {
-    update.isCompleted = params.isCompleted;
+  const isValidCSRFToken = await learnerAuth.validateCSRFToken(event, params.csrfToken);
+  if (!isValidCSRFToken) {
+    logger.warn('CSRF token is invalid');
+    return json(null, { status: 403 });
   }
+
+  const learningUnitId = params.id as string;
+  const lastCheckpoint = params.lastCheckpoint as number;
+  const contentItemId = params.contentItemId as string;
+  const isCompleted =
+    'isCompleted' in params && typeof params.isCompleted === 'boolean'
+      ? params.isCompleted
+      : undefined;
 
   const findUniqueArgs = {
     select: { isCompleted: true },
-    where: { userId_learningUnitId: { userId: user.id, learningUnitId: params.id } },
+    where: { userId_learningUnitId: { userId: user.id, learningUnitId } },
   } satisfies LearningJourneyFindUniqueArgs;
 
   try {
-    const existing = await db.learningJourney.findUnique(findUniqueArgs);
+    await db.$transaction(async (tx) => {
+      const existing: LearningJourneyGetPayload<typeof findUniqueArgs> | null =
+        await tx.learningJourney.findUnique(findUniqueArgs);
 
-    update.isCompleted = existing?.isCompleted ? true : update.isCompleted;
+      const update: { isCompleted?: boolean } = {};
+      if (isCompleted !== undefined && !(existing && existing.isCompleted)) {
+        update.isCompleted = isCompleted;
+      }
 
-    const learningJourneyArgs = {
-      update,
-      create: {
-        userId: user.id,
-        learningUnitId: params.id,
-        isCompleted: false,
-        lastCheckpoint: params.lastCheckpoint,
-      },
-      where: { userId_learningUnitId: { userId: user.id, learningUnitId: params.id } },
-    } satisfies LearningJourneyUpsertArgs;
+      const learningJourneyArgs = {
+        where: {
+          userId_learningUnitId: { userId: user.id, learningUnitId },
+        },
+        update,
+        create: {
+          userId: user.id,
+          learningUnitId,
+          isCompleted: false,
+        },
+        select: { id: true },
+      } satisfies LearningJourneyUpsertArgs;
 
-    await db.learningJourney.upsert(learningJourneyArgs);
+      const journey: LearningJourneyGetPayload<typeof learningJourneyArgs> =
+        await tx.learningJourney.upsert(learningJourneyArgs);
+
+      await tx.learningJourneyCheckpoint.upsert({
+        where: {
+          learningJourneyId_contentItemId: {
+            learningJourneyId: journey.id,
+            contentItemId,
+          },
+        },
+        update: { lastCheckpoint },
+        create: {
+          learningJourneyId: journey.id,
+          contentItemId,
+          lastCheckpoint,
+        },
+      });
+    });
   } catch (err) {
     logger.error({ err }, 'Failed to create/update learning journey');
     return json(null, { status: 500 });

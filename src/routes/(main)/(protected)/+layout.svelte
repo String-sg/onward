@@ -22,12 +22,14 @@
   } from '$lib/helpers/index.js';
   import { Player } from '$lib/states/index.js';
 
+  import type { LayoutData } from './$types';
+
   const { children } = $props();
 
   const player = Player.create();
 
-  let isNowPlayingViewOpen = $state(false);
   let isChatViewOpen = $state(false);
+
   let isTrackingSession = $state(false);
   let isPodcastCompletedModalOpen = $state(false);
   let isQuizAvailable = $derived(page.data?.isQuizAvailable ?? false);
@@ -36,7 +38,7 @@
   const isQuizPage = $derived(page.url.pathname.includes('/quiz'));
 
   const handleNowPlayingBarClick = () => {
-    isNowPlayingViewOpen = true;
+    player.isNowPlayingViewOpen = true;
 
     if (player.currentTrack) {
       trackNowPlayingBarClick(player.currentTrack.id);
@@ -48,7 +50,7 @@
   };
 
   const handleNowPlayingViewClose = () => {
-    isNowPlayingViewOpen = false;
+    player.isNowPlayingViewOpen = false;
   };
 
   const handleSeek = (value: number) => {
@@ -94,6 +96,8 @@
         body: JSON.stringify({
           id: player.currentTrack?.id,
           lastCheckpoint: progress,
+          contentItemId: player.currentTrack?.contentItemId,
+          csrfToken: (page.data as LayoutData).csrfToken,
           ...(isQuizAvailable !== undefined && { isCompleted: isQuizAvailable }),
         }),
       });
@@ -201,7 +205,7 @@
 
 {#if player.currentTrack}
   <NowPlayingView
-    isopen={isNowPlayingViewOpen}
+    isopen={player.isNowPlayingViewOpen}
     onclose={handleNowPlayingViewClose}
     isplaying={player.isPlaying}
     playbackspeed={player.playbackSpeed}

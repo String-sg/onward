@@ -21,7 +21,7 @@
         tags: learningUnit.tags,
         title: learningUnit.title,
         summary: learningUnit.summary,
-        url: learningUnit.contentURL ?? '',
+        url: learningUnit.contentItems?.[0]?.url ?? '',
       },
       lastCheckpoint,
     );

@@ -91,7 +91,11 @@ export const load: PageServerLoad = async (event) => {
       createdAt: true,
       title: true,
       summary: true,
-      contentURL: true,
+      contentItems: {
+        select: { id: true, type: true, url: true },
+        where: { type: 'PODCAST' },
+        take: 1,
+      },
       createdBy: true,
       isRequired: true,
       dueDate: true,
@@ -147,13 +151,21 @@ export const load: PageServerLoad = async (event) => {
     select: {
       id: true,
       isCompleted: true,
-      lastCheckpoint: true,
+      checkpoints: {
+        select: { lastCheckpoint: true },
+        where: { contentItem: { type: 'PODCAST' } },
+        take: 1,
+      },
       learningUnit: {
         select: {
           id: true,
           title: true,
           summary: true,
-          contentURL: true,
+          contentItems: {
+            select: { id: true, type: true, url: true },
+            where: { type: 'PODCAST' },
+            take: 1,
+          },
           createdAt: true,
           createdBy: true,
           isRequired: true,
@@ -174,8 +186,10 @@ export const load: PageServerLoad = async (event) => {
     where: {
       userId: user.id,
       learningUnit: {
-        contentType: {
-          not: 'QUIZ',
+        contentItems: {
+          some: {
+            type: { not: 'QUIZ' },
+          },
         },
       },
     },
@@ -245,9 +259,9 @@ export const load: PageServerLoad = async (event) => {
       }),
       tags: lu.tags.map((t) => t.tag),
     })),
-    learningJourneys: learningJourneys.map((lj) => ({
+    learningJourneys: learningJourneys.map(({ checkpoints, ...lj }) => ({
       ...lj,
-      lastCheckpoint: Number(lj.lastCheckpoint),
+      lastCheckpoint: checkpoints[0] ? Number(checkpoints[0].lastCheckpoint) : 0,
       learningUnit: {
         ...lj.learningUnit,
         tags: lj.learningUnit.tags.map((t) => t.tag),
