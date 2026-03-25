@@ -23,3 +23,6 @@ out
 # Ignore environment variables.
 *.env*
 !.env.example
+
+# test
+coverage/*
