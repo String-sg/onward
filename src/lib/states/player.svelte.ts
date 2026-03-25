@@ -214,7 +214,7 @@ export class Player extends EventTarget {
       throw new OperationUnpermittedError();
     }
 
-    if (this.#audio.src !== track.url) {
+    if (this.#currentTrack?.id !== track.id) {
       this.#audio.pause();
 
       // Load the new track metadata

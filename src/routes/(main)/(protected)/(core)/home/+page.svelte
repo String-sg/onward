@@ -13,14 +13,18 @@
     item: (typeof data.learningJourneys)[0] | (typeof data.recommendedLearningUnits)[0],
   ) => {
     const learningUnit = 'learningUnit' in item ? item.learningUnit : item;
+    const lastCheckpoint = 'lastCheckpoint' in item ? item.lastCheckpoint : undefined;
 
-    player.play({
-      id: learningUnit.id,
-      tags: learningUnit.tags,
-      title: learningUnit.title,
-      summary: learningUnit.summary,
-      url: learningUnit.contentURL ?? '',
-    });
+    player.play(
+      {
+        id: learningUnit.id,
+        tags: learningUnit.tags,
+        title: learningUnit.title,
+        summary: learningUnit.summary,
+        url: learningUnit.contentURL ?? '',
+      },
+      lastCheckpoint,
+    );
   };
 
   const handleLearningUnitPause = () => {
@@ -119,6 +123,7 @@
             onplay: () => handleLearningUnitPlay(learningJourney),
             onpause: handleLearningUnitPause,
             onresume: handleLearningUnitResume,
+            lastcheckpoint: learningJourney.lastCheckpoint,
           }}
           status={learningJourney.learningUnit.status}
         />

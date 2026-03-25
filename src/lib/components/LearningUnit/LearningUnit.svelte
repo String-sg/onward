@@ -57,6 +57,10 @@
        * A callback to resume playback.
        */
       onresume: () => void;
+      /**
+       * The saved playback position in seconds. When > 0, shows "Resume" instead of "Play".
+       */
+      lastcheckpoint?: number;
     } | null;
   }
 
@@ -138,8 +142,8 @@
         <Pause class="h-4 w-4" />
         <span class="font-medium">Pause</span>
       </Button>
-    {:else if player.isactive && !player.isplaying}
-      <Button variant="secondary" onclick={handleResume}>
+    {:else if (player.lastcheckpoint ?? 0) > 0}
+      <Button variant="secondary" onclick={player.isactive ? handleResume : handlePlay}>
         <Play class="h-4 w-4" />
         <span class="font-medium">Resume</span>
       </Button>

@@ -147,6 +147,7 @@ export const load: PageServerLoad = async (event) => {
     select: {
       id: true,
       isCompleted: true,
+      lastCheckpoint: true,
       learningUnit: {
         select: {
           id: true,
@@ -246,6 +247,7 @@ export const load: PageServerLoad = async (event) => {
     })),
     learningJourneys: learningJourneys.map((lj) => ({
       ...lj,
+      lastCheckpoint: Number(lj.lastCheckpoint),
       learningUnit: {
         ...lj.learningUnit,
         tags: lj.learningUnit.tags.map((t) => t.tag),
