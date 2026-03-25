@@ -15,9 +15,9 @@ function makeEvent(headers: Record<string, string> = {}, clientIp = '127.0.0.1')
   const childLogger = { warn: vi.fn(), error: vi.fn() };
   const logger = { warn: vi.fn(), error: vi.fn(), child: vi.fn().mockReturnValue(childLogger) };
   return {
-    request: new Request('http://localhost/api/internal/hello', { headers }),
+    request: new Request('http://localhost/api/extract/hello', { headers }),
     getClientAddress: () => clientIp,
-    url: new URL('http://localhost/api/internal/hello'),
+    url: new URL('http://localhost/api/extract/hello'),
     locals: { logger },
   } as never;
 }
@@ -26,7 +26,7 @@ beforeEach(() => {
   vi.unstubAllEnvs();
 });
 
-describe('internal hello GET - IP whitelist', () => {
+describe('extract hello GET - IP whitelist', () => {
   test('returns server error when IP whitelist is not configured', async () => {
     vi.stubEnv('INTERNAL_API_KEY', 'test-api-key');
     vi.stubEnv('INTERNAL_API_ALLOWED_IPS', '');
@@ -61,7 +61,7 @@ describe('internal hello GET - IP whitelist', () => {
   });
 });
 
-describe('internal hello GET - API key', () => {
+describe('extract hello GET - API key', () => {
   test('returns unauthorized when api key is missing', async () => {
     vi.stubEnv('INTERNAL_API_KEY', 'test-api-key');
     vi.stubEnv('INTERNAL_API_ALLOWED_IPS', '127.0.0.1');
