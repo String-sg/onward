@@ -318,8 +318,7 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
   {
     id: uuidv7(),
     title: 'AI Learning Unit 1',
-    contentType: ContentType.PODCAST,
-    contentURL: 'http://localhost:5173',
+    status: LearningUnitStatus.PUBLISHED,
     summary,
     objectives,
     createdBy: 'DXD Product Team',
@@ -358,12 +357,14 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     questionAnswers: {
       create: questionAnswers,
     },
+    contentItems: {
+      create: [{ type: ContentType.PODCAST, url: 'http://localhost:5173', order: 1 }],
+    },
   },
   {
     id: uuidv7(),
     title: 'AI Learning Unit 2',
-    contentType: ContentType.PODCAST,
-    contentURL: 'http://localhost:5173',
+    status: LearningUnitStatus.PUBLISHED,
     summary,
     objectives,
     createdBy: 'DXD Product Team',
@@ -391,12 +392,14 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     questionAnswers: {
       create: questionAnswers,
     },
+    contentItems: {
+      create: [{ type: ContentType.PODCAST, url: 'http://localhost:5173', order: 1 }],
+    },
   },
   {
     id: uuidv7(),
     title: 'AI Quiz',
-    contentType: ContentType.QUIZ,
-    contentURL: null,
+    status: LearningUnitStatus.PUBLISHED,
     summary,
     objectives,
     createdBy: 'DXD Product Team',
@@ -439,8 +442,7 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
   {
     id: uuidv7(),
     title: 'BOB Learning Unit 1',
-    contentType: ContentType.PODCAST,
-    contentURL: 'http://localhost:5173',
+    status: LearningUnitStatus.PUBLISHED,
     summary,
     objectives,
     createdBy: 'DXD Product Team',
@@ -468,12 +470,14 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     questionAnswers: {
       create: questionAnswers,
     },
+    contentItems: {
+      create: [{ type: ContentType.PODCAST, url: 'http://localhost:5173', order: 1 }],
+    },
   },
   {
     id: uuidv7(),
     title: 'BOB Learning Unit 2',
-    contentType: ContentType.PODCAST,
-    contentURL: 'http://localhost:5173',
+    status: LearningUnitStatus.PUBLISHED,
     summary,
     objectives,
     createdBy: 'DXD Product Team',
@@ -501,12 +505,14 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     questionAnswers: {
       create: questionAnswers,
     },
+    contentItems: {
+      create: [{ type: ContentType.PODCAST, url: 'http://localhost:5173', order: 1 }],
+    },
   },
   {
     id: uuidv7(),
     title: 'Career Learning Unit 1',
-    contentType: ContentType.PODCAST,
-    contentURL: 'http://localhost:5173',
+    status: LearningUnitStatus.PUBLISHED,
     summary,
     objectives,
     createdBy: 'DXD Product Team',
@@ -534,12 +540,14 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     questionAnswers: {
       create: questionAnswers,
     },
+    contentItems: {
+      create: [{ type: ContentType.PODCAST, url: 'http://localhost:5173', order: 1 }],
+    },
   },
   {
     id: uuidv7(),
     title: 'Innovation Learning Unit 1',
-    contentType: ContentType.PODCAST,
-    contentURL: 'http://localhost:5173',
+    status: LearningUnitStatus.PUBLISHED,
     summary,
     objectives,
     createdBy: 'DXD Product Team',
@@ -567,12 +575,14 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     questionAnswers: {
       create: questionAnswers,
     },
+    contentItems: {
+      create: [{ type: ContentType.PODCAST, url: 'http://localhost:5173', order: 1 }],
+    },
   },
   {
     id: uuidv7(),
     title: 'News Learning Unit 1',
-    contentType: ContentType.PODCAST,
-    contentURL: 'http://localhost:5173',
+    status: LearningUnitStatus.PUBLISHED,
     summary,
     objectives,
     createdBy: 'DXD Product Team',
@@ -600,12 +610,14 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     questionAnswers: {
       create: questionAnswers,
     },
+    contentItems: {
+      create: [{ type: ContentType.PODCAST, url: 'http://localhost:5173', order: 1 }],
+    },
   },
   {
     id: uuidv7(),
     title: 'Productivity Learning Unit 1',
-    contentType: ContentType.PODCAST,
-    contentURL: 'http://localhost:5173',
+    status: LearningUnitStatus.PUBLISHED,
     summary,
     objectives,
     createdBy: 'DXD Product Team',
@@ -633,12 +645,14 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     questionAnswers: {
       create: questionAnswers,
     },
+    contentItems: {
+      create: [{ type: ContentType.PODCAST, url: 'http://localhost:5173', order: 1 }],
+    },
   },
   {
     id: uuidv7(),
     title: 'Cyber Hygiene Learning Unit 1',
-    contentType: ContentType.PODCAST,
-    contentURL: 'http://localhost:5173',
+    status: LearningUnitStatus.PUBLISHED,
     summary,
     objectives,
     createdBy: 'DXD Product Team',
@@ -656,6 +670,45 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     },
     questionAnswers: {
       create: questionAnswers,
+    },
+    contentItems: {
+      create: [{ type: ContentType.PODCAST, url: 'http://localhost:5173', order: 1 }],
+    },
+  },
+  {
+    id: uuidv7(),
+    title: 'AI Video Unit 1',
+    status: LearningUnitStatus.PUBLISHED,
+    summary,
+    objectives,
+    createdBy: 'DXD Product Team',
+    collections: {
+      create: [
+        {
+          collection: {
+            connect: {
+              id: collections[0].id,
+            },
+          },
+        },
+      ],
+    },
+    tags: {
+      create: [
+        {
+          tag: {
+            connect: {
+              id: tags[0].id,
+            },
+          },
+        },
+      ],
+    },
+    contentItems: {
+      create: [
+        { type: ContentType.VIDEO, url: 'https://vimeo.com/1172996293', order: 1 },
+        { type: ContentType.PODCAST, url: 'http://localhost:5173', order: 2 },
+      ],
     },
   },
 ];
