@@ -87,7 +87,33 @@ describe('LearningUnit', () => {
     expect(screen.getByText('Pause')).toBeInTheDocument();
   });
 
-  test('shows Resume button when player is active but not playing', () => {
+  test('shows Resume button when player is active but not playing and has lastcheckpoint', () => {
+    const player = {
+      isactive: true,
+      isplaying: false,
+      onplay: vi.fn(),
+      onpause: vi.fn(),
+      onresume: vi.fn(),
+      lastcheckpoint: 100,
+    };
+    render(LearningUnit, { props: { ...defaultProps, player } });
+    expect(screen.getByText('Resume')).toBeInTheDocument();
+  });
+
+  test('shows Resume button when player is not active but has lastcheckpoint', () => {
+    const player = {
+      isactive: false,
+      isplaying: false,
+      onplay: vi.fn(),
+      onpause: vi.fn(),
+      onresume: vi.fn(),
+      lastcheckpoint: 100,
+    };
+    render(LearningUnit, { props: { ...defaultProps, player } });
+    expect(screen.getByText('Resume')).toBeInTheDocument();
+  });
+
+  test('shows Play button when player is active but not playing and has no lastcheckpoint', () => {
     const player = {
       isactive: true,
       isplaying: false,
@@ -96,7 +122,7 @@ describe('LearningUnit', () => {
       onresume: vi.fn(),
     };
     render(LearningUnit, { props: { ...defaultProps, player } });
-    expect(screen.getByText('Resume')).toBeInTheDocument();
+    expect(screen.getByText('Play')).toBeInTheDocument();
   });
 
   test('calls onplay when Play button is clicked', async () => {
@@ -129,7 +155,7 @@ describe('LearningUnit', () => {
     expect(player.onpause).toHaveBeenCalledTimes(1);
   });
 
-  test('calls onresume when Resume button is clicked', async () => {
+  test('calls onresume when Resume button is clicked and player is active', async () => {
     const user = userEvent.setup();
     const player = {
       isactive: true,
@@ -137,11 +163,28 @@ describe('LearningUnit', () => {
       onplay: vi.fn(),
       onpause: vi.fn(),
       onresume: vi.fn(),
+      lastcheckpoint: 100,
     };
     render(LearningUnit, { props: { ...defaultProps, player } });
 
     await user.click(screen.getByText('Resume'));
     expect(player.onresume).toHaveBeenCalledTimes(1);
+  });
+
+  test('calls onplay when Resume button is clicked and player is not active', async () => {
+    const user = userEvent.setup();
+    const player = {
+      isactive: false,
+      isplaying: false,
+      onplay: vi.fn(),
+      onpause: vi.fn(),
+      onresume: vi.fn(),
+      lastcheckpoint: 100,
+    };
+    render(LearningUnit, { props: { ...defaultProps, player } });
+
+    await user.click(screen.getByText('Resume'));
+    expect(player.onplay).toHaveBeenCalledTimes(1);
   });
 
   test('does not show player controls when player is null', () => {
