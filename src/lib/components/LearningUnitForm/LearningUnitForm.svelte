@@ -1,8 +1,7 @@
 <script module lang="ts">
   export interface UnitState {
     title: string;
-    contentType: string;
-    contentURL: string;
+    contentItems: { type: 'VIDEO' | 'PODCAST' | 'QUIZ'; url: string | undefined }[];
     collectionId: string;
     summary: string;
     objectives: string;
@@ -44,6 +43,14 @@
   }
 
   let { unit = $bindable(), data, form, onsubmit }: Props = $props();
+
+  const addContentItem = () => {
+    unit = { ...unit, contentItems: [...unit.contentItems, { type: 'PODCAST', url: '' }] };
+  };
+
+  const removeContentItem = (index: number) => {
+    unit = { ...unit, contentItems: unit.contentItems.filter((_, i) => i !== index) };
+  };
 
   const minDueDate = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().split('T')[0];
 
@@ -97,34 +104,59 @@
         <TextInput type="text" id="title" name="title" bind:value={unit.title} />
       </FormField>
 
-      <FormField
-        label="Content Type"
-        id="contentType"
-        required
-        error={form?.errors?.contentType?.message}
-      >
-        <Select id="contentType" name="contentType" bind:value={unit.contentType}>
-          <option value="">Select a content type</option>
-          {#each data.contentTypes as ct (ct)}
-            <option value={ct}>{ct.toLowerCase()}</option>
-          {/each}
-        </Select>
-      </FormField>
+      <!-- Content Items -->
+      <div class="flex flex-col gap-3">
+        <span class="text-sm font-medium">Content</span>
 
-      <FormField
-        label="Content URL"
-        id="contentURL"
-        required
-        error={form?.errors?.contentURL?.message}
-      >
-        <TextInput
-          type="url"
-          id="contentURL"
-          name="contentURL"
-          placeholder="https://..."
-          bind:value={unit.contentURL}
-        />
-      </FormField>
+        {#if form?.errors?.contentItems?.message}
+          <p class="text-sm text-red-600">{form.errors.contentItems.message}</p>
+        {/if}
+
+        {#each unit.contentItems as item, i (i)}
+          <div class="flex items-start gap-2">
+            <Select
+              id="contentItems-{i}-type"
+              bind:value={item.type}
+              onchange={() => {
+                if (item.type === 'QUIZ') {
+                  unit = {
+                    ...unit,
+                    contentItems: unit.contentItems.map((c, j) =>
+                      j === i ? { ...c, url: undefined } : c,
+                    ),
+                  };
+                } else {
+                  unit = {
+                    ...unit,
+                    contentItems: unit.contentItems.map((c, j) =>
+                      j === i ? { ...c, url: c.url ?? '' } : c,
+                    ),
+                  };
+                }
+              }}
+            >
+              {#each data.contentTypes as ct (ct)}
+                <option value={ct}>{ct.toLowerCase()}</option>
+              {/each}
+            </Select>
+            {#if item.type !== 'QUIZ'}
+              <TextInput
+                id="contentItems-{i}-url"
+                type="url"
+                bind:value={item.url}
+                placeholder={item.type === 'VIDEO' ? 'https://...' : 'Podcast URL'}
+              />
+            {/if}
+            <Button type="button" variant="secondary" onclick={() => removeContentItem(i)}>
+              Remove
+            </Button>
+          </div>
+        {/each}
+
+        <Button type="button" variant="secondary" onclick={addContentItem}>Add content item</Button>
+      </div>
+
+      <input type="hidden" name="contentItems" value={JSON.stringify(unit.contentItems)} />
 
       <FormField
         label="Collection"

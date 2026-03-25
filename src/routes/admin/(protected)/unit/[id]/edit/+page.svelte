@@ -12,8 +12,12 @@
     untrack(() => {
       return {
         title: data.learningUnit.title ?? '',
-        contentType: data.learningUnit.contentType ?? '',
-        contentURL: data.learningUnit.contentURL ?? '',
+        contentItems: data.learningUnit.contentItems.map(
+          (item: { type: 'VIDEO' | 'PODCAST' | 'QUIZ'; url: string | null }) => ({
+            type: item.type,
+            url: item.url ?? '',
+          }),
+        ),
         collectionId: data.learningUnit.collectionId ?? '',
         summary: data.learningUnit.summary ?? '',
         objectives: data.learningUnit.objectives ?? '',
@@ -42,8 +46,12 @@
         if (savedLU) {
           unit = {
             title: savedLU.title ?? '',
-            contentType: savedLU.contentType ?? '',
-            contentURL: savedLU.contentURL ?? '',
+            contentItems: savedLU.contentItems.map(
+              (item: { type: 'VIDEO' | 'PODCAST' | 'QUIZ'; url: string | null }) => ({
+                type: item.type,
+                url: item.url ?? '',
+              }),
+            ),
             collectionId: savedLU.collectionId ?? '',
             summary: savedLU.summary ?? '',
             objectives: savedLU.objectives ?? '',

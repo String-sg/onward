@@ -102,8 +102,6 @@ export const actions = {
       data: {
         status: LearningUnitStatus.DRAFT,
         title: data.title,
-        contentType: data.contentType,
-        contentURL: data.contentURL,
         summary: data.summary,
         objectives: data.objectives,
         createdBy: data.createdBy,
@@ -134,6 +132,15 @@ export const actions = {
                   answer: q.answer,
                   explanation: q.explanation,
                   order: i + 1,
+                })),
+              }
+            : undefined,
+        contentItems:
+          data.contentItems.length > 0
+            ? {
+                create: data.contentItems.map((item) => ({
+                  type: item.type,
+                  url: item.url,
                 })),
               }
             : undefined,
@@ -177,8 +184,6 @@ export const actions = {
       data: {
         status: LearningUnitStatus.PUBLISHED,
         title: data.title,
-        contentType: data.contentType,
-        contentURL: data.contentURL,
         summary: data.summary,
         objectives: data.objectives,
         createdBy: data.createdBy,
@@ -209,6 +214,15 @@ export const actions = {
                   answer: q.answer,
                   explanation: q.explanation,
                   order: i + 1,
+                })),
+              }
+            : undefined,
+        contentItems:
+          data.contentItems.length > 0
+            ? {
+                create: data.contentItems.map((item) => ({
+                  type: item.type,
+                  url: item.url,
                 })),
               }
             : undefined,
