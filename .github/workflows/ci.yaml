@@ -110,6 +110,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Generate prisma client
+        run: pnpm db:generate
+
       - name: Test
         run: pnpm test
 
