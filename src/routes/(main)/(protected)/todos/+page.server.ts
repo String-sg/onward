@@ -25,7 +25,11 @@ export const load: PageServerLoad = async (event) => {
       createdAt: true,
       title: true,
       summary: true,
-      contentURL: true,
+      contentItems: {
+        select: { id: true, type: true, url: true },
+        where: { type: 'PODCAST' },
+        take: 1,
+      },
       createdBy: true,
       isRequired: true,
       dueDate: true,

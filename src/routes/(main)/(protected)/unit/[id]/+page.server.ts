@@ -53,8 +53,9 @@ export const load: PageServerLoad = async (event) => {
       title: true,
       summary: true,
       objectives: true,
-      contentURL: true,
-      contentType: true,
+      contentItems: {
+        select: { id: true, type: true, url: true },
+      },
       createdAt: true,
       createdBy: true,
       isRequired: true,
@@ -104,8 +105,13 @@ export const load: PageServerLoad = async (event) => {
 
   const learningJourneyArgs = {
     select: {
-      lastCheckpoint: true,
       isCompleted: true,
+      checkpoints: {
+        select: {
+          contentItemId: true,
+          lastCheckpoint: true,
+        },
+      },
     },
     where: {
       userId_learningUnitId: {
@@ -202,7 +208,7 @@ export const load: PageServerLoad = async (event) => {
   );
 
   let aiLiteracyCompleted: boolean | null = null;
-  if (inAILiteracyCollection && learningUnit.contentType === 'QUIZ') {
+  if (inAILiteracyCollection && learningUnit.contentItems.some((item) => item.type === 'QUIZ')) {
     const learningUnitCollectionArg = {
       where: {
         collectionId: learningUnit.collections.find(
@@ -230,6 +236,13 @@ export const load: PageServerLoad = async (event) => {
     }
   }
 
+  const checkpoints: Record<string, number> = {};
+  if (learningJourney?.checkpoints) {
+    for (const cp of learningJourney.checkpoints) {
+      checkpoints[cp.contentItemId] = Number(cp.lastCheckpoint);
+    }
+  }
+
   return {
     csrfToken: event.locals.session.csrfToken(),
     id: learningUnit.id,
@@ -237,14 +250,13 @@ export const load: PageServerLoad = async (event) => {
     title: learningUnit.title,
     summary: learningUnit.summary,
     objectives: learningUnit.objectives,
-    url: learningUnit.contentURL,
+    contentItems: learningUnit.contentItems,
     createdAt: learningUnit.createdAt,
     createdBy: learningUnit.createdBy,
-    contentType: learningUnit.contentType,
     isQuizAvailable,
     isRequired: learningUnit.isRequired,
     dueDate: learningUnit.dueDate,
-    lastCheckpoint: Number(learningJourney?.lastCheckpoint),
+    checkpoints,
     quizStatus,
     userSentiment: sentiment?.hasLiked ?? null,
     likesCount: likesAggregate._count.hasLiked,
@@ -355,7 +367,6 @@ export const actions: Actions = {
       create: {
         userId: user.id,
         learningUnitId: event.params.id,
-        lastCheckpoint: 0,
         isQuizAttempted: true,
       },
     } satisfies LearningJourneyUpsertArgs;

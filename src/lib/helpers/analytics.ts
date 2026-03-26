@@ -110,6 +110,62 @@ export function trackNowPlayingBarClick(learning_unit_id: string) {
 }
 
 /**
+ * Tracks when a video is played at 20% completion.
+ * @param learningUnitId - The ID of the learning unit that was played.
+ */
+export function track20PercentVideoPlay(learningUnitId: string) {
+  if (!browser) {
+    return;
+  }
+
+  window.gtag('event', 'video_play_20_percent', {
+    learning_unit_id: learningUnitId,
+  });
+}
+
+/**
+ * Tracks when a video is played at 50% completion.
+ * @param learningUnitId - The ID of the learning unit that was played.
+ */
+export function track50PercentVideoPlay(learningUnitId: string) {
+  if (!browser) {
+    return;
+  }
+
+  window.gtag('event', 'video_play_50_percent', {
+    learning_unit_id: learningUnitId,
+  });
+}
+
+/**
+ * Tracks when a video is played at 80% completion.
+ * @param learningUnitId - The ID of the learning unit that was played.
+ */
+export function track80PercentVideoPlay(learningUnitId: string) {
+  if (!browser) {
+    return;
+  }
+
+  window.gtag('event', 'video_play_80_percent', {
+    learning_unit_id: learningUnitId,
+  });
+}
+
+/**
+ * Tracks when a video is completed (100%).
+ * @param learningUnitId - The ID of the learning unit that was completed.
+ */
+export function trackVideoCompletion(learningUnitId: string) {
+  if (!browser) {
+    return;
+  }
+
+  window.gtag('event', 'video_completion', {
+    learning_unit_id: learningUnitId,
+  });
+}
+
+/**
  * Tracks when a podcast is completed (100%).
  * @param learningUnitId - The ID of the learning unit that was completed.
  */

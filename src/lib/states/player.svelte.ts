@@ -12,6 +12,7 @@ export interface Track {
   title: string;
   summary: string;
   url: string;
+  contentItemId?: string;
 }
 
 /**
@@ -43,6 +44,7 @@ export interface Track {
 export class Player extends EventTarget {
   #currentTrack = $state.raw<Track | null>(null);
   #isPlaying = $state(false);
+  #isNowPlayingViewOpen = $state(false);
   #duration = $state(0);
   #progress = $state(0);
   #playbackSpeedIndex = $state(1);
@@ -52,7 +54,6 @@ export class Player extends EventTarget {
   #hasTracked50Percent = $state(false);
   #hasTracked80Percent = $state(false);
   #hasTracked100Percent = $state(false);
-
   #audio: HTMLAudioElement | null = null;
 
   constructor() {
@@ -160,6 +161,14 @@ export class Player extends EventTarget {
    */
   get isPlaying() {
     return this.#isPlaying;
+  }
+
+  get isNowPlayingViewOpen() {
+    return this.#isNowPlayingViewOpen;
+  }
+
+  set isNowPlayingViewOpen(value: boolean) {
+    this.#isNowPlayingViewOpen = value;
   }
 
   /**

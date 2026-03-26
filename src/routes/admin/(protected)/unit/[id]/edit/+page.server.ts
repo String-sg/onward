@@ -29,6 +29,7 @@ export const load: PageServerLoad = async (event) => {
   const learningUnitArgs = {
     where: { id: event.params.id },
     include: {
+      contentItems: true,
       tags: { include: { tag: true } },
       sources: { include: { tags: { include: { tag: true } } } },
       questionAnswers: { orderBy: { order: 'asc' } },
@@ -105,6 +106,10 @@ export const load: PageServerLoad = async (event) => {
         answer: q.answer,
         explanation: q.explanation,
       })),
+      contentItems: learningUnit.contentItems.map((item) => ({
+        type: item.type,
+        url: item.url,
+      })),
     },
     collections,
     contentTags,
@@ -136,8 +141,6 @@ export const actions = {
       where: { id: event.params.id },
       data: {
         title: data.title,
-        contentType: data.contentType,
-        contentURL: data.contentURL,
         summary: data.summary,
         objectives: data.objectives,
         createdBy: data.createdBy,
@@ -170,8 +173,16 @@ export const actions = {
             order: i + 1,
           })),
         },
+        contentItems: {
+          deleteMany: {},
+          create: data.contentItems.map((item) => ({
+            type: item.type,
+            url: item.url,
+          })),
+        },
       },
       include: {
+        contentItems: true,
         tags: { include: { tag: true } },
         sources: { include: { tags: { include: { tag: true } } } },
         questionAnswers: { orderBy: { order: 'asc' } },
@@ -205,6 +216,10 @@ export const actions = {
           answer: q.answer,
           explanation: q.explanation,
         })),
+        contentItems: learningUnit.contentItems.map((item) => ({
+          type: item.type,
+          url: item.url,
+        })),
       },
     };
   },
@@ -230,8 +245,6 @@ export const actions = {
       where: { id: event.params.id },
       data: {
         title: result.data.title,
-        contentType: result.data.contentType,
-        contentURL: result.data.contentURL,
         summary: result.data.summary,
         objectives: result.data.objectives,
         createdBy: result.data.createdBy,
@@ -265,6 +278,13 @@ export const actions = {
             answer: q.answer,
             explanation: q.explanation,
             order: i + 1,
+          })),
+        },
+        contentItems: {
+          deleteMany: {},
+          create: result.data.contentItems.map((item) => ({
+            type: item.type,
+            url: item.url,
           })),
         },
       },

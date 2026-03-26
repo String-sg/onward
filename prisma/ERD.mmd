@@ -1,0 +1,170 @@
+erDiagram
+    User {
+        uuid id PK
+        varchar name
+        string email UK
+        string google_provider_id UK
+        string avatar_url
+        timestamptz created_at
+        timestamptz updated_at
+    }
+
+    UserProfile {
+        uuid user_id PK,FK
+        enum learning_frequency
+        boolean is_subscribed
+        timestamptz created_at
+        timestamptz updated_at
+    }
+
+    UserAdmin {
+        uuid id PK
+        varchar name
+        string email UK
+        string google_provider_id UK
+        boolean is_active
+        timestamptz created_at
+        timestamptz updated_at
+    }
+
+    Collection {
+        uuid id PK
+        string title
+        string description
+        uuid tag_id FK
+        boolean is_topic
+        timestamptz created_at
+        timestamptz updated_at
+    }
+
+    Tag {
+        uuid id PK
+        varchar code UK
+        varchar label
+        timestamptz created_at
+        timestamptz updated_at
+    }
+
+    LearningUnit {
+        uuid id PK
+        string title
+        enum content_type
+        string summary
+        string objectives
+        string created_by
+        boolean is_recommended
+        boolean is_required
+        enum status
+        string content_url
+        date due_date
+        timestamptz created_at
+        timestamptz updated_at
+    }
+
+    LearningUnitContent {
+        uuid id PK
+        uuid unit_id FK
+        enum type
+        string url
+        int order
+        timestamptz created_at
+        timestamptz updated_at
+    }
+
+    LearningUnitSentiments {
+        uuid user_id FK
+        uuid learning_unit_id FK
+        boolean has_liked
+        timestamptz created_at
+        timestamptz updated_at
+    }
+
+    LearningUnitSources {
+        uuid id PK
+        string title
+        string source_url
+        uuid learning_unit_id FK
+        timestamptz created_at
+        timestamptz updated_at
+    }
+
+    LearningJourney {
+        uuid id PK
+        boolean is_completed
+        decimal last_checkpoint
+        boolean is_quiz_attempted
+        boolean is_quiz_passed
+        uuid user_id FK
+        uuid learning_unit_id FK
+        timestamptz created_at
+        timestamptz updated_at
+    }
+
+    LearningJourneyCheckpoint {
+        uuid id PK
+        decimal checkpoint
+        uuid learning_journey_id FK
+        uuid content_item_id FK
+        timestamptz created_at
+        timestamptz updated_at
+    }
+
+    QuestionAnswer {
+        uuid id PK
+        string question
+        string_array options
+        smallint answer
+        string explanation
+        smallint order
+        uuid learning_unit_id FK
+        timestamptz created_at
+        timestamptz updated_at
+    }
+
+    Thread {
+        uuid id PK
+        boolean is_active
+        uuid user_id FK
+        timestamptz created_at
+        timestamptz updated_at
+    }
+
+    Message {
+        uuid id PK
+        string content
+        enum role
+        uuid thread_id FK
+        timestamptz created_at
+        timestamptz updated_at
+    }
+
+    %% User relationships
+    User ||--o| UserProfile : "has profile"
+    User ||--o{ LearningJourney : "tracks progress"
+    User ||--o{ LearningUnitSentiments : "reacts to"
+    User ||--o{ Thread : "chats in"
+
+    %% User interests (many-to-many via junction)
+    UserProfile }o--o{ Collection : "interested in"
+
+    %% Collection and Tag
+    Collection }o--o| Tag : "tagged with"
+    Collection }o--o{ LearningUnit : "contains"
+
+    %% Learning Unit core
+    LearningUnit ||--o{ LearningUnitContent : "has content"
+    LearningUnit }o--o{ Tag : "tagged with"
+    LearningUnit ||--o{ LearningUnitSentiments : "receives"
+    LearningUnit ||--o{ LearningUnitSources : "cites"
+    LearningUnit ||--o{ LearningJourney : "tracked by"
+    LearningUnit ||--o{ QuestionAnswer : "has questions"
+
+    %% Checkpoints
+    LearningJourney ||--o{ LearningJourneyCheckpoint : "has checkpoints"
+    LearningUnitContent ||--o{ LearningJourneyCheckpoint : "tracked by"
+
+    %% Sources and Tags
+    LearningUnitSources }o--o{ Tag : "tagged with"
+
+    %% Thread
+    Thread ||--o{ Message : "contains"

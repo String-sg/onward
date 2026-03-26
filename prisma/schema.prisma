@@ -67,14 +67,12 @@ model LearningUnit {
 
   // Domain-Specific Fields.
   title         String             @map("title")
-  contentType   ContentType        @map("content_type")
   summary       String             @map("summary")
   objectives    String             @map("objectives")
   createdBy     String             @map("created_by")
   isRecommended Boolean            @default(false) @map("is_recommended")
   isRequired    Boolean            @default(false) @map("is_required")
   status        LearningUnitStatus @default(DRAFT) @map("status")
-  contentURL    String?            @map("content_url")
   dueDate       DateTime?          @map("due_date") @db.Date
 
   // Relations.
@@ -84,8 +82,23 @@ model LearningUnit {
   learningJourneys LearningJourney[]
   questionAnswers  QuestionAnswer[]
   sources          LearningUnitSources[]
+  contentItems     LearningUnitContent[]
 
   @@map("learning_units")
+}
+
+model LearningUnitContent {
+  id        String      @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  unitId    String      @map("unit_id") @db.Uuid
+  type      ContentType @map("type")
+  url       String?     @map("url")
+  createdAt DateTime    @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime    @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  unit        LearningUnit                @relation(fields: [unitId], references: [id], onDelete: Cascade)
+  checkpoints LearningJourneyCheckpoint[]
+
+  @@map("learning_unit_content")
 }
 
 model LearningUnitCollection {
@@ -139,6 +152,7 @@ model LearningUnitSources {
 enum ContentType {
   PODCAST
   QUIZ
+  VIDEO
 }
 
 enum LearningUnitStatus {
@@ -153,7 +167,6 @@ model LearningJourney {
 
   // Domain-Specific Fields.
   isCompleted     Boolean  @default(false) @map("is_completed")
-  lastCheckpoint  Decimal  @map("last_checkpoint")
   isQuizAttempted Boolean  @default(false) @map("is_quiz_attempted")
   isQuizPassed    Boolean? @map("is_quiz_passed")
 
@@ -164,8 +177,28 @@ model LearningJourney {
   user         User         @relation(fields: [userId], references: [id])
   learningUnit LearningUnit @relation(fields: [learningUnitId], references: [id])
 
+  checkpoints LearningJourneyCheckpoint[]
+
   @@unique([userId, learningUnitId])
   @@map("learning_journeys")
+}
+
+model LearningJourneyCheckpoint {
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  // Domain-Specific Fields.
+  lastCheckpoint Decimal @map("last_checkpoint")
+
+  // Relations.
+  learningJourneyId String @map("learning_journey_id") @db.Uuid
+  contentItemId     String @map("content_item_id") @db.Uuid
+
+  learningJourney LearningJourney     @relation(fields: [learningJourneyId], references: [id], onDelete: Cascade)
+  contentItem     LearningUnitContent @relation(fields: [contentItemId], references: [id], onDelete: Cascade)
+
+  @@id([learningJourneyId, contentItemId])
+  @@map("learning_journey_checkpoints")
 }
 
 model Tag {

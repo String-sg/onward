@@ -9,8 +9,7 @@
 
   let unit = $state({
     title: '',
-    contentType: '',
-    contentURL: '',
+    contentItems: [],
     collectionId: '',
     summary: '',
     objectives: '',

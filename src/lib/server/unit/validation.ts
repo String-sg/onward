@@ -9,15 +9,85 @@ export const ERROR_MESSAGES = {
     `At least ${min} ${field.toLowerCase()} ${min === 1 ? 'is' : 'are'} required`,
 };
 
+export interface ContentItemData {
+  type: ContentType;
+  url: string | null;
+}
+
 export type FormValidationError = Record<
   string,
   { message: string; items?: Record<string, string>[] }
 >;
 
+function parseContentItems(
+  data: FormData,
+  requireAtLeastOne: boolean,
+  errors: FormValidationError,
+): ContentItemData[] {
+  const json = data.get('contentItems');
+
+  if (!json || typeof json !== 'string') {
+    if (requireAtLeastOne) {
+      errors.contentItems = { message: ERROR_MESSAGES.ARRAY_MIN('Content item', 1) };
+    }
+    return [];
+  }
+
+  let items: ContentItemData[];
+  try {
+    items = JSON.parse(json);
+  } catch {
+    errors.contentItems = { message: ERROR_MESSAGES.INVALID_DATA() };
+    return [];
+  }
+
+  if (!Array.isArray(items)) {
+    errors.contentItems = { message: ERROR_MESSAGES.INVALID_DATA() };
+    return [];
+  }
+
+  if (requireAtLeastOne && items.length === 0) {
+    errors.contentItems = { message: ERROR_MESSAGES.ARRAY_MIN('Content item', 1) };
+    return items;
+  }
+
+  const itemErrors: Record<string, string>[] = items.map(() => ({}));
+
+  for (let i = 0; i < items.length; i++) {
+    const item = items[i];
+    const err: Record<string, string> = {};
+
+    if (!(Object.values(ContentType) as string[]).includes(item.type)) {
+      err.type = ERROR_MESSAGES.INVALID_OPTION;
+    } else if (item.type === ContentType.VIDEO || item.type === ContentType.PODCAST) {
+      if (!item.url || typeof item.url !== 'string' || item.url.trim().length === 0) {
+        err.url = ERROR_MESSAGES.FIELD_REQUIRED;
+      } else {
+        try {
+          new URL(item.url.trim());
+          item.url = item.url.trim();
+        } catch {
+          err.url = ERROR_MESSAGES.INVALID_DATA('URL');
+        }
+      }
+    } else {
+      // QUIZ: discard any URL
+      item.url = null;
+    }
+
+    if (Object.keys(err).length > 0) itemErrors[i] = err;
+  }
+
+  if (itemErrors.some((e) => Object.keys(e).length > 0)) {
+    errors.contentItems = { message: '', items: itemErrors };
+  }
+
+  return items;
+}
+
 export interface LearningUnitDraftFormData {
   title: string;
-  contentType: ContentType;
-  contentURL: string;
+  contentItems: ContentItemData[];
   summary: string;
   objectives: string;
   createdBy: string;
@@ -37,8 +107,7 @@ export interface LearningUnitDraftFormData {
 
 export interface LearningUnitFormData {
   title: string;
-  contentType: ContentType;
-  contentURL: string;
+  contentItems: ContentItemData[];
   summary: string;
   objectives: string;
   createdBy: string;
@@ -77,28 +146,7 @@ export function validateLearningUnitDraft(
     title = titleRaw.trim();
   }
 
-  const contentTypeRaw = data.get('contentType');
-  let contentType: ContentType;
-  if (!contentTypeRaw || typeof contentTypeRaw !== 'string' || contentTypeRaw.trim().length === 0) {
-    errors.contentType = { message: ERROR_MESSAGES.FIELD_REQUIRED };
-  } else if (!(Object.values(ContentType) as string[]).includes(contentTypeRaw)) {
-    errors.contentType = { message: ERROR_MESSAGES.INVALID_OPTION };
-  } else {
-    contentType = contentTypeRaw as ContentType;
-  }
-
-  const contentURLRaw = data.get('contentURL');
-  let contentURL: string;
-  if (!contentURLRaw || typeof contentURLRaw !== 'string' || contentURLRaw.trim().length === 0) {
-    errors.contentURL = { message: ERROR_MESSAGES.FIELD_REQUIRED };
-  } else {
-    try {
-      new URL(contentURLRaw.trim());
-      contentURL = contentURLRaw.trim();
-    } catch {
-      errors.contentURL = { message: ERROR_MESSAGES.INVALID_DATA('URL') };
-    }
-  }
+  const contentItems = parseContentItems(data, false, errors);
 
   const summaryRaw = data.get('summary');
   let summary: string;
@@ -250,8 +298,7 @@ export function validateLearningUnitDraft(
     success: true,
     data: {
       title: title!,
-      contentType: contentType!,
-      contentURL: contentURL!,
+      contentItems,
       summary: summary!,
       objectives: objectives!,
       createdBy: createdBy!,
@@ -284,23 +331,7 @@ export function validateLearningUnit(data: FormData):
     errors.title = { message: ERROR_MESSAGES.FIELD_REQUIRED };
   }
 
-  const contentType = data.get('contentType');
-  if (!contentType || typeof contentType !== 'string') {
-    errors.contentType = { message: ERROR_MESSAGES.FIELD_REQUIRED };
-  } else if (!(Object.values(ContentType) as string[]).includes(contentType)) {
-    errors.contentType = { message: ERROR_MESSAGES.INVALID_OPTION };
-  }
-
-  const contentURL = data.get('contentURL');
-  if (!contentURL || typeof contentURL !== 'string' || contentURL.trim().length === 0) {
-    errors.contentURL = { message: ERROR_MESSAGES.FIELD_REQUIRED };
-  } else {
-    try {
-      new URL(contentURL);
-    } catch {
-      errors.contentURL = { message: ERROR_MESSAGES.INVALID_DATA('URL') };
-    }
-  }
+  const contentItems = parseContentItems(data, true, errors);
 
   const summary = data.get('summary');
   if (!summary || typeof summary !== 'string' || summary.trim().length === 0) {
@@ -484,8 +515,7 @@ export function validateLearningUnit(data: FormData):
     success: true,
     data: {
       title: (title as string).trim(),
-      contentType: contentType as ContentType,
-      contentURL: (contentURL as string).trim(),
+      contentItems,
       summary: (summary as string).trim(),
       objectives: (objectives as string).trim(),
       createdBy: (createdBy as string).trim(),
