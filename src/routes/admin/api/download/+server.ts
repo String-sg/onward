@@ -44,7 +44,12 @@ export const GET: RequestHandler = async (event) => {
   } satisfies LearningJourneyFindManyArgs;
 
   try {
-    const records = await db.learningJourney.findMany(reportArgs);
+    const [records, quiz] = await Promise.all([
+      db.learningJourney.findMany(reportArgs),
+      quizId
+        ? db.learningUnit.findUnique({ where: { id: quizId }, select: { title: true } })
+        : null,
+    ]);
 
     const rows = records.map((r) => ({
       Name: r.user.name,
@@ -60,10 +65,20 @@ export const GET: RequestHandler = async (event) => {
 
     const buffer: Uint8Array = XLSX.write(workbook, { type: 'buffer', bookType: 'xlsx' });
 
+    const now = new Date();
+    const dd = String(now.getDate()).padStart(2, '0');
+    const mm = String(now.getMonth() + 1).padStart(2, '0');
+    const yyyy = now.getFullYear();
+    const hh = String(now.getHours()).padStart(2, '0');
+    const min = String(now.getMinutes()).padStart(2, '0');
+    const ss = String(now.getSeconds()).padStart(2, '0');
+    const quizTitle = (quiz?.title ?? 'quiz').replace(/[^a-zA-Z0-9]/g, '_');
+    const filename = `${dd}${mm}${yyyy}${hh}${min}${ss}_${quizTitle}_user_report.xlsx`;
+
     return new Response(buffer.buffer as ArrayBuffer, {
       headers: {
         'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        'Content-Disposition': 'attachment; filename="quiz-report.xlsx"',
+        'Content-Disposition': `attachment; filename="${filename}"`,
       },
     });
   } catch (err) {

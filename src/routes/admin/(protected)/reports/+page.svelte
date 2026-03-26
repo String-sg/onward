@@ -11,7 +11,7 @@
 
   let { data }: PageProps = $props();
 
-  let selectedId = $state(data.quizId);
+  let selectedId = $derived(data.quizId);
 
   const downloadHref = $derived(`/admin/api/download?quizId=${encodeURIComponent(selectedId)}`);
 
