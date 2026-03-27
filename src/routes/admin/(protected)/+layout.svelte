@@ -1,12 +1,15 @@
 <script lang="ts">
-  import { BookOpen } from '@lucide/svelte';
+  import { BookOpen, FileSpreadsheet } from '@lucide/svelte';
 
   import { page } from '$app/state';
   import { Sidebar } from '$lib/components/Sidebar/index.js';
 
   let { children } = $props();
 
-  const navItems = [{ href: '/admin', label: 'Learning Units', icon: BookOpen }];
+  const navItems = [
+    { href: '/admin', label: 'Learning Units', icon: BookOpen },
+    { href: '/admin/reports', label: 'Generate Report', icon: FileSpreadsheet },
+  ];
 </script>
 
 <div class="flex h-screen overflow-hidden">

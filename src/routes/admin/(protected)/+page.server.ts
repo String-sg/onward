@@ -1,4 +1,4 @@
-import { error } from '@sveltejs/kit';
+import { error, redirect } from '@sveltejs/kit';
 
 import { db, type LearningUnitFindManyArgs, type LearningUnitGetPayload } from '$lib/server/db.js';
 
@@ -9,6 +9,12 @@ export const load: PageServerLoad = async (event) => {
     userID: event.locals.session.user!.id,
     handler: 'page_load_admin',
   });
+
+  const { user } = event.locals.session;
+  if (!user) {
+    logger.warn('User not authenticated');
+    throw redirect(303, '/admin');
+  }
 
   const page = Number(event.url.searchParams.get('page')) || 1;
   const pageSize = Number(event.url.searchParams.get('pageSize')) || 10;
