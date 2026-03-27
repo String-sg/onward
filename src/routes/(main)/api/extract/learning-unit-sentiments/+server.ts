@@ -1,7 +1,7 @@
 import type { RequestHandler } from '@sveltejs/kit';
 import { json } from '@sveltejs/kit';
 
-import type { UserFindManyArgs } from '$lib/server/db.js';
+import type { LearningUnitSentimentsFindManyArgs } from '$lib/server/db.js';
 import { db } from '$lib/server/db.js';
 import {
   composeMiddleware,
@@ -20,8 +20,8 @@ import {
   parsePositiveInteger,
 } from '../helpers.js';
 
-const getUsersApi: RequestHandler = async (event) => {
-  const logger = event.locals.logger.child({ handler: 'api_extract_users' });
+const getLearningUnitSentimentsApi: RequestHandler = async (event) => {
+  const logger = event.locals.logger.child({ handler: 'api_extract_learning_unit_sentiments' });
 
   const pageResult = parsePositiveInteger(event.url.searchParams.get('page'), DEFAULT_PAGE, 'page');
   if ('error' in pageResult) {
@@ -59,32 +59,30 @@ const getUsersApi: RequestHandler = async (event) => {
 
   const where = buildUpdatedAtWhere(lastUpdatedStartResult.value, lastUpdatedEndResult.value);
 
-  const userArgs = {
+  const learningUnitSentimentsArgs = {
     where,
-    orderBy: {
-      updatedAt: 'asc',
-    },
+    orderBy: [{ updatedAt: 'asc' }, { userId: 'asc' }, { learningUnitId: 'asc' }],
     skip,
     take: pageSize,
-  } satisfies UserFindManyArgs;
+  } satisfies LearningUnitSentimentsFindManyArgs;
 
   try {
-    const [users, totalCount] = await Promise.all([
-      db.user.findMany(userArgs),
-      db.user.count({ where }),
+    const [learningUnitSentiments, totalCount] = await Promise.all([
+      db.learningUnitSentiments.findMany(learningUnitSentimentsArgs),
+      db.learningUnitSentiments.count({ where }),
     ]);
 
     return json({
-      data: users,
+      data: learningUnitSentiments,
       pagination: buildPagination(page, pageSize, totalCount),
       filters: buildUpdatedAtFilters(lastUpdatedStartResult.value, lastUpdatedEndResult.value),
     });
   } catch (err) {
-    logger.error({ err }, 'Failed to extract users');
-    return json({ message: 'Failed to extract users.' }, { status: 500 });
+    logger.error({ err }, 'Failed to extract learning unit sentiments');
+    return json({ message: 'Failed to extract learning unit sentiments.' }, { status: 500 });
   }
 };
 
 export const GET: RequestHandler = composeMiddleware([withIpWhitelist, withInternalApiKey])(
-  getUsersApi,
+  getLearningUnitSentimentsApi,
 );

@@ -20,7 +20,7 @@ function getRequestLogger(event: Parameters<RequestHandler>[0], middleware: stri
 }
 
 function getInternalApiKey() {
-  return env.INTERNAL_API_KEY ?? '';
+  return env.EXTRACT_API_KEY ?? '';
 }
 
 function isValidApiKey(apiKey: string, expectedApiKey: string) {
@@ -37,7 +37,7 @@ export function withInternalApiKey(handler: RequestHandler): RequestHandler {
     const expectedApiKey = getInternalApiKey();
 
     if (!expectedApiKey) {
-      logger.error('INTERNAL_API_KEY is not configured');
+      logger.error('EXTRACT_API_KEY is not configured');
       return json({ message: 'Internal API key is not configured.' }, { status: 500 });
     }
 
@@ -57,13 +57,13 @@ export function withInternalApiKey(handler: RequestHandler): RequestHandler {
 export function withIpWhitelist(handler: RequestHandler): RequestHandler {
   return async (event) => {
     const logger = getRequestLogger(event, 'withIpWhitelist');
-    const allowedIps = (env.INTERNAL_API_ALLOWED_IPS ?? '')
+    const allowedIps = (env.EXTRACT_API_ALLOWED_IPS ?? '')
       .split(',')
       .map((ip) => ip.trim())
       .filter(Boolean);
 
     if (allowedIps.length === 0) {
-      logger.error('INTERNAL_API_ALLOWED_IPS is not configured');
+      logger.error('EXTRACT_API_ALLOWED_IPS is not configured');
       return json({ message: 'IP whitelist is not configured.' }, { status: 500 });
     }
 

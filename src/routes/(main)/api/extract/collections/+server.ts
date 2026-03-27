@@ -1,7 +1,7 @@
 import type { RequestHandler } from '@sveltejs/kit';
 import { json } from '@sveltejs/kit';
 
-import type { UserFindManyArgs } from '$lib/server/db.js';
+import type { CollectionFindManyArgs } from '$lib/server/db.js';
 import { db } from '$lib/server/db.js';
 import {
   composeMiddleware,
@@ -20,8 +20,8 @@ import {
   parsePositiveInteger,
 } from '../helpers.js';
 
-const getUsersApi: RequestHandler = async (event) => {
-  const logger = event.locals.logger.child({ handler: 'api_extract_users' });
+const getCollectionsApi: RequestHandler = async (event) => {
+  const logger = event.locals.logger.child({ handler: 'api_extract_collections' });
 
   const pageResult = parsePositiveInteger(event.url.searchParams.get('page'), DEFAULT_PAGE, 'page');
   if ('error' in pageResult) {
@@ -59,32 +59,32 @@ const getUsersApi: RequestHandler = async (event) => {
 
   const where = buildUpdatedAtWhere(lastUpdatedStartResult.value, lastUpdatedEndResult.value);
 
-  const userArgs = {
+  const collectionArgs = {
     where,
     orderBy: {
       updatedAt: 'asc',
     },
     skip,
     take: pageSize,
-  } satisfies UserFindManyArgs;
+  } satisfies CollectionFindManyArgs;
 
   try {
-    const [users, totalCount] = await Promise.all([
-      db.user.findMany(userArgs),
-      db.user.count({ where }),
+    const [collections, totalCount] = await Promise.all([
+      db.collection.findMany(collectionArgs),
+      db.collection.count({ where }),
     ]);
 
     return json({
-      data: users,
+      data: collections,
       pagination: buildPagination(page, pageSize, totalCount),
       filters: buildUpdatedAtFilters(lastUpdatedStartResult.value, lastUpdatedEndResult.value),
     });
   } catch (err) {
-    logger.error({ err }, 'Failed to extract users');
-    return json({ message: 'Failed to extract users.' }, { status: 500 });
+    logger.error({ err }, 'Failed to extract collections');
+    return json({ message: 'Failed to extract collections.' }, { status: 500 });
   }
 };
 
 export const GET: RequestHandler = composeMiddleware([withIpWhitelist, withInternalApiKey])(
-  getUsersApi,
+  getCollectionsApi,
 );

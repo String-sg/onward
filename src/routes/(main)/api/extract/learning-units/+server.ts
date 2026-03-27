@@ -1,7 +1,7 @@
 import type { RequestHandler } from '@sveltejs/kit';
 import { json } from '@sveltejs/kit';
 
-import type { UserFindManyArgs } from '$lib/server/db.js';
+import type { LearningUnitFindManyArgs } from '$lib/server/db.js';
 import { db } from '$lib/server/db.js';
 import {
   composeMiddleware,
@@ -20,8 +20,8 @@ import {
   parsePositiveInteger,
 } from '../helpers.js';
 
-const getUsersApi: RequestHandler = async (event) => {
-  const logger = event.locals.logger.child({ handler: 'api_extract_users' });
+const getLearningUnitsApi: RequestHandler = async (event) => {
+  const logger = event.locals.logger.child({ handler: 'api_extract_learning_units' });
 
   const pageResult = parsePositiveInteger(event.url.searchParams.get('page'), DEFAULT_PAGE, 'page');
   if ('error' in pageResult) {
@@ -59,32 +59,32 @@ const getUsersApi: RequestHandler = async (event) => {
 
   const where = buildUpdatedAtWhere(lastUpdatedStartResult.value, lastUpdatedEndResult.value);
 
-  const userArgs = {
+  const learningUnitArgs = {
     where,
     orderBy: {
       updatedAt: 'asc',
     },
     skip,
     take: pageSize,
-  } satisfies UserFindManyArgs;
+  } satisfies LearningUnitFindManyArgs;
 
   try {
-    const [users, totalCount] = await Promise.all([
-      db.user.findMany(userArgs),
-      db.user.count({ where }),
+    const [learningUnits, totalCount] = await Promise.all([
+      db.learningUnit.findMany(learningUnitArgs),
+      db.learningUnit.count({ where }),
     ]);
 
     return json({
-      data: users,
+      data: learningUnits,
       pagination: buildPagination(page, pageSize, totalCount),
       filters: buildUpdatedAtFilters(lastUpdatedStartResult.value, lastUpdatedEndResult.value),
     });
   } catch (err) {
-    logger.error({ err }, 'Failed to extract users');
-    return json({ message: 'Failed to extract users.' }, { status: 500 });
+    logger.error({ err }, 'Failed to extract learning units');
+    return json({ message: 'Failed to extract learning units.' }, { status: 500 });
   }
 };
 
 export const GET: RequestHandler = composeMiddleware([withIpWhitelist, withInternalApiKey])(
-  getUsersApi,
+  getLearningUnitsApi,
 );

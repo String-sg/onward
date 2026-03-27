@@ -11,7 +11,7 @@ vi.mock('$env/dynamic/private', () => ({
 
 vi.mock('$lib/server/db.js', () => ({
   db: {
-    user: {
+    learningUnit: {
       findMany: vi.fn(),
       count: vi.fn(),
     },
@@ -23,7 +23,7 @@ import { db } from '$lib/server/db.js';
 import { GET } from './+server.js';
 
 function makeEvent(
-  url = 'http://localhost/api/extract/users',
+  url = 'http://localhost/api/extract/learning-units',
   headers: Record<string, string> = {},
   clientIp = '127.0.0.1',
 ) {
@@ -39,36 +39,40 @@ function makeEvent(
 
 beforeEach(() => {
   vi.unstubAllEnvs();
-  vi.mocked(db.user.findMany).mockReset();
-  vi.mocked(db.user.count).mockReset();
+  vi.mocked(db.learningUnit.findMany).mockReset();
+  vi.mocked(db.learningUnit.count).mockReset();
   vi.stubEnv('EXTRACT_API_KEY', 'test-api-key');
   vi.stubEnv('EXTRACT_API_ALLOWED_IPS', '127.0.0.1');
 });
 
-describe('extract users GET', () => {
-  test('returns paginated users', async () => {
-    vi.mocked(db.user.findMany).mockResolvedValue([
+describe('extract learning units GET', () => {
+  test('returns paginated learning units', async () => {
+    vi.mocked(db.learningUnit.findMany).mockResolvedValue([
       {
-        id: 'user-1',
-        name: 'Alice',
-        email: 'alice@example.com',
-        googleProviderId: 'google-1',
-        avatarURL: 'https://example.com/alice.png',
+        id: 'unit-1',
+        title: 'Unit A',
+        summary: 'Summary',
+        objectives: 'Objectives',
+        createdBy: 'Admin',
+        isRecommended: false,
+        isRequired: false,
+        status: 'PUBLISHED',
+        dueDate: null,
         createdAt: new Date('2026-01-01T00:00:00.000Z'),
         updatedAt: new Date('2026-01-05T00:00:00.000Z'),
       },
     ]);
-    vi.mocked(db.user.count).mockResolvedValue(3);
+    vi.mocked(db.learningUnit.count).mockResolvedValue(3);
 
     const response = await GET(
-      makeEvent('http://localhost/api/extract/users?page=2&pageSize=1', {
+      makeEvent('http://localhost/api/extract/learning-units?page=2&pageSize=1', {
         'x-api-key': 'test-api-key',
       }),
     );
     const body = await response.json();
 
     expect(response.status).toBe(200);
-    expect(db.user.findMany).toHaveBeenCalledWith(
+    expect(db.learningUnit.findMany).toHaveBeenCalledWith(
       expect.objectContaining({
         skip: 1,
         take: 1,
@@ -86,13 +90,13 @@ describe('extract users GET', () => {
     expect(body.data).toHaveLength(1);
   });
 
-  test('filters users by updatedAt range', async () => {
-    vi.mocked(db.user.findMany).mockResolvedValue([]);
-    vi.mocked(db.user.count).mockResolvedValue(0);
+  test('filters learning units by updatedAt range', async () => {
+    vi.mocked(db.learningUnit.findMany).mockResolvedValue([]);
+    vi.mocked(db.learningUnit.count).mockResolvedValue(0);
 
     const response = await GET(
       makeEvent(
-        'http://localhost/api/extract/users?lastUpdatedStart=2026-01-01T00:00:00.000Z&lastUpdatedEnd=2026-01-31T23:59:59.999Z',
+        'http://localhost/api/extract/learning-units?lastUpdatedStart=2026-01-01T00:00:00.000Z&lastUpdatedEnd=2026-01-31T23:59:59.999Z',
         {
           'x-api-key': 'test-api-key',
         },
@@ -101,7 +105,7 @@ describe('extract users GET', () => {
     const body = await response.json();
 
     expect(response.status).toBe(200);
-    expect(db.user.findMany).toHaveBeenCalledWith(
+    expect(db.learningUnit.findMany).toHaveBeenCalledWith(
       expect.objectContaining({
         where: {
           updatedAt: {
@@ -117,16 +121,16 @@ describe('extract users GET', () => {
     });
   });
 
-  test('returns bad request for invalid lastUpdatedStart', async () => {
+  test('returns bad request for invalid lastUpdatedEnd', async () => {
     const response = await GET(
-      makeEvent('http://localhost/api/extract/users?lastUpdatedStart=not-a-date', {
+      makeEvent('http://localhost/api/extract/learning-units?lastUpdatedEnd=not-a-date', {
         'x-api-key': 'test-api-key',
       }),
     );
     const body = await response.json();
 
     expect(response.status).toBe(400);
-    expect(body).toEqual({ message: 'Invalid lastUpdatedStart parameter.' });
-    expect(db.user.findMany).not.toHaveBeenCalled();
+    expect(body).toEqual({ message: 'Invalid lastUpdatedEnd parameter.' });
+    expect(db.learningUnit.findMany).not.toHaveBeenCalled();
   });
 });
