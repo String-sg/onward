@@ -34,7 +34,7 @@ export const GET: RequestHandler = async (event) => {
     },
     where: {
       learningUnit: {
-        contentItems: { some: { type: ContentType.QUIZ } },
+        contents: { some: { type: ContentType.QUIZ } },
         ...(quizId && { id: quizId }),
       },
     },

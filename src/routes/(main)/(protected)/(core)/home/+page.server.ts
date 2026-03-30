@@ -91,7 +91,7 @@ export const load: PageServerLoad = async (event) => {
       createdAt: true,
       title: true,
       summary: true,
-      contentItems: {
+      contents: {
         select: { id: true, type: true, url: true },
         where: { type: 'PODCAST' },
         take: 1,
@@ -153,7 +153,7 @@ export const load: PageServerLoad = async (event) => {
       isCompleted: true,
       checkpoints: {
         select: { lastCheckpoint: true },
-        where: { contentItem: { type: 'PODCAST' } },
+        where: { learningUnitContent: { type: 'PODCAST' } },
         take: 1,
       },
       learningUnit: {
@@ -161,7 +161,7 @@ export const load: PageServerLoad = async (event) => {
           id: true,
           title: true,
           summary: true,
-          contentItems: {
+          contents: {
             select: { id: true, type: true, url: true },
             where: { type: 'PODCAST' },
             take: 1,
@@ -186,7 +186,7 @@ export const load: PageServerLoad = async (event) => {
     where: {
       userId: user.id,
       learningUnit: {
-        contentItems: {
+        contents: {
           some: {
             type: { not: 'QUIZ' },
           },

@@ -53,7 +53,7 @@ export const load: PageServerLoad = async (event) => {
       title: true,
       summary: true,
       objectives: true,
-      contentItems: {
+      contents: {
         select: { id: true, type: true, url: true },
       },
       createdAt: true,
@@ -108,7 +108,7 @@ export const load: PageServerLoad = async (event) => {
       isCompleted: true,
       checkpoints: {
         select: {
-          contentItemId: true,
+          learningUnitContentId: true,
           lastCheckpoint: true,
         },
       },
@@ -208,7 +208,7 @@ export const load: PageServerLoad = async (event) => {
   );
 
   let aiLiteracyCompleted: boolean | null = null;
-  if (inAILiteracyCollection && learningUnit.contentItems.some((item) => item.type === 'QUIZ')) {
+  if (inAILiteracyCollection && learningUnit.contents.some((item) => item.type === 'QUIZ')) {
     const learningUnitCollectionArg = {
       where: {
         collectionId: learningUnit.collections.find(
@@ -239,7 +239,7 @@ export const load: PageServerLoad = async (event) => {
   const checkpoints: Record<string, number> = {};
   if (learningJourney?.checkpoints) {
     for (const cp of learningJourney.checkpoints) {
-      checkpoints[cp.contentItemId] = Number(cp.lastCheckpoint);
+      checkpoints[cp.learningUnitContentId] = Number(cp.lastCheckpoint);
     }
   }
 
@@ -250,7 +250,7 @@ export const load: PageServerLoad = async (event) => {
     title: learningUnit.title,
     summary: learningUnit.summary,
     objectives: learningUnit.objectives,
-    contentItems: learningUnit.contentItems,
+    contents: learningUnit.contents,
     createdAt: learningUnit.createdAt,
     createdBy: learningUnit.createdBy,
     isQuizAvailable,

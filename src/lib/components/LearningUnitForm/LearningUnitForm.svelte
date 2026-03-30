@@ -1,7 +1,7 @@
 <script module lang="ts">
   export interface UnitState {
     title: string;
-    contentItems: { type: 'VIDEO' | 'PODCAST' | 'QUIZ'; url: string | undefined }[];
+    contents: { type: 'VIDEO' | 'PODCAST' | 'QUIZ'; url: string | undefined }[];
     collectionId: string;
     summary: string;
     objectives: string;
@@ -45,11 +45,11 @@
   let { unit = $bindable(), data, form, onsubmit }: Props = $props();
 
   const addContentItem = () => {
-    unit = { ...unit, contentItems: [...unit.contentItems, { type: 'PODCAST', url: '' }] };
+    unit = { ...unit, contents: [...unit.contents, { type: 'PODCAST', url: '' }] };
   };
 
   const removeContentItem = (index: number) => {
-    unit = { ...unit, contentItems: unit.contentItems.filter((_, i) => i !== index) };
+    unit = { ...unit, contents: unit.contents.filter((_, i) => i !== index) };
   };
 
   const minDueDate = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().split('T')[0];
@@ -108,27 +108,25 @@
       <div class="flex flex-col gap-3">
         <span class="text-sm font-medium">Content</span>
 
-        {#if form?.errors?.contentItems?.message}
-          <p class="text-sm text-red-600">{form.errors.contentItems.message}</p>
+        {#if form?.errors?.contents?.message}
+          <p class="text-sm text-red-600">{form.errors.contents.message}</p>
         {/if}
 
-        {#each unit.contentItems as item, i (i)}
+        {#each unit.contents as item, i (i)}
           <div class="flex items-start gap-2">
             <Select
-              id="contentItems-{i}-type"
+              id="contents-{i}-type"
               bind:value={item.type}
               onchange={() => {
                 if (item.type === 'QUIZ') {
                   unit = {
                     ...unit,
-                    contentItems: unit.contentItems.map((c, j) =>
-                      j === i ? { ...c, url: undefined } : c,
-                    ),
+                    contents: unit.contents.map((c, j) => (j === i ? { ...c, url: undefined } : c)),
                   };
                 } else {
                   unit = {
                     ...unit,
-                    contentItems: unit.contentItems.map((c, j) =>
+                    contents: unit.contents.map((c, j) =>
                       j === i ? { ...c, url: c.url ?? '' } : c,
                     ),
                   };
@@ -141,7 +139,7 @@
             </Select>
             {#if item.type !== 'QUIZ'}
               <TextInput
-                id="contentItems-{i}-url"
+                id="contents-{i}-url"
                 type="url"
                 bind:value={item.url}
                 placeholder={item.type === 'VIDEO' ? 'https://...' : 'Podcast URL'}
@@ -156,7 +154,7 @@
         <Button type="button" variant="secondary" onclick={addContentItem}>Add content item</Button>
       </div>
 
-      <input type="hidden" name="contentItems" value={JSON.stringify(unit.contentItems)} />
+      <input type="hidden" name="contents" value={JSON.stringify(unit.contents)} />
 
       <FormField
         label="Collection"

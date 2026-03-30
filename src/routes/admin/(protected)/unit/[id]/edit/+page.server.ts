@@ -29,7 +29,7 @@ export const load: PageServerLoad = async (event) => {
   const learningUnitArgs = {
     where: { id: event.params.id },
     include: {
-      contentItems: true,
+      contents: true,
       tags: { include: { tag: true } },
       sources: { include: { tags: { include: { tag: true } } } },
       questionAnswers: { orderBy: { order: 'asc' } },
@@ -106,7 +106,7 @@ export const load: PageServerLoad = async (event) => {
         answer: q.answer,
         explanation: q.explanation,
       })),
-      contentItems: learningUnit.contentItems.map((item) => ({
+      contents: learningUnit.contents.map((item) => ({
         type: item.type,
         url: item.url,
       })),
@@ -173,16 +173,16 @@ export const actions = {
             order: i + 1,
           })),
         },
-        contentItems: {
+        contents: {
           deleteMany: {},
-          create: data.contentItems.map((item) => ({
+          create: data.contents.map((item) => ({
             type: item.type,
             url: item.url,
           })),
         },
       },
       include: {
-        contentItems: true,
+        contents: true,
         tags: { include: { tag: true } },
         sources: { include: { tags: { include: { tag: true } } } },
         questionAnswers: { orderBy: { order: 'asc' } },
@@ -216,7 +216,7 @@ export const actions = {
           answer: q.answer,
           explanation: q.explanation,
         })),
-        contentItems: learningUnit.contentItems.map((item) => ({
+        contents: learningUnit.contents.map((item) => ({
           type: item.type,
           url: item.url,
         })),
@@ -280,9 +280,9 @@ export const actions = {
             order: i + 1,
           })),
         },
-        contentItems: {
+        contents: {
           deleteMany: {},
-          create: result.data.contentItems.map((item) => ({
+          create: result.data.contents.map((item) => ({
             type: item.type,
             url: item.url,
           })),

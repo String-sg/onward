@@ -356,7 +356,7 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     questionAnswers: {
       create: questionAnswers,
     },
-    contentItems: {
+    contents: {
       create: [{ type: ContentType.PODCAST, url: 'http://localhost:5173' }],
     },
   },
@@ -391,7 +391,7 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     questionAnswers: {
       create: questionAnswers,
     },
-    contentItems: {
+    contents: {
       create: [{ type: ContentType.PODCAST, url: 'http://localhost:5173' }],
     },
   },
@@ -436,7 +436,7 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     questionAnswers: {
       create: questionAnswers,
     },
-    contentItems: {
+    contents: {
       create: [{ type: ContentType.QUIZ }],
     },
   },
@@ -477,7 +477,7 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
         },
       ],
     },
-    contentItems: {
+    contents: {
       create: [
         { type: ContentType.VIDEO, url: 'https://vimeo.com/1172996293' },
         { type: ContentType.PODCAST, url: 'http://localhost:5173' },
@@ -524,7 +524,7 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     questionAnswers: {
       create: questionAnswers,
     },
-    contentItems: {
+    contents: {
       create: [
         { type: ContentType.VIDEO, url: 'http://localhost:5173' },
         { type: ContentType.PODCAST, url: 'http://localhost:5173' },
@@ -563,7 +563,7 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     questionAnswers: {
       create: questionAnswers,
     },
-    contentItems: {
+    contents: {
       create: [{ type: ContentType.PODCAST, url: 'http://localhost:5173' }],
     },
   },
@@ -598,7 +598,7 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     questionAnswers: {
       create: questionAnswers,
     },
-    contentItems: {
+    contents: {
       create: [{ type: ContentType.PODCAST, url: 'http://localhost:5173' }],
     },
   },
@@ -633,7 +633,7 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     questionAnswers: {
       create: questionAnswers,
     },
-    contentItems: {
+    contents: {
       create: [{ type: ContentType.PODCAST, url: 'http://localhost:5173' }],
     },
   },
@@ -668,7 +668,7 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     questionAnswers: {
       create: questionAnswers,
     },
-    contentItems: {
+    contents: {
       create: [{ type: ContentType.PODCAST, url: 'http://localhost:5173' }],
     },
   },
@@ -703,7 +703,7 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     questionAnswers: {
       create: questionAnswers,
     },
-    contentItems: {
+    contents: {
       create: [{ type: ContentType.PODCAST, url: 'http://localhost:5173' }],
     },
   },
@@ -738,7 +738,7 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     questionAnswers: {
       create: questionAnswers,
     },
-    contentItems: {
+    contents: {
       create: [{ type: ContentType.PODCAST, url: 'http://localhost:5173' }],
     },
   },
@@ -771,7 +771,7 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
         },
       ],
     },
-    contentItems: {
+    contents: {
       create: [
         { type: ContentType.VIDEO, url: 'https://vimeo.com/1172996293' },
         { type: ContentType.PODCAST, url: 'http://localhost:5173' },

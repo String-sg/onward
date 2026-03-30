@@ -96,7 +96,7 @@
         body: JSON.stringify({
           id: player.currentTrack?.id,
           lastCheckpoint: progress,
-          contentItemId: player.currentTrack?.contentItemId,
+          learningUnitContentId: player.currentTrack?.learningUnitContentId,
           csrfToken: (page.data as LayoutData).csrfToken,
           ...(isQuizAvailable !== undefined && { isCompleted: isQuizAvailable }),
         }),

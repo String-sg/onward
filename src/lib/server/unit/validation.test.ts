@@ -29,24 +29,24 @@ const BASE_PUBLISH = {
   questionAnswers: JSON.stringify([]),
 };
 
-describe('validateLearningUnitDraft - contentItems', () => {
+describe('validateLearningUnitDraft - contents', () => {
   test('accepts VIDEO item with valid URL', () => {
     const fd = makeFormData({
       ...BASE_DRAFT,
-      contentItems: JSON.stringify([{ type: 'VIDEO', url: 'https://example.com/video/123' }]),
+      contents: JSON.stringify([{ type: 'VIDEO', url: 'https://example.com/video/123' }]),
     });
     const result = validateLearningUnitDraft(fd);
     expect(result.success).toBe(true);
     if (result.success) {
-      expect(result.data.contentItems[0].type).toBe('VIDEO');
-      expect(result.data.contentItems[0].url).toBe('https://example.com/video/123');
+      expect(result.data.contents[0].type).toBe('VIDEO');
+      expect(result.data.contents[0].url).toBe('https://example.com/video/123');
     }
   });
 
   test('accepts PODCAST item with valid URL', () => {
     const fd = makeFormData({
       ...BASE_DRAFT,
-      contentItems: JSON.stringify([{ type: 'PODCAST', url: 'https://example.com/audio.mp3' }]),
+      contents: JSON.stringify([{ type: 'PODCAST', url: 'https://example.com/audio.mp3' }]),
     });
     expect(validateLearningUnitDraft(fd).success).toBe(true);
   });
@@ -54,24 +54,24 @@ describe('validateLearningUnitDraft - contentItems', () => {
   test('accepts QUIZ item without URL', () => {
     const fd = makeFormData({
       ...BASE_DRAFT,
-      contentItems: JSON.stringify([{ type: 'QUIZ', url: null }]),
+      contents: JSON.stringify([{ type: 'QUIZ', url: null }]),
     });
     const result = validateLearningUnitDraft(fd);
     expect(result.success).toBe(true);
     if (result.success) {
-      expect(result.data.contentItems[0].url).toBeNull();
+      expect(result.data.contents[0].url).toBeNull();
     }
   });
 
-  test('accepts empty contentItems in draft', () => {
-    const fd = makeFormData({ ...BASE_DRAFT, contentItems: JSON.stringify([]) });
+  test('accepts empty contents in draft', () => {
+    const fd = makeFormData({ ...BASE_DRAFT, contents: JSON.stringify([]) });
     expect(validateLearningUnitDraft(fd).success).toBe(true);
   });
 
   test('rejects VIDEO item with empty URL', () => {
     const fd = makeFormData({
       ...BASE_DRAFT,
-      contentItems: JSON.stringify([{ type: 'VIDEO', url: '' }]),
+      contents: JSON.stringify([{ type: 'VIDEO', url: '' }]),
     });
     expect(validateLearningUnitDraft(fd).success).toBe(false);
   });
@@ -79,26 +79,26 @@ describe('validateLearningUnitDraft - contentItems', () => {
   test('rejects invalid content type', () => {
     const fd = makeFormData({
       ...BASE_DRAFT,
-      contentItems: JSON.stringify([{ type: 'PDF', url: 'https://example.com/file.pdf' }]),
+      contents: JSON.stringify([{ type: 'PDF', url: 'https://example.com/file.pdf' }]),
     });
     expect(validateLearningUnitDraft(fd).success).toBe(false);
   });
 });
 
-describe('validateLearningUnit - contentItems', () => {
+describe('validateLearningUnit - contents', () => {
   test('requires at least one content item for publish', () => {
-    const fd = makeFormData({ ...BASE_PUBLISH, contentItems: JSON.stringify([]) });
+    const fd = makeFormData({ ...BASE_PUBLISH, contents: JSON.stringify([]) });
     const result = validateLearningUnit(fd);
     expect(result.success).toBe(false);
     if (!result.success) {
-      expect(result.errors.contentItems).toBeDefined();
+      expect(result.errors.contents).toBeDefined();
     }
   });
 
   test('accepts VIDEO content item for publish', () => {
     const fd = makeFormData({
       ...BASE_PUBLISH,
-      contentItems: JSON.stringify([{ type: 'VIDEO', url: 'https://example.com/video/987654321' }]),
+      contents: JSON.stringify([{ type: 'VIDEO', url: 'https://example.com/video/987654321' }]),
     });
     expect(validateLearningUnit(fd).success).toBe(true);
   });
@@ -106,7 +106,7 @@ describe('validateLearningUnit - contentItems', () => {
   test('rejects PODCAST item with invalid URL for publish', () => {
     const fd = makeFormData({
       ...BASE_PUBLISH,
-      contentItems: JSON.stringify([{ type: 'PODCAST', url: 'not-a-url' }]),
+      contents: JSON.stringify([{ type: 'PODCAST', url: 'not-a-url' }]),
     });
     expect(validateLearningUnit(fd).success).toBe(false);
   });
@@ -114,7 +114,7 @@ describe('validateLearningUnit - contentItems', () => {
   test('accepts multiple content items', () => {
     const fd = makeFormData({
       ...BASE_PUBLISH,
-      contentItems: JSON.stringify([
+      contents: JSON.stringify([
         { type: 'VIDEO', url: 'https://example.com/video/123' },
         { type: 'QUIZ', url: null },
       ]),

@@ -55,8 +55,8 @@
   );
 
   let videoModalOpen = $state(false);
-  const podcastContent = $derived(data.contentItems.find((c) => c.type === 'PODCAST'));
-  const videoContent = $derived(data.contentItems.find((c) => c.type === 'VIDEO'));
+  const podcastContent = $derived(data.contents.find((c) => c.type === 'PODCAST'));
+  const videoContent = $derived(data.contents.find((c) => c.type === 'VIDEO'));
 
   let podcastCheckpoint = $derived(podcastContent ? (data.checkpoints[podcastContent.id] ?? 0) : 0);
   let videoCheckpoint = $derived(videoContent ? (data.checkpoints[videoContent.id] ?? 0) : 0);
@@ -97,7 +97,7 @@
       title: data.title,
       summary: data.summary,
       url: podcastContent.url,
-      contentItemId: podcastContent.id,
+      learningUnitContentId: podcastContent.id,
     });
     player.isNowPlayingViewOpen = true;
   };
@@ -118,7 +118,7 @@
           title: data.title,
           summary: data.summary,
           url: podcastContent ? (podcastContent.url ?? '') : '',
-          contentItemId: podcastContent ? podcastContent.id : undefined,
+          learningUnitContentId: podcastContent ? podcastContent.id : undefined,
         },
         initialSeekTime,
       );
@@ -169,7 +169,7 @@
       body: JSON.stringify({
         id: data.id,
         lastCheckpoint: 0,
-        contentItemId: videoContent.id,
+        learningUnitContentId: videoContent.id,
         csrfToken: data.csrfToken,
         isCompleted: !data.isQuizAvailable,
       }),
@@ -187,7 +187,7 @@
       body: JSON.stringify({
         id: data.id,
         lastCheckpoint: currentTime,
-        contentItemId: videoContent.id,
+        learningUnitContentId: videoContent.id,
         csrfToken: data.csrfToken,
       }),
     });
@@ -470,7 +470,9 @@
   <div
     class={[
       'fixed inset-0 z-202 flex items-center justify-center transition-opacity duration-300',
-      videoModalOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0',
+      videoModalOpen
+        ? 'pointer-events-auto mx-auto max-w-5xl opacity-100'
+        : 'pointer-events-none opacity-0',
     ]}
   >
     <button
@@ -480,7 +482,7 @@
       <X />
     </button>
 
-    <div class="w-full max-w-4xl px-4 landscape:max-w-[calc((100svh-2rem)*16/9)]">
+    <div class="w-full px-4 landscape:max-w-[calc((100svh-2rem)*16/9)]">
       <VimeoPlayer
         url={videoContent.url ?? ''}
         startTime={videoCheckpoint || undefined}
