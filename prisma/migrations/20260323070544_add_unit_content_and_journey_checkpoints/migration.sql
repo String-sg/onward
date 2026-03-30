@@ -1,7 +1,3 @@
--- Add Video content type
-ALTER TYPE "ContentType"
-ADD VALUE 'VIDEO';
-
 -- Add Learning Unit Content table
 CREATE TABLE "learning_unit_content" (
   "id" UUID NOT NULL DEFAULT uuid_generate_v7 (),
