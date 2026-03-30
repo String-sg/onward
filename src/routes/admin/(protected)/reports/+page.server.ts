@@ -26,7 +26,7 @@ export const load: PageServerLoad = async (event) => {
 
   const where = {
     learningUnit: {
-      contentItems: { some: { type: ContentType.QUIZ } },
+      contents: { some: { type: ContentType.QUIZ } },
       ...(quizId && { id: quizId }),
     },
   };
@@ -53,7 +53,7 @@ export const load: PageServerLoad = async (event) => {
     const [quizzes, records, totalCount] = await Promise.all([
       db.learningUnit.findMany({
         where: {
-          contentItems: { some: { type: ContentType.QUIZ } },
+          contents: { some: { type: ContentType.QUIZ } },
           status: 'PUBLISHED',
           isRequired: true,
         },

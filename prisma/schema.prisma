@@ -82,23 +82,27 @@ model LearningUnit {
   learningJourneys LearningJourney[]
   questionAnswers  QuestionAnswer[]
   sources          LearningUnitSources[]
-  contentItems     LearningUnitContent[]
+  contents         LearningUnitContent[]
 
   @@map("learning_units")
 }
 
 model LearningUnitContent {
-  id        String      @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
-  unitId    String      @map("unit_id") @db.Uuid
-  type      ContentType @map("type")
-  url       String?     @map("url")
-  createdAt DateTime    @default(now()) @map("created_at") @db.Timestamptz(3)
-  updatedAt DateTime    @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
+  id        String   @id @default(dbgenerated("uuid_generate_v7()")) @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
 
-  unit        LearningUnit                @relation(fields: [unitId], references: [id], onDelete: Cascade)
-  checkpoints LearningJourneyCheckpoint[]
+  // Domain-Specific Fields.
+  type ContentType @map("type")
+  url  String?     @map("url")
 
-  @@map("learning_unit_content")
+  // Relations.
+  learningUnitId String @map("learning_unit_id") @db.Uuid
+
+  learningUnit LearningUnit                @relation(fields: [learningUnitId], references: [id], onDelete: Cascade)
+  checkpoints  LearningJourneyCheckpoint[]
+
+  @@map("learning_unit_contents")
 }
 
 model LearningUnitCollection {
@@ -193,12 +197,12 @@ model LearningJourneyCheckpoint {
 
   // Relations.
   learningJourneyId String @map("learning_journey_id") @db.Uuid
-  contentItemId     String @map("content_item_id") @db.Uuid
+  learningUnitContentId String @map("learning_unit_content_id") @db.Uuid
 
-  learningJourney LearningJourney     @relation(fields: [learningJourneyId], references: [id], onDelete: Cascade)
-  contentItem     LearningUnitContent @relation(fields: [contentItemId], references: [id], onDelete: Cascade)
+  learningJourney    LearningJourney     @relation(fields: [learningJourneyId], references: [id], onDelete: Cascade)
+  learningUnitContent LearningUnitContent @relation(fields: [learningUnitContentId], references: [id], onDelete: Cascade)
 
-  @@id([learningJourneyId, contentItemId])
+  @@id([learningJourneyId, learningUnitContentId])
   @@map("learning_journey_checkpoints")
 }
 

@@ -135,10 +135,10 @@ export const actions = {
                 })),
               }
             : undefined,
-        contentItems:
-          data.contentItems.length > 0
+        contents:
+          data.contents.length > 0
             ? {
-                create: data.contentItems.map((item) => ({
+                create: data.contents.map((item) => ({
                   type: item.type,
                   url: item.url,
                 })),
@@ -217,10 +217,10 @@ export const actions = {
                 })),
               }
             : undefined,
-        contentItems:
-          data.contentItems.length > 0
+        contents:
+          data.contents.length > 0
             ? {
-                create: data.contentItems.map((item) => ({
+                create: data.contents.map((item) => ({
                   type: item.type,
                   url: item.url,
                 })),

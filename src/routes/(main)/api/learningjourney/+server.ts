@@ -34,8 +34,8 @@ export const POST: RequestHandler = async (event) => {
       typeof params['id'] !== 'string' ||
       !('lastCheckpoint' in params) ||
       typeof params['lastCheckpoint'] !== 'number' ||
-      !('contentItemId' in params) ||
-      typeof params['contentItemId'] !== 'string' ||
+      !('learningUnitContentId' in params) ||
+      typeof params['learningUnitContentId'] !== 'string' ||
       !('csrfToken' in params) ||
       typeof params['csrfToken'] !== 'string'
     ) {
@@ -54,7 +54,7 @@ export const POST: RequestHandler = async (event) => {
 
   const learningUnitId = params.id as string;
   const lastCheckpoint = params.lastCheckpoint as number;
-  const contentItemId = params.contentItemId as string;
+  const learningUnitContentId = params.learningUnitContentId as string;
   const isCompleted =
     'isCompleted' in params && typeof params.isCompleted === 'boolean'
       ? params.isCompleted
@@ -93,15 +93,15 @@ export const POST: RequestHandler = async (event) => {
 
       await tx.learningJourneyCheckpoint.upsert({
         where: {
-          learningJourneyId_contentItemId: {
+          learningJourneyId_learningUnitContentId: {
             learningJourneyId: journey.id,
-            contentItemId,
+            learningUnitContentId,
           },
         },
         update: { lastCheckpoint },
         create: {
           learningJourneyId: journey.id,
-          contentItemId,
+          learningUnitContentId,
           lastCheckpoint,
         },
       });

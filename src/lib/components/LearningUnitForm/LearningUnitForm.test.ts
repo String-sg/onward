@@ -6,7 +6,7 @@ import { LearningUnitForm } from './index.js';
 
 const BASE_UNIT = {
   title: '',
-  contentItems: [],
+  contents: [],
   collectionId: '',
   summary: '',
   objectives: '',
@@ -38,7 +38,7 @@ describe('LearningUnitForm - content items', () => {
     const user = userEvent.setup();
     render(LearningUnitForm, {
       props: {
-        unit: { ...BASE_UNIT, contentItems: [] },
+        unit: { ...BASE_UNIT, contents: [] },
         data: BASE_DATA,
         form: null,
         onsubmit: vi.fn(),
@@ -53,7 +53,7 @@ describe('LearningUnitForm - content items', () => {
   test('shows URL input for PODCAST type', async () => {
     render(LearningUnitForm, {
       props: {
-        unit: { ...BASE_UNIT, contentItems: [{ type: 'PODCAST', url: '' }] },
+        unit: { ...BASE_UNIT, contents: [{ type: 'PODCAST', url: '' }] },
         data: BASE_DATA,
         form: null,
         onsubmit: vi.fn(),
@@ -65,7 +65,7 @@ describe('LearningUnitForm - content items', () => {
   test('shows URL input for VIDEO type', () => {
     render(LearningUnitForm, {
       props: {
-        unit: { ...BASE_UNIT, contentItems: [{ type: 'VIDEO', url: '' }] },
+        unit: { ...BASE_UNIT, contents: [{ type: 'VIDEO', url: '' }] },
         data: BASE_DATA,
         form: null,
         onsubmit: vi.fn(),
@@ -77,7 +77,7 @@ describe('LearningUnitForm - content items', () => {
   test('does not show URL input for QUIZ type', () => {
     render(LearningUnitForm, {
       props: {
-        unit: { ...BASE_UNIT, contentItems: [{ type: 'QUIZ', url: undefined }] },
+        unit: { ...BASE_UNIT, contents: [{ type: 'QUIZ', url: undefined }] },
         data: BASE_DATA,
         form: null,
         onsubmit: vi.fn(),
@@ -90,7 +90,7 @@ describe('LearningUnitForm - content items', () => {
     const user = userEvent.setup();
     render(LearningUnitForm, {
       props: {
-        unit: { ...BASE_UNIT, contentItems: [{ type: 'PODCAST', url: 'https://example.com' }] },
+        unit: { ...BASE_UNIT, contents: [{ type: 'PODCAST', url: 'https://example.com' }] },
         data: BASE_DATA,
         form: null,
         onsubmit: vi.fn(),

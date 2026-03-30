@@ -12,7 +12,7 @@ export interface Track {
   title: string;
   summary: string;
   url: string;
-  contentItemId?: string;
+  learningUnitContentId?: string;
 }
 
 /**

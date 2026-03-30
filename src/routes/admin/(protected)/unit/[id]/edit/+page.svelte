@@ -12,7 +12,7 @@
     untrack(() => {
       return {
         title: data.learningUnit.title ?? '',
-        contentItems: data.learningUnit.contentItems.map(
+        contents: data.learningUnit.contents.map(
           (item: { type: 'VIDEO' | 'PODCAST' | 'QUIZ'; url: string | null }) => ({
             type: item.type,
             url: item.url ?? '',
@@ -46,7 +46,7 @@
         if (savedLU) {
           unit = {
             title: savedLU.title ?? '',
-            contentItems: savedLU.contentItems.map(
+            contents: savedLU.contents.map(
               (item: { type: 'VIDEO' | 'PODCAST' | 'QUIZ'; url: string | null }) => ({
                 type: item.type,
                 url: item.url ?? '',

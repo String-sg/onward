@@ -24,11 +24,11 @@ function parseContentItems(
   requireAtLeastOne: boolean,
   errors: FormValidationError,
 ): ContentItemData[] {
-  const json = data.get('contentItems');
+  const json = data.get('contents');
 
   if (!json || typeof json !== 'string') {
     if (requireAtLeastOne) {
-      errors.contentItems = { message: ERROR_MESSAGES.ARRAY_MIN('Content item', 1) };
+      errors.contents = { message: ERROR_MESSAGES.ARRAY_MIN('Content item', 1) };
     }
     return [];
   }
@@ -37,17 +37,17 @@ function parseContentItems(
   try {
     items = JSON.parse(json);
   } catch {
-    errors.contentItems = { message: ERROR_MESSAGES.INVALID_DATA() };
+    errors.contents = { message: ERROR_MESSAGES.INVALID_DATA() };
     return [];
   }
 
   if (!Array.isArray(items)) {
-    errors.contentItems = { message: ERROR_MESSAGES.INVALID_DATA() };
+    errors.contents = { message: ERROR_MESSAGES.INVALID_DATA() };
     return [];
   }
 
   if (requireAtLeastOne && items.length === 0) {
-    errors.contentItems = { message: ERROR_MESSAGES.ARRAY_MIN('Content item', 1) };
+    errors.contents = { message: ERROR_MESSAGES.ARRAY_MIN('Content item', 1) };
     return items;
   }
 
@@ -79,7 +79,7 @@ function parseContentItems(
   }
 
   if (itemErrors.some((e) => Object.keys(e).length > 0)) {
-    errors.contentItems = { message: '', items: itemErrors };
+    errors.contents = { message: '', items: itemErrors };
   }
 
   return items;
@@ -87,7 +87,7 @@ function parseContentItems(
 
 export interface LearningUnitDraftFormData {
   title: string;
-  contentItems: ContentItemData[];
+  contents: ContentItemData[];
   summary: string;
   objectives: string;
   createdBy: string;
@@ -107,7 +107,7 @@ export interface LearningUnitDraftFormData {
 
 export interface LearningUnitFormData {
   title: string;
-  contentItems: ContentItemData[];
+  contents: ContentItemData[];
   summary: string;
   objectives: string;
   createdBy: string;
@@ -146,7 +146,7 @@ export function validateLearningUnitDraft(
     title = titleRaw.trim();
   }
 
-  const contentItems = parseContentItems(data, false, errors);
+  const contents = parseContentItems(data, false, errors);
 
   const summaryRaw = data.get('summary');
   let summary: string;
@@ -298,7 +298,7 @@ export function validateLearningUnitDraft(
     success: true,
     data: {
       title: title!,
-      contentItems,
+      contents,
       summary: summary!,
       objectives: objectives!,
       createdBy: createdBy!,
@@ -331,7 +331,7 @@ export function validateLearningUnit(data: FormData):
     errors.title = { message: ERROR_MESSAGES.FIELD_REQUIRED };
   }
 
-  const contentItems = parseContentItems(data, true, errors);
+  const contents = parseContentItems(data, true, errors);
 
   const summary = data.get('summary');
   if (!summary || typeof summary !== 'string' || summary.trim().length === 0) {
@@ -515,7 +515,7 @@ export function validateLearningUnit(data: FormData):
     success: true,
     data: {
       title: (title as string).trim(),
-      contentItems,
+      contents,
       summary: (summary as string).trim(),
       objectives: (objectives as string).trim(),
       createdBy: (createdBy as string).trim(),
