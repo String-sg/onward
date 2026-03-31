@@ -1,7 +1,7 @@
 import { json } from '@sveltejs/kit';
 import * as XLSX from 'xlsx';
 
-import { ContentType, db, type LearningJourneyFindManyArgs } from '$lib/server/db.js';
+import { db, type LearningJourneyFindManyArgs } from '$lib/server/db.js';
 
 import type { RequestHandler } from './$types';
 
@@ -34,7 +34,7 @@ export const GET: RequestHandler = async (event) => {
     },
     where: {
       learningUnit: {
-        contents: { some: { type: ContentType.QUIZ } },
+        questionAnswers: { some: {} },
         ...(quizId && { id: quizId }),
       },
     },

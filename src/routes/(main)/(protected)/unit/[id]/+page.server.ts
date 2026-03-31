@@ -208,7 +208,7 @@ export const load: PageServerLoad = async (event) => {
   );
 
   let aiLiteracyCompleted: boolean | null = null;
-  if (inAILiteracyCollection && learningUnit.contents.some((item) => item.type === 'QUIZ')) {
+  if (inAILiteracyCollection && isQuizAvailable) {
     const learningUnitCollectionArg = {
       where: {
         collectionId: learningUnit.collections.find(

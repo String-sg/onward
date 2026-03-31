@@ -59,7 +59,7 @@ function parseContentItems(
 
     if (!(Object.values(ContentType) as string[]).includes(item.type)) {
       err.type = ERROR_MESSAGES.INVALID_OPTION;
-    } else if (item.type === ContentType.VIDEO || item.type === ContentType.PODCAST) {
+    } else {
       if (!item.url || typeof item.url !== 'string' || item.url.trim().length === 0) {
         err.url = ERROR_MESSAGES.FIELD_REQUIRED;
       } else {
@@ -70,9 +70,6 @@ function parseContentItems(
           err.url = ERROR_MESSAGES.INVALID_DATA('URL');
         }
       }
-    } else {
-      // QUIZ: discard any URL
-      item.url = null;
     }
 
     if (Object.keys(err).length > 0) itemErrors[i] = err;

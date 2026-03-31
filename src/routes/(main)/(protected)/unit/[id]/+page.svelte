@@ -20,7 +20,7 @@
 
   import { browser } from '$app/environment';
   import { enhance } from '$app/forms';
-  import { afterNavigate } from '$app/navigation';
+  import { afterNavigate, invalidateAll } from '$app/navigation';
   import { page } from '$app/state';
   import { Badge } from '$lib/components/Badge/index.js';
   import { Button } from '$lib/components/Button/index.js';
@@ -159,11 +159,11 @@
     }
   };
 
-  const handleVideoComplete = () => {
+  const handleVideoComplete = async () => {
     if (!videoContent) {
       return;
     }
-    fetch('/api/learningjourney', {
+    await fetch('/api/learningjourney', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -175,6 +175,7 @@
       }),
     });
     trackVideoCompletion(data.id);
+    await invalidateAll();
   };
 
   const handleVideoCheckpoint = (currentTime: number) => {

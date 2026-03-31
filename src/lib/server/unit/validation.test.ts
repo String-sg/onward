@@ -51,18 +51,6 @@ describe('validateLearningUnitDraft - contents', () => {
     expect(validateLearningUnitDraft(fd).success).toBe(true);
   });
 
-  test('accepts QUIZ item without URL', () => {
-    const fd = makeFormData({
-      ...BASE_DRAFT,
-      contents: JSON.stringify([{ type: 'QUIZ', url: null }]),
-    });
-    const result = validateLearningUnitDraft(fd);
-    expect(result.success).toBe(true);
-    if (result.success) {
-      expect(result.data.contents[0].url).toBeNull();
-    }
-  });
-
   test('accepts empty contents in draft', () => {
     const fd = makeFormData({ ...BASE_DRAFT, contents: JSON.stringify([]) });
     expect(validateLearningUnitDraft(fd).success).toBe(true);
@@ -116,7 +104,7 @@ describe('validateLearningUnit - contents', () => {
       ...BASE_PUBLISH,
       contents: JSON.stringify([
         { type: 'VIDEO', url: 'https://example.com/video/123' },
-        { type: 'QUIZ', url: null },
+        { type: 'PODCAST', url: 'https://example.com/audio.mp3' },
       ]),
     });
     expect(validateLearningUnit(fd).success).toBe(true);

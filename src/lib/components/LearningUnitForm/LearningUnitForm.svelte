@@ -1,7 +1,7 @@
 <script module lang="ts">
   export interface UnitState {
     title: string;
-    contents: { type: 'VIDEO' | 'PODCAST' | 'QUIZ'; url: string | undefined }[];
+    contents: { type: 'VIDEO' | 'PODCAST'; url: string | undefined }[];
     collectionId: string;
     summary: string;
     objectives: string;
@@ -114,37 +114,17 @@
 
         {#each unit.contents as item, i (i)}
           <div class="flex items-start gap-2">
-            <Select
-              id="contents-{i}-type"
-              bind:value={item.type}
-              onchange={() => {
-                if (item.type === 'QUIZ') {
-                  unit = {
-                    ...unit,
-                    contents: unit.contents.map((c, j) => (j === i ? { ...c, url: undefined } : c)),
-                  };
-                } else {
-                  unit = {
-                    ...unit,
-                    contents: unit.contents.map((c, j) =>
-                      j === i ? { ...c, url: c.url ?? '' } : c,
-                    ),
-                  };
-                }
-              }}
-            >
+            <Select id="contents-{i}-type" bind:value={item.type}>
               {#each data.contentTypes as ct (ct)}
                 <option value={ct}>{ct.toLowerCase()}</option>
               {/each}
             </Select>
-            {#if item.type !== 'QUIZ'}
-              <TextInput
-                id="contents-{i}-url"
-                type="url"
-                bind:value={item.url}
-                placeholder={item.type === 'VIDEO' ? 'https://...' : 'Podcast URL'}
-              />
-            {/if}
+            <TextInput
+              id="contents-{i}-url"
+              type="url"
+              bind:value={item.url}
+              placeholder={item.type === 'VIDEO' ? 'https://...' : 'Podcast URL'}
+            />
             <Button type="button" variant="secondary" onclick={() => removeContentItem(i)}>
               Remove
             </Button>

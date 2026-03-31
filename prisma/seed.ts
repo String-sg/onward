@@ -353,9 +353,6 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
         },
       ],
     },
-    questionAnswers: {
-      create: questionAnswers,
-    },
     contents: {
       create: [{ type: ContentType.PODCAST, url: 'http://localhost:5173' }],
     },
@@ -436,9 +433,6 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     questionAnswers: {
       create: questionAnswers,
     },
-    contents: {
-      create: [{ type: ContentType.QUIZ }],
-    },
   },
   {
     id: uuidv7(),
@@ -479,14 +473,14 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     },
     contents: {
       create: [
-        { type: ContentType.VIDEO, url: 'https://vimeo.com/1172996293' },
+        { type: ContentType.VIDEO, url: 'http://localhost:5173' },
         { type: ContentType.PODCAST, url: 'http://localhost:5173' },
       ],
     },
   },
   {
     id: uuidv7(),
-    title: 'AI Podcast/Video/Quiz Unit',
+    title: 'AI Podcast/Video Unit',
     status: LearningUnitStatus.PUBLISHED,
     summary,
     objectives,
@@ -521,14 +515,10 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
         },
       ],
     },
-    questionAnswers: {
-      create: questionAnswers,
-    },
     contents: {
       create: [
         { type: ContentType.VIDEO, url: 'http://localhost:5173' },
         { type: ContentType.PODCAST, url: 'http://localhost:5173' },
-        { type: ContentType.QUIZ },
       ],
     },
   },
@@ -773,7 +763,7 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     },
     contents: {
       create: [
-        { type: ContentType.VIDEO, url: 'https://vimeo.com/1172996293' },
+        { type: ContentType.VIDEO, url: 'http://localhost:5173' },
         { type: ContentType.PODCAST, url: 'http://localhost:5173' },
       ],
     },

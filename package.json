@@ -13,7 +13,6 @@
     "db:deploy": "prisma migrate deploy",
     "db:reset": "prisma migrate reset",
     "db:seed": "node --import=tsx prisma/seed.ts",
-    "db:seed:quiz-journeys": "node --import=tsx prisma/seed-quiz-journeys.ts",
     "check": "svelte-kit sync && svelte-check --fail-on-warnings",
     "format": "prettier --check \"**/*.{svelte,js,ts,md,html,css,json,yaml}\"",
     "lint": "eslint \"**/*.{svelte,js,ts}\"",
