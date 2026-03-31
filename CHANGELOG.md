@@ -2,6 +2,51 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.10.0 (2026-03-27)
+
+### Features ✨
+
+- feat: first time pass rate tracking ([#526](https://github.com/String-sg/onward/pull/526)) ([4f644a1](https://github.com/String-sg/onward/commit/4f644a1eb7daf661bd67a26352f6b09edd07b41f))
+- feat: add video content ([#523](https://github.com/String-sg/onward/pull/523)) ([e3366ba](https://github.com/String-sg/onward/commit/e3366ba9e9fd0f8e2ca3980115ab8eb77488ce4b))
+- feat: update onboarding ui ([#509](https://github.com/String-sg/onward/pull/509)) ([925fe63](https://github.com/String-sg/onward/commit/925fe6340ef797f954e677ce89008b6a1990f737))
+- feat: add markdown support for quiz questions ([#510](https://github.com/String-sg/onward/pull/510)) ([3bd66d8](https://github.com/String-sg/onward/commit/3bd66d8c4e9b3dc8bbc7e997a55bd8b10fb037a7))
+- feat: add learning unit states ([#498](https://github.com/String-sg/onward/pull/498)) ([43b86d8](https://github.com/String-sg/onward/commit/43b86d87a422ea2ba3cbd35bf0d58c3bdd5a644e))
+- feat: mandatory collection ([#500](https://github.com/String-sg/onward/pull/500)) ([c2a1980](https://github.com/String-sg/onward/commit/c2a19805a19d8d2de968c641570d9038d82ca3cf))
+- feat: update copy and image formatting for onboarding page ([#501](https://github.com/String-sg/onward/pull/501)) ([5380cdc](https://github.com/String-sg/onward/commit/5380cdc5ef4a271b458b96f75eb380a34c730703))
+- feat: onboarding flow ([#484](https://github.com/String-sg/onward/pull/484)) ([100a3bd](https://github.com/String-sg/onward/commit/100a3bd9d817fd14b7084ecdf9cb99120b7f0938))
+- feat(admin): add admin app ([#476](https://github.com/String-sg/onward/pull/476)) ([7ae8600](https://github.com/String-sg/onward/commit/7ae8600d9697f7e3ab3249aec5148ba20a3de793))
+- feat: add GA profile click ([#493](https://github.com/String-sg/onward/pull/493)) ([da9073d](https://github.com/String-sg/onward/commit/da9073dd722cc4f2a1015e4b843a1e118e2f0f8f))
+
+### Bug Fixes 🐛
+
+- fix: allow resume playback on home page learning bites ([#521](https://github.com/String-sg/onward/pull/521)) ([a4a27d3](https://github.com/String-sg/onward/commit/a4a27d30d987c49b9cade45331d8d340c9451711))
+- fix: prevent revert of completion status when user re-visit learning bites ([#520](https://github.com/String-sg/onward/pull/520)) ([05883cc](https://github.com/String-sg/onward/commit/05883cc97fe504e8ccab289e29648418dd59f18a))
+- fix: update query of condition to filter collection data ([#517](https://github.com/String-sg/onward/pull/517)) ([2c06928](https://github.com/String-sg/onward/commit/2c069282768c495af2e76cf2d2d10f5ef2d977ae))
+- fix: Quiz SSR error ([#512](https://github.com/String-sg/onward/pull/512)) ([8479eaf](https://github.com/String-sg/onward/commit/8479eaf8c308674399384f26fb17e4aadc2585da))
+- fix: load chip bags for onboarding view ([#508](https://github.com/String-sg/onward/pull/508)) ([3ff33d7](https://github.com/String-sg/onward/commit/3ff33d7657bd11a40a094747064eeeda043c5746))
+- fix: error pages for main and admin pages ([#505](https://github.com/String-sg/onward/pull/505)) ([04bd375](https://github.com/String-sg/onward/commit/04bd37557a7ecaf8ef7af07893a52d7246ccd5c4))
+- fix: correct page states ([#503](https://github.com/String-sg/onward/pull/503)) ([e955f94](https://github.com/String-sg/onward/commit/e955f94d514567396d63b2c1bc51d539db0db966))
+- fix: correct variable naming, add missing curly braces ([#499](https://github.com/String-sg/onward/pull/499)) ([5e38890](https://github.com/String-sg/onward/commit/5e3889086b1db23f6f0b6f91466b6c31dcb71252))
+- fix: leave podcast modal closed when there's no quiz present ([#495](https://github.com/String-sg/onward/pull/495)) ([42e290d](https://github.com/String-sg/onward/commit/42e290d0d369e070a94ffd79e3cd492eecb84933))
+- fix: enable quiz only upon all prerequisites completed ([#532](https://github.com/String-sg/onward/pull/532)) ([c8595a4](https://github.com/String-sg/onward/commit/c8595a47761f04aede698ebd5add5766fbb09bd7))
+- fix: video content type migration ([#531](https://github.com/String-sg/onward/pull/531)) ([da1bfa5](https://github.com/String-sg/onward/commit/da1bfa52a46261aa543c649f541372d77bb66dad))
+- fix: add missing migration file ([#527](https://github.com/String-sg/onward/pull/527)) ([1d0cd6f](https://github.com/String-sg/onward/commit/1d0cd6fea6d7fa4e3e532c6657b618b22e99883e))
+
+### Chores 🧹
+
+- chore: update dependencies ([#502](https://github.com/String-sg/onward/pull/502)) ([f28c77a](https://github.com/String-sg/onward/commit/f28c77a5f3e368613a4eb838a05177388df2d1be))
+- chore: update node to 24.14.0 ([#504](https://github.com/String-sg/onward/pull/504)) ([826991e](https://github.com/String-sg/onward/commit/826991ec6f4ab50455895568b9864496265e3408))
+- chore: update svelte dependencies ([#497](https://github.com/String-sg/onward/pull/497)) ([d754b54](https://github.com/String-sg/onward/commit/d754b54a06d3725bcb12b6faca78e22f32f401ae))
+- chore: update js-yaml ([#496](https://github.com/String-sg/onward/pull/496)) ([9de0e55](https://github.com/String-sg/onward/commit/9de0e554aecbc10c64ae09c67c01ea6c4dcbe0bb))
+- chore: upgrade aws sdk dependency ([#494](https://github.com/String-sg/onward/pull/494)) ([45c3b0e](https://github.com/String-sg/onward/commit/45c3b0e6f871e6fbcaf37419876a29edfeee264f))
+- chore: upgrade dependencies ([#488](https://github.com/String-sg/onward/pull/488)) ([0e37c11](https://github.com/String-sg/onward/commit/0e37c114e2656e0ee7e987c4eb3b12c3ecf0dfe4))
+- chore: bump node to v24 ([#487](https://github.com/String-sg/onward/pull/487)) ([4c52351](https://github.com/String-sg/onward/commit/4c52351325976875c2c564982245139dc2fc82f4))
+
+### CI 🤖
+
+- ci: move codeql to a separate workflow ([#490](https://github.com/String-sg/onward/pull/490)) ([a2cec99](https://github.com/String-sg/onward/commit/a2cec9954f31f73db7967f6af73c4e6fb7e9d6a6))
+- ci: sast using codeql ([#486](https://github.com/String-sg/onward/pull/486)) ([2aad153](https://github.com/String-sg/onward/commit/2aad15366c724a745623fec78dddc4cf0706b835))
+
 ## 1.9.0 (2026-01-28)
 
 ### Features ✨
