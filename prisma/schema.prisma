@@ -155,7 +155,6 @@ model LearningUnitSources {
 
 enum ContentType {
   PODCAST
-  QUIZ
   VIDEO
 }
 

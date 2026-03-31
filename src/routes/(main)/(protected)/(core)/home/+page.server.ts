@@ -185,13 +185,6 @@ export const load: PageServerLoad = async (event) => {
     },
     where: {
       userId: user.id,
-      learningUnit: {
-        contents: {
-          some: {
-            type: { not: 'QUIZ' },
-          },
-        },
-      },
     },
     orderBy: {
       createdAt: 'desc',

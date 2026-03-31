@@ -1,7 +1,6 @@
 import { error, redirect } from '@sveltejs/kit';
 
 import {
-  ContentType,
   db,
   type LearningJourneyFindManyArgs,
   type LearningJourneyGetPayload,
@@ -26,7 +25,7 @@ export const load: PageServerLoad = async (event) => {
 
   const where = {
     learningUnit: {
-      contents: { some: { type: ContentType.QUIZ } },
+      questionAnswers: { some: {} },
       ...(quizId && { id: quizId }),
     },
   };
@@ -53,7 +52,7 @@ export const load: PageServerLoad = async (event) => {
     const [quizzes, records, totalCount] = await Promise.all([
       db.learningUnit.findMany({
         where: {
-          contents: { some: { type: ContentType.QUIZ } },
+          questionAnswers: { some: {} },
           status: 'PUBLISHED',
           isRequired: true,
         },

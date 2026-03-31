@@ -23,7 +23,7 @@ const BASE_DATA = {
   collections: [],
   contentTags: [],
   sourceTags: [],
-  contentTypes: ['PODCAST', 'QUIZ', 'VIDEO'],
+  contentTypes: ['PODCAST', 'VIDEO'],
 };
 
 describe('LearningUnitForm - content items', () => {
@@ -72,18 +72,6 @@ describe('LearningUnitForm - content items', () => {
       },
     });
     expect(screen.getByPlaceholderText('https://...')).toBeInTheDocument();
-  });
-
-  test('does not show URL input for QUIZ type', () => {
-    render(LearningUnitForm, {
-      props: {
-        unit: { ...BASE_UNIT, contents: [{ type: 'QUIZ', url: undefined }] },
-        data: BASE_DATA,
-        form: null,
-        onsubmit: vi.fn(),
-      },
-    });
-    expect(screen.queryByPlaceholderText(/url/i)).not.toBeInTheDocument();
   });
 
   test('removes a content item when Remove is clicked', async () => {

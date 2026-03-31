@@ -13,7 +13,7 @@
       return {
         title: data.learningUnit.title ?? '',
         contents: data.learningUnit.contents.map(
-          (item: { type: 'VIDEO' | 'PODCAST' | 'QUIZ'; url: string | null }) => ({
+          (item: { type: 'VIDEO' | 'PODCAST'; url: string | null }) => ({
             type: item.type,
             url: item.url ?? '',
           }),
@@ -47,7 +47,7 @@
           unit = {
             title: savedLU.title ?? '',
             contents: savedLU.contents.map(
-              (item: { type: 'VIDEO' | 'PODCAST' | 'QUIZ'; url: string | null }) => ({
+              (item: { type: 'VIDEO' | 'PODCAST'; url: string | null }) => ({
                 type: item.type,
                 url: item.url ?? '',
               }),
