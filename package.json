@@ -77,7 +77,8 @@
       "lodash": ">=4.17.23",
       "fast-xml-parser": ">=5.3.8",
       "cookie": ">=0.7.0",
-      "flatted": ">=3.4.2"
+      "flatted": ">=3.4.2",
+      "picomatch@2": "~2.3.2"
     }
   }
 }
