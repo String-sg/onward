@@ -1,6 +1,7 @@
-import { type Handle, redirect } from '@sveltejs/kit';
+import { type Handle, json, redirect } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
 
+import { env } from '$env/dynamic/private';
 import { HOME_PATH, nanoid } from '$lib/helpers/index.js';
 import { learnerAuth } from '$lib/server/auth/index.js';
 import { logger } from '$lib/server/logger.js';
@@ -9,13 +10,25 @@ import { logger } from '$lib/server/logger.js';
  * A handle that adds a request ID to the response headers and attaches a scoped logger to the
  * event. Downstream handles are expected to use the scoped logger for logging.
  */
-const requestLoggingHandle: Handle = async ({ event, resolve }) => {
+const requestLoggingHandle: Handle = ({ event, resolve }) => {
   const requestId = nanoid();
 
   event.setHeaders({ 'X-Request-Id': requestId });
   event.locals.logger = logger.child({ requestId });
 
-  return await resolve(event);
+  return resolve(event);
+};
+
+/**
+ * A handle that gates API routes behind feature flags.
+ * Returns 403 for disabled features before any further processing.
+ */
+const featureFlagHandle: Handle = ({ event, resolve }) => {
+  if (event.url.pathname.startsWith('/api/messages') && env.FEATURE_AI_CHAT !== 'true') {
+    return json(null, { status: 403 });
+  }
+
+  return resolve(event);
 };
 
 /**
@@ -52,6 +65,7 @@ const routeProtectionHandle: Handle = async ({ event, resolve }) => {
 
 export const handle: Handle = sequence(
   requestLoggingHandle,
+  featureFlagHandle,
   learnerAuth.handle,
   routeProtectionHandle,
 );

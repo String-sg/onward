@@ -198,7 +198,9 @@
         />
       {/if}
 
-      <ChatWidget onclick={handleChatWidgetClick} />
+      {#if page.data.featureFlags.aiChat}
+        <ChatWidget onclick={handleChatWidgetClick} />
+      {/if}
     </div>
   </div>
 {/if}
@@ -327,6 +329,8 @@
   </Modal>
 {/if}
 
-<ChatView isopen={isChatViewOpen} onclose={handleChatViewClose} />
+{#if page.data.featureFlags.aiChat}
+  <ChatView isopen={isChatViewOpen} onclose={handleChatViewClose} />
+{/if}
 
 <OnboardingView isopen={isOnboardingViewOpen} onclose={handleOnboardingViewClose} />
