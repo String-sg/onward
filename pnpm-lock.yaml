@@ -6,7 +6,6 @@ settings:
 
 overrides:
   hono: '>=4.11.10'
-  lodash: '>=4.17.23'
   fast-xml-parser: '>=5.3.8'
   cookie: '>=0.7.0'
   flatted: '>=3.4.2'
