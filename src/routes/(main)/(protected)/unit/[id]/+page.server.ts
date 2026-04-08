@@ -250,7 +250,10 @@ export const load: PageServerLoad = async (event) => {
     title: learningUnit.title,
     summary: learningUnit.summary,
     objectives: learningUnit.objectives,
-    contents: learningUnit.contents,
+    contents: learningUnit.contents.map((c) => ({
+      ...c,
+      url: c.type === 'VIDEO' ? null : c.url,
+    })),
     createdAt: learningUnit.createdAt,
     createdBy: learningUnit.createdBy,
     isQuizAvailable,

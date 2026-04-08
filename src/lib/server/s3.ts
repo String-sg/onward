@@ -10,6 +10,7 @@ import {
   S3Client,
   S3ServiceException,
 } from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 import { env } from '$env/dynamic/private';
 
@@ -115,6 +116,17 @@ export async function uploadPodcastObject(file: File, key: string): Promise<stri
 
   return `${env.APP_URL || 'http://localhost:5173'}/${path}`;
 }
+
+/**
+ * Generates a presigned URL for a video stored in S3.
+ *
+ * @param key - The S3 object key (e.g. `videos/intro.mp4`).
+ * @returns A time-limited presigned URL for direct browser access.
+ */
+export const getVideoPresignedUrl = async (key: string): Promise<string> => {
+  const command = new GetObjectCommand({ Bucket: BUCKET, Key: key });
+  return getSignedUrl(client, command, { expiresIn: 900 });
+};
 
 /**
  * The base class for all S3 errors.
