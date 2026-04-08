@@ -20,8 +20,8 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1000.0",
-    "@prisma/adapter-pg": "^7.6.0",
-    "@prisma/client": "^7.6.0",
+    "@prisma/adapter-pg": "^7.7.0",
+    "@prisma/client": "^7.7.0",
     "@valkey/valkey-glide": "2.0.1",
     "@vimeo/player": "^2.30.3",
     "openai": "^5.22.0",
@@ -33,7 +33,7 @@
     "@lucide/svelte": "^0.511.0",
     "@sveltejs/adapter-node": "^5.2.12",
     "@sveltejs/enhanced-img": "^0.8.1",
-    "@sveltejs/kit": "^2.53.4",
+    "@sveltejs/kit": "^2.57.0",
     "@sveltejs/vite-plugin-svelte": "^6.2.1",
     "@tailwindcss/typography": "^0.5.18",
     "@tailwindcss/vite": "^4.1.18",
@@ -60,8 +60,8 @@
     "prettier": "^3.6.2",
     "prettier-plugin-svelte": "^3.4.0",
     "prettier-plugin-tailwindcss": "^0.6.13",
-    "prisma": "^7.6.0",
-    "svelte": "^5.53.6",
+    "prisma": "^7.7.0",
+    "svelte": "^5.55.2",
     "svelte-check": "^4.3.0",
     "tailwindcss": "^4.1.11",
     "tsx": "^4.20.5",
@@ -73,11 +73,10 @@
   },
   "pnpm": {
     "overrides": {
+      "@hono/node-server": ">=1.19.13",
       "hono": ">=4.11.10",
       "fast-xml-parser": ">=5.3.8",
-      "cookie": ">=0.7.0",
-      "flatted": ">=3.4.2",
-      "picomatch@2": "~2.3.2"
+      "cookie": ">=0.7.0"
     }
   }
 }
