@@ -3,6 +3,10 @@ import { sequence } from '@sveltejs/kit/hooks';
 
 import { HOME_PATH, nanoid } from '$lib/helpers/index.js';
 import { learnerAuth } from '$lib/server/auth/index.js';
+import {
+  type CloudfrontSignedCookiesOutput,
+  getCloudFrontSignedCookies,
+} from '$lib/server/cloudfront.js';
 import { logger } from '$lib/server/logger.js';
 
 /**
@@ -50,8 +54,38 @@ const routeProtectionHandle: Handle = async ({ event, resolve }) => {
   return redirect(303, `/login?return_to=${encodeURIComponent(event.url.pathname)}`);
 };
 
+const cloudFrontCookieHandle: Handle = async ({ event, resolve }) => {
+  if (event.locals.session.isAuthenticated) {
+    const ttl = learnerAuth.authenticatedTimeout;
+
+    let signedCookies: CloudfrontSignedCookiesOutput | null;
+    try {
+      signedCookies = getCloudFrontSignedCookies(ttl);
+    } catch (err) {
+      event.locals.logger.error({ err }, 'Failed to generate CloudFront signed cookies');
+      return await resolve(event);
+    }
+    if (!signedCookies) {
+      return await resolve(event);
+    }
+
+    for (const [name, value] of Object.entries(signedCookies)) {
+      event.cookies.set(name, value, {
+        path: '/',
+        httpOnly: true,
+        secure: true,
+        sameSite: 'lax',
+        maxAge: ttl,
+      });
+    }
+  }
+
+  return await resolve(event);
+};
+
 export const handle: Handle = sequence(
   requestLoggingHandle,
   learnerAuth.handle,
   routeProtectionHandle,
+  cloudFrontCookieHandle,
 );

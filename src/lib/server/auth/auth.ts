@@ -132,6 +132,15 @@ export interface AuthOptions {
 export interface AuthResult {
   handle: Handle;
   /**
+   * The resolved authenticated session timeout, in seconds. This is the value actually used by
+   * `handle` to set the authenticated session cookie `maxAge` and Valkey TTL — not the raw
+   * duration string from `AuthOptions`.
+   *
+   * Exposed so downstream handles (e.g. CloudFront signed cookie issuance) can align their own
+   * TTLs with the session's sliding window without needing to re-parse durations or query Valkey.
+   */
+  authenticatedTimeout: number;
+  /**
    * Signs in the provided user by destroying the current session and creating a new one. The new
    * session will be associated with the provided user, replacing `event.locals.session` and
    * updating the session cookies accordingly.
@@ -284,6 +293,7 @@ export default function Auth(valkey: GlideClient, options?: PartialDeep<AuthOpti
   } satisfies AuthOptions;
 
   return {
+    authenticatedTimeout: opts.session.authenticatedTimeout,
     handle: async ({ event, resolve }) => {
       const sid = event.cookies.get(opts.cookies.session.name);
 
