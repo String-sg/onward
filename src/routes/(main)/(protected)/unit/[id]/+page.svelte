@@ -25,7 +25,7 @@
   import { Badge } from '$lib/components/Badge/index.js';
   import { Button } from '$lib/components/Button/index.js';
   import { Modal } from '$lib/components/Modal/index.js';
-  import { VimeoPlayer } from '$lib/components/VimeoPlayer/index.js';
+  import { VideoPlayer } from '$lib/components/VideoPlayer/index.js';
   import {
     getBadgeInfo,
     HOME_PATH,
@@ -55,6 +55,13 @@
   );
 
   let videoModalOpen = $state(false);
+  let videoSrc = $state<string | null>(null);
+  let tracked20 = false;
+  let tracked50 = false;
+  let tracked80 = false;
+  let tracked100 = false;
+  let lastCheckpointSavedAt = 0;
+
   const podcastContent = $derived(data.contents.find((c) => c.type === 'PODCAST'));
   const videoContent = $derived(data.contents.find((c) => c.type === 'VIDEO'));
 
@@ -75,17 +82,7 @@
     returnTo = from.url.pathname;
   });
 
-  const handleWatch = () => {
-    videoModalOpen = true;
-    if (player.isPlaying) {
-      player.toggle();
-    }
-  };
-
-  const handleCloseVideo = () => {
-    videoModalOpen = false;
-  };
-
+  // Podcast handlers
   const handlePlay = () => {
     if (!podcastContent || !podcastContent.url) {
       return;
@@ -128,12 +125,37 @@
     player.isNowPlayingViewOpen = true;
   };
 
-  let tracked20 = false;
-  let tracked50 = false;
-  let tracked80 = false;
-  let tracked100 = false;
+  // Video handlers
+  const CHECKPOINT_INTERVAL_SECONDS = 10;
 
-  const handleVideoTimeUpdate = (percent: number) => {
+  const handleWatch = () => {
+    if (!videoContent || !videoContent.url) {
+      return;
+    }
+
+    videoSrc = `${videoContent.url}`;
+    videoModalOpen = true;
+    if (player.isPlaying) {
+      player.toggle();
+    }
+  };
+
+  const handleCloseVideo = () => {
+    videoModalOpen = false;
+    videoSrc = null;
+    tracked20 = false;
+    tracked50 = false;
+    tracked80 = false;
+    tracked100 = false;
+    lastCheckpointSavedAt = 0;
+  };
+
+  const handleVideoTimeUpdate = (currentTime: number, duration: number) => {
+    if (duration <= 0) {
+      return;
+    }
+    const percent = (currentTime / duration) * 100;
+
     if (percent >= 20 && !tracked20) {
       tracked20 = true;
       track20PercentVideoPlay(data.id);
@@ -146,20 +168,15 @@
       tracked80 = true;
       track80PercentVideoPlay(data.id);
     }
-    if (percent >= 100 && !tracked100) {
-      tracked100 = true;
-      handleVideoComplete();
+
+    if (!tracked100 && currentTime - lastCheckpointSavedAt >= CHECKPOINT_INTERVAL_SECONDS) {
+      lastCheckpointSavedAt = currentTime;
+      saveVideoCheckpoint(currentTime);
     }
   };
 
-  const handleVideoEnded = () => {
-    if (!tracked100) {
-      tracked100 = true;
-      handleVideoComplete();
-    }
-  };
-
-  const handleVideoComplete = async () => {
+  const handleVideoEnded = async () => {
+    tracked100 = true;
     if (!videoContent) {
       return;
     }
@@ -178,7 +195,13 @@
     await invalidateAll();
   };
 
-  const handleVideoCheckpoint = (currentTime: number) => {
+  const handleVideoPause = (currentTime: number) => {
+    if (lastCheckpointSavedAt > 0 && !tracked100) {
+      saveVideoCheckpoint(currentTime);
+    }
+  };
+
+  const saveVideoCheckpoint = (currentTime: number) => {
     if (!videoContent) {
       return;
     }
@@ -194,6 +217,7 @@
     });
   };
 
+  // Sources and quiz handlers
   const handleSourcesModal = () => {
     isSourcesModalOpen = true;
     trackSourcesClick(data.id);
@@ -459,40 +483,16 @@
   </main>
 </Modal>
 
-{#if videoContent}
-  <Modal
+{#if videoSrc}
+  <VideoPlayer
+    src={videoSrc}
+    title={data.title}
+    tags={data.tags}
+    startTime={videoCheckpoint > 0 ? videoCheckpoint : 0}
     isopen={videoModalOpen}
     onclose={handleCloseVideo}
-    variant="dark"
-    class="pointer-events-none"
-    closeonbackdropclick={false}
+    ontimeupdate={handleVideoTimeUpdate}
+    onended={handleVideoEnded}
+    onpause={handleVideoPause}
   />
-
-  <div
-    class={[
-      'fixed inset-0 z-202 flex items-center justify-center transition-opacity duration-300',
-      videoModalOpen
-        ? 'pointer-events-auto mx-auto max-w-5xl opacity-100'
-        : 'pointer-events-none opacity-0',
-    ]}
-  >
-    <button
-      onclick={handleCloseVideo}
-      class="absolute top-4 right-4 z-10 cursor-pointer rounded-full p-3 text-white transition-colors hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white focus-visible:outline-dashed"
-    >
-      <X />
-    </button>
-
-    <div class="w-full px-4 landscape:max-w-[calc((100svh-2rem)*16/9)]">
-      <VimeoPlayer
-        url={videoContent.url ?? ''}
-        startTime={videoCheckpoint || undefined}
-        active={videoModalOpen}
-        ontimeupdate={handleVideoTimeUpdate}
-        onended={handleVideoEnded}
-        oncheckpoint={handleVideoCheckpoint}
-        onpause={handleVideoCheckpoint}
-      />
-    </div>
-  </div>
 {/if}
