@@ -24,7 +24,9 @@
   let selectedFile = $state<File | null>(null);
 
   const isFileValid = (file: File): boolean => {
-    if (!accept) return true;
+    if (!accept) {
+      return true;
+    }
 
     const acceptedFileTypes = accept.split(',').map((t) => t.trim());
     const fileType = file.type;

@@ -6,7 +6,9 @@ function makeFormData(fields: Record<string, string | string[]>): FormData {
   const fd = new FormData();
   for (const [key, val] of Object.entries(fields)) {
     if (Array.isArray(val)) {
-      for (const v of val) fd.append(key, v);
+      for (const v of val) {
+        fd.append(key, v);
+      }
     } else {
       fd.set(key, val);
     }

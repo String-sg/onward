@@ -126,7 +126,9 @@ describe('Slider', () => {
     });
 
     const slider = container.querySelector('div');
-    if (!slider) throw new Error('Slider not found');
+    if (!slider) {
+      throw new Error('Slider not found');
+    }
 
     vi.spyOn(slider, 'getBoundingClientRect').mockReturnValue({
       left: 0,
@@ -161,7 +163,9 @@ describe('Slider', () => {
     });
 
     const slider = container.querySelector('div');
-    if (!slider) throw new Error('Slider not found');
+    if (!slider) {
+      throw new Error('Slider not found');
+    }
 
     vi.spyOn(slider, 'getBoundingClientRect').mockReturnValue({
       left: 0,

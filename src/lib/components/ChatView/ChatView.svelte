@@ -60,7 +60,9 @@
 
   // Auto resize textarea.
   $effect(() => {
-    if (!textareaElement) return;
+    if (!textareaElement) {
+      return;
+    }
 
     textareaElement.style.height = 'auto';
     textareaElement.style.height = query ? `${Math.min(textareaElement.scrollHeight, 96)}px` : '';

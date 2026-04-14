@@ -61,6 +61,7 @@ export default ts.config(
       'simple-import-sort': simpleImportStort,
     },
     rules: {
+      curly: 'error',
       'simple-import-sort/imports': 'error',
       'simple-import-sort/exports': 'error',
     },
