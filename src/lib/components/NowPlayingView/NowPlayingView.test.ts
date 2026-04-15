@@ -1,6 +1,8 @@
 import { render, screen } from '@testing-library/svelte';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, test, vi } from 'vitest';
+import { beforeAll, describe, expect, test, vi } from 'vitest';
+
+import { noop } from '$lib/helpers/index.js';
 
 import { NowPlayingView } from './index.js';
 
@@ -11,6 +13,20 @@ vi.mock('$env/dynamic/public', () => ({
 }));
 
 describe('NowPlayingView', () => {
+  beforeAll(() => {
+    globalThis.ResizeObserver = class {
+      observe() {
+        noop();
+      }
+      unobserve() {
+        noop();
+      }
+      disconnect() {
+        noop();
+      }
+    };
+  });
+
   const defaultProps = {
     isopen: true,
     onclose: vi.fn(),

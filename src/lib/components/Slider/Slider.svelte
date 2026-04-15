@@ -48,7 +48,9 @@
 
   // Handle pointer down and movement
   const updateSlider = (clientX: number) => {
-    if (!slider) return;
+    if (!slider) {
+      return;
+    }
 
     const rect = slider.getBoundingClientRect();
     const input: [number, number] = [rect.left, rect.right];

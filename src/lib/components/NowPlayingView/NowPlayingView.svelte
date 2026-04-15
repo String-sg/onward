@@ -2,6 +2,7 @@
   import { ChevronDown, Pause, Play, RotateCcw, RotateCw } from '@lucide/svelte';
   import DOMPurify from 'dompurify';
   import { marked } from 'marked';
+  import type { UIEventHandler } from 'svelte/elements';
 
   import { Badge } from '$lib/components/Badge/index.js';
   import { Modal, type ModalProps } from '$lib/components/Modal/index.js';
@@ -75,12 +76,46 @@
     onspeedchange,
   }: Props = $props();
 
+  let scrollContainer = $state<HTMLDivElement>();
+  let atTop = $state(true);
+  let atBottom = $state(true);
+
+  const updateScrollState = () => {
+    if (!scrollContainer) {
+      return;
+    }
+
+    const { scrollTop, scrollHeight, clientHeight } = scrollContainer;
+    atTop = scrollTop <= 0;
+    atBottom = scrollTop + clientHeight >= scrollHeight - 1;
+  };
+
+  $effect(() => {
+    if (!scrollContainer) {
+      return;
+    }
+
+    const observer = new ResizeObserver(updateScrollState);
+    observer.observe(scrollContainer);
+    if (scrollContainer.firstElementChild) {
+      observer.observe(scrollContainer.firstElementChild);
+    }
+
+    return () => {
+      observer.disconnect();
+    };
+  });
+
   const handleClose = () => {
     onclose();
   };
 
   const handlePositionChange: SliderProps['onvaluechange'] = (value) => {
     onseek(value);
+  };
+
+  const handleScroll: UIEventHandler<HTMLDivElement> = () => {
+    updateScrollState();
   };
 </script>
 
@@ -97,7 +132,15 @@
       </button>
     </div>
 
-    <div class="overflow-y-auto mask-t-from-98% mask-b-from-90%">
+    <div
+      bind:this={scrollContainer}
+      onscroll={handleScroll}
+      class={[
+        'min-h-0 flex-1 overflow-y-auto',
+        !atTop && 'mask-t-from-98%',
+        !atBottom && 'mask-b-from-90%',
+      ]}
+    >
       <div class="prose prose-white max-w-none pb-4 text-lg">
         <!-- eslint-disable-next-line svelte/no-at-html-tags -->
         {@html DOMPurify.sanitize(marked.parse(currenttrack.summary, { async: false }))}

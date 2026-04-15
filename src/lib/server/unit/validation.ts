@@ -72,7 +72,9 @@ function parseContentItems(
       }
     }
 
-    if (Object.keys(err).length > 0) itemErrors[i] = err;
+    if (Object.keys(err).length > 0) {
+      itemErrors[i] = err;
+    }
   }
 
   if (itemErrors.some((e) => Object.keys(e).length > 0)) {
