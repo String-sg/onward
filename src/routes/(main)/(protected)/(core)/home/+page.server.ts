@@ -226,6 +226,48 @@ export const load: PageServerLoad = async (event) => {
     },
   });
 
+  const collectionArgs = {
+    select: {
+      id: true,
+      title: true,
+      _count: {
+        select: {
+          learningUnits: {
+            where: {
+              learningUnit: {
+                status: LearningUnitStatus.PUBLISHED,
+              },
+            },
+          },
+        },
+      },
+    },
+    where: {
+      isTopic: false,
+      learningUnits: {
+        some: {
+          learningUnit: {
+            status: LearningUnitStatus.PUBLISHED,
+          },
+        },
+      },
+      NOT: {
+        title: 'AI Literacy',
+      },
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+    take: 2,
+  } satisfies CollectionFindManyArgs;
+  let collections: CollectionGetPayload<typeof collectionArgs>[];
+  try {
+    collections = await db.collection.findMany(collectionArgs);
+  } catch (err) {
+    logger.error({ err }, 'Failed to retrieve Collections');
+    throw error(500);
+  }
+
   return {
     username: user.name,
     toDoList: toDoList.map((collection) => ({
@@ -267,9 +309,13 @@ export const load: PageServerLoad = async (event) => {
         }),
       },
     })),
-    collections: topicalCollections.map((collection) => ({
+    topics: topicalCollections.map((collection) => ({
       ...collection,
       numberOfPodcasts: collection._count.learningUnits,
+    })),
+    collections: collections.map((collection) => ({
+      ...collection,
+      numberOfBites: collection._count.learningUnits,
     })),
   };
 };

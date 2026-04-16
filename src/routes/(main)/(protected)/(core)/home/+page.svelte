@@ -131,27 +131,57 @@
     </div>
   {/if}
 
+  <!-- Collections -->
+  {#if data.collections.length > 0}
+    <div class="flex flex-row justify-between px-2">
+      <span class="text-xl font-semibold">Collections</span>
+    </div>
+
+    <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
+      {#each data.collections as collection (collection.id)}
+        <a
+          href={`/collection/${collection.id}`}
+          class="relative overflow-hidden rounded-4xl bg-blue-500 transition-shadow hover:ring-1 hover:ring-blue-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed"
+        >
+          <div class="relative z-1 flex gap-x-6 gap-y-2 p-6 text-white">
+            <div class="flex flex-col gap-y-2">
+              <span class="text-xl font-semibold">
+                {collection.title}
+              </span>
+
+              <div class="flex flex-col gap-y-1 text-sm">
+                <span>
+                  {collection.numberOfBites} bite{collection.numberOfBites === 1 ? '' : 's'}
+                </span>
+              </div>
+            </div>
+          </div>
+        </a>
+      {/each}
+    </div>
+  {/if}
+
   <!-- Learning Topics -->
-  {#if data.collections.some((collection) => collection.numberOfPodcasts > 0)}
+  {#if data.topics.some((topic) => topic.numberOfPodcasts > 0)}
     <div class="flex flex-row justify-between px-2">
       <span class="text-xl font-semibold">Learning topics</span>
     </div>
 
     <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
-      {#each data.collections as collection (collection.id)}
-        {#if collection.numberOfPodcasts > 0}
+      {#each data.topics as topic (topic.id)}
+        {#if topic.numberOfPodcasts > 0}
           <Collection
-            to="/collection/{collection.id}"
-            title={collection.title}
-            type={collection.tag?.code ?? ''}
-            numberofpodcasts={collection.numberOfPodcasts}
+            to="/collection/{topic.id}"
+            title={topic.title}
+            type={topic.tag?.code ?? ''}
+            numberofpodcasts={topic.numberOfPodcasts}
           />
         {/if}
       {/each}
     </div>
   {/if}
 
-  {#if data.toDoList.length === 0 && data.recommendedLearningUnits.length === 0 && data.learningJourneys.length === 0 && data.collections.some((collection) => collection.numberOfPodcasts === 0)}
+  {#if data.toDoList.length === 0 && data.recommendedLearningUnits.length === 0 && data.learningJourneys.length === 0 && data.collections.length === 0 && data.topics.every((topic) => topic.numberOfPodcasts === 0)}
     <div class="mt-8 flex flex-col items-center gap-y-5">
       <EmptyStateView username={data.username} imagealt="No bites found" />
     </div>
