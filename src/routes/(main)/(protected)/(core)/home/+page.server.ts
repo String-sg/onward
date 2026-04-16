@@ -272,7 +272,7 @@ export const load: PageServerLoad = async (event) => {
     username: user.name,
     toDoList: toDoList.map((collection) => ({
       ...collection,
-      numberOfPodcasts: collection._count.learningUnits,
+      numberOfBites: collection._count.learningUnits,
       dueDate: new Date(
         Math.max(
           ...collection.learningUnits
@@ -311,7 +311,7 @@ export const load: PageServerLoad = async (event) => {
     })),
     topics: topicalCollections.map((collection) => ({
       ...collection,
-      numberOfPodcasts: collection._count.learningUnits,
+      numberOfBites: collection._count.learningUnits,
     })),
     collections: collections.map((collection) => ({
       ...collection,

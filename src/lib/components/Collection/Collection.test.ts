@@ -6,7 +6,7 @@ import { Collection } from './index.js';
 describe('Collection', () => {
   test('renders as a link with correct href', () => {
     render(Collection, {
-      props: { to: '/collection/1', title: 'Test Collection', numberofpodcasts: 1, type: 'AI' },
+      props: { to: '/collection/1', title: 'Test Collection', numberofbites: 1, type: 'AI' },
     });
     const link = screen.getByRole('link');
     expect(link).toHaveAttribute('href', '/collection/1');
@@ -14,21 +14,21 @@ describe('Collection', () => {
 
   test('displays title', () => {
     render(Collection, {
-      props: { to: '/collection/1', title: 'My Collection', numberofpodcasts: 1, type: 'BOB' },
+      props: { to: '/collection/1', title: 'My Collection', numberofbites: 1, type: 'BOB' },
     });
     expect(screen.getByText('My Collection')).toBeInTheDocument();
   });
 
-  test('displays podcast count', () => {
+  test('displays bite count', () => {
     render(Collection, {
-      props: { to: '/collection/1', title: 'Test', numberofpodcasts: 7, type: 'CAREER' },
+      props: { to: '/collection/1', title: 'Test', numberofbites: 7, type: 'CAREER' },
     });
-    expect(screen.getByText('7 podcast(s)')).toBeInTheDocument();
+    expect(screen.getByText('7 bites')).toBeInTheDocument();
   });
 
   test('applies AI type background class', () => {
     const { container } = render(Collection, {
-      props: { to: '/test', title: 'AI Collection', numberofpodcasts: 1, type: 'AI' },
+      props: { to: '/test', title: 'AI Collection', numberofbites: 1, type: 'AI' },
     });
     const link = container.querySelector('a');
     expect(link).toHaveClass('bg-pink-300');
@@ -36,7 +36,7 @@ describe('Collection', () => {
 
   test('applies BOB type background class', () => {
     const { container } = render(Collection, {
-      props: { to: '/test', title: 'BOB Collection', numberofpodcasts: 1, type: 'BOB' },
+      props: { to: '/test', title: 'BOB Collection', numberofbites: 1, type: 'BOB' },
     });
     const link = container.querySelector('a');
     expect(link).toHaveClass('bg-blue-300');
@@ -44,7 +44,7 @@ describe('Collection', () => {
 
   test('applies CAREER type background class', () => {
     const { container } = render(Collection, {
-      props: { to: '/test', title: 'Career Collection', numberofpodcasts: 1, type: 'CAREER' },
+      props: { to: '/test', title: 'Career Collection', numberofbites: 1, type: 'CAREER' },
     });
     const link = container.querySelector('a');
     expect(link).toHaveClass('bg-violet-300');
@@ -52,7 +52,7 @@ describe('Collection', () => {
 
   test('applies PROD type background class', () => {
     const { container } = render(Collection, {
-      props: { to: '/test', title: 'Prod Collection', numberofpodcasts: 1, type: 'PROD' },
+      props: { to: '/test', title: 'Prod Collection', numberofbites: 1, type: 'PROD' },
     });
     const link = container.querySelector('a');
     expect(link).toHaveClass('bg-orange-300');
@@ -60,7 +60,7 @@ describe('Collection', () => {
 
   test('applies STU_DEV type background class', () => {
     const { container } = render(Collection, {
-      props: { to: '/test', title: 'Student Dev', numberofpodcasts: 1, type: 'STU_DEV' },
+      props: { to: '/test', title: 'Student Dev', numberofbites: 1, type: 'STU_DEV' },
     });
     const link = container.querySelector('a');
     expect(link).toHaveClass('bg-green-300');
@@ -68,7 +68,7 @@ describe('Collection', () => {
 
   test('applies WELLBEING type background class', () => {
     const { container } = render(Collection, {
-      props: { to: '/test', title: 'Wellbeing', numberofpodcasts: 1, type: 'WELLBEING' },
+      props: { to: '/test', title: 'Wellbeing', numberofbites: 1, type: 'WELLBEING' },
     });
     const link = container.querySelector('a');
     expect(link).toHaveClass('bg-emerald-300');
@@ -76,7 +76,7 @@ describe('Collection', () => {
 
   test('applies NEWS type background class', () => {
     const { container } = render(Collection, {
-      props: { to: '/test', title: 'News', numberofpodcasts: 1, type: 'NEWS' },
+      props: { to: '/test', title: 'News', numberofbites: 1, type: 'NEWS' },
     });
     const link = container.querySelector('a');
     expect(link).toHaveClass('bg-cyan-300');
@@ -84,7 +84,7 @@ describe('Collection', () => {
 
   test('applies INNOV type background class', () => {
     const { container } = render(Collection, {
-      props: { to: '/test', title: 'Innovation', numberofpodcasts: 1, type: 'INNOV' },
+      props: { to: '/test', title: 'Innovation', numberofbites: 1, type: 'INNOV' },
     });
     const link = container.querySelector('a');
     expect(link).toHaveClass('bg-pink-300');
@@ -92,7 +92,7 @@ describe('Collection', () => {
 
   test('applies STU_WELL type background class', () => {
     const { container } = render(Collection, {
-      props: { to: '/test', title: 'Student Wellbeing', numberofpodcasts: 1, type: 'STU_WELL' },
+      props: { to: '/test', title: 'Student Wellbeing', numberofbites: 1, type: 'STU_WELL' },
     });
     const link = container.querySelector('a');
     expect(link).toHaveClass('bg-green-300');
@@ -100,7 +100,7 @@ describe('Collection', () => {
 
   test('applies INFRA type background class', () => {
     const { container } = render(Collection, {
-      props: { to: '/test', title: 'Infrastructure', numberofpodcasts: 1, type: 'INFRA' },
+      props: { to: '/test', title: 'Infrastructure', numberofbites: 1, type: 'INFRA' },
     });
     const link = container.querySelector('a');
     expect(link).toHaveClass('bg-blue-300');
@@ -108,7 +108,7 @@ describe('Collection', () => {
 
   test('applies EDU_VOICES type background class', () => {
     const { container } = render(Collection, {
-      props: { to: '/test', title: 'Educator Voices', numberofpodcasts: 1, type: 'EDU_VOICES' },
+      props: { to: '/test', title: 'Educator Voices', numberofbites: 1, type: 'EDU_VOICES' },
     });
     const link = container.querySelector('a');
     expect(link).toHaveClass('bg-cyan-300');
@@ -119,7 +119,7 @@ describe('Collection', () => {
       props: {
         to: '/test',
         title: 'Employee Engagement',
-        numberofpodcasts: 1,
+        numberofbites: 1,
         type: 'EMP_ENGAGEMENT',
       },
     });

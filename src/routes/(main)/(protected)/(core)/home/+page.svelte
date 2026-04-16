@@ -55,7 +55,7 @@
         <ToDoList
           to={`/collection/${collection.id}`}
           title={collection.title}
-          numberofpodcasts={collection.numberOfPodcasts}
+          numberofbites={collection.numberOfBites}
           dueDate={collection.dueDate}
         />
       {/each}
@@ -162,26 +162,26 @@
   {/if}
 
   <!-- Learning Topics -->
-  {#if data.topics.some((topic) => topic.numberOfPodcasts > 0)}
+  {#if data.topics.some((topic) => topic.numberOfBites > 0)}
     <div class="flex flex-row justify-between px-2">
       <span class="text-xl font-semibold">Learning topics</span>
     </div>
 
     <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
       {#each data.topics as topic (topic.id)}
-        {#if topic.numberOfPodcasts > 0}
+        {#if topic.numberOfBites > 0}
           <Collection
             to="/collection/{topic.id}"
             title={topic.title}
             type={topic.tag?.code ?? ''}
-            numberofpodcasts={topic.numberOfPodcasts}
+            numberofbites={topic.numberOfBites}
           />
         {/if}
       {/each}
     </div>
   {/if}
 
-  {#if data.toDoList.length === 0 && data.recommendedLearningUnits.length === 0 && data.learningJourneys.length === 0 && data.collections.length === 0 && data.topics.every((topic) => topic.numberOfPodcasts === 0)}
+  {#if data.toDoList.length === 0 && data.recommendedLearningUnits.length === 0 && data.learningJourneys.length === 0 && data.collections.length === 0 && data.topics.every((topic) => topic.numberOfBites === 0)}
     <div class="mt-8 flex flex-col items-center gap-y-5">
       <EmptyStateView username={data.username} imagealt="No bites found" />
     </div>

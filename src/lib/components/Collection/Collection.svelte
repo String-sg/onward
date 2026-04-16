@@ -9,16 +9,16 @@
      */
     title: string;
     /**
-     * Total number of podcasts in this collection.
+     * Total number of bites in this collection.
      */
-    numberofpodcasts: number;
+    numberofbites: number;
     /**
      * Defines the visual theme and icon for the collection.
      */
     type: string;
   }
 
-  let { to, title, numberofpodcasts, type }: Props = $props();
+  let { to, title, numberofbites, type }: Props = $props();
 </script>
 
 <a
@@ -141,7 +141,7 @@
 
       <div class="flex flex-col">
         <span class="text-sm">
-          {numberofpodcasts} podcast(s)
+          {numberofbites} bite{numberofbites === 1 ? '' : 's'}
         </span>
       </div>
     </div>
