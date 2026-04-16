@@ -264,6 +264,12 @@ const collections: Prisma.CollectionCreateInput[] = [
     description: 'Mandatory Mods for Cyber Hygiene',
     isTopic: false,
   },
+  {
+    id: uuidv7(),
+    title: 'Our School Stories Workshop',
+    description: 'A collection of workshops and resources for sharing school stories.',
+    isTopic: false,
+  },
 ];
 
 const questionAnswers: Prisma.QuestionAnswerCreateManyLearningUnitInput[] = [
@@ -727,6 +733,37 @@ const learningUnits: Prisma.LearningUnitCreateInput[] = [
     },
     questionAnswers: {
       create: questionAnswers,
+    },
+    contents: {
+      create: [{ type: ContentType.PODCAST, url: 'http://localhost:5173' }],
+    },
+  },
+  {
+    id: uuidv7(),
+    title: 'Our School Stories Workshop Learning Unit 1',
+    status: LearningUnitStatus.PUBLISHED,
+    summary,
+    objectives,
+    createdBy: 'DXD Product Team',
+    collections: {
+      create: {
+        collection: {
+          connect: {
+            id: collections[15].id,
+          },
+        },
+      },
+    },
+    tags: {
+      create: [
+        {
+          tag: {
+            connect: {
+              id: tags[2].id,
+            },
+          },
+        },
+      ],
     },
     contents: {
       create: [{ type: ContentType.PODCAST, url: 'http://localhost:5173' }],
