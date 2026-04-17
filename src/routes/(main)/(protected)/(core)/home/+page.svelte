@@ -1,8 +1,8 @@
 <script lang="ts">
   import { Collection } from '$lib/components/Collection/index.js';
+  import { CollectionCard } from '$lib/components/CollectionCard/index.js';
   import { EmptyStateView } from '$lib/components/EmptyStateView/index.js';
   import { LearningUnit } from '$lib/components/LearningUnit/index.js';
-  import { ToDoList } from '$lib/components/ToDoList/index.js';
   import { Player } from '$lib/states/index.js';
 
   const { data } = $props();
@@ -37,29 +37,27 @@
 </script>
 
 <main class="relative mx-auto flex min-h-svh max-w-5xl flex-col gap-y-4 px-4 pt-43 pb-28">
-  <!-- To-do List -->
-  {#if data.toDoList.length > 0}
+  <!-- Collections -->
+  {#if data.collections.length > 0}
     <div class="flex items-center justify-between px-2">
-      <span class="text-xl font-semibold">To-dos</span>
+      <span class="text-xl font-semibold">Collections</span>
 
       <a
-        href="/todos"
+        href="/collections"
         class="rounded-2xl px-4 py-2 text-sm font-medium hover:bg-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed"
       >
         See all
       </a>
     </div>
 
-    <div class="flex flex-col gap-y-4">
-      {#each data.toDoList as collection (collection.id)}
-        <ToDoList
-          to={`/collection/${collection.id}`}
-          title={collection.title}
-          numberofbites={collection.numberOfBites}
-          dueDate={collection.dueDate}
-        />
-      {/each}
-    </div>
+    {#each data.collections as collection (collection.id)}
+      <CollectionCard
+        to={`/collection/${collection.id}`}
+        title={collection.title}
+        numberofbites={collection.numberOfBites}
+        dueDate={collection.dueDate ?? undefined}
+      />
+    {/each}
   {/if}
 
   <!-- Recommended Bites -->
@@ -131,36 +129,6 @@
     </div>
   {/if}
 
-  <!-- Collections -->
-  {#if data.collections.length > 0}
-    <div class="flex flex-row justify-between px-2">
-      <span class="text-xl font-semibold">Collections</span>
-    </div>
-
-    <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
-      {#each data.collections as collection (collection.id)}
-        <a
-          href={`/collection/${collection.id}`}
-          class="relative overflow-hidden rounded-4xl bg-blue-500 transition-shadow hover:ring-1 hover:ring-blue-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed"
-        >
-          <div class="relative z-1 flex gap-x-6 gap-y-2 p-6 text-white">
-            <div class="flex flex-col gap-y-2">
-              <span class="text-xl font-semibold">
-                {collection.title}
-              </span>
-
-              <div class="flex flex-col gap-y-1 text-sm">
-                <span>
-                  {collection.numberOfBites} bite{collection.numberOfBites === 1 ? '' : 's'}
-                </span>
-              </div>
-            </div>
-          </div>
-        </a>
-      {/each}
-    </div>
-  {/if}
-
   <!-- Learning Topics -->
   {#if data.topics.some((topic) => topic.numberOfBites > 0)}
     <div class="flex flex-row justify-between px-2">
@@ -181,7 +149,7 @@
     </div>
   {/if}
 
-  {#if data.toDoList.length === 0 && data.recommendedLearningUnits.length === 0 && data.learningJourneys.length === 0 && data.collections.length === 0 && data.topics.every((topic) => topic.numberOfBites === 0)}
+  {#if data.recommendedLearningUnits.length === 0 && data.learningJourneys.length === 0 && data.collections.length === 0 && data.topics.every((topic) => topic.numberOfBites === 0)}
     <div class="mt-8 flex flex-col items-center gap-y-5">
       <EmptyStateView username={data.username} imagealt="No bites found" />
     </div>

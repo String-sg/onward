@@ -23,13 +23,25 @@ export const load: PageServerLoad = async (event) => {
     throw redirect(303, '/login');
   }
 
-  const toDoListArgs = {
+  const collectionArgs = {
     select: {
       id: true,
       title: true,
+      recommendedAt: true,
+      tag: {
+        select: {
+          code: true,
+        },
+      },
       _count: {
         select: {
-          learningUnits: true,
+          learningUnits: {
+            where: {
+              learningUnit: {
+                status: LearningUnitStatus.PUBLISHED,
+              },
+            },
+          },
         },
       },
       learningUnits: {
@@ -37,51 +49,37 @@ export const load: PageServerLoad = async (event) => {
           learningUnit: {
             select: {
               dueDate: true,
+              isRequired: true,
             },
+          },
+        },
+        where: {
+          learningUnit: {
+            status: LearningUnitStatus.PUBLISHED,
+            isRequired: true,
+            dueDate: { not: null },
           },
         },
       },
     },
     where: {
+      isTopic: false,
       learningUnits: {
-        every: {
-          learningUnit: {
-            isRequired: true,
-            status: LearningUnitStatus.PUBLISHED,
-          },
-        },
         some: {
           learningUnit: {
-            OR: [
-              {
-                learningJourneys: {
-                  some: {
-                    userId: user.id,
-                    isCompleted: false,
-                  },
-                },
-              },
-              {
-                NOT: {
-                  learningJourneys: {
-                    some: {
-                      userId: user.id,
-                    },
-                  },
-                },
-              },
-            ],
+            status: LearningUnitStatus.PUBLISHED,
           },
         },
       },
     },
+    orderBy: [{ recommendedAt: { sort: 'desc', nulls: 'last' } }, { createdAt: 'desc' }],
+    take: 2,
   } satisfies CollectionFindManyArgs;
-
-  let toDoList: CollectionGetPayload<typeof toDoListArgs>[];
+  let collections: CollectionGetPayload<typeof collectionArgs>[];
   try {
-    toDoList = await db.collection.findMany(toDoListArgs);
+    collections = await db.collection.findMany(collectionArgs);
   } catch (err) {
-    logger.error({ err }, 'Failed to retrieve to-do list');
+    logger.error({ err }, 'Failed to retrieve collections');
     throw error(500);
   }
 
@@ -226,65 +224,27 @@ export const load: PageServerLoad = async (event) => {
     },
   });
 
-  const collectionArgs = {
-    select: {
-      id: true,
-      title: true,
-      _count: {
-        select: {
-          learningUnits: {
-            where: {
-              learningUnit: {
-                status: LearningUnitStatus.PUBLISHED,
-              },
-            },
-          },
-        },
-      },
-    },
-    where: {
-      isTopic: false,
-      learningUnits: {
-        some: {
-          learningUnit: {
-            status: LearningUnitStatus.PUBLISHED,
-          },
-        },
-      },
-      NOT: {
-        title: 'AI Literacy',
-      },
-    },
-    orderBy: {
-      createdAt: 'desc',
-    },
-    take: 2,
-  } satisfies CollectionFindManyArgs;
-  let collections: CollectionGetPayload<typeof collectionArgs>[];
-  try {
-    collections = await db.collection.findMany(collectionArgs);
-  } catch (err) {
-    logger.error({ err }, 'Failed to retrieve Collections');
-    throw error(500);
-  }
-
   return {
     username: user.name,
-    toDoList: toDoList.map((collection) => ({
-      ...collection,
-      numberOfBites: collection._count.learningUnits,
-      dueDate: new Date(
-        Math.max(
-          ...collection.learningUnits
-            .map((lu) => lu.learningUnit.dueDate?.getTime() ?? 0)
-            .filter((time) => time > 0),
-        ),
-      ).toLocaleDateString('en-GB', {
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric',
-      }),
-    })),
+    collections: collections.map((collection) => {
+      const dueDates = collection.learningUnits
+        .map((lu) => lu.learningUnit.dueDate?.getTime() ?? 0)
+        .filter((time) => time > 0);
+
+      return {
+        id: collection.id,
+        title: collection.title,
+        numberOfBites: collection._count.learningUnits,
+        dueDate:
+          dueDates.length > 0
+            ? new Date(Math.max(...dueDates)).toLocaleDateString('en-GB', {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric',
+              })
+            : null,
+      };
+    }),
     recommendedLearningUnits: recommendedLearningUnits.map((lu) => ({
       ...lu,
       status: getLearningUnitStatus({
@@ -310,10 +270,6 @@ export const load: PageServerLoad = async (event) => {
       },
     })),
     topics: topicalCollections.map((collection) => ({
-      ...collection,
-      numberOfBites: collection._count.learningUnits,
-    })),
-    collections: collections.map((collection) => ({
       ...collection,
       numberOfBites: collection._count.learningUnits,
     })),
