@@ -1,8 +1,8 @@
 <script lang="ts">
   import { Collection } from '$lib/components/Collection/index.js';
+  import { CollectionCard } from '$lib/components/CollectionCard/index.js';
   import { EmptyStateView } from '$lib/components/EmptyStateView/index.js';
   import { LearningUnit } from '$lib/components/LearningUnit/index.js';
-  import { ToDoList } from '$lib/components/ToDoList/index.js';
   import { Player } from '$lib/states/index.js';
 
   const { data } = $props();
@@ -37,26 +37,26 @@
 </script>
 
 <main class="relative mx-auto flex min-h-svh max-w-5xl flex-col gap-y-4 px-4 pt-43 pb-28">
-  <!-- To-do List -->
-  {#if data.toDoList.length > 0}
+  <!-- Collections -->
+  {#if data.collections.length > 0}
     <div class="flex items-center justify-between px-2">
-      <span class="text-xl font-semibold">To-dos</span>
+      <span class="text-xl font-semibold">Collections</span>
 
       <a
-        href="/todos"
+        href="/collection"
         class="rounded-2xl px-4 py-2 text-sm font-medium hover:bg-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed"
       >
         See all
       </a>
     </div>
 
-    <div class="flex flex-col gap-y-4">
-      {#each data.toDoList as collection (collection.id)}
-        <ToDoList
+    <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
+      {#each data.collections as collection (collection.id)}
+        <CollectionCard
           to={`/collection/${collection.id}`}
           title={collection.title}
-          numberofpodcasts={collection.numberOfPodcasts}
-          dueDate={collection.dueDate}
+          numberofbites={collection.numberOfBites}
+          dueDate={collection.dueDate ?? undefined}
         />
       {/each}
     </div>
@@ -132,26 +132,26 @@
   {/if}
 
   <!-- Learning Topics -->
-  {#if data.collections.some((collection) => collection.numberOfPodcasts > 0)}
+  {#if data.topics.some((topic) => topic.numberOfBites > 0)}
     <div class="flex flex-row justify-between px-2">
       <span class="text-xl font-semibold">Learning topics</span>
     </div>
 
     <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
-      {#each data.collections as collection (collection.id)}
-        {#if collection.numberOfPodcasts > 0}
+      {#each data.topics as topic (topic.id)}
+        {#if topic.numberOfBites > 0}
           <Collection
-            to="/collection/{collection.id}"
-            title={collection.title}
-            type={collection.tag?.code ?? ''}
-            numberofpodcasts={collection.numberOfPodcasts}
+            to="/collection/{topic.id}"
+            title={topic.title}
+            type={topic.tag?.code ?? ''}
+            numberofbites={topic.numberOfBites}
           />
         {/if}
       {/each}
     </div>
   {/if}
 
-  {#if data.toDoList.length === 0 && data.recommendedLearningUnits.length === 0 && data.learningJourneys.length === 0 && data.collections.some((collection) => collection.numberOfPodcasts === 0)}
+  {#if data.recommendedLearningUnits.length === 0 && data.learningJourneys.length === 0 && data.collections.length === 0 && data.topics.every((topic) => topic.numberOfBites === 0)}
     <div class="mt-8 flex flex-col items-center gap-y-5">
       <EmptyStateView username={data.username} imagealt="No bites found" />
     </div>

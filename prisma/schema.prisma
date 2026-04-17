@@ -50,7 +50,7 @@ model Collection {
   title       String  @map("title")
   description String  @map("description")
   tagId       String? @map("tag_id") @db.Uuid
-  isTopic     Boolean @default(false) @map("is_topic")
+  isTopic       Boolean   @default(false) @map("is_topic")
 
   // Relations.
   learningUnits LearningUnitCollection[]

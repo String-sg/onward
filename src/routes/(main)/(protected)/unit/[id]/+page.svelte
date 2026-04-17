@@ -27,6 +27,7 @@
   import { Modal } from '$lib/components/Modal/index.js';
   import { VideoPlayer } from '$lib/components/VideoPlayer/index.js';
   import {
+    COLLECTION_BG_COLOR,
     getBadgeInfo,
     HOME_PATH,
     IsWithinViewport,
@@ -254,22 +255,9 @@
 
 <main class="relative mx-auto flex min-h-svh max-w-5xl flex-col gap-y-5 px-4 pt-23 pb-28">
   <div
-    class={[
-      'flex flex-col gap-y-2 rounded-3xl border border-slate-200 p-6',
-      {
-        AI: 'bg-pink-50',
-        BOB: 'bg-blue-50',
-        CAREER: 'bg-violet-50',
-        EDU_VOICES: 'bg-cyan-50',
-        EMP_ENGAGEMENT: 'bg-blue-50',
-        INFRA: 'bg-blue-50',
-        INNOV: 'bg-pink-50',
-        NEWS: 'bg-cyan-50',
-        PROD: 'bg-orange-50',
-        STU_DEV: 'bg-green-50',
-        WELLBEING: 'bg-emerald-50',
-      }[data.tags[0]?.code],
-    ]}
+    class="flex flex-col gap-y-2 rounded-3xl border border-slate-200 p-6 {data.tags[0]
+      ? COLLECTION_BG_COLOR[data.tags[0].code]
+      : 'bg-blue-50'}"
   >
     <div class="flex flex-wrap gap-x-2">
       {#if data.quizStatus}

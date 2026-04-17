@@ -2,8 +2,6 @@ import { error, redirect } from '@sveltejs/kit';
 
 import { getLearningUnitStatus } from '$lib/helpers/index.js';
 import {
-  type CollectionFindManyArgs,
-  type CollectionGetPayload,
   db,
   type LearningJourneyFindManyArgs,
   type LearningJourneyGetPayload,
@@ -23,65 +21,40 @@ export const load: PageServerLoad = async (event) => {
     throw redirect(303, '/login');
   }
 
-  const toDoListArgs = {
-    select: {
-      id: true,
-      title: true,
-      _count: {
-        select: {
-          learningUnits: true,
-        },
-      },
-      learningUnits: {
-        select: {
-          learningUnit: {
-            select: {
-              dueDate: true,
-            },
-          },
-        },
-      },
-    },
-    where: {
-      learningUnits: {
-        every: {
-          learningUnit: {
-            isRequired: true,
-            status: LearningUnitStatus.PUBLISHED,
-          },
-        },
-        some: {
-          learningUnit: {
-            OR: [
-              {
-                learningJourneys: {
-                  some: {
-                    userId: user.id,
-                    isCompleted: false,
-                  },
-                },
-              },
-              {
-                NOT: {
-                  learningJourneys: {
-                    some: {
-                      userId: user.id,
-                    },
-                  },
-                },
-              },
-            ],
-          },
-        },
-      },
-    },
-  } satisfies CollectionFindManyArgs;
+  interface CollectionRow {
+    id: string;
+    title: string;
+    number_of_bites: bigint;
+    min_due_date: Date | null;
+  }
 
-  let toDoList: CollectionGetPayload<typeof toDoListArgs>[];
+  let collections: CollectionRow[];
+
   try {
-    toDoList = await db.collection.findMany(toDoListArgs);
+    collections = await db.$queryRaw<CollectionRow[]>`
+      WITH collection_data AS (
+        SELECT
+          c.id,
+          c.title,
+          COUNT(lu.id) FILTER (WHERE lu.status = 'PUBLISHED') AS number_of_bites,
+          MIN(lu.due_date) FILTER (
+            WHERE lu.status = 'PUBLISHED' AND lu.is_required = true AND lu.due_date IS NOT NULL
+          ) AS min_due_date,
+          MAX(lu.updated_at) FILTER (WHERE lu.status = 'PUBLISHED') AS max_content_updated_at
+        FROM collections c
+        INNER JOIN learning_unit_collections luc ON luc.collection_id = c.id
+        INNER JOIN learning_units lu ON lu.id = luc.learning_unit_id
+        WHERE c.is_topic = false
+        GROUP BY c.id, c.title
+        HAVING COUNT(lu.id) FILTER (WHERE lu.status = 'PUBLISHED') > 0
+      )
+      SELECT id, title, number_of_bites, min_due_date
+      FROM collection_data
+      ORDER BY min_due_date ASC NULLS LAST, max_content_updated_at DESC
+      LIMIT 4
+    `;
   } catch (err) {
-    logger.error({ err }, 'Failed to retrieve to-do list');
+    logger.error({ err }, 'Failed to retrieve collections');
     throw error(500);
   }
 
@@ -228,20 +201,17 @@ export const load: PageServerLoad = async (event) => {
 
   return {
     username: user.name,
-    toDoList: toDoList.map((collection) => ({
-      ...collection,
-      numberOfPodcasts: collection._count.learningUnits,
-      dueDate: new Date(
-        Math.max(
-          ...collection.learningUnits
-            .map((lu) => lu.learningUnit.dueDate?.getTime() ?? 0)
-            .filter((time) => time > 0),
-        ),
-      ).toLocaleDateString('en-GB', {
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric',
-      }),
+    collections: collections.map((row) => ({
+      id: row.id,
+      title: row.title,
+      numberOfBites: Number(row.number_of_bites),
+      dueDate: row.min_due_date
+        ? row.min_due_date.toLocaleDateString('en-GB', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric',
+          })
+        : null,
     })),
     recommendedLearningUnits: recommendedLearningUnits.map((lu) => ({
       ...lu,
@@ -267,9 +237,9 @@ export const load: PageServerLoad = async (event) => {
         }),
       },
     })),
-    collections: topicalCollections.map((collection) => ({
+    topics: topicalCollections.map((collection) => ({
       ...collection,
-      numberOfPodcasts: collection._count.learningUnits,
+      numberOfBites: collection._count.learningUnits,
     })),
   };
 };
