@@ -26,11 +26,11 @@
 <a
   href={to}
   class={[
-    'relative min-h-30 overflow-hidden rounded-4xl transition-shadow hover:ring-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed',
+    'relative flex min-h-30 flex-col overflow-hidden rounded-4xl transition-shadow hover:ring-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed',
     title === 'AI Literacy' ? 'bg-pink-500 hover:ring-pink-300' : 'bg-blue-500 hover:ring-blue-300',
   ]}
 >
-  <div class="relative z-1 flex gap-x-6 gap-y-2 p-6 text-white">
+  <div class="relative z-1 flex grow items-center gap-x-6 gap-y-2 p-6 text-white">
     <div class="flex items-center">
       <div
         class={[
