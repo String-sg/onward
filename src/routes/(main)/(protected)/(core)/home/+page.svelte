@@ -43,21 +43,23 @@
       <span class="text-xl font-semibold">Collections</span>
 
       <a
-        href="/collections"
+        href="/collection"
         class="rounded-2xl px-4 py-2 text-sm font-medium hover:bg-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-950 focus-visible:outline-dashed"
       >
         See all
       </a>
     </div>
 
-    {#each data.collections as collection (collection.id)}
-      <CollectionCard
-        to={`/collection/${collection.id}`}
-        title={collection.title}
-        numberofbites={collection.numberOfBites}
-        dueDate={collection.dueDate ?? undefined}
-      />
-    {/each}
+    <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
+      {#each data.collections as collection (collection.id)}
+        <CollectionCard
+          to={`/collection/${collection.id}`}
+          title={collection.title}
+          numberofbites={collection.numberOfBites}
+          dueDate={collection.dueDate ?? undefined}
+        />
+      {/each}
+    </div>
   {/if}
 
   <!-- Recommended Bites -->
