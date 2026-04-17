@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Bot, Library } from '@lucide/svelte';
+  import { Bot, LibraryBig } from '@lucide/svelte';
 
   export interface Props {
     /**
@@ -41,7 +41,7 @@
         {#if title === 'AI Literacy'}
           <Bot class="h-8 w-8 text-pink-600" />
         {:else}
-          <Library class="h-8 w-8 text-blue-600" />
+          <LibraryBig class="h-8 w-8 text-blue-600" />
         {/if}
       </div>
     </div>
