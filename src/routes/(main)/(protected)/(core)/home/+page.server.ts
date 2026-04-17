@@ -39,7 +39,8 @@ export const load: PageServerLoad = async (event) => {
           COUNT(lu.id) FILTER (WHERE lu.status = 'PUBLISHED') AS number_of_bites,
           MIN(lu.due_date) FILTER (
             WHERE lu.status = 'PUBLISHED' AND lu.is_required = true AND lu.due_date IS NOT NULL
-          ) AS min_due_date
+          ) AS min_due_date,
+          MAX(lu.updated_at) FILTER (WHERE lu.status = 'PUBLISHED') AS max_content_updated_at
         FROM collections c
         INNER JOIN learning_unit_collections luc ON luc.collection_id = c.id
         INNER JOIN learning_units lu ON lu.id = luc.learning_unit_id
@@ -49,7 +50,7 @@ export const load: PageServerLoad = async (event) => {
       )
       SELECT id, title, number_of_bites, min_due_date
       FROM collection_data
-      ORDER BY min_due_date ASC NULLS LAST
+      ORDER BY min_due_date ASC NULLS LAST, max_content_updated_at DESC
       LIMIT 4
     `;
   } catch (err) {
