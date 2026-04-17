@@ -257,7 +257,6 @@ const collections: Prisma.CollectionCreateInput[] = [
       },
     },
     isTopic: false,
-    recommendedAt: new Date(),
   },
   {
     id: uuidv7(),

@@ -2,8 +2,6 @@ import { error, redirect } from '@sveltejs/kit';
 
 import { getLearningUnitStatus } from '$lib/helpers/index.js';
 import {
-  type CollectionFindManyArgs,
-  type CollectionGetPayload,
   db,
   type LearningJourneyFindManyArgs,
   type LearningJourneyGetPayload,
@@ -23,61 +21,37 @@ export const load: PageServerLoad = async (event) => {
     throw redirect(303, '/login');
   }
 
-  const collectionArgs = {
-    select: {
-      id: true,
-      title: true,
-      recommendedAt: true,
-      tag: {
-        select: {
-          code: true,
-        },
-      },
-      _count: {
-        select: {
-          learningUnits: {
-            where: {
-              learningUnit: {
-                status: LearningUnitStatus.PUBLISHED,
-              },
-            },
-          },
-        },
-      },
-      learningUnits: {
-        select: {
-          learningUnit: {
-            select: {
-              dueDate: true,
-              isRequired: true,
-            },
-          },
-        },
-        where: {
-          learningUnit: {
-            status: LearningUnitStatus.PUBLISHED,
-            isRequired: true,
-            dueDate: { not: null },
-          },
-        },
-      },
-    },
-    where: {
-      isTopic: false,
-      learningUnits: {
-        some: {
-          learningUnit: {
-            status: LearningUnitStatus.PUBLISHED,
-          },
-        },
-      },
-    },
-    orderBy: [{ recommendedAt: { sort: 'desc', nulls: 'last' } }, { createdAt: 'desc' }],
-    take: 2,
-  } satisfies CollectionFindManyArgs;
-  let collections: CollectionGetPayload<typeof collectionArgs>[];
+  interface CollectionRow {
+    id: string;
+    title: string;
+    number_of_bites: bigint;
+    min_due_date: Date | null;
+  }
+
+  let collections: CollectionRow[];
+
   try {
-    collections = await db.collection.findMany(collectionArgs);
+    collections = await db.$queryRaw<CollectionRow[]>`
+      WITH collection_data AS (
+        SELECT
+          c.id,
+          c.title,
+          COUNT(lu.id) FILTER (WHERE lu.status = 'PUBLISHED') AS number_of_bites,
+          MIN(lu.due_date) FILTER (
+            WHERE lu.status = 'PUBLISHED' AND lu.is_required = true AND lu.due_date IS NOT NULL
+          ) AS min_due_date
+        FROM collections c
+        INNER JOIN learning_unit_collections luc ON luc.collection_id = c.id
+        INNER JOIN learning_units lu ON lu.id = luc.learning_unit_id
+        WHERE c.is_topic = false
+        GROUP BY c.id, c.title
+        HAVING COUNT(lu.id) FILTER (WHERE lu.status = 'PUBLISHED') > 0
+      )
+      SELECT id, title, number_of_bites, min_due_date
+      FROM collection_data
+      ORDER BY min_due_date ASC NULLS LAST
+      LIMIT 4
+    `;
   } catch (err) {
     logger.error({ err }, 'Failed to retrieve collections');
     throw error(500);
@@ -226,25 +200,18 @@ export const load: PageServerLoad = async (event) => {
 
   return {
     username: user.name,
-    collections: collections.map((collection) => {
-      const dueDates = collection.learningUnits
-        .map((lu) => lu.learningUnit.dueDate?.getTime() ?? 0)
-        .filter((time) => time > 0);
-
-      return {
-        id: collection.id,
-        title: collection.title,
-        numberOfBites: collection._count.learningUnits,
-        dueDate:
-          dueDates.length > 0
-            ? new Date(Math.max(...dueDates)).toLocaleDateString('en-GB', {
-                day: 'numeric',
-                month: 'short',
-                year: 'numeric',
-              })
-            : null,
-      };
-    }),
+    collections: collections.map((row) => ({
+      id: row.id,
+      title: row.title,
+      numberOfBites: Number(row.number_of_bites),
+      dueDate: row.min_due_date
+        ? row.min_due_date.toLocaleDateString('en-GB', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric',
+          })
+        : null,
+    })),
     recommendedLearningUnits: recommendedLearningUnits.map((lu) => ({
       ...lu,
       status: getLearningUnitStatus({

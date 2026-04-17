@@ -44,10 +44,7 @@ export const load: PageServerLoad = async (event) => {
         },
       },
     },
-    orderBy: [
-      { recommendedAt: { sort: 'desc' as const, nulls: 'last' as const } },
-      { createdAt: 'desc' as const },
-    ],
+    orderBy: [{ createdAt: 'desc' as const }],
   } satisfies CollectionFindManyArgs;
 
   let collections: CollectionGetPayload<typeof collectionArgs>[];

@@ -51,7 +51,6 @@ model Collection {
   description String  @map("description")
   tagId       String? @map("tag_id") @db.Uuid
   isTopic       Boolean   @default(false) @map("is_topic")
-  recommendedAt DateTime? @map("recommended_at") @db.Timestamptz(3)
 
   // Relations.
   learningUnits LearningUnitCollection[]
