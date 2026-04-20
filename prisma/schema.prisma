@@ -195,10 +195,10 @@ model LearningJourneyCheckpoint {
   lastCheckpoint Decimal @map("last_checkpoint")
 
   // Relations.
-  learningJourneyId String @map("learning_journey_id") @db.Uuid
+  learningJourneyId     String @map("learning_journey_id") @db.Uuid
   learningUnitContentId String @map("learning_unit_content_id") @db.Uuid
 
-  learningJourney    LearningJourney     @relation(fields: [learningJourneyId], references: [id], onDelete: Cascade)
+  learningJourney     LearningJourney     @relation(fields: [learningJourneyId], references: [id], onDelete: Cascade)
   learningUnitContent LearningUnitContent @relation(fields: [learningUnitContentId], references: [id], onDelete: Cascade)
 
   @@id([learningJourneyId, learningUnitContentId])
