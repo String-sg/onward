@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.11.0 (2026-04-23)
+
+### Features ✨
+
+- feat: add Collections section in Home page ([#546](https://github.com/String-sg/onward/pull/546)) ([e3304d9](https://github.com/String-sg/onward/commit/e3304d9a80e79120ca49abb35d554cb5da792f8b))
+- feat: update video delivery using AWS Cloudfront ([#542](https://github.com/String-sg/onward/pull/542)) ([daebb84](https://github.com/String-sg/onward/commit/daebb84396b91cde00362f6cbbc5a239b7ea54ee))
+
+### Bug Fixes 🐛
+
+- fix: Now Playing View transcript scroll behavior ([#543](https://github.com/String-sg/onward/pull/543)) ([082f4ad](https://github.com/String-sg/onward/commit/082f4ad8295c1d1b5aee80cd8f483f96696e3e0b))
+
+### Chores 🧹
+
+- chore: bump dependencies to fix vulnerabilities ([#547](https://github.com/String-sg/onward/pull/547)) ([e74ca6e](https://github.com/String-sg/onward/commit/e74ca6e4d5ea716a9717054d0d6ca26d29968acd))
+- chore: update dependencies ([#541](https://github.com/String-sg/onward/pull/541)) ([3b40908](https://github.com/String-sg/onward/commit/3b40908f71eeb99ac9c31f7a6560a4921d2511a1))
+- chore: update prisma dependencies for security patch ([#536](https://github.com/String-sg/onward/pull/536)) ([d5c28a5](https://github.com/String-sg/onward/commit/d5c28a51decc29c1923f0cf97108a6b34c178347))
+- chore(deps-dev): bump vite from 7.1.12 to 7.3.2 ([#537](https://github.com/String-sg/onward/pull/537)) ([c98dd9a](https://github.com/String-sg/onward/commit/c98dd9a5067c01a0ad0a9ede8c3d48623363ce6d))
+- chore(deps-dev): bump dompurify from 3.2.7 to 3.3.2 ([#529](https://github.com/String-sg/onward/pull/529)) ([680f238](https://github.com/String-sg/onward/commit/680f2380da7825622091795daa85e162d3954f7e))
+- chore(deps): bump picomatch from 2.3.1 to 2.3.2 ([#524](https://github.com/String-sg/onward/pull/524)) ([565fa93](https://github.com/String-sg/onward/commit/565fa932aa85f52824ef9ef2ee9ea21b70feadb3))
+- chore(deps): bump flatted from 3.3.3 to 3.4.2 ([#519](https://github.com/String-sg/onward/pull/519)) ([f4f201f](https://github.com/String-sg/onward/commit/f4f201f0403aaef6147ab963bebe30c6bced0d14))
+
 ## 1.10.0 (2026-03-27)
 
 ### Features ✨
