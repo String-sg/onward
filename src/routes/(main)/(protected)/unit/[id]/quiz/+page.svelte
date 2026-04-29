@@ -173,7 +173,7 @@
 <Modal isopen={isFeedbackModalOpen} onclose={toggleFeedbackModalVisibility} size="partial">
   <header class="sticky inset-x-0 top-0 bg-white/90 backdrop-blur-sm">
     <div class="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
-      <span class="text-xl font-medium">
+      <span class={['text-xl font-medium', !isCorrectAnswer && 'text-red-600']}>
         {isCorrectAnswer ? 'Correct answer!' : 'Not quite right!'}
       </span>
 
@@ -194,19 +194,19 @@
         <div
           class={[
             'flex items-center gap-x-3 rounded-2xl border px-2.5 py-3.5',
-            isCorrectAnswer ? 'border-transparent bg-lime-200' : 'border-slate-950 bg-white',
+            isCorrectAnswer ? 'border-transparent bg-lime-200' : 'border-red-600 bg-white',
           ]}
         >
           <span
             class={[
               'flex h-8 w-8 shrink-0 items-center justify-center rounded-lg font-semibold',
-              isCorrectAnswer ? 'bg-lime-400' : 'bg-slate-950 text-white',
+              isCorrectAnswer ? 'bg-lime-400' : 'bg-red-500 text-white',
             ]}
           >
             {String.fromCharCode(65 + selectedOptionIndex)}
           </span>
 
-          <span class="text-left">
+          <span class={['text-left', !isCorrectAnswer && 'text-red-600']}>
             {currentQuestionAnswer.options[selectedOptionIndex]}
           </span>
         </div>
