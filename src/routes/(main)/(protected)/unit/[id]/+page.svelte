@@ -7,11 +7,11 @@
     Headphones,
     Lightbulb,
     MessageCircleWarningIcon,
+    MonitorPlay,
     Pause,
     ThumbsDown,
     ThumbsUp,
     TriangleAlert,
-    Video,
     X,
   } from '@lucide/svelte';
   import { formatDistanceToNow } from 'date-fns';
@@ -65,6 +65,7 @@
 
   const podcastContent = $derived(data.contents.find((c) => c.type === 'PODCAST'));
   const videoContent = $derived(data.contents.find((c) => c.type === 'VIDEO'));
+  const hasPodcastAndVideo = $derived(Boolean(podcastContent && videoContent));
 
   let podcastCheckpoint = $derived(podcastContent ? (data.checkpoints[podcastContent.id] ?? 0) : 0);
   let videoCheckpoint = $derived(videoContent ? (data.checkpoints[videoContent.id] ?? 0) : 0);
@@ -343,32 +344,52 @@
       <div class="flex flex-col gap-y-4">
         {#if podcastContent}
           {#if isActive && player.isPlaying}
-            <Button variant="primary" width="full" onclick={handlePause}>
+            <Button
+              variant={hasPodcastAndVideo ? 'secondary' : 'primary'}
+              width="full"
+              onclick={handlePause}
+            >
               <Pause class="h-4 w-4" />
               <span class="font-medium">Pause</span>
             </Button>
           {:else if isActive && !player.isPlaying}
-            <Button variant="primary" width="full" onclick={handleResume}>
+            <Button
+              variant={hasPodcastAndVideo ? 'secondary' : 'primary'}
+              width="full"
+              onclick={handleResume}
+            >
               <Headphones class="h-4 w-4" />
-              <span class="font-medium">Listen</span>
+              <span class="font-medium">Podcast</span>
             </Button>
           {:else if podcastCheckpoint > 0}
-            <Button variant="primary" width="full" onclick={handleResume}>
+            <Button
+              variant={hasPodcastAndVideo ? 'secondary' : 'primary'}
+              width="full"
+              onclick={handleResume}
+            >
               <Headphones class="h-4 w-4" />
-              <span class="font-medium">Listen</span>
+              <span class="font-medium">Podcast</span>
             </Button>
           {:else}
-            <Button variant="primary" width="full" onclick={handlePlay}>
+            <Button
+              variant={hasPodcastAndVideo ? 'secondary' : 'primary'}
+              width="full"
+              onclick={handlePlay}
+            >
               <Headphones class="h-4 w-4" />
-              <span class="font-medium">Listen</span>
+              <span class="font-medium">Podcast</span>
             </Button>
           {/if}
         {/if}
 
         {#if videoContent}
-          <Button variant="secondary" width="full" onclick={handleWatch}>
-            <Video class="h-4 w-4" />
-            <span class="font-medium">Watch</span>
+          <Button
+            variant={hasPodcastAndVideo ? 'secondary' : 'primary'}
+            width="full"
+            onclick={handleWatch}
+          >
+            <MonitorPlay class="h-4 w-4" />
+            <span class="font-medium">Video</span>
           </Button>
         {/if}
 
