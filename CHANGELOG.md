@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.12.0 (2026-04-29)
+
+### Features ✨
+
+- feat: update Player buttons UI ([#552](https://github.com/String-sg/onward/pull/552)) ([3755323](https://github.com/String-sg/onward/commit/37553233ec84c719ce91b3ad434e9cff55b30ed5))
+- feat: update Quiz Incorrect answer UI ([#551](https://github.com/String-sg/onward/pull/551)) ([65788ec](https://github.com/String-sg/onward/commit/65788ec929276d3fa87ce646341b633858206188))
+
+### Chores 🧹
+
+- chore: fix vulnerabilities ([#554](https://github.com/String-sg/onward/pull/554)) ([d015194](https://github.com/String-sg/onward/commit/d015194c460ffbb3ce0ad79d30c3eba1b08ebce8))
+
 ## 1.11.0 (2026-04-23)
 
 ### Features ✨
