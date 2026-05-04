@@ -45,6 +45,15 @@
                 </a>.
               </span>
             </span>
+
+            <a
+              href="https://ask.gov.sg/glow"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-center text-xs underline"
+            >
+              Have questions?
+            </a>
           </div>
         </div>
 
