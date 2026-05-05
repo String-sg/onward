@@ -88,6 +88,11 @@ const tags: Prisma.TagCreateInput[] = [
     code: 'LINK',
     label: 'Link',
   },
+  {
+    id: uuidv7(),
+    code: 'INTRA',
+    label: 'Intranet',
+  },
 ];
 
 const collections: Prisma.CollectionCreateInput[] = [
