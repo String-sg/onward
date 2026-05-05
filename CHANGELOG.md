@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.13.0 (2026-05-05)
+
+### Features ✨
+
+- feat: add help link to login page ([#555](https://github.com/String-sg/onward/pull/555)) ([47ab05a](https://github.com/String-sg/onward/commit/47ab05a0))
+
 ## 1.12.0 (2026-04-29)
 
 ### Features ✨
