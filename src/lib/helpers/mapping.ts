@@ -16,6 +16,7 @@ const BADGE_TYPE_INFO: Record<string, { variant: BadgeProps['variant']; label: s
   EMP_ENGAGEMENT: { variant: 'blue', label: 'Employee engagement' },
   PDF: { variant: 'slate', label: 'PDF' },
   LINK: { variant: 'slate', label: 'Link' },
+  INTRA: { variant: 'slate', label: 'Intranet' },
   REQUIRED: { variant: 'slate-light', label: 'Required' },
   OVERDUE: { variant: 'slate-light', label: 'Overdue' },
   COMPLETED: { variant: 'slate-light', label: 'Completed' },

@@ -473,10 +473,12 @@
           class="inline-flex gap-x-4 rounded-2xl border border-slate-200 bg-white p-3"
         >
           <div class="flex w-[calc(100%-36px)] flex-col gap-y-1">
-            {#each source.tags.map((t) => t.tag) as tag (tag)}
-              {@const badgeInfo = getBadgeInfo(tag.code)}
-              <Badge variant={badgeInfo.variant}>{badgeInfo.label}</Badge>
-            {/each}
+            <div class="flex flex-wrap gap-2">
+              {#each source.tags.map((t) => t.tag) as tag (tag)}
+                {@const badgeInfo = getBadgeInfo(tag.code)}
+                <Badge variant={badgeInfo.variant}>{badgeInfo.label}</Badge>
+              {/each}
+            </div>
 
             <span class="truncate">
               {source.title}
