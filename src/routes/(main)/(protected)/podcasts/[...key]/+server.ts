@@ -20,7 +20,10 @@ export const GET: RequestHandler = async (event) => {
 
   let podcast: Awaited<ReturnType<typeof getPodcastObject>> | null = null;
   try {
-    podcast = await getPodcastObject(`podcasts/${event.params.key}`, { range });
+    podcast = await getPodcastObject(`podcasts/${event.params.key}`, {
+      range,
+      signal: event.request.signal,
+    });
     if (!podcast) {
       return text(INVALID_REQUEST_BODY, { status: 400 });
     }
