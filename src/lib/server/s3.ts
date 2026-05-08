@@ -34,19 +34,20 @@ const client =
  * If the range is not satisfiable, a {@link RangeNotSatisfiableError} is thrown.
  *
  * @param key - The key of the object to get.
+ * @param opts.signal - Aborts the underlying S3 request when the consumer goes away, releasing the socket back to the pool.
  * @param opts.range - An optional range to retrieve a portion of the object.
  * @returns The object from S3, or `null` if the object does not exist.
  */
 export async function getPodcastObject(
   key: string,
-  opts: { range?: string | null } = {},
+  opts: { signal: AbortSignal; range?: string | null },
 ): Promise<{
   stream: ReadableStream;
   headers: Record<string, string>;
 } | null> {
   try {
     const cmd = new GetObjectCommand({ Bucket: BUCKET, Key: key, Range: opts.range ?? undefined });
-    const res = await client.send(cmd);
+    const res = await client.send(cmd, { abortSignal: opts.signal });
 
     if (!res.Body || !(res.Body instanceof Readable)) {
       return null;
@@ -54,6 +55,7 @@ export async function getPodcastObject(
 
     const stream = Readable.toWeb(res.Body);
     if (!(stream instanceof ReadableStream)) {
+      res.Body.destroy();
       return null;
     }
 
