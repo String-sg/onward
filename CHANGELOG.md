@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.13.1 (2026-05-08)
+
+### Bug Fixes 🐛
+
+- fix: S3 socket exhaustion for podcast delivery ([#558](https://github.com/String-sg/onward/pull/558)) ([74b6ae71](https://github.com/String-sg/onward/commit/74b6ae710d2566492caba59bae3c0d1a4fc204fa))
+
 ## 1.13.0 (2026-05-05)
 
 ### Features ✨
