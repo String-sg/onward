@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 
-import { CodeChallengeMethod, OAuth2Client } from 'google-auth-library';
+import { CodeChallengeMethod, type LoginTicket, OAuth2Client } from 'google-auth-library';
 
 import { env } from '$env/dynamic/private';
 
@@ -124,36 +124,50 @@ export async function exchangeCodeForIdToken({
 }
 
 /**
- * Verifies the Google ID token and extracts the profile information from the
- * Google OAuth2 ID token.
+ * Verifies the Google ID token and extracts the profile information.
+ *
+ * Throws `InvalidIdTokenError` when the token cannot be trusted — bad
+ * signature, expired, missing claims, or hosted-domain mismatch.
  *
  * @param idToken - The Google ID token to verify.
- * @returns The Google profile or `null` if the ID token is invalid.
- *
- * @example
- * ```ts
- * const profile = await verifyIdToken(idToken);
- * ```
+ * @returns The Google profile.
+ * @throws InvalidIdTokenError
  */
-export async function verifyIdToken(idToken: string): Promise<GoogleProfile | null> {
+export async function verifyIdToken(idToken: string): Promise<GoogleProfile> {
   const client = getOAuth2Client();
 
-  const ticket = await client.verifyIdToken({ idToken });
+  let ticket: LoginTicket;
+  try {
+    ticket = await client.verifyIdToken({ idToken });
+  } catch {
+    throw new InvalidIdTokenError(`Google ID token rejected by verifier`);
+  }
 
   const payload = ticket.getPayload();
-  if (!payload || !payload.sub || !payload.email || !payload.name || !payload.picture) {
-    return null;
+  if (!payload) {
+    throw new InvalidIdTokenError('Google ID token payload missing');
+  }
+  const { sub, email, name, picture } = payload;
+  if (!sub || !email || !name || !picture) {
+    const missing = !sub ? 'sub' : !email ? 'email' : !name ? 'name' : 'picture';
+    throw new InvalidIdTokenError(`Google ID token missing claim: ${missing}`);
   }
 
-  // If the Google hosted domain is set, make sure the `hd` claim matches the hosted domain.
   if (env.GOOGLE_HOSTED_DOMAIN && payload.hd !== env.GOOGLE_HOSTED_DOMAIN) {
-    return null;
+    throw new InvalidIdTokenError(
+      'Google ID token hosted domain does not match the configured hosted domain',
+    );
   }
 
-  return {
-    id: payload.sub,
-    email: payload.email,
-    name: payload.name,
-    picture: payload.picture,
-  };
+  return { id: sub, email, name, picture };
+}
+
+/**
+ * Thrown when token verification fails.
+ */
+export class InvalidIdTokenError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = this.constructor.name;
+  }
 }
