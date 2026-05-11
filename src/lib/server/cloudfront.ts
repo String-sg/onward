@@ -7,15 +7,10 @@ export { type CloudfrontSignedCookiesOutput } from '@aws-sdk/cloudfront-signer';
 const { CLOUDFRONT_KEY_PAIR_ID, CLOUDFRONT_PRIVATE_KEY } = env;
 
 /**
- * Generates CloudFront signed cookies scoped to `/videos/*` and `/podcasts/*` on
- * the app domain. The caller is responsible for passing a TTL that matches the
- * desired lifetime (typically the authenticated session's sliding window).
+ * Returns CloudFront signed cookies for protected resources, or `null` when
+ * signing credentials are not configured.
  *
- * Uses a custom policy (not a canned policy) because canned policies do not
- * support wildcard resources — CloudFront rebuilds the canned policy at verify
- * time using the concrete request URL, so a wildcard Resource would never match.
- *
- * @param ttlSeconds - How long the signed cookies should remain valid, in seconds.
+ * @param ttlSeconds - Cookie lifetime in seconds.
  */
 export const getCloudFrontSignedCookies = (
   ttlSeconds: number,
@@ -29,15 +24,7 @@ export const getCloudFrontSignedCookies = (
   const policy = JSON.stringify({
     Statement: [
       {
-        Resource: `${env.APP_URL}/videos/*`,
-        Condition: {
-          DateLessThan: {
-            'AWS:EpochTime': expiresEpoch,
-          },
-        },
-      },
-      {
-        Resource: `${env.APP_URL}/podcasts/*`,
+        Resource: `${env.APP_URL}/*`,
         Condition: {
           DateLessThan: {
             'AWS:EpochTime': expiresEpoch,
