@@ -68,16 +68,11 @@ export const GET: RequestHandler = async (event) => {
     return redirect(302, '/login?error=oauth2_callback_failed');
   }
 
-  let profile: GoogleProfile | null = null;
+  let profile: GoogleProfile;
   try {
     profile = await verifyIdToken(idToken);
-
-    if (!profile) {
-      logger.error('Invalid Google profile');
-      return redirect(302, '/login?error=oauth2_callback_failed');
-    }
   } catch (err) {
-    logger.error(err, 'Failed to verify ID token');
+    logger.error({ err }, 'Failed to verify ID token');
     return redirect(302, '/login?error=oauth2_callback_failed');
   }
 
