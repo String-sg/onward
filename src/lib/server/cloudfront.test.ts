@@ -50,6 +50,14 @@ describe('getCloudFrontSignedCookies', () => {
             },
           },
         },
+        {
+          Resource: 'https://app.example.com/podcasts/*',
+          Condition: {
+            DateLessThan: {
+              'AWS:EpochTime': expect.any(Number),
+            },
+          },
+        },
       ],
     });
 
@@ -76,9 +84,11 @@ describe('getCloudFrontSignedCookies', () => {
 
     const callArgs = mockGetSignedCookies.mock.calls[0][0];
     const parsedPolicy = JSON.parse(callArgs.policy);
-    const expirationEpoch = parsedPolicy.Statement[0].Condition.DateLessThan['AWS:EpochTime'];
+    const videoExpiration = parsedPolicy.Statement[0].Condition.DateLessThan['AWS:EpochTime'];
+    const podcastExpiration = parsedPolicy.Statement[1].Condition.DateLessThan['AWS:EpochTime'];
 
-    expect(expirationEpoch).toBeGreaterThanOrEqual(beforeEpoch + ttlSeconds);
-    expect(expirationEpoch).toBeLessThanOrEqual(afterEpoch + ttlSeconds);
+    expect(videoExpiration).toBeGreaterThanOrEqual(beforeEpoch + ttlSeconds);
+    expect(videoExpiration).toBeLessThanOrEqual(afterEpoch + ttlSeconds);
+    expect(podcastExpiration).toBe(videoExpiration);
   });
 });
