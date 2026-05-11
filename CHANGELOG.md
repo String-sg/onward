@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.14.0 (2026-05-11)
+
+### Features ✨
+
+- feat: improve google oauth error logs ([#565](https://github.com/String-sg/onward/pull/565)) ([0a8ce0f0](https://github.com/String-sg/onward/commit/0a8ce0f0))
+
 ## 1.13.3 (2026-05-11)
 
 ### Bug Fixes 🐛
