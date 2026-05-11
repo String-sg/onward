@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.13.2 (2026-05-11)
+
+### Bug Fixes 🐛
+
+- fix: podcast delivery to CDN ([#561](https://github.com/String-sg/onward/pull/561)) ([f09b804d](https://github.com/String-sg/onward/commit/f09b804d))
+
 ## 1.13.1 (2026-05-08)
 
 ### Bug Fixes 🐛
