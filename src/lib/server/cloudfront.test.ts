@@ -43,15 +43,7 @@ describe('getCloudFrontSignedCookies', () => {
     expect(parsedPolicy).toMatchObject({
       Statement: [
         {
-          Resource: 'https://app.example.com/videos/*',
-          Condition: {
-            DateLessThan: {
-              'AWS:EpochTime': expect.any(Number),
-            },
-          },
-        },
-        {
-          Resource: 'https://app.example.com/podcasts/*',
+          Resource: 'https://app.example.com/*',
           Condition: {
             DateLessThan: {
               'AWS:EpochTime': expect.any(Number),
@@ -84,11 +76,9 @@ describe('getCloudFrontSignedCookies', () => {
 
     const callArgs = mockGetSignedCookies.mock.calls[0][0];
     const parsedPolicy = JSON.parse(callArgs.policy);
-    const videoExpiration = parsedPolicy.Statement[0].Condition.DateLessThan['AWS:EpochTime'];
-    const podcastExpiration = parsedPolicy.Statement[1].Condition.DateLessThan['AWS:EpochTime'];
+    const expiration = parsedPolicy.Statement[0].Condition.DateLessThan['AWS:EpochTime'];
 
-    expect(videoExpiration).toBeGreaterThanOrEqual(beforeEpoch + ttlSeconds);
-    expect(videoExpiration).toBeLessThanOrEqual(afterEpoch + ttlSeconds);
-    expect(podcastExpiration).toBe(videoExpiration);
+    expect(expiration).toBeGreaterThanOrEqual(beforeEpoch + ttlSeconds);
+    expect(expiration).toBeLessThanOrEqual(afterEpoch + ttlSeconds);
   });
 });
