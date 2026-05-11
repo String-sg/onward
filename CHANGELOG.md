@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.13.3 (2026-05-11)
+
+### Bug Fixes 🐛
+
+- fix: malformed CloudFront policy for content ([#563](https://github.com/String-sg/onward/pull/563)) ([a511b6cc](https://github.com/String-sg/onward/commit/a511b6cc))
+
 ## 1.13.2 (2026-05-11)
 
 ### Bug Fixes 🐛
