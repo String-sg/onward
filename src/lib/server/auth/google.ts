@@ -18,9 +18,9 @@ export interface GoogleProfile {
    */
   name: string;
   /**
-   * A URL to the picture of the Google profile.
+   * A URL to the picture of the Google profile, or null if Google did not provide a `picture` claim.
    */
-  picture: string;
+  picture: string | null;
 }
 
 /**
@@ -148,8 +148,8 @@ export async function verifyIdToken(idToken: string): Promise<GoogleProfile> {
     throw new InvalidIdTokenError('Google ID token payload missing');
   }
   const { sub, email, name, picture } = payload;
-  if (!sub || !email || !name || !picture) {
-    const missing = !sub ? 'sub' : !email ? 'email' : !name ? 'name' : 'picture';
+  if (!sub || !email || !name) {
+    const missing = !sub ? 'sub' : !email ? 'email' : 'name';
     throw new InvalidIdTokenError(`Google ID token missing claim: ${missing}`);
   }
 
@@ -159,7 +159,7 @@ export async function verifyIdToken(idToken: string): Promise<GoogleProfile> {
     );
   }
 
-  return { id: sub, email, name, picture };
+  return { id: sub, email, name, picture: picture ?? null };
 }
 
 /**
