@@ -18,7 +18,7 @@ const AVATAR_TTL = 24 * 60 * 60;
  * for direct use as the `src` of an `<img>` element.
  *
  * @param userId - The ID of the user whose avatar should be retrieved.
- * @returns The base64-encoded avatar, or `null` if the user is not found.
+ * @returns The base64-encoded avatar, or `null` if the user has no avatar URL or is not found.
  */
 export async function getBase64EncodedAvatar(userId: string): Promise<string | null> {
   let avatar = await valkey.get(`${AVATAR_NAMESPACE}:${userId}`);
@@ -34,7 +34,7 @@ export async function getBase64EncodedAvatar(userId: string): Promise<string | n
       id: userId,
     },
   });
-  if (!user) {
+  if (!user || user.avatarURL === null) {
     return null;
   }
 

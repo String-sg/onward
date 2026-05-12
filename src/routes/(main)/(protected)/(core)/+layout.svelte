@@ -3,6 +3,7 @@
   import type { MouseEventHandler } from 'svelte/elements';
 
   import { page } from '$app/state';
+  import { Avatar } from '$lib/components/Avatar/index.js';
   import { trackProfileClick } from '$lib/helpers/analytics.js';
   import { HOME_PATH, IsWithinViewport } from '$lib/helpers/index.js';
 
@@ -42,7 +43,7 @@
           class="h-10 w-10 cursor-pointer overflow-hidden rounded-full"
           onclick={handleProfileClick}
         >
-          <img src={data.avatar} alt="profile" />
+          <Avatar src={data.avatar} name={data.username} />
         </a>
       </div>
 

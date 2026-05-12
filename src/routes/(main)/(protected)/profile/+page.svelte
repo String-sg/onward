@@ -2,6 +2,7 @@
   import { ArrowLeft, BookOpenCheck, Lightbulb } from '@lucide/svelte';
 
   import { afterNavigate } from '$app/navigation';
+  import { Avatar } from '$lib/components/Avatar/index.js';
   import { HOME_PATH, IsWithinViewport } from '$lib/helpers/index.js';
 
   const { data } = $props();
@@ -81,7 +82,7 @@
 <main class="relative mx-auto flex min-h-svh max-w-5xl flex-col gap-y-4 px-4 py-3 pt-23">
   <div class="flex items-center gap-x-6 rounded-3xl bg-white p-4">
     <div class="h-10 w-10 overflow-hidden rounded-full">
-      <img src={data.avatar} alt="profile" />
+      <Avatar src={data.avatar} name={data.name} />
     </div>
 
     <div class="flex flex-col">
