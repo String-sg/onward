@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.14.1 (2026-05-12)
+
+### Bug Fixes 🐛
+
+- fix: handle missing picture claim in google oauth login ([#567](https://github.com/String-sg/onward/pull/567)) ([4cdb9489](https://github.com/String-sg/onward/commit/4cdb9489))
+
 ## 1.14.0 (2026-05-11)
 
 ### Features ✨
