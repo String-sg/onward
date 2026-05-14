@@ -77,13 +77,7 @@ To contribute code, you'll need to set up your development environment.
 **Prerequisites:**
 
 - **Node.js:** Version 24. You can use a version manager like [fnm](https://github.com/Schniz/fnm) or [nvm](https://github.com/nvm-sh/nvm) to manage Node.js versions.
-- **pnpm:** We use `pnpm` for package management, pinned via the `packageManager` field in `package.json`. Enable [Corepack](https://nodejs.org/api/corepack.html) (shipped with Node.js) so the pinned version is used automatically:
-
-  ```sh
-  corepack enable
-  ```
-
-  Alternatively, install pnpm manually via Homebrew (`brew install pnpm`) or the official [pnpm installation guide](https://pnpm.io/installation), but note that your local version may drift from the pinned one.
+- **pnpm:** We use `pnpm` for package management, pinned via the `packageManager` field in `package.json`. Install pnpm via Homebrew (`brew install pnpm`) or the official [pnpm installation guide](https://pnpm.io/installation); pnpm will automatically use the pinned version when run inside this repo.
 
 **Steps:**
 
