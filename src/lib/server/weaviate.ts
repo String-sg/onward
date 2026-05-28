@@ -36,27 +36,36 @@ process.on('sveltekit:shutdown', async () => {
 });
 
 /**
+ * The properties stored on a `LearningUnit` object in Weaviate.
+ *
+ * Declared as a `type` so it satisfies Weaviate's `Properties` constraint.
+ */
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+export type LearningUnit = {
+  learning_unit_id: string;
+  content: string;
+};
+
+/**
  * Search for relevant learning content by using both keyword and vector similarity.
  *
  * @param query - The query to search for.
- * @returns A list of relevant learning content.
+ * @returns A list of relevant learning units.
  *
  * @example
  * ```ts
  * const results = await search("What is artificial intelligence?");
- * console.log(results); // ["Content about AI...", "Another related content..."]
+ * console.log(results); // [{ learning_unit_id: "...", content: "Content about AI..." }, ...]
  * ```
  */
-export async function search(query: string): Promise<string[]> {
-  const result = await client.collections
-    .get<{ content: string }>('LearningUnit')
-    .query.hybrid(query, {
-      queryProperties: ['content'],
-      targetVector: ['content_vector'],
-      maxVectorDistance: 0.7,
-      returnProperties: ['content'],
-      limit: 10,
-    });
+export async function search(query: string): Promise<LearningUnit[]> {
+  const result = await client.collections.get<LearningUnit>('LearningUnit').query.hybrid(query, {
+    limit: 10,
+    returnProperties: ['learning_unit_id', 'content'],
+    maxVectorDistance: 0.55,
+    queryProperties: ['content'],
+    targetVector: ['content_vector'],
+  });
 
-  return result.objects.map((obj) => obj.properties.content);
+  return result.objects.map((obj) => obj.properties);
 }
