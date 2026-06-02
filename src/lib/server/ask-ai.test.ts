@@ -100,7 +100,7 @@ describe('DEVELOPER_MESSAGE', () => {
   });
 });
 
-describe('ask — first turn (no history)', () => {
+describe('completion — first turn (no history)', () => {
   test('skips contextualization, searches the raw query, streams, and persists', async () => {
     mockCreate.mockResolvedValueOnce(streamChunks(['Photo', 'synthesis', ' is a process.']));
     mockSearch.mockResolvedValueOnce([
@@ -114,8 +114,8 @@ describe('ask — first turn (no history)', () => {
     });
     mockThreadFindFirst.mockResolvedValueOnce({ id: 'thread-1' });
 
-    const { ask } = await import('./ask-ai.js');
-    const stream = ask({
+    const { completion } = await import('./ask-ai.js');
+    const stream = completion({
       userId: 'user-1',
       query: 'What is photosynthesis?',
       history: [],
@@ -154,7 +154,7 @@ describe('ask — first turn (no history)', () => {
   });
 });
 
-describe('ask — follow-up turn (with history)', () => {
+describe('completion — follow-up turn (with history)', () => {
   test('contextualizes, searches the standalone query, and generates with history + context', async () => {
     mockCreate
       .mockResolvedValueOnce(structuredCompletion('why does Bob attend the meeting'))
@@ -172,8 +172,8 @@ describe('ask — follow-up turn (with history)', () => {
       { role: 'user' as const, content: 'Tell me about Bob' },
       { role: 'assistant' as const, content: 'Bob is a character.' },
     ];
-    const { ask } = await import('./ask-ai.js');
-    const stream = ask({
+    const { completion } = await import('./ask-ai.js');
+    const stream = completion({
       userId: 'user-1',
       query: 'why is he there?',
       history,
@@ -216,14 +216,14 @@ describe('ask — follow-up turn (with history)', () => {
   });
 });
 
-describe('ask — contextualization content_filter', () => {
+describe('completion — contextualization content_filter', () => {
   test('emits SSE error, does not search or persist', async () => {
     mockCreate.mockResolvedValueOnce({
       choices: [{ finish_reason: 'content_filter', message: { role: 'assistant', content: null } }],
     });
 
-    const { ask } = await import('./ask-ai.js');
-    const stream = ask({
+    const { completion } = await import('./ask-ai.js');
+    const stream = completion({
       userId: 'u',
       query: 'why is he there?',
       history: [{ role: 'user', content: 'earlier' }],
@@ -239,7 +239,7 @@ describe('ask — contextualization content_filter', () => {
   });
 });
 
-describe('ask — contextualization fallback', () => {
+describe('completion — contextualization fallback', () => {
   test('falls back to the raw query when contextualization throws, then answers', async () => {
     mockCreate
       .mockRejectedValueOnce(new Error('nano down'))
@@ -253,8 +253,8 @@ describe('ask — contextualization fallback', () => {
     });
     mockThreadFindFirst.mockResolvedValueOnce({ id: 'thread-1' });
 
-    const { ask } = await import('./ask-ai.js');
-    const stream = ask({
+    const { completion } = await import('./ask-ai.js');
+    const stream = completion({
       userId: 'u',
       query: 'why is he there?',
       history: [{ role: 'user', content: 'earlier' }],
@@ -267,7 +267,7 @@ describe('ask — contextualization fallback', () => {
   });
 });
 
-describe('ask — gate and retrieval', () => {
+describe('completion — gate and retrieval', () => {
   test('zero hits triggers the gate: emits REFUSAL_MESSAGE, persists refusal, no generate call', async () => {
     mockSearch.mockResolvedValueOnce([]);
     mockTransaction.mockImplementation(async (cb: (tx: unknown) => Promise<void>) => {
@@ -278,8 +278,8 @@ describe('ask — gate and retrieval', () => {
     });
     mockThreadFindFirst.mockResolvedValueOnce({ id: 'thread-1' });
 
-    const { ask, REFUSAL_MESSAGE } = await import('./ask-ai.js');
-    const stream = ask({ userId: 'u', query: 'q', history: [], logger: silentLogger });
+    const { completion, REFUSAL_MESSAGE } = await import('./ask-ai.js');
+    const stream = completion({ userId: 'u', query: 'q', history: [], logger: silentLogger });
     const events = await readAll(stream);
 
     expect(mockCreate).not.toHaveBeenCalled();
@@ -298,8 +298,8 @@ describe('ask — gate and retrieval', () => {
   test('search() throws: emits SSE error, does not persist', async () => {
     mockSearch.mockRejectedValueOnce(new Error('weaviate timeout'));
 
-    const { ask } = await import('./ask-ai.js');
-    const stream = ask({ userId: 'u', query: 'q', history: [], logger: silentLogger });
+    const { completion } = await import('./ask-ai.js');
+    const stream = completion({ userId: 'u', query: 'q', history: [], logger: silentLogger });
     const events = await readAll(stream);
 
     expect(mockCreate).not.toHaveBeenCalled();
@@ -343,13 +343,13 @@ const streamThatThrows = (): AsyncIterable<ChatCompletionChunk> => ({
   },
 });
 
-describe('ask — call #2 error branches', () => {
+describe('completion — answer stream error branches', () => {
   test('finish_reason: length emits SSE error and skips persistence', async () => {
     mockCreate.mockResolvedValueOnce(streamWithFinish(['half'], 'length'));
     mockSearch.mockResolvedValueOnce([{ learning_unit_id: 'lu-1', content: 'hit' }]);
 
-    const { ask } = await import('./ask-ai.js');
-    const stream = ask({ userId: 'u', query: 'q', history: [], logger: silentLogger });
+    const { completion } = await import('./ask-ai.js');
+    const stream = completion({ userId: 'u', query: 'q', history: [], logger: silentLogger });
     const events = await readAll(stream);
 
     expect(events).toContainEqual(
@@ -366,8 +366,8 @@ describe('ask — call #2 error branches', () => {
     mockCreate.mockResolvedValueOnce(streamWithFinish([], 'content_filter'));
     mockSearch.mockResolvedValueOnce([{ learning_unit_id: 'lu-1', content: 'hit' }]);
 
-    const { ask } = await import('./ask-ai.js');
-    const stream = ask({ userId: 'u', query: 'q', history: [], logger: silentLogger });
+    const { completion } = await import('./ask-ai.js');
+    const stream = completion({ userId: 'u', query: 'q', history: [], logger: silentLogger });
     const events = await readAll(stream);
 
     expect(events).toContainEqual(
@@ -380,8 +380,8 @@ describe('ask — call #2 error branches', () => {
     mockCreate.mockResolvedValueOnce(streamWithRefusal());
     mockSearch.mockResolvedValueOnce([{ learning_unit_id: 'lu-1', content: 'hit' }]);
 
-    const { ask } = await import('./ask-ai.js');
-    const stream = ask({ userId: 'u', query: 'q', history: [], logger: silentLogger });
+    const { completion } = await import('./ask-ai.js');
+    const stream = completion({ userId: 'u', query: 'q', history: [], logger: silentLogger });
     const events = await readAll(stream);
 
     expect(events).toContainEqual(
@@ -394,8 +394,8 @@ describe('ask — call #2 error branches', () => {
     mockCreate.mockResolvedValueOnce(streamThatThrows());
     mockSearch.mockResolvedValueOnce([{ learning_unit_id: 'lu-1', content: 'hit' }]);
 
-    const { ask } = await import('./ask-ai.js');
-    const stream = ask({ userId: 'u', query: 'q', history: [], logger: silentLogger });
+    const { completion } = await import('./ask-ai.js');
+    const stream = completion({ userId: 'u', query: 'q', history: [], logger: silentLogger });
     const events = await readAll(stream);
 
     expect(events).toContainEqual(
@@ -408,7 +408,7 @@ describe('ask — call #2 error branches', () => {
   });
 });
 
-describe('ask — persistence: thread lookup/create', () => {
+describe('completion — persistence: thread lookup/create', () => {
   test('creates a new thread when none is active', async () => {
     mockCreate.mockResolvedValueOnce(streamChunks(['answer']));
     mockSearch.mockResolvedValueOnce([{ learning_unit_id: 'lu-1', content: 'hit' }]);
@@ -421,8 +421,8 @@ describe('ask — persistence: thread lookup/create', () => {
     mockThreadFindFirst.mockResolvedValueOnce(null);
     mockThreadCreate.mockResolvedValueOnce({ id: 'new-thread' });
 
-    const { ask } = await import('./ask-ai.js');
-    const stream = ask({ userId: 'u', query: 'q', history: [], logger: silentLogger });
+    const { completion } = await import('./ask-ai.js');
+    const stream = completion({ userId: 'u', query: 'q', history: [], logger: silentLogger });
     await readAll(stream);
 
     expect(mockThreadCreate).toHaveBeenCalledWith({
@@ -448,8 +448,8 @@ describe('ask — persistence: thread lookup/create', () => {
     });
     mockThreadFindFirst.mockResolvedValueOnce({ id: 'existing-thread' });
 
-    const { ask } = await import('./ask-ai.js');
-    const stream = ask({ userId: 'u', query: 'q', history: [], logger: silentLogger });
+    const { completion } = await import('./ask-ai.js');
+    const stream = completion({ userId: 'u', query: 'q', history: [], logger: silentLogger });
     await readAll(stream);
 
     expect(mockThreadCreate).not.toHaveBeenCalled();
@@ -462,14 +462,14 @@ describe('ask — persistence: thread lookup/create', () => {
   });
 });
 
-describe('ask — persistence failure', () => {
+describe('completion — persistence failure', () => {
   test('success-path transaction failure: emits [DONE], logs error, no rethrow', async () => {
     mockCreate.mockResolvedValueOnce(streamChunks(['answer']));
     mockSearch.mockResolvedValueOnce([{ learning_unit_id: 'lu-1', content: 'hit' }]);
     mockTransaction.mockRejectedValueOnce(new Error('db down'));
 
-    const { ask } = await import('./ask-ai.js');
-    const stream = ask({ userId: 'u', query: 'q', history: [], logger: silentLogger });
+    const { completion } = await import('./ask-ai.js');
+    const stream = completion({ userId: 'u', query: 'q', history: [], logger: silentLogger });
     const events = await readAll(stream);
 
     expect(events).toContainEqual('data: [DONE]\n\n');
@@ -479,12 +479,12 @@ describe('ask — persistence failure', () => {
     );
   });
 
-  test('refusal-path transaction failure: logs error, no rethrow', async () => {
+  test('refusal-path transaction failure: emits [DONE], logs error, no rethrow', async () => {
     mockSearch.mockResolvedValueOnce([]);
     mockTransaction.mockRejectedValueOnce(new Error('db down'));
 
-    const { ask, REFUSAL_MESSAGE } = await import('./ask-ai.js');
-    const stream = ask({ userId: 'u', query: 'q', history: [], logger: silentLogger });
+    const { completion, REFUSAL_MESSAGE } = await import('./ask-ai.js');
+    const stream = completion({ userId: 'u', query: 'q', history: [], logger: silentLogger });
     const events = await readAll(stream);
 
     expect(events).toContainEqual(

@@ -67,7 +67,7 @@ Two LLM calls on a follow-up turn (contextualize + generate); **one** LLM call o
 ```mermaid
 flowchart TD
     Client([Client]) -->|POST /api/messages| Handler[Route handler<br/>auth · CSRF · parse · load history]
-    Handler --> Ask[ask&#40;userId, query, history, logger&#41;]
+    Handler --> Ask[completion&#40;userId, query, history, logger&#41;]
     Ask --> First{history empty?}
     First -->|yes &#40;first turn&#41;| RawQ[searchQuery = raw query]
     First -->|no| Ctx[Contextualize — non-streamed<br/>model: gpt-5-nano<br/>reasoning_effort: 'minimal'<br/>response_format: CONTEXTUALIZE_SCHEMA]
@@ -94,7 +94,7 @@ flowchart TD
 Single server-only module, consistent with the flat convention (`openai.ts`, `weaviate.ts`, `db.ts`):
 
 ```
-src/lib/server/ask-ai.ts        constants + ask + file-private helpers
+src/lib/server/ask-ai.ts        constants + completion + file-private helpers
 src/lib/server/ask-ai.test.ts
 ```
 
@@ -102,19 +102,19 @@ Exported surface of `ask-ai.ts`:
 
 | Export                  | Purpose                                                                |
 | ----------------------- | ---------------------------------------------------------------------- |
-| `ask(params)`           | Public entry point — returns the SSE `ReadableStream`.                 |
+| `completion(params)`    | Public entry point — returns the SSE `ReadableStream`.                 |
 | `CONTEXTUALIZE_MESSAGE` | Developer prompt for the contextualization call.                       |
 | `CONTEXTUALIZE_SCHEMA`  | `response_format` (strict JSON schema) for the contextualization call. |
 | `DEVELOPER_MESSAGE`     | Developer prompt for the answer call (grounding/tone/formatting).      |
 | `REFUSAL_MESSAGE`       | Canned refusal string.                                                 |
-| `AskParams`             | Param type.                                                            |
+| `CompletionParams`      | Param type.                                                            |
 | `__test__`              | `{ contextualizeQuery, parseContextualizedQuery }` for unit tests.     |
 
 **Removed from the tools design:** `SEARCH_TOOL`, `parseToolCall`. The constants aren't mocked in tests (asserted directly); the prose prompts are calibration surfaces and aren't asserted on content.
 
-`openai.ts` is the SDK-client export only. `weaviate.ts` is unchanged. The route at `src/routes/(main)/api/messages/+server.ts` already delegates to `ask(...)` (no change needed).
+`openai.ts` is the SDK-client export only. `weaviate.ts` is unchanged. The route at `src/routes/(main)/api/messages/+server.ts` already delegates to `completion(...)` (no change needed).
 
-If `ask-ai.ts` grows past ~250 lines, the natural future split is a folder with `config.ts` (the two prompts + schema + refusal string) and `ask-ai.ts` (`ask` + helpers). Defer until size warrants.
+If `ask-ai.ts` grows past ~250 lines, the natural future split is a folder with `config.ts` (the two prompts + schema + refusal string) and `ask-ai.ts` (`completion` + helpers). Defer until size warrants.
 
 ## 6. Components
 
@@ -163,7 +163,9 @@ export const CONTEXTUALIZE_SCHEMA: ResponseFormatJSONSchema = {
   - was: `Use ONLY the context returned by \`search_learning_content\`. …`
   - now: `Use ONLY the retrieved learning content provided below. NEVER augment, extrapolate, or fill gaps with training knowledge.`
 
-Everything else (the rest of Grounding, Context, Instruction integrity, Tone, Formatting, Rule priority) is unchanged. The refusal bullet still interpolates `${REFUSAL_MESSAGE}`.
+Everything else (the rest of Grounding, Context, Instruction integrity, Tone, Formatting) is unchanged. The refusal bullet still interpolates `${REFUSAL_MESSAGE}`.
+
+A standalone `## Rule priority` section (a numbered Grounding → Instruction integrity → Context → Tone → Formatting tiebreaker) was considered and **removed**. Per OpenAI's GPT-5 prompting guidance, an explicit priority list earns its place only when the rules genuinely compete; these sections are largely orthogonal, so the list was near-inert and only added reasoning-token overhead. The single real conflict it resolved — the exact-refusal line vs. the "respond in Markdown" formatting rules — is instead resolved inline with a carve-out in the Formatting section.
 
 ```ts
 export const REFUSAL_MESSAGE = "It looks like I don't have enough information to answer that.";
@@ -198,20 +200,13 @@ export const DEVELOPER_MESSAGE = `You are the Ask AI assistant for Glow, a learn
 - Use lists or code blocks where they aid clarity (numbered steps for procedures or sequences, bullets for parallel items); prose otherwise.
 - Use **bold** sparingly — only the central concept on first mention. Do not bold supporting terms.
 - Do not lead with a heading.
-
-## Rule priority
-When rules conflict, apply in this order:
-1. Grounding
-2. Instruction integrity
-3. Context
-4. Tone
-5. Formatting
+- These formatting rules do not apply to the refusal line, which must be returned exactly as written.
 `;
 ```
 
 ### 6.3 Retrieval
 
-No new module. `ask` calls `search()` from `$lib/server/weaviate` directly. `search()` returns `LearningUnit[]` where `LearningUnit = { learning_unit_id: string; content: string }`. The retrieved content is rendered into the answer prompt as `hits.map((h) => '- ' + h.content).join('\n\n')`. No score arithmetic, no client-side thresholding (Weaviate's hybrid score is suitable only for intra-query ranking; absolute thresholding belongs with a future re-ranker). `maxVectorDistance` / `alpha` are the calibration surface and are unchanged here.
+No new module. `completion` calls `search()` from `$lib/server/weaviate` directly. `search()` returns `LearningUnit[]` where `LearningUnit = { learning_unit_id: string; content: string }`. The retrieved content is rendered into the answer prompt as `hits.map((h) => '- ' + h.content).join('\n\n')`. No score arithmetic, no client-side thresholding (Weaviate's hybrid score is suitable only for intra-query ranking; absolute thresholding belongs with a future re-ranker). `maxVectorDistance` / `alpha` are the calibration surface and are unchanged here.
 
 ### 6.4 Contextualization helper (`contextualizeQuery`)
 
@@ -221,7 +216,7 @@ File-private, exported via `__test__`. Produces the search query and encapsulate
 type ContextualizeResult = { query: string } | { contentFiltered: true };
 
 const contextualizeQuery = async (args: {
-  history: AskParams['history'];
+  history: CompletionParams['history'];
   query: string;
   userId: string;
   logger: Logger;
@@ -231,7 +226,7 @@ const contextualizeQuery = async (args: {
 Behavior:
 
 1. **First turn:** if `history.length === 0`, return `{ query }` (the raw query) without any LLM call. Nothing to resolve, and rewriting a clean standalone question risks distorting it.
-2. Otherwise call `gpt-5-nano` with `reasoning_effort: 'minimal'`, `response_format: CONTEXTUALIZE_SCHEMA`, and `messages = [{ role: 'developer', content: CONTEXTUALIZE_MESSAGE }, ...history, { role: 'user', content: query }]`.
+2. Otherwise call `gpt-5-nano` with `reasoning_effort: 'minimal'`, `response_format: CONTEXTUALIZE_SCHEMA`, and `messages = [{ role: 'developer', content: CONTEXTUALIZE_MESSAGE }, ...history.slice(-6), { role: 'user', content: query }]`. Only the **last 3 turns** (6 messages) of history are passed: reference resolution is local, so older turns add no signal and risk pulling stale entities into the rewrite.
    - **Throws:** log `warn` "Contextualization failed, falling back to user query"; return `{ query }`.
    - **`finish_reason === 'content_filter'`:** log `error`; return `{ contentFiltered: true }` (caller short-circuits).
    - **`finish_reason === 'length'`:** not special-cased — the truncated JSON fails to parse and falls through to the parse-fallback below (return `{ query }`). `reasoning_effort: 'minimal'` + a one-field schema make this near-impossible.
@@ -250,19 +245,19 @@ const parseContextualizedQuery = (completion: ChatCompletion): string | null => 
 };
 ```
 
-### 6.5 Orchestration (`ask`)
+### 6.5 Orchestration (`completion`)
 
 Single public entry point, signature unchanged:
 
 ```ts
-export type AskParams = {
+export type CompletionParams = {
   userId: string;
   query: string;
   history: Array<{ role: 'user' | 'assistant'; content: string }>;
   logger: Logger;
 };
 
-export const ask = (params: AskParams): ReadableStream<Uint8Array>;
+export const completion = (params: CompletionParams): ReadableStream<Uint8Array>;
 ```
 
 Inside `ReadableStream.start(controller)`:
@@ -276,7 +271,7 @@ Inside `ReadableStream.start(controller)`:
 
 File-private helpers (exported only via `__test__` where unit-tested):
 
-- `buildContextualizeMessages(history, query)` → `[developer(CONTEXTUALIZE_MESSAGE), ...history, user(query)]`.
+- `buildContextualizeMessages(history, query)` → `[developer(CONTEXTUALIZE_MESSAGE), ...history.slice(-6), user(query)]` — only the last 3 turns of history (see §6.4).
 - `buildGenerateMessages(history, query, hits)` → `[developer(DEVELOPER_MESSAGE), ...history, user(query), developer(contextBlock)]`, where `contextBlock = '## Retrieved learning content\n\n' + hits.map((h) => '- ' + h.content).join('\n\n')`.
 - `contextualizeQuery(args)` — §6.4.
 - `parseContextualizedQuery(completion)` — §6.4.
@@ -284,11 +279,11 @@ File-private helpers (exported only via `__test__` where unit-tested):
 
 **Context injection decision (open for review):** retrieved hits are injected as a trailing `developer`-role message (`contextBlock`) after the user query, not embedded in the user turn and not merged into the system prompt. Rationale: keeps the user's verbatim question in the `user` turn (history fidelity) and places the data as the most-recent, most-attended content for the answer call. The grounding rules in `DEVELOPER_MESSAGE` refer to "the retrieved learning content provided below". A `developer` message holds data here rather than instructions; if that reads wrong on review, the alternative is a `user`-role context message or folding the block into the system prompt.
 
-**Client disconnect:** the route handler does not forward `event.request.signal` into `ask`. On disconnect the generate call completes server-side and persistence runs on `finish_reason: 'stop'`. Matches ChatGPT/Claude/Gemini behavior. Unchanged.
+**Client disconnect:** the route handler does not forward `event.request.signal` into `completion`. On disconnect the generate call completes server-side and persistence runs on `finish_reason: 'stop'`. Matches ChatGPT/Claude/Gemini behavior. Unchanged.
 
 ### 6.6 Route handler (`+server.ts`)
 
-Already slimmed to delegate to `ask(...)` (commit `549948a5`). No change required by this spec. `GET`/`DELETE` unchanged.
+Already slimmed to delegate to `completion(...)` (commit `549948a5`). No change required by this spec. `GET`/`DELETE` unchanged.
 
 ## 7. SSE protocol
 
@@ -304,7 +299,7 @@ The client requires no changes. A refusal is a single `chunk` followed by `[DONE
 
 ## 8. Error handling
 
-**Two zones, split by HTTP response state.** Pre-stream (route handler): JSON status codes, unchanged. Post-stream (inside `ask`): the SSE response is committed; failures emit an SSE error event and close.
+**Two zones, split by HTTP response state.** Pre-stream (route handler): JSON status codes, unchanged. Post-stream (inside `completion`): the SSE response is committed; failures emit an SSE error event and close.
 
 **Error matrix:**
 
@@ -329,7 +324,7 @@ The client requires no changes. A refusal is a single `chunk` followed by `[DONE
 
 **Difference from the tools design:** the "model did not call the tool" and "tool arguments failed `JSON.parse`" refusal branches are **removed** — they only existed because of the tool wrapper. Their nearest analogue (contextualization produced no usable query) is now a _non-failing fallback to the raw query_, not a refusal: a poor query still retrieves, and the gate + grounding rule still protect correctness.
 
-**Logging convention:** route handler creates the child logger once and passes it to `ask`; `ask-ai.ts` uses it directly (no nested `.child()`). Representative calls:
+**Logging convention:** route handler creates the child logger once and passes it to `completion`; `ask-ai.ts` uses it directly (no nested `.child()`). Representative calls:
 
 ```ts
 logger.warn({ err, userId }, 'Contextualization failed, falling back to user query');
@@ -368,7 +363,7 @@ logger.error({ err, userId }, 'Failed to persist messages');
 - With history, malformed/empty content → returns `{ query }` (raw) + `warn`.
 - With history, `content_filter` → returns `{ contentFiltered: true }`.
 
-`ask`:
+`completion`:
 
 - **First turn happy path** (`history: []`): no contextualize call; `search` called with the raw query; one OpenAI call (generate); streams chunks + `[DONE]`; persists USER + answer. Generate messages = developer + user + context block (`- <hit.content>`).
 - **Follow-up happy path** (non-empty history): contextualize call then generate call; `search` called with the standalone query; generate messages include history + context block.

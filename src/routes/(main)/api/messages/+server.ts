@@ -1,6 +1,6 @@
 import { json, type RequestHandler } from '@sveltejs/kit';
 
-import { ask } from '$lib/server/ask-ai.js';
+import { completion } from '$lib/server/ask-ai.js';
 import { learnerAuth } from '$lib/server/auth';
 import { db, type MessageFindManyArgs, type MessageGetPayload } from '$lib/server/db.js';
 
@@ -92,7 +92,7 @@ export const POST: RequestHandler = async (event) => {
     return json(null, { status: 500 });
   }
 
-  const stream = ask({
+  const stream = completion({
     userId: user.id,
     query,
     history: history.map((m) => ({

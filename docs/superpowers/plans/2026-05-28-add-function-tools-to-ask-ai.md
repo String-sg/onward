@@ -6,22 +6,22 @@
 
 **Goal:** Implement a four-stage contextualization pipeline for Ask AI — contextualize → retrieve → gate → generate — where the latest message is made standalone before retrieval and a deterministic zero-hit gate guarantees grounding.
 
-**Architecture:** `ask({ userId, query, history, logger })` returns an SSE `ReadableStream`. On a follow-up turn it first calls `gpt-5-nano` (structured output) to rewrite the latest message into a standalone search query; on the first turn it skips straight to the raw query. It then calls `weaviate.search()`, applies the zero-hit gate (deterministic refusal), and streams a grounded answer from `gpt-5-mini` with the retrieved hits injected as a context message. Per spec §3–§6.
+**Architecture:** `completion({ userId, query, history, logger })` returns an SSE `ReadableStream`. On a follow-up turn it first calls `gpt-5-nano` (structured output) to rewrite the latest message into a standalone search query; on the first turn it skips straight to the raw query. It then calls `weaviate.search()`, applies the zero-hit gate (deterministic refusal), and streams a grounded answer from `gpt-5-mini` with the retrieved hits injected as a context message. Per spec §3–§6.
 
 **Tech Stack:** SvelteKit, TypeScript, `openai` SDK (chat completions API, structured outputs), Weaviate JS client, Prisma + Postgres, Pino logger, Vitest.
 
 **Spec:** [`docs/superpowers/specs/2026-05-28-ask-ai-grounding-design.md`](../specs/2026-05-28-ask-ai-grounding-design.md)
 
-**Starting point:** `ask-ai.ts` / `ask-ai.test.ts` on disk still contain the superseded function-tools code; replace it with the target below — no tool symbols survive in the final module. `+server.ts` already delegates to `ask()` and needs no change. `weaviate.ts` and `openai.ts` need no change.
+**Starting point:** `ask-ai.ts` / `ask-ai.test.ts` on disk still contain the superseded function-tools code; replace it with the target below — no tool symbols survive in the final module. `+server.ts` already delegates to `completion()` and needs no change. `weaviate.ts` and `openai.ts` need no change.
 
 ---
 
 ## File structure
 
-| File                            | Action     | Responsibility                                                                                                                                                                                                                                         |
-| ------------------------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `src/lib/server/ask-ai.ts`      | **Modify** | Add `CONTEXTUALIZE_MESSAGE`, `CONTEXTUALIZE_SCHEMA`, `contextualizeQuery`, `parseContextualizedQuery`. Rework `DEVELOPER_MESSAGE` (drop tool refs). Rewire `ask` to the pipeline. Remove `SEARCH_TOOL`, `parseToolCall`, and the debug `console.log`s. |
-| `src/lib/server/ask-ai.test.ts` | **Modify** | Add `CONTEXTUALIZE_SCHEMA` / `parseContextualizedQuery` / `contextualizeQuery` tests. Rewrite `ask` tests for the pipeline. Remove `SEARCH_TOOL` / `parseToolCall` / tool-flow tests.                                                                  |
+| File                            | Action     | Responsibility                                                                                                                                                                                                                                                |
+| ------------------------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/lib/server/ask-ai.ts`      | **Modify** | Add `CONTEXTUALIZE_MESSAGE`, `CONTEXTUALIZE_SCHEMA`, `contextualizeQuery`, `parseContextualizedQuery`. Rework `DEVELOPER_MESSAGE` (drop tool refs). Rewire `completion` to the pipeline. Remove `SEARCH_TOOL`, `parseToolCall`, and the debug `console.log`s. |
+| `src/lib/server/ask-ai.test.ts` | **Modify** | Add `CONTEXTUALIZE_SCHEMA` / `parseContextualizedQuery` / `contextualizeQuery` tests. Rewrite `completion` tests for the pipeline. Remove `SEARCH_TOOL` / `parseToolCall` / tool-flow tests.                                                                  |
 
 No other files change.
 
@@ -32,7 +32,7 @@ No other files change.
 - **No commit steps in this plan.** Per user preference, commits are coordinated at end-of-session, not per task. Propose a single batched commit (or ask how to split) at the end.
 - **Test style (AAA):** Arrange / Act / Assert separated by a single blank line. **No `// Arrange` / `// Act` / `// Assert` comments.** No shared cross-file test helpers — module-local fixtures (`readAll`, `structuredCompletion`, `streamChunks`, `silentLogger`) stay inline in the test file.
 - **Imports:** SvelteKit module imports end in `.js` even when sourcing `.ts`.
-- **Function style:** `const ask = (...)` / `const contextualizeQuery = async (...)` arrow form.
+- **Function style:** `const completion = (...)` / `const contextualizeQuery = async (...)` arrow form.
 - **No type-escape casts** on the OpenAI calls (the codebase removed them — commit `a16c1a73`). Type `CONTEXTUALIZE_SCHEMA` as `ResponseFormatJSONSchema`.
 - **Run a single test file:** `pnpm test src/lib/server/ask-ai.test.ts`.
 - **Run a single test by name:** `pnpm test src/lib/server/ask-ai.test.ts -t "name fragment"`.
@@ -47,7 +47,7 @@ No other files change.
 - Modify: `src/lib/server/ask-ai.ts`
 - Modify: `src/lib/server/ask-ai.test.ts`
 
-Build the module's prompts, schema, and contextualization helpers, with unit tests. `ask` is implemented in Task 2; until then the prior code in the file remains so the module keeps compiling — it is removed wholesale in Task 2.
+Build the module's prompts, schema, and contextualization helpers, with unit tests. `completion` is implemented in Task 2; until then the prior code in the file remains so the module keeps compiling — it is removed wholesale in Task 2.
 
 - [ ] **Step 1: Write the failing tests**
 
@@ -267,18 +267,19 @@ Add the helpers and the `buildContextualizeMessages` builder near the other file
 
 ```ts
 const buildContextualizeMessages = (
-  history: AskParams['history'],
+  history: CompletionParams['history'],
   query: string,
 ): ChatCompletionMessageParam[] => [
   { role: 'developer', content: CONTEXTUALIZE_MESSAGE },
-  ...history.map((m) => ({ role: m.role, content: m.content })),
+  // Reference resolution is local; last 3 turns (6 messages) only, to keep stale entities out.
+  ...history.slice(-6).map((m) => ({ role: m.role, content: m.content })),
   { role: 'user', content: query },
 ];
 
 type ContextualizeResult = { query: string } | { contentFiltered: true };
 
 const contextualizeQuery = async (args: {
-  history: AskParams['history'];
+  history: CompletionParams['history'];
   query: string;
   userId: string;
   logger: Logger;
@@ -352,16 +353,16 @@ Expected: PASS — new tests + all existing tool-flow tests still green; no TS e
 
 ---
 
-## Task 2: Build the `ask` orchestrator (contextualization pipeline)
+## Task 2: Build the `completion` orchestrator (contextualization pipeline)
 
 **Files:**
 
 - Modify: `src/lib/server/ask-ai.ts`
 - Modify: `src/lib/server/ask-ai.test.ts`
 
-Build the orchestrator. Write the `ask` pipeline tests first (red), then implement `ask` + `buildGenerateMessages`, finalize `DEVELOPER_MESSAGE`, and strip the file to the target exported surface — no `SEARCH_TOOL`, no `parseToolCall`, no debug logs (green).
+Build the orchestrator. Write the `completion` pipeline tests first (red), then implement `completion` + `buildGenerateMessages`, finalize `DEVELOPER_MESSAGE`, and strip the file to the target exported surface — no `SEARCH_TOOL`, no `parseToolCall`, no debug logs (green).
 
-- [ ] **Step 1: Replace the `ask`-flow and constant tests**
+- [ ] **Step 1: Replace the `completion`-flow and constant tests**
 
 In `src/lib/server/ask-ai.test.ts`:
 
@@ -373,10 +374,10 @@ import { DEVELOPER_MESSAGE, REFUSAL_MESSAGE } from './ask-ai.js';
 
 (Keep the `CONTEXTUALIZE_*` import block and the `structuredCompletion` fixture added in Task 1.)
 
-(b) **Replace** the entire `describe('ask — happy path', …)` block and the `describe('ask — call #1 refusal branches', …)` and `describe('ask — call #1 SSE error branches', …)` and `describe('ask — empty-query fallback', …)` blocks with the pipeline versions below. Leave the `ask — call #2 error branches`, `ask — persistence: thread lookup/create`, and `ask — persistence failure` blocks in place but update them per (c).
+(b) **Replace** the entire `describe('completion — happy path', …)` block and the `describe('completion — call #1 refusal branches', …)` and `describe('completion — call #1 SSE error branches', …)` and `describe('completion — empty-query fallback', …)` blocks with the pipeline versions below. Leave the `completion — call #2 error branches`, `completion — persistence: thread lookup/create`, and `completion — persistence failure` blocks in place but update them per (c).
 
 ```ts
-describe('ask — first turn (no history)', () => {
+describe('completion — first turn (no history)', () => {
   test('skips contextualization, searches the raw query, streams, and persists', async () => {
     mockCreate.mockResolvedValueOnce(streamChunks(['Photo', 'synthesis', ' is a process.']));
     mockSearch.mockResolvedValueOnce([
@@ -390,8 +391,8 @@ describe('ask — first turn (no history)', () => {
     });
     mockThreadFindFirst.mockResolvedValueOnce({ id: 'thread-1' });
 
-    const { ask } = await import('./ask-ai.js');
-    const stream = ask({
+    const { completion } = await import('./ask-ai.js');
+    const stream = completion({
       userId: 'user-1',
       query: 'What is photosynthesis?',
       history: [],
@@ -430,7 +431,7 @@ describe('ask — first turn (no history)', () => {
   });
 });
 
-describe('ask — follow-up turn (with history)', () => {
+describe('completion — follow-up turn (with history)', () => {
   test('contextualizes, searches the standalone query, and generates with history + context', async () => {
     mockCreate
       .mockResolvedValueOnce(structuredCompletion('why does Bob attend the meeting'))
@@ -448,8 +449,8 @@ describe('ask — follow-up turn (with history)', () => {
       { role: 'user' as const, content: 'Tell me about Bob' },
       { role: 'assistant' as const, content: 'Bob is a character.' },
     ];
-    const { ask } = await import('./ask-ai.js');
-    const stream = ask({
+    const { completion } = await import('./ask-ai.js');
+    const stream = completion({
       userId: 'user-1',
       query: 'why is he there?',
       history,
@@ -486,14 +487,14 @@ describe('ask — follow-up turn (with history)', () => {
   });
 });
 
-describe('ask — contextualization content_filter', () => {
+describe('completion — contextualization content_filter', () => {
   test('emits SSE error, does not search or persist', async () => {
     mockCreate.mockResolvedValueOnce({
       choices: [{ finish_reason: 'content_filter', message: { role: 'assistant', content: null } }],
     });
 
-    const { ask } = await import('./ask-ai.js');
-    const stream = ask({
+    const { completion } = await import('./ask-ai.js');
+    const stream = completion({
       userId: 'u',
       query: 'why is he there?',
       history: [{ role: 'user', content: 'earlier' }],
@@ -509,7 +510,7 @@ describe('ask — contextualization content_filter', () => {
   });
 });
 
-describe('ask — contextualization fallback', () => {
+describe('completion — contextualization fallback', () => {
   test('falls back to the raw query when contextualization throws, then answers', async () => {
     mockCreate
       .mockRejectedValueOnce(new Error('nano down'))
@@ -523,8 +524,8 @@ describe('ask — contextualization fallback', () => {
     });
     mockThreadFindFirst.mockResolvedValueOnce({ id: 'thread-1' });
 
-    const { ask } = await import('./ask-ai.js');
-    const stream = ask({
+    const { completion } = await import('./ask-ai.js');
+    const stream = completion({
       userId: 'u',
       query: 'why is he there?',
       history: [{ role: 'user', content: 'earlier' }],
@@ -538,10 +539,10 @@ describe('ask — contextualization fallback', () => {
 });
 ```
 
-(c) **Update fixtures** in the remaining `ask` blocks (`call #2 error branches`, `persistence: thread lookup/create`, `persistence failure`) and the gate/weaviate blocks: every test that used `toolCallCompletion('…')` as the first `mockCreate` value now drives a **first-turn** flow (empty `history`), so the first `mockCreate` value is the **generate stream** directly. Replace each occurrence accordingly. The gate and weaviate blocks become:
+(c) **Update fixtures** in the remaining `completion` blocks (`call #2 error branches`, `persistence: thread lookup/create`, `persistence failure`) and the gate/weaviate blocks: every test that used `toolCallCompletion('…')` as the first `mockCreate` value now drives a **first-turn** flow (empty `history`), so the first `mockCreate` value is the **generate stream** directly. Replace each occurrence accordingly. The gate and weaviate blocks become:
 
 ```ts
-describe('ask — gate and retrieval', () => {
+describe('completion — gate and retrieval', () => {
   test('zero hits triggers the gate: emits REFUSAL_MESSAGE, persists refusal, no generate call', async () => {
     mockSearch.mockResolvedValueOnce([]);
     mockTransaction.mockImplementation(async (cb: (tx: unknown) => Promise<void>) => {
@@ -552,8 +553,8 @@ describe('ask — gate and retrieval', () => {
     });
     mockThreadFindFirst.mockResolvedValueOnce({ id: 'thread-1' });
 
-    const { ask, REFUSAL_MESSAGE } = await import('./ask-ai.js');
-    const stream = ask({ userId: 'u', query: 'q', history: [], logger: silentLogger });
+    const { completion, REFUSAL_MESSAGE } = await import('./ask-ai.js');
+    const stream = completion({ userId: 'u', query: 'q', history: [], logger: silentLogger });
     const events = await readAll(stream);
 
     expect(mockCreate).not.toHaveBeenCalled();
@@ -572,8 +573,8 @@ describe('ask — gate and retrieval', () => {
   test('search() throws: emits SSE error, does not persist', async () => {
     mockSearch.mockRejectedValueOnce(new Error('weaviate timeout'));
 
-    const { ask } = await import('./ask-ai.js');
-    const stream = ask({ userId: 'u', query: 'q', history: [], logger: silentLogger });
+    const { completion } = await import('./ask-ai.js');
+    const stream = completion({ userId: 'u', query: 'q', history: [], logger: silentLogger });
     const events = await readAll(stream);
 
     expect(mockCreate).not.toHaveBeenCalled();
@@ -599,12 +600,12 @@ with a single-mock setup (first-turn → generate is the only call):
 mockCreate.mockResolvedValueOnce(<stream>);
 ```
 
-and where a test previously chained only `toolCallCompletion('q')` (the refusal-path persistence-failure test), set `mockSearch.mockResolvedValueOnce([])` with **no** `mockCreate` value and assert via the gate path. Keep every `ask({ ..., history: [], ... })`.
+and where a test previously chained only `toolCallCompletion('q')` (the refusal-path persistence-failure test), set `mockSearch.mockResolvedValueOnce([])` with **no** `mockCreate` value and assert via the gate path. Keep every `completion({ ..., history: [], ... })`.
 
 - [ ] **Step 2: Run the tests to verify they fail**
 
 Run: `pnpm test src/lib/server/ask-ai.test.ts`
-Expected: FAIL — `ask` still runs the tool flow (calls `gpt-5-nano` with `tools`/`tool_choice`), so first-turn/follow-up message assertions and `not.toHaveBeenCalled()` checks fail; imports of removed `SEARCH_TOOL` are gone.
+Expected: FAIL — `completion` still runs the tool flow (calls `gpt-5-nano` with `tools`/`tool_choice`), so first-turn/follow-up message assertions and `not.toHaveBeenCalled()` checks fail; imports of removed `SEARCH_TOOL` are gone.
 
 - [ ] **Step 3: Rework `DEVELOPER_MESSAGE` (drop tool references)**
 
@@ -641,24 +642,17 @@ export const DEVELOPER_MESSAGE = `You are the Ask AI assistant for Glow, a learn
 - Use lists or code blocks where they aid clarity (numbered steps for procedures or sequences, bullets for parallel items); prose otherwise.
 - Use **bold** sparingly — only the central concept on first mention. Do not bold supporting terms.
 - Do not lead with a heading.
-
-## Rule priority
-When rules conflict, apply in this order:
-1. Grounding
-2. Instruction integrity
-3. Context
-4. Tone
-5. Formatting
+- These formatting rules do not apply to the refusal line, which must be returned exactly as written.
 `;
 ```
 
-- [ ] **Step 4: Add `buildGenerateMessages` and rewrite the `ask` body**
+- [ ] **Step 4: Add `buildGenerateMessages` and rewrite the `completion` body**
 
 Replace the existing `buildInitialMessages` helper with `buildGenerateMessages`:
 
 ```ts
 const buildGenerateMessages = (
-  history: AskParams['history'],
+  history: CompletionParams['history'],
   query: string,
   hits: LearningUnit[],
 ): ChatCompletionMessageParam[] => [
@@ -672,10 +666,10 @@ const buildGenerateMessages = (
 ];
 ```
 
-Replace the entire `ask` function body with:
+Replace the entire `completion` function body with:
 
 ```ts
-export const ask = (params: AskParams): ReadableStream<Uint8Array> => {
+export const completion = (params: CompletionParams): ReadableStream<Uint8Array> => {
   const { userId, query, history, logger } = params;
 
   return new ReadableStream<Uint8Array>({
@@ -847,7 +841,7 @@ Capture dev-console log lines for any failure before declaring done.
 | §6.2 reworked `DEVELOPER_MESSAGE`                                               | Task 2 (step 3)       |
 | §6.3 retrieval (`search()` direct, `h.content`)                                 | Task 2 (step 4)       |
 | §6.4 `contextualizeQuery` + `parseContextualizedQuery`                          | Task 1                |
-| §6.5 orchestration (`ask`, `buildGenerateMessages`, `saveTurn`)                 | Task 2 (step 4)       |
+| §6.5 orchestration (`completion`, `buildGenerateMessages`, `saveTurn`)          | Task 2 (step 4)       |
 | §6.6 route handler (no change)                                                  | — (already delegates) |
 | §7 SSE protocol                                                                 | Task 2                |
 | §8 error matrix (contextualize fallback, content_filter, gate, generate errors) | Tasks 1, 2            |
@@ -859,7 +853,7 @@ Capture dev-console log lines for any failure before declaring done.
 ## Self-review notes
 
 - **Spec coverage:** every §6 component maps to a task above; §11 future items are intentionally not implemented.
-- **Type consistency:** `contextualizeQuery` returns `ContextualizeResult` used identically in Task 1 tests and Task 2 `ask`; `buildGenerateMessages` signature `(history, query, hits)` matches its call site; `parseContextualizedQuery` returns `string | null` consumed by `contextualizeQuery`.
+- **Type consistency:** `contextualizeQuery` returns `ContextualizeResult` used identically in Task 1 tests and Task 2 `completion`; `buildGenerateMessages` signature `(history, query, hits)` matches its call site; `parseContextualizedQuery` returns `string | null` consumed by `contextualizeQuery`.
 - **No placeholders:** all steps contain full code or exact commands with expected output.
 - **Open design point flagged for review:** retrieved hits are injected as a trailing `developer`-role context message (spec §6.5). If reviewers prefer a `user`-role context message or folding the block into the system prompt, change `buildGenerateMessages` and the two message-assertion tests in Task 2 together.
   </content>
