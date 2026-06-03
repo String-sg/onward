@@ -81,12 +81,11 @@ afterEach(() => {
 });
 
 import {
-  __test__,
   CONTEXTUALIZE_MESSAGE,
   CONTEXTUALIZE_SCHEMA,
   DEVELOPER_MESSAGE,
   REFUSAL_MESSAGE,
-} from './ask-ai.js';
+} from './chat.js';
 
 describe('REFUSAL_MESSAGE', () => {
   test('is the exact canned refusal string', () => {
@@ -114,7 +113,7 @@ describe('completion — first turn (no history)', () => {
     });
     mockThreadFindFirst.mockResolvedValueOnce({ id: 'thread-1' });
 
-    const { completion } = await import('./ask-ai.js');
+    const { completion } = await import('./chat.js');
     const stream = completion({
       userId: 'user-1',
       query: 'What is photosynthesis?',
@@ -172,7 +171,7 @@ describe('completion — follow-up turn (with history)', () => {
       { role: 'user' as const, content: 'Tell me about Bob' },
       { role: 'assistant' as const, content: 'Bob is a character.' },
     ];
-    const { completion } = await import('./ask-ai.js');
+    const { completion } = await import('./chat.js');
     const stream = completion({
       userId: 'user-1',
       query: 'why is he there?',
@@ -222,7 +221,7 @@ describe('completion — contextualization content_filter', () => {
       choices: [{ finish_reason: 'content_filter', message: { role: 'assistant', content: null } }],
     });
 
-    const { completion } = await import('./ask-ai.js');
+    const { completion } = await import('./chat.js');
     const stream = completion({
       userId: 'u',
       query: 'why is he there?',
@@ -253,7 +252,7 @@ describe('completion — contextualization fallback', () => {
     });
     mockThreadFindFirst.mockResolvedValueOnce({ id: 'thread-1' });
 
-    const { completion } = await import('./ask-ai.js');
+    const { completion } = await import('./chat.js');
     const stream = completion({
       userId: 'u',
       query: 'why is he there?',
@@ -278,7 +277,7 @@ describe('completion — gate and retrieval', () => {
     });
     mockThreadFindFirst.mockResolvedValueOnce({ id: 'thread-1' });
 
-    const { completion, REFUSAL_MESSAGE } = await import('./ask-ai.js');
+    const { completion, REFUSAL_MESSAGE } = await import('./chat.js');
     const stream = completion({ userId: 'u', query: 'q', history: [], logger: silentLogger });
     const events = await readAll(stream);
 
@@ -298,7 +297,7 @@ describe('completion — gate and retrieval', () => {
   test('search() throws: emits SSE error, does not persist', async () => {
     mockSearch.mockRejectedValueOnce(new Error('weaviate timeout'));
 
-    const { completion } = await import('./ask-ai.js');
+    const { completion } = await import('./chat.js');
     const stream = completion({ userId: 'u', query: 'q', history: [], logger: silentLogger });
     const events = await readAll(stream);
 
@@ -348,7 +347,7 @@ describe('completion — answer stream error branches', () => {
     mockCreate.mockResolvedValueOnce(streamWithFinish(['half'], 'length'));
     mockSearch.mockResolvedValueOnce([{ learning_unit_id: 'lu-1', content: 'hit' }]);
 
-    const { completion } = await import('./ask-ai.js');
+    const { completion } = await import('./chat.js');
     const stream = completion({ userId: 'u', query: 'q', history: [], logger: silentLogger });
     const events = await readAll(stream);
 
@@ -366,7 +365,7 @@ describe('completion — answer stream error branches', () => {
     mockCreate.mockResolvedValueOnce(streamWithFinish([], 'content_filter'));
     mockSearch.mockResolvedValueOnce([{ learning_unit_id: 'lu-1', content: 'hit' }]);
 
-    const { completion } = await import('./ask-ai.js');
+    const { completion } = await import('./chat.js');
     const stream = completion({ userId: 'u', query: 'q', history: [], logger: silentLogger });
     const events = await readAll(stream);
 
@@ -380,7 +379,7 @@ describe('completion — answer stream error branches', () => {
     mockCreate.mockResolvedValueOnce(streamWithRefusal());
     mockSearch.mockResolvedValueOnce([{ learning_unit_id: 'lu-1', content: 'hit' }]);
 
-    const { completion } = await import('./ask-ai.js');
+    const { completion } = await import('./chat.js');
     const stream = completion({ userId: 'u', query: 'q', history: [], logger: silentLogger });
     const events = await readAll(stream);
 
@@ -394,7 +393,7 @@ describe('completion — answer stream error branches', () => {
     mockCreate.mockResolvedValueOnce(streamThatThrows());
     mockSearch.mockResolvedValueOnce([{ learning_unit_id: 'lu-1', content: 'hit' }]);
 
-    const { completion } = await import('./ask-ai.js');
+    const { completion } = await import('./chat.js');
     const stream = completion({ userId: 'u', query: 'q', history: [], logger: silentLogger });
     const events = await readAll(stream);
 
@@ -421,7 +420,7 @@ describe('completion — persistence: thread lookup/create', () => {
     mockThreadFindFirst.mockResolvedValueOnce(null);
     mockThreadCreate.mockResolvedValueOnce({ id: 'new-thread' });
 
-    const { completion } = await import('./ask-ai.js');
+    const { completion } = await import('./chat.js');
     const stream = completion({ userId: 'u', query: 'q', history: [], logger: silentLogger });
     await readAll(stream);
 
@@ -448,7 +447,7 @@ describe('completion — persistence: thread lookup/create', () => {
     });
     mockThreadFindFirst.mockResolvedValueOnce({ id: 'existing-thread' });
 
-    const { completion } = await import('./ask-ai.js');
+    const { completion } = await import('./chat.js');
     const stream = completion({ userId: 'u', query: 'q', history: [], logger: silentLogger });
     await readAll(stream);
 
@@ -468,7 +467,7 @@ describe('completion — persistence failure', () => {
     mockSearch.mockResolvedValueOnce([{ learning_unit_id: 'lu-1', content: 'hit' }]);
     mockTransaction.mockRejectedValueOnce(new Error('db down'));
 
-    const { completion } = await import('./ask-ai.js');
+    const { completion } = await import('./chat.js');
     const stream = completion({ userId: 'u', query: 'q', history: [], logger: silentLogger });
     const events = await readAll(stream);
 
@@ -483,7 +482,7 @@ describe('completion — persistence failure', () => {
     mockSearch.mockResolvedValueOnce([]);
     mockTransaction.mockRejectedValueOnce(new Error('db down'));
 
-    const { completion, REFUSAL_MESSAGE } = await import('./ask-ai.js');
+    const { completion, REFUSAL_MESSAGE } = await import('./chat.js');
     const stream = completion({ userId: 'u', query: 'q', history: [], logger: silentLogger });
     const events = await readAll(stream);
 
@@ -514,134 +513,36 @@ describe('CONTEXTUALIZE_SCHEMA', () => {
   });
 });
 
-describe('parseContextualizedQuery', () => {
-  test('returns the query when content is valid JSON with a string query', () => {
-    const completion = structuredCompletion('why does Bob attend the meeting');
-
-    const result = __test__.parseContextualizedQuery(completion);
-
-    expect(result).toBe('why does Bob attend the meeting');
-  });
-
-  test('returns null when content is not a string', () => {
-    const completion = {
-      choices: [{ finish_reason: 'stop', message: { role: 'assistant', content: null } }],
-    } as unknown as ChatCompletion;
-
-    const result = __test__.parseContextualizedQuery(completion);
-
-    expect(result).toBeNull();
-  });
-
-  test('returns null when content is not valid JSON', () => {
-    const completion = {
-      choices: [{ finish_reason: 'stop', message: { role: 'assistant', content: '{ broken' } }],
-    } as unknown as ChatCompletion;
-
-    const result = __test__.parseContextualizedQuery(completion);
-
-    expect(result).toBeNull();
-  });
-
-  test('returns null when JSON has no string query field', () => {
-    const completion = {
-      choices: [{ finish_reason: 'stop', message: { role: 'assistant', content: '{"query":42}' } }],
-    } as unknown as ChatCompletion;
-
-    const result = __test__.parseContextualizedQuery(completion);
-
-    expect(result).toBeNull();
-  });
-});
-
-describe('contextualizeQuery', () => {
-  test('first turn (empty history) returns the raw query and makes no OpenAI call', async () => {
-    const result = await __test__.contextualizeQuery({
-      history: [],
-      query: 'What is photosynthesis?',
-      userId: 'u',
-      logger: silentLogger,
+describe('completion — contextualization malformed content', () => {
+  test('falls back to the raw query when nano returns malformed content, then answers', async () => {
+    mockCreate
+      .mockResolvedValueOnce({
+        choices: [{ finish_reason: 'stop', message: { role: 'assistant', content: '{ broken' } }],
+      })
+      .mockResolvedValueOnce(streamChunks(['answer']));
+    mockSearch.mockResolvedValueOnce([{ learning_unit_id: 'lu-1', content: 'hit' }]);
+    mockTransaction.mockImplementation(async (cb: (tx: unknown) => Promise<void>) => {
+      await cb({
+        thread: { findFirst: mockThreadFindFirst, create: mockThreadCreate },
+        message: { createMany: mockMessageCreateMany },
+      });
     });
+    mockThreadFindFirst.mockResolvedValueOnce({ id: 'thread-1' });
 
-    expect(result).toEqual({ query: 'What is photosynthesis?' });
-    expect(mockCreate).not.toHaveBeenCalled();
-  });
-
-  test('with history, returns the parsed standalone query and calls gpt-5-nano with the schema', async () => {
-    mockCreate.mockResolvedValueOnce(structuredCompletion('why does Bob attend the meeting'));
-
-    const result = await __test__.contextualizeQuery({
-      history: [
-        { role: 'user', content: 'Tell me about Bob' },
-        { role: 'assistant', content: 'Bob is a character.' },
-      ],
+    const { completion } = await import('./chat.js');
+    const stream = completion({
+      userId: 'u',
       query: 'why is he there?',
-      userId: 'u',
-      logger: silentLogger,
-    });
-
-    expect(result).toEqual({ query: 'why does Bob attend the meeting' });
-    expect(mockCreate).toHaveBeenCalledWith({
-      model: 'gpt-5-nano',
-      reasoning_effort: 'minimal',
-      response_format: CONTEXTUALIZE_SCHEMA,
-      messages: [
-        { role: 'developer', content: CONTEXTUALIZE_MESSAGE },
-        { role: 'user', content: 'Tell me about Bob' },
-        { role: 'assistant', content: 'Bob is a character.' },
-        { role: 'user', content: 'why is he there?' },
-      ],
-    });
-  });
-
-  test('with history, falls back to the raw query when the call throws', async () => {
-    mockCreate.mockRejectedValueOnce(new Error('nano down'));
-
-    const result = await __test__.contextualizeQuery({
       history: [{ role: 'user', content: 'earlier' }],
-      query: 'why is he there?',
-      userId: 'u',
       logger: silentLogger,
     });
+    const events = await readAll(stream);
 
-    expect(result).toEqual({ query: 'why is he there?' });
-    expect(silentLogger.warn).toHaveBeenCalledWith(
-      expect.objectContaining({ userId: 'u' }),
-      'Contextualization failed, falling back to user query',
-    );
-  });
-
-  test('with history, falls back to the raw query when content is malformed', async () => {
-    mockCreate.mockResolvedValueOnce({
-      choices: [{ finish_reason: 'stop', message: { role: 'assistant', content: '{ broken' } }],
-    });
-
-    const result = await __test__.contextualizeQuery({
-      history: [{ role: 'user', content: 'earlier' }],
-      query: 'why is he there?',
-      userId: 'u',
-      logger: silentLogger,
-    });
-
-    expect(result).toEqual({ query: 'why is he there?' });
+    expect(mockSearch).toHaveBeenCalledWith('why is he there?');
+    expect(events).toContainEqual('data: [DONE]\n\n');
     expect(silentLogger.warn).toHaveBeenCalledWith(
       { userId: 'u' },
       'Contextualization returned empty or malformed query, falling back to user query',
     );
-  });
-
-  test('with history, signals contentFiltered on finish_reason content_filter', async () => {
-    mockCreate.mockResolvedValueOnce({
-      choices: [{ finish_reason: 'content_filter', message: { role: 'assistant', content: null } }],
-    });
-
-    const result = await __test__.contextualizeQuery({
-      history: [{ role: 'user', content: 'earlier' }],
-      query: 'bad input',
-      userId: 'u',
-      logger: silentLogger,
-    });
-
-    expect(result).toEqual({ contentFiltered: true });
   });
 });

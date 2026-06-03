@@ -1,7 +1,7 @@
 # Ask AI — grounded contextualization pipeline
 
 **Status:** Design (pre-implementation refactor)
-**Date:** 2026-05-28 (revised 2026-05-29: pivot from function tools to an explicit contextualization pipeline)
+**Date:** 2026-05-28 (revised 2026-05-29)
 **Owner:** sralphian029
 **Scope:** Server-side chat orchestration for the Ask AI feature
 
@@ -18,16 +18,6 @@ Two problems motivate this design:
 
 Azure OpenAI's content filter already catches a subset of harmful inputs/outputs (the handler surfaces `finish_reason === 'content_filter'`) and is unchanged here.
 
-### 1.1 Why this revises the earlier function-tools design
-
-The first version of this spec achieved grounding with OpenAI **function tools**: a forced `search_learning_content` tool call (`tool_choice: 'required'`) was the model's only path to information. That shipped on this branch.
-
-We are pivoting away from tools because the flow never used what tools provide — runtime _choice_. With one tool, `tool_choice: 'required'`, and `parallel_tool_calls: false`, the model has no decision to make: it calls the one tool, every turn, always. The tool call's only product is a single rewritten query string. Wrapping a fixed pipeline step (retrieval runs unconditionally) in a decision primitive and then removing the decision adds machinery — `JSON.parse` of tool arguments, a "model didn't call the tool" branch, a malformed-arguments branch, and a replayed assistant-tool-call + tool-result message pair — that serves no purpose here.
-
-The replacement is an **explicit contextualization step**: a plain LLM call that rewrites the latest message into a standalone query (industry names: LangChain's _history-aware retriever_ / "contextualize question" prompt; LlamaIndex's _condense question_). Retrieval stays an unconditional pipeline stage in code. This is simpler, makes follow-up handling first-class, and removes the dead tool plumbing.
-
-**Grounding is not weakened by the pivot.** The structural guarantee was never the tool — it was the deterministic zero-hit gate (§3, layer 1), which is identical in both designs. See §2.
-
 ## 2. Goal
 
 Keep every answer grounded in retrieved Glow learning content, and make follow-up questions retrieve correctly.
@@ -35,7 +25,7 @@ Keep every answer grounded in retrieved Glow learning content, and make follow-u
 Grounding rests on two layers, in order of strength:
 
 1. **Deterministic zero-hit gate (structural).** When retrieval returns zero hits, the server emits a canned refusal directly and never calls the answer model. This does not depend on model compliance and is the layer that makes off-topic refusal reliable.
-2. **Prompt grounding rule (model compliance).** When retrieval returns hits, the answer model is instructed to use only that content and to refuse if it does not cover the question. This is the only defense for the "retrieval returned weakly-related but non-empty hits" case — true in the tools design as well; a future re-ranker or grounding-judge step (§11) is the way to harden it.
+2. **Prompt grounding rule (model compliance).** When retrieval returns hits, the answer model is instructed to use only that content and to refuse if it does not cover the question. This is the only defense for the "retrieval returned weakly-related but non-empty hits" case; a future re-ranker or grounding-judge step (§11) is the way to harden it.
 
 Out of scope for this spec:
 
@@ -48,7 +38,7 @@ Out of scope for this spec:
 
 ## 3. Approach
 
-**A four-stage, mostly-deterministic pipeline. No function tools, no agent loop.**
+**A four-stage, mostly-deterministic pipeline.**
 
 ```
 1. CONTEXTUALIZE  rewrite the latest message into a standalone search query
@@ -87,18 +77,18 @@ flowchart TD
     Stream --> Done
 ```
 
-**Per-step model selection:** `gpt-5-nano` for the bounded, closed-output contextualization call; `gpt-5-mini` for the free-form Markdown answer. Matches OpenAI's positioning (nano for bounded closed-output tasks, mini for free-form multi-rule generation). Unchanged from the tools design.
+**Per-step model selection:** `gpt-5-nano` for the bounded, closed-output contextualization call; `gpt-5-mini` for the free-form Markdown answer. Matches OpenAI's positioning (nano for bounded closed-output tasks, mini for free-form multi-rule generation).
 
 ## 5. Module layout
 
 Single server-only module, consistent with the flat convention (`openai.ts`, `weaviate.ts`, `db.ts`):
 
 ```
-src/lib/server/ask-ai.ts        constants + completion + file-private helpers
-src/lib/server/ask-ai.test.ts
+src/lib/server/chat.ts          constants + completion + file-private helpers
+src/lib/server/chat.test.ts
 ```
 
-Exported surface of `ask-ai.ts`:
+Exported surface of `chat.ts`:
 
 | Export                  | Purpose                                                                |
 | ----------------------- | ---------------------------------------------------------------------- |
@@ -110,15 +100,15 @@ Exported surface of `ask-ai.ts`:
 | `CompletionParams`      | Param type.                                                            |
 | `__test__`              | `{ contextualizeQuery, parseContextualizedQuery }` for unit tests.     |
 
-**Removed from the tools design:** `SEARCH_TOOL`, `parseToolCall`. The constants aren't mocked in tests (asserted directly); the prose prompts are calibration surfaces and aren't asserted on content.
+The constants aren't mocked in tests (asserted directly); the prose prompts are calibration surfaces and aren't asserted on content.
 
 `openai.ts` is the SDK-client export only. `weaviate.ts` is unchanged. The route at `src/routes/(main)/api/messages/+server.ts` already delegates to `completion(...)` (no change needed).
 
-If `ask-ai.ts` grows past ~250 lines, the natural future split is a folder with `config.ts` (the two prompts + schema + refusal string) and `ask-ai.ts` (`completion` + helpers). Defer until size warrants.
+If `chat.ts` grows past ~250 lines, the natural future split is a folder with `config.ts` (the two prompts + schema + refusal string) and `chat.ts` (`completion` + helpers). Defer until size warrants.
 
 ## 6. Components
 
-### 6.1 Contextualization prompt + schema (in `ask-ai.ts`)
+### 6.1 Contextualization prompt + schema (in `chat.ts`)
 
 ```ts
 export const CONTEXTUALIZE_MESSAGE = `You rewrite a learner's latest message into a standalone search query for Glow's learning-content search.
@@ -153,19 +143,11 @@ export const CONTEXTUALIZE_SCHEMA: ResponseFormatJSONSchema = {
 
 `ResponseFormatJSONSchema` is imported from `openai/resources/index.js` (or `.../shared.js`); type it properly rather than casting (the codebase removed type-escape casts — commit `a16c1a73`).
 
-### 6.2 Answer prompt (in `ask-ai.ts`)
+### 6.2 Answer prompt (in `chat.ts`)
 
-`DEVELOPER_MESSAGE` is the existing prompt with the tool references removed. Changes from the tools version:
+`DEVELOPER_MESSAGE` instructs the answer model to ground its response in the retrieved learning content. The first Grounding bullet ties the model to the provided content (`Use ONLY the retrieved learning content provided below…`); the refusal bullet interpolates `${REFUSAL_MESSAGE}`. The full text is below.
 
-- **Delete** the line `You have one tool: \`search_learning_content(query)\` …`.
-- **Delete** the entire `## Tool usage` section.
-- **Reword** the first Grounding bullet to refer to the provided content instead of the tool:
-  - was: `Use ONLY the context returned by \`search_learning_content\`. …`
-  - now: `Use ONLY the retrieved learning content provided below. NEVER augment, extrapolate, or fill gaps with training knowledge.`
-
-Everything else (the rest of Grounding, Context, Instruction integrity, Tone, Formatting) is unchanged. The refusal bullet still interpolates `${REFUSAL_MESSAGE}`.
-
-A standalone `## Rule priority` section (a numbered Grounding → Instruction integrity → Context → Tone → Formatting tiebreaker) was considered and **removed**. Per OpenAI's GPT-5 prompting guidance, an explicit priority list earns its place only when the rules genuinely compete; these sections are largely orthogonal, so the list was near-inert and only added reasoning-token overhead. The single real conflict it resolved — the exact-refusal line vs. the "respond in Markdown" formatting rules — is instead resolved inline with a carve-out in the Formatting section.
+There is deliberately no `## Rule priority` section. Per OpenAI's GPT-5 prompting guidance, an explicit priority list earns its place only when the rules genuinely compete; these sections (Grounding, Context, Instruction integrity, Tone, Formatting) are largely orthogonal, so such a list would be near-inert and only add reasoning-token overhead. The single real conflict — the exact-refusal line vs. the "respond in Markdown" formatting rules — is resolved inline with a carve-out in the Formatting section.
 
 ```ts
 export const REFUSAL_MESSAGE = "It looks like I don't have enough information to answer that.";
@@ -265,7 +247,7 @@ Inside `ReadableStream.start(controller)`:
 1. **Contextualize:** `const contextualized = await contextualizeQuery({ history, query, userId, logger })`. If `'contentFiltered' in contextualized`: emit SSE `error` ("Content flagged"), close, do not persist, return. Else `searchQuery = contextualized.query`.
 2. **Retrieve:** `hits = await search(searchQuery)` in a scoped try/catch. On throw: log `error`, emit SSE `error` ("Service error"), close, do not persist, return.
 3. **Gate:** if `hits.length === 0`: log `info` "Refused: no relevant context", emit `REFUSAL_MESSAGE` chunk + `[DONE]`, persist USER + `REFUSAL_MESSAGE`, close, return.
-4. **Generate:** `openAI.chat.completions.create({ model: 'gpt-5-mini', reasoning_effort: 'low', verbosity: 'low', stream: true, messages: buildGenerateMessages(history, query, hits) })`. A create-time throw is caught by the outer safety-net try (→ SSE `error` "Service error" + close, no persist). **No `tools`, no `tool_choice`.**
+4. **Generate:** `openAI.chat.completions.create({ model: 'gpt-5-mini', reasoning_effort: 'low', verbosity: 'low', stream: true, messages: buildGenerateMessages(history, query, hits) })`. A create-time throw is caught by the outer safety-net try (→ SSE `error` "Service error" + close, no persist).
 5. **Stream:** iterate chunks (in its own try/catch). `delta.refusal` → SSE `error` "Request refused" + close, no persist. `finish_reason === 'length'` → "Max tokens reached". `finish_reason === 'content_filter'` → "Content flagged". `finish_reason === 'stop'` → emit `[DONE]`, persist USER + accumulated answer, close. Otherwise accumulate `delta.content` and emit it as a `chunk`. A mid-stream throw → SSE `error` "Service error" + close, no persist.
 6. **Persist:** one transaction (`saveTurn`) — look up the user's active `Thread`, create one if none, insert USER + ASSISTANT (or USER + REFUSAL_MESSAGE). No retry; the SSE response is already delivered, so a failure is logged and the stream closes.
 
@@ -279,7 +261,7 @@ File-private helpers (exported only via `__test__` where unit-tested):
 
 **Context injection decision (open for review):** retrieved hits are injected as a trailing `developer`-role message (`contextBlock`) after the user query, not embedded in the user turn and not merged into the system prompt. Rationale: keeps the user's verbatim question in the `user` turn (history fidelity) and places the data as the most-recent, most-attended content for the answer call. The grounding rules in `DEVELOPER_MESSAGE` refer to "the retrieved learning content provided below". A `developer` message holds data here rather than instructions; if that reads wrong on review, the alternative is a `user`-role context message or folding the block into the system prompt.
 
-**Client disconnect:** the route handler does not forward `event.request.signal` into `completion`. On disconnect the generate call completes server-side and persistence runs on `finish_reason: 'stop'`. Matches ChatGPT/Claude/Gemini behavior. Unchanged.
+**Client disconnect:** the route handler does not forward `event.request.signal` into `completion`. On disconnect the generate call completes server-side and persistence runs on `finish_reason: 'stop'`. Matches ChatGPT/Claude/Gemini behavior.
 
 ### 6.6 Route handler (`+server.ts`)
 
@@ -303,28 +285,28 @@ The client requires no changes. A refusal is a single `chunk` followed by `[DONE
 
 **Error matrix:**
 
-| Failure                                         | Where  | Response                                       | Persist?             |
-| ----------------------------------------------- | ------ | ---------------------------------------------- | -------------------- |
-| Auth / CSRF / body parse / history load         | route  | `401`/`400`/`415`/`422`/`500` JSON             | no                   |
-| Contextualize call throws                       | ask-ai | fall back to raw query, continue               | (continues)          |
-| Contextualize `finish_reason: 'content_filter'` | ask-ai | SSE `error` ("Content flagged") + close        | no                   |
-| Contextualize `finish_reason: 'length'`         | ask-ai | fall back to raw query (parse fails), continue | (continues)          |
-| Contextualize returns malformed/empty query     | ask-ai | fall back to raw query, continue               | (continues)          |
-| Weaviate throws                                 | ask-ai | SSE `error` ("Service error") + close          | no                   |
-| Weaviate returns 0 hits (gate)                  | ask-ai | SSE `chunk` `REFUSAL_MESSAGE` + `[DONE]`       | yes (USER + refusal) |
-| Generate call throws before first chunk         | ask-ai | SSE `error` ("Service error") + close          | no                   |
-| Generate stream interrupted mid-flight          | ask-ai | SSE `error` ("Service error") + close          | no                   |
-| Generate `finish_reason: 'length'`              | ask-ai | SSE `error` ("Max tokens reached") + close     | no                   |
-| Generate `finish_reason: 'content_filter'`      | ask-ai | SSE `error` ("Content flagged") + close        | no                   |
-| Generate chunk has `delta.refusal`              | ask-ai | SSE `error` ("Request refused") + close        | no                   |
-| Persistence transaction fails (either path)     | ask-ai | already emitted `[DONE]`; close                | no (log only)        |
-| Client disconnects mid-stream                   | ask-ai | stream + generate call continue server-side    | yes (on `stop`)      |
+| Failure                                         | Where | Response                                       | Persist?             |
+| ----------------------------------------------- | ----- | ---------------------------------------------- | -------------------- |
+| Auth / CSRF / body parse / history load         | route | `401`/`400`/`415`/`422`/`500` JSON             | no                   |
+| Contextualize call throws                       | chat  | fall back to raw query, continue               | (continues)          |
+| Contextualize `finish_reason: 'content_filter'` | chat  | SSE `error` ("Content flagged") + close        | no                   |
+| Contextualize `finish_reason: 'length'`         | chat  | fall back to raw query (parse fails), continue | (continues)          |
+| Contextualize returns malformed/empty query     | chat  | fall back to raw query, continue               | (continues)          |
+| Weaviate throws                                 | chat  | SSE `error` ("Service error") + close          | no                   |
+| Weaviate returns 0 hits (gate)                  | chat  | SSE `chunk` `REFUSAL_MESSAGE` + `[DONE]`       | yes (USER + refusal) |
+| Generate call throws before first chunk         | chat  | SSE `error` ("Service error") + close          | no                   |
+| Generate stream interrupted mid-flight          | chat  | SSE `error` ("Service error") + close          | no                   |
+| Generate `finish_reason: 'length'`              | chat  | SSE `error` ("Max tokens reached") + close     | no                   |
+| Generate `finish_reason: 'content_filter'`      | chat  | SSE `error` ("Content flagged") + close        | no                   |
+| Generate chunk has `delta.refusal`              | chat  | SSE `error` ("Request refused") + close        | no                   |
+| Persistence transaction fails (either path)     | chat  | already emitted `[DONE]`; close                | no (log only)        |
+| Client disconnects mid-stream                   | chat  | stream + generate call continue server-side    | yes (on `stop`)      |
 
 **Atomicity:** USER + ASSISTANT persist in one transaction at one of three terminal points — refusal short-circuit, successful stream completion, or never. No orphan USER messages.
 
-**Difference from the tools design:** the "model did not call the tool" and "tool arguments failed `JSON.parse`" refusal branches are **removed** — they only existed because of the tool wrapper. Their nearest analogue (contextualization produced no usable query) is now a _non-failing fallback to the raw query_, not a refusal: a poor query still retrieves, and the gate + grounding rule still protect correctness.
+**Fallback, not refusal:** when contextualization produces no usable query, the pipeline falls back to the raw query rather than refusing — a poor query still retrieves, and the gate + grounding rule still protect correctness.
 
-**Logging convention:** route handler creates the child logger once and passes it to `completion`; `ask-ai.ts` uses it directly (no nested `.child()`). Representative calls:
+**Logging convention:** route handler creates the child logger once and passes it to `completion`; `chat.ts` uses it directly (no nested `.child()`). Representative calls:
 
 ```ts
 logger.warn({ err, userId }, 'Contextualization failed, falling back to user query');
@@ -345,7 +327,7 @@ logger.error({ err, userId }, 'Failed to persist messages');
 
 ## 9. Testing
 
-**Location:** `src/lib/server/ask-ai.test.ts`. **Runner:** Vitest with `vi.mock()` for `$lib/server/openai`, `$lib/server/weaviate`, `$lib/server/db`, set up inline. **Structure:** Arrange–Act–Assert separated by blank lines, no `// Arrange` comments, no shared cross-file helpers (the module-local fixtures `readAll`, `structuredCompletion`, `streamChunks`, `silentLogger` stay).
+**Location:** `src/lib/server/chat.test.ts`. **Runner:** Vitest with `vi.mock()` for `$lib/server/openai`, `$lib/server/weaviate`, `$lib/server/db`, set up inline. **Structure:** Arrange–Act–Assert separated by blank lines, no `// Arrange` comments, no shared cross-file helpers (the module-local fixtures `readAll`, `structuredCompletion`, `streamChunks`, `silentLogger` stay).
 
 **Test inventory:**
 

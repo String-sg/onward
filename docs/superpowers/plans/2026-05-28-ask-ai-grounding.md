@@ -2,8 +2,6 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-> **Note on history:** the module currently holds a prior, **unmerged** function-tools implementation built earlier on branch `feat/add-function-tools-ask-ai`. That approach was wrong and is being replaced wholesale — its commits will be dropped during the final history cleanup. This is **not** a refactor: build the feature as specified below and do not preserve any tool code. The filename keeps `…add-function-tools…` only for branch continuity.
-
 **Goal:** Implement a four-stage contextualization pipeline for Ask AI — contextualize → retrieve → gate → generate — where the latest message is made standalone before retrieval and a deterministic zero-hit gate guarantees grounding.
 
 **Architecture:** `completion({ userId, query, history, logger })` returns an SSE `ReadableStream`. On a follow-up turn it first calls `gpt-5-nano` (structured output) to rewrite the latest message into a standalone search query; on the first turn it skips straight to the raw query. It then calls `weaviate.search()`, applies the zero-hit gate (deterministic refusal), and streams a grounded answer from `gpt-5-mini` with the retrieved hits injected as a context message. Per spec §3–§6.

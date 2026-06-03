@@ -1,7 +1,7 @@
 import { json, type RequestHandler } from '@sveltejs/kit';
 
-import { completion } from '$lib/server/ask-ai.js';
 import { learnerAuth } from '$lib/server/auth';
+import { completion } from '$lib/server/chat.js';
 import { db, type MessageFindManyArgs, type MessageGetPayload } from '$lib/server/db.js';
 
 import type { JSONObject } from '../types';

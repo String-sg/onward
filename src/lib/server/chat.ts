@@ -303,5 +303,3 @@ const sseEvent = (event: CompletionEvent): Uint8Array =>
   encoder.encode(`data: ${JSON.stringify(event)}\n\n`);
 
 const sseDone = (): Uint8Array => encoder.encode('data: [DONE]\n\n');
-
-export const __test__ = { contextualizeQuery, parseContextualizedQuery };
