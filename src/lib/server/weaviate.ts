@@ -60,7 +60,7 @@ export type LearningUnit = {
  */
 export async function search(query: string): Promise<LearningUnit[]> {
   const result = await client.collections.get<LearningUnit>('LearningUnit').query.hybrid(query, {
-    limit: 30,
+    limit: 100,
     returnProperties: ['learning_unit_id', 'content'],
     alpha: 0.5,
     maxVectorDistance: 0.55,

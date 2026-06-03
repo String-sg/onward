@@ -103,6 +103,20 @@ export const completion = (params: CompletionParams): ReadableStream<Uint8Array>
           return;
         }
 
+        logger.info(
+          {
+            userId,
+            query: searchQuery,
+            count: hits.length,
+            hits: hits.map((h) => ({
+              learning_unit_id: h.learning_unit_id,
+              chars: h.content.length,
+              preview: h.content.slice(0, 120),
+            })),
+          },
+          'Retrieved learning content',
+        );
+
         if (hits.length === 0) {
           logger.info({ userId, query: searchQuery }, 'Refused: no relevant context');
           controller.enqueue(sseEvent({ type: 'chunk', message: REFUSAL_MESSAGE }));
@@ -119,7 +133,7 @@ export const completion = (params: CompletionParams): ReadableStream<Uint8Array>
         const stream = await openAI.chat.completions.create({
           model: 'gpt-5-mini',
           reasoning_effort: 'low',
-          verbosity: 'low',
+          verbosity: 'medium',
           stream: true,
           messages: buildGenerateMessages(history, query, hits),
         });
