@@ -47,23 +47,18 @@ export type LearningUnit = {
 };
 
 /**
- * Search for relevant learning content by using both keyword and vector similarity.
+ * Search for relevant learning content using both keyword and vector similarity.
  *
  * @param query - The query to search for.
  * @returns A list of relevant learning units.
- *
- * @example
- * ```ts
- * const results = await search("What is artificial intelligence?");
- * console.log(results); // [{ learning_unit_id: "...", content: "Content about AI..." }, ...]
- * ```
  */
 export async function search(query: string): Promise<LearningUnit[]> {
   const result = await client.collections.get<LearningUnit>('LearningUnit').query.hybrid(query, {
-    limit: 100,
+    limit: 60, // caps how many hits feed the answer prompt
     returnProperties: ['learning_unit_id', 'content'],
     alpha: 0.5,
-    maxVectorDistance: 0.55,
+    fusionType: 'RelativeScore',
+    maxVectorDistance: 0.55, // relevance cutoff: drops vector-distant (off-topic) matches
     queryProperties: ['content'],
     targetVector: ['content_vector'],
   });

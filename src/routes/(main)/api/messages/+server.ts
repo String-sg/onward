@@ -1,7 +1,7 @@
 import { json, type RequestHandler } from '@sveltejs/kit';
 
 import { learnerAuth } from '$lib/server/auth';
-import { completion } from '$lib/server/chat.js';
+import { createChatStreamResponse } from '$lib/server/chat';
 import { db, type MessageFindManyArgs, type MessageGetPayload } from '$lib/server/db.js';
 
 import type { JSONObject } from '../types';
@@ -92,7 +92,7 @@ export const POST: RequestHandler = async (event) => {
     return json(null, { status: 500 });
   }
 
-  const stream = completion({
+  return createChatStreamResponse({
     userId: user.id,
     query,
     history: history.map((m) => ({
@@ -100,15 +100,6 @@ export const POST: RequestHandler = async (event) => {
       content: m.content,
     })),
     logger,
-  });
-
-  return new Response(stream, {
-    status: 200,
-    headers: {
-      'Content-Type': 'text/event-stream',
-      'Cache-Control': 'no-cache',
-      Connection: 'keep-alive',
-    },
   });
 };
 
