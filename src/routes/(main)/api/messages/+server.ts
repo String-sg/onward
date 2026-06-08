@@ -1,9 +1,8 @@
 import { json, type RequestHandler } from '@sveltejs/kit';
 
 import { learnerAuth } from '$lib/server/auth';
-import { db, type MessageFindManyArgs, type MessageGetPayload, Role } from '$lib/server/db.js';
-import { DEVELOPER_MESSAGE, openAI } from '$lib/server/openai.js';
-import { search } from '$lib/server/weaviate';
+import { createChatStreamResponse } from '$lib/server/chat';
+import { db, type MessageFindManyArgs, type MessageGetPayload } from '$lib/server/db.js';
 
 import type { JSONObject } from '../types';
 
@@ -79,26 +78,13 @@ export const POST: RequestHandler = async (event) => {
 
   const query = params['query'];
 
-  let result: string[];
-  try {
-    result = await search(query);
-  } catch (err) {
-    logger.error({ err, userId: user.id }, 'Failed to search for relevant content');
-    return json(null, { status: 500 });
-  }
-
   const messagesArgs = {
     select: { role: true, content: true },
-    where: {
-      thread: {
-        userId: user.id,
-        isActive: true,
-      },
-    },
+    where: { thread: { userId: user.id, isActive: true } },
     orderBy: { createdAt: 'asc' },
   } satisfies MessageFindManyArgs;
 
-  let history: MessageGetPayload<typeof messagesArgs>[] | null;
+  let history: MessageGetPayload<typeof messagesArgs>[];
   try {
     history = await db.message.findMany(messagesArgs);
   } catch (err) {
@@ -106,162 +92,14 @@ export const POST: RequestHandler = async (event) => {
     return json(null, { status: 500 });
   }
 
-  const completion = await openAI.chat.completions.create({
-    model: 'gpt-5-nano',
-    messages: [
-      {
-        role: 'developer',
-        content: DEVELOPER_MESSAGE,
-      },
-      {
-        role: 'developer',
-        content:
-          '**CONTEXT**: \n\n' +
-          (result.length === 0
-            ? 'No relevant context found.'
-            : `${result.map((cont) => `- ${cont}`).join('\n\n')}`),
-      },
-      ...history.map((msg) => ({
-        role: msg.role.toLowerCase() as 'user' | 'assistant',
-        content: msg.content,
-      })),
-      {
-        role: 'user',
-        content: query,
-      },
-    ],
-    stream: true,
-  });
-
-  const encoder = new TextEncoder();
-
-  let fullAnswer = '';
-
-  const answerStream = new ReadableStream({
-    async start(controller) {
-      let event: {
-        type: 'chunk' | 'error';
-        message: string;
-      };
-
-      try {
-        for await (const chunk of completion) {
-          if (!('choices' in chunk) || chunk.choices.length === 0 || !chunk.choices[0].delta) {
-            logger.error({ chunk: chunk }, 'Invalid stream format');
-
-            event = { type: 'error', message: 'Invalid stream format.' };
-            controller.enqueue(encoder.encode(`data: ${JSON.stringify(event)}\n\n`));
-
-            break;
-          }
-
-          if (chunk.choices[0].delta.refusal) {
-            logger.warn(
-              { refusal: chunk.choices[0].delta.refusal, userId: user.id },
-              'Request refused by AI',
-            );
-
-            event = { type: 'error', message: 'Request refused by AI.' };
-            controller.enqueue(encoder.encode(`data: ${JSON.stringify(event)}\n\n`));
-
-            break;
-          }
-
-          if (chunk.choices[0].finish_reason) {
-            if (chunk.choices[0].finish_reason === 'length') {
-              logger.warn('Max number of tokens in request has been reached');
-
-              event = { type: 'error', message: 'Max number of tokens has been reached.' };
-              controller.enqueue(encoder.encode(`data: ${JSON.stringify(event)}\n\n`));
-
-              break;
-            }
-
-            if (chunk.choices[0].finish_reason === 'content_filter') {
-              logger.warn('Content is flagged');
-
-              event = { type: 'error', message: 'Content is flagged.' };
-              controller.enqueue(encoder.encode(`data: ${JSON.stringify(event)}\n\n`));
-
-              break;
-            }
-          }
-
-          if (chunk.choices[0].finish_reason === 'stop') {
-            try {
-              await db.$transaction(async (tx) => {
-                let thread = await tx.thread.findFirst({
-                  where: { userId: user.id, isActive: true },
-                  select: { id: true },
-                });
-
-                if (!thread) {
-                  thread = await tx.thread.create({
-                    data: { userId: user.id, isActive: true },
-                    select: { id: true },
-                  });
-                }
-
-                await tx.message.createMany({
-                  data: [
-                    {
-                      threadId: thread.id,
-                      role: Role.USER,
-                      content: query,
-                    },
-                    {
-                      threadId: thread.id,
-                      role: Role.ASSISTANT,
-                      content: fullAnswer,
-                    },
-                  ],
-                });
-              });
-            } catch (err) {
-              logger.error({ err, userId: user.id }, 'Failed to create a message');
-              return json(null, { status: 500 });
-            }
-
-            controller.enqueue(encoder.encode(`data: [DONE]\n\n`));
-
-            break;
-          }
-
-          if (!chunk.choices[0].delta.content) {
-            logger.warn('Content is missing');
-
-            event = { type: 'error', message: 'Content is missing.' };
-            controller.enqueue(encoder.encode(`data: ${JSON.stringify(event)}\n\n`));
-
-            break;
-          }
-
-          fullAnswer += chunk.choices[0].delta.content;
-
-          event = { type: 'chunk', message: chunk.choices[0].delta.content };
-          controller.enqueue(encoder.encode(`data: ${JSON.stringify(event)}\n\n`));
-        }
-      } catch (err) {
-        logger.error({ err, userId: user.id }, 'Error in streaming response');
-
-        event = {
-          type: 'error',
-          message: err instanceof Error ? err.message : 'Unknown error occurred',
-        };
-        controller.enqueue(encoder.encode(`data: ${JSON.stringify(event)}\n\n`));
-      } finally {
-        controller.close();
-      }
-    },
-  });
-
-  return new Response(answerStream, {
-    status: 200,
-    headers: {
-      'Content-Type': 'text/event-stream',
-      'Cache-Control': 'no-cache',
-      Connection: 'keep-alive',
-    },
+  return createChatStreamResponse({
+    userId: user.id,
+    query,
+    history: history.map((m) => ({
+      role: m.role.toLowerCase() as 'user' | 'assistant',
+      content: m.content,
+    })),
+    logger,
   });
 };
 
