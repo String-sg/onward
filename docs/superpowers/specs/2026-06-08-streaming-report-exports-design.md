@@ -1,6 +1,6 @@
 # Streaming Report Exports (ExcelJS) — Design
 
-**Status:** Draft
+**Status:** Approved
 **Issue:** none
 **Depends on / Related:** foundation for [Onboarding Report](./2026-06-08-onboarding-report-design.md) (Spec B). This is Spec A; Spec B builds on the helper defined here.
 
