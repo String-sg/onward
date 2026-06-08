@@ -27,8 +27,7 @@
     "@valkey/valkey-glide": "2.0.1",
     "exceljs": "^4.4.0",
     "openai": "^5.22.0",
-    "weaviate-client": "^3.13.0",
-    "xlsx": "file:vendor/xlsx-0.20.3.tgz"
+    "weaviate-client": "^3.13.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.3",

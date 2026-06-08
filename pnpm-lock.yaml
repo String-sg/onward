@@ -46,9 +46,6 @@ importers:
       weaviate-client:
         specifier: ^3.13.0
         version: 3.13.0
-      xlsx:
-        specifier: file:vendor/xlsx-0.20.3.tgz
-        version: file:vendor/xlsx-0.20.3.tgz
     devDependencies:
       '@eslint/js':
         specifier: ^9.39.3
@@ -4474,12 +4471,6 @@ packages:
       utf-8-validate:
         optional: true
 
-  xlsx@file:vendor/xlsx-0.20.3.tgz:
-    resolution: {integrity: sha512-oLDq3jw7AcLqKWH2AhCpVTZl8mf6X2YReP+Neh0SJUzV/BdZYjth94tG5toiMB1PPrYtxOCfaoUCkvtuH+3AJA==, tarball: file:vendor/xlsx-0.20.3.tgz}
-    version: 0.20.3
-    engines: {node: '>=0.8'}
-    hasBin: true
-
   xml-name-validator@5.0.0:
     resolution: {integrity: sha512-EvGK8EJ3DhaHfbRlETOWAS5pO9MZITeauHKJyb8wyajUfQUenkIg2MvLDTZ4T/TgIcm3HU0TFBgWWboAZ30UHg==}
     engines: {node: '>=18'}
@@ -8887,8 +8878,6 @@ snapshots:
   wrappy@1.0.2: {}
 
   ws@8.18.3: {}
-
-  xlsx@file:vendor/xlsx-0.20.3.tgz: {}
 
   xml-name-validator@5.0.0: {}
 
