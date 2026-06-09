@@ -13,7 +13,9 @@
 
   let selectedId = $derived(data.quizId);
 
-  const downloadHref = $derived(`/admin/api/download?quizId=${encodeURIComponent(selectedId)}`);
+  const downloadHref = $derived(
+    `/admin/api/download/quiz?quizId=${encodeURIComponent(selectedId)}`,
+  );
 
   const handleFilterChange = async () => {
     const url = new URL(page.url);
