@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { FileSpreadsheet } from '@lucide/svelte';
+  import { ArrowLeft, FileSpreadsheet } from '@lucide/svelte';
 
   import { goto } from '$app/navigation';
   import { page } from '$app/state';
@@ -34,6 +34,14 @@
     { key: 'subscribed', label: 'Subscribed?' },
   ];
 </script>
+
+<a
+  href="/admin/reports"
+  class="flex w-fit items-center gap-1 text-sm font-medium text-slate-500 transition-colors hover:text-slate-950"
+>
+  <ArrowLeft class="h-4 w-4" />
+  Back to reports
+</a>
 
 <div class="rounded-lg border border-slate-200 bg-white p-6">
   <div class="flex flex-col gap-1">
