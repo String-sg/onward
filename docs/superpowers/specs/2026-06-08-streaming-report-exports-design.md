@@ -2,13 +2,13 @@
 
 **Status:** Approved
 **Issue:** none
-**Depends on / Related:** foundation for [Onboarding Report](./2026-06-08-onboarding-report-design.md) (Spec B). This is Spec A; Spec B builds on the helper defined here.
+**Depends on / Related:** foundation for [User Profile Report](./2026-06-08-user-profile-report-design.md) (Spec B). This is Spec A; Spec B builds on the helper defined here.
 
 ## Overview
 
-The admin quiz export (`admin/api/download`) loads every matching row into memory, builds the whole workbook, and serializes it to a single buffer before sending, so memory scales linearly with row count. As data grows, a single export can spike memory and destabilize the server. There is also no reusable export path, so the upcoming onboarding report would otherwise copy the same buffered pattern. This spec replaces that with a memory-bounded, end-to-end streaming export built on ExcelJS: rows are read from the database in cursor-batched pages straight into an ExcelJS `WorkbookWriter`, whose output is piped to the HTTP response, so neither the full result set nor the full file is ever held in memory. The streaming logic lives in one reusable helper, fixing the memory model once ahead of the onboarding report (Spec B) adding a second export.
+The admin quiz export (`admin/api/download`) loads every matching row into memory, builds the whole workbook, and serializes it to a single buffer before sending, so memory scales linearly with row count. As data grows, a single export can spike memory and destabilize the server. There is also no reusable export path, so the upcoming user profile report would otherwise copy the same buffered pattern. This spec replaces that with a memory-bounded, end-to-end streaming export built on ExcelJS: rows are read from the database in cursor-batched pages straight into an ExcelJS `WorkbookWriter`, whose output is piped to the HTTP response, so neither the full result set nor the full file is ever held in memory. The streaming logic lives in one reusable helper, fixing the memory model once ahead of the user profile report (Spec B) adding a second export.
 
-Scope: the **existing quiz export only**. The onboarding report (Spec B) reuses the helper introduced here; no UI/pagination changes to the reports page and no change to the report's columns or filename format (output is equivalent to today, minus row ordering — see Architecture).
+Scope: the **existing quiz export only**. The user profile report (Spec B) reuses the helper introduced here; no UI/pagination changes to the reports page and no change to the report's columns or filename format (output is equivalent to today, minus row ordering — see Architecture).
 
 The deploy adapter is `@sveltejs/adapter-node` on Node 24, so streaming `Response` bodies (via `Readable.toWeb`) are supported. `xlsx` (SheetJS) is currently imported in exactly one place — `src/routes/admin/api/download/+server.ts` — and vendored as a local tarball (`file:vendor/xlsx-0.20.3.tgz`), so migrating the quiz export removes that dependency entirely; `exceljs` is not yet a dependency and is added by this work.
 
@@ -84,7 +84,7 @@ generateReport<Row, Cursor>(options: GenerateReportOptions<Row, Cursor>): Respon
 - **Guarantees:** returns 14 digits — day, month, year, hours, minutes, seconds, each zero-padded, in local time. Carries no business meaning and no filename suffix; each caller assembles its own filename around the prefix.
 - **Requires:** a `Date`.
 
-Shared by both exports (this report and the onboarding report, Spec B); co-located with `sanitizeSpreadsheetCell` in `reports/helpers.ts`. The per-report filename suffix (e.g. `_user_report.xlsx`) stays in each endpoint.
+Shared by both exports (this report and the user profile report, Spec B); co-located with `sanitizeSpreadsheetCell` in `reports/helpers.ts`. The per-report filename suffix (e.g. `_user_report.xlsx`) stays in each endpoint.
 
 Information-hiding test: an endpoint declares only its columns, `fetchBatch`, and (optionally) `onError`; the streaming loop, PassThrough bridge, headers, commit, and stream-destroy-on-error are all internal to the helper and can change without touching consumers. The helper always owns the recovery (destroying the stream); it notifies the caller through `onError` only when one is provided, so logging stays out of the helper.
 

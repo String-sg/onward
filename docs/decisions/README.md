@@ -37,4 +37,4 @@ the ADR; the spec consumes its outcome.
 
 - [0001 — Stream report exports end-to-end with ExcelJS via a generic helper](./0001-stream-report-exports-with-exceljs.md) — accepted
 - [0002 — Read streaming exports with keyset cursor pagination on the primary key](./0002-keyset-cursor-pagination-on-primary-key.md) — accepted
-- [0003 — Nested per-report download routes and inline query-param tabs](./0003-report-export-routing-and-tabs.md) — accepted
+- [0003 — Nested per-report download endpoints and separate per-report page routes](./0003-report-export-routing-and-page-routes.md) — accepted
