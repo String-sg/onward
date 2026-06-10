@@ -2,15 +2,15 @@
 
 **Status:** Draft
 **Issue:** [String-sg/onward#571](https://github.com/String-sg/onward/issues/571) — Expose subscriber list and content preference on Glow admin
-**Depends on / Related:** [Streaming Report Exports](./2026-06-08-streaming-report-exports-design.md) (Spec A). This is Spec B; it reuses the `generateReport` helper, the `sanitizeSpreadsheetCell` sanitizer, and the already-nested `download/quiz` route that Spec A introduces. Spec A lands first.
+**Depends on / Related:** [Streaming Report Exports](./2026-06-08-streaming-report-exports-design.md) (Spec A) and [Card-Grid Report Index](./2026-06-10-card-grid-report-index-design.md) (Spec C). This is Spec B; it reuses the `generateReport` helper, the `sanitizeSpreadsheetCell` sanitizer, and the already-nested `download/quiz` route that Spec A introduces, and it plugs a new report into the card-grid reports area that Spec C restructures. Spec A and Spec C land first.
 
 **Naming:** the route/folder/endpoint segment is `user-profile` (matching the `UserProfile` model); the user-facing label, sheet name, and filename use "User Profile Report" per #571.
 
 ## Overview
 
-Add a "User Profile Report" as its own page in the admin **Generate Report** area, alongside the existing "Quiz Report". The two reports are sibling page routes — `/admin/reports/quiz` and `/admin/reports/user-profile` — under a shared layout that renders the report nav; `/admin/reports` redirects to the quiz report (the default). Each report page previews its rows with server-side pagination and offers an `.xlsx` download. The user-profile download streams all onboarded users (no filter) via Spec A's `generateReport` helper.
+Add a "User Profile Report" as a new report in the admin **Generate Report** area, alongside the existing "Quiz Report". The area's card-grid index, shared layout, and "← Back to reports" pattern are owned by Spec C; this spec is purely additive — it adds the `user-profile` sibling page route (`/admin/reports/user-profile`), a card entry in the index, and the user-profile download endpoint. The page previews its rows with server-side pagination, carries a "← Back to reports" link per Spec C's pattern, and offers an `.xlsx` download. The user-profile download streams all onboarded users (no filter) via Spec A's `generateReport` helper.
 
-Scope: this report reuses Spec A's export mechanism unchanged; it does not introduce a new streaming path.
+Scope: this report reuses Spec A's export mechanism unchanged (no new streaming path) and Spec C's reports-area structure unchanged (no presentation/routing decisions of its own).
 
 ## Goals
 
@@ -41,11 +41,11 @@ Generated types `UserProfileFindManyArgs` / `UserProfileGetPayload` are re-expor
 
 ## Architecture
 
-> Decision: nested per-report download endpoints and separate per-report page routes. See [ADR-0003](../../decisions/0003-report-export-routing-and-page-routes.md).
+> Decision: nested per-report download endpoints (see [ADR-0003](../../decisions/0003-report-export-routing-and-page-routes.md)). The reports-area presentation (card-grid index with per-page back navigation, see [ADR-0004](../../decisions/0004-card-grid-report-index.md)) is owned by [Spec C](./2026-06-10-card-grid-report-index-design.md); this spec consumes that structure unchanged.
 
 **Downloads (API tree).** Spec A already moved the quiz download to `src/routes/admin/api/download/quiz/+server.ts`. This spec adds the sibling `src/routes/admin/api/download/user-profile/+server.ts`, keeping each handler single-purpose and the `download/{quiz,user-profile}` hierarchy a clear "report exports" family. Downloads stream a file and are API endpoints, so they stay in the `admin/api` tree, separate from the page routes.
 
-**Pages (route tree).** The two report previews are separate page routes under `src/routes/admin/(protected)/reports/`: `quiz/` (the existing quiz report, relocated from the former `reports/` root) and `user-profile/` (new). A shared `+layout.svelte` renders the "Generate Report" header and the report nav (two links, active by `page.url.pathname`); it introduces no reusable `Tabs` component. A redirect at `reports/+page.server.ts` sends `/admin/reports` to `/admin/reports/quiz`. Each page's load runs only its own queries, so server-side pagination works per report without a discriminated-union page payload or tab branching.
+**Pages (route tree).** Spec C restructures `src/routes/admin/(protected)/reports/` into a card-grid index (`reports/+page.svelte`), a slim shared `+layout.svelte`, and a relocated `reports/quiz/` sibling. This spec adds one more sibling, `reports/user-profile/` (new), and one card entry to the index's report list. The user-profile page renders a "← Back to reports" link above its content per Spec C's pattern. Its load runs only its own queries, so server-side pagination works without a discriminated-union page payload or tab branching.
 
 ## Contracts & boundaries
 
@@ -65,31 +65,21 @@ New external contract:
 
 ## Components / changes
 
-### 1. `src/routes/admin/(protected)/reports/+layout.svelte` (new)
+The reports-area shell (slim `+layout.svelte`, card-grid index `reports/+page.svelte`, deleted redirect, relocated `reports/quiz/`) is owned by [Spec C](./2026-06-10-card-grid-report-index-design.md). This spec adds the following on top of it, plus one `ReportLink` entry for the user-profile card in Spec C's index list.
 
-- Renders the "Generate Report" header and the report nav: "Quiz Report" → `/admin/reports/quiz`, "User Profile Report" → `/admin/reports/user-profile`, each active by `page.url.pathname`.
-- Renders the active page via the `children` snippet. No data load.
-
-### 2. `src/routes/admin/(protected)/reports/+page.server.ts` (changed)
-
-- Replaces the former quiz-report load with a redirect: `/admin/reports` → `/admin/reports/quiz`.
-
-### 3. `src/routes/admin/(protected)/reports/quiz/+page.server.ts` and `+page.svelte` (relocated)
-
-- The existing quiz-report load and UI, moved unchanged from the former `reports/` root (quiz dropdown + paginated `learningJourney`; preview table, paginator, and download link → `/admin/api/download/quiz?quizId=...`).
-
-### 4. `src/routes/admin/(protected)/reports/user-profile/+page.server.ts` (new, load)
+### 1. `src/routes/admin/(protected)/reports/user-profile/+page.server.ts` (new, load)
 
 - Paginated `db.userProfile.findMany` + `db.userProfile.count`, reusing `PAGE_SIZE = 10`, `orderBy: { user: { name: 'asc' } }`, selecting `isSubscribed`, `user { name, email }`, `interests { collection { title } }`.
 
-### 5. `src/routes/admin/(protected)/reports/user-profile/+page.svelte` (new, UI)
+### 2. `src/routes/admin/(protected)/reports/user-profile/+page.svelte` (new, UI)
 
+- "← Back to reports" link above the content (per [Spec C](./2026-06-10-card-grid-report-index-design.md)'s pattern).
 - `Table` with columns Name, Email, Content Preferences, Subscribed?.
 - `Paginator` (shown when `totalCount > pageSize`).
 - Download XLSX `LinkButton` → `/admin/api/download/user-profile` (`data-sveltekit-reload`).
 - Row mapping: `contentPreferences = interests.map((i) => i.collection.title).join(', ')`, `subscribed = isSubscribed ? 'Yes' : 'No'`.
 
-### 6. `src/routes/admin/api/download/user-profile/+server.ts` (new)
+### 3. `src/routes/admin/api/download/user-profile/+server.ts` (new)
 
 Uses Spec A's `generateReport` helper (which owns streaming, headers, `Cache-Control: no-store`, per-cell `sanitizeSpreadsheetCell`, and destroying the stream on error):
 
@@ -100,7 +90,7 @@ Uses Spec A's `generateReport` helper (which owns streaming, headers, `Cache-Con
 - Column values: `Content Preferences = interests.map((i) => i.collection.title).join(', ')`; `Subscribed? = isSubscribed ? 'Yes' : 'No'`.
 - Filename `DDMMYYYYHHmmss_user_profile_report.xlsx`, sheet `"User Profile Report"`.
 
-The on-screen preview (component 4) orders by `user.name` for readability; the download orders by `userId` per Spec A's keyset batching ([ADR-0002](../../decisions/0002-keyset-cursor-pagination-on-primary-key.md)). The two intentionally differ — the admin can sort the downloaded file in Excel.
+The on-screen preview (component 1) orders by `user.name` for readability; the download orders by `userId` per Spec A's keyset batching ([ADR-0002](../../decisions/0002-keyset-cursor-pagination-on-primary-key.md)). The two intentionally differ — the admin can sort the downloaded file in Excel.
 
 ## Error handling
 
