@@ -54,56 +54,50 @@
   ];
 </script>
 
-<div class="mx-auto flex max-w-6xl flex-col gap-6">
-  <div>
-    <span class="text-xl font-medium">Generate Report</span>
-  </div>
+<div class="rounded-lg border border-slate-200 bg-white p-6">
+  <div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-1">
+      <span class="font-medium">Quiz Report</span>
+      <span class="text-sm text-slate-500">
+        Select a quiz to preview results and download the report.
+      </span>
+    </div>
 
-  <div class="rounded-lg border border-slate-200 bg-white p-6">
-    <div class="flex flex-col gap-4">
-      <div class="flex flex-col gap-1">
-        <span class="font-medium">Quiz Report</span>
-        <span class="text-sm text-slate-500">
-          Select a quiz to preview results and download the report.
-        </span>
-      </div>
-
-      <div class="flex flex-col gap-1.5">
-        <label for="quiz-filter" class="text-sm font-medium text-slate-700">Quiz title</label>
-        <select
-          id="quiz-filter"
-          bind:value={selectedId}
-          onchange={handleFilterChange}
-          class="rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-slate-950 focus:outline-none"
-        >
-          <option value="" disabled>Select a quiz...</option>
-          {#each data.quizzes as quiz (quiz.id)}
-            <option value={quiz.id}>{quiz.title}</option>
-          {/each}
-        </select>
-      </div>
+    <div class="flex flex-col gap-1.5">
+      <label for="quiz-filter" class="text-sm font-medium text-slate-700">Quiz title</label>
+      <select
+        id="quiz-filter"
+        bind:value={selectedId}
+        onchange={handleFilterChange}
+        class="rounded-lg border border-slate-200 px-3 py-2 text-sm focus:border-slate-950 focus:outline-none"
+      >
+        <option value="" disabled>Select a quiz...</option>
+        {#each data.quizzes as quiz (quiz.id)}
+          <option value={quiz.id}>{quiz.title}</option>
+        {/each}
+      </select>
     </div>
   </div>
-
-  {#if selectedId}
-    <div class="flex flex-col gap-0">
-      <Table {columns} data={rows} emptyMessage="No quiz results found" />
-
-      {#if data.totalCount > data.pageSize}
-        <Paginator
-          totalCount={data.totalCount}
-          currentPage={data.currentPage}
-          pageSize={data.pageSize}
-          onpagechange={handlePageChange}
-        />
-      {/if}
-    </div>
-
-    <div class="flex justify-end">
-      <LinkButton href={downloadHref} variant="secondary" data-sveltekit-reload>
-        <FileSpreadsheet class="h-4 w-4" />
-        Download XLSX
-      </LinkButton>
-    </div>
-  {/if}
 </div>
+
+{#if selectedId}
+  <div class="flex flex-col gap-0">
+    <Table {columns} data={rows} emptyMessage="No quiz results found" />
+
+    {#if data.totalCount > data.pageSize}
+      <Paginator
+        totalCount={data.totalCount}
+        currentPage={data.currentPage}
+        pageSize={data.pageSize}
+        onpagechange={handlePageChange}
+      />
+    {/if}
+  </div>
+
+  <div class="flex justify-end">
+    <LinkButton href={downloadHref} variant="secondary" data-sveltekit-reload>
+      <FileSpreadsheet class="h-4 w-4" />
+      Download XLSX
+    </LinkButton>
+  </div>
+{/if}
