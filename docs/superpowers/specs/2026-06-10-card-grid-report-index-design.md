@@ -1,6 +1,6 @@
 # Card-Grid Report Index — Design
 
-**Status:** Draft
+**Status:** Approved
 **Rationale (ADR):** [ADR-0004 — Card-grid report index with per-page back navigation](../../decisions/0004-card-grid-report-index.md), which supersedes the page-presentation decision of [ADR-0003](../../decisions/0003-report-export-routing-and-page-routes.md) (its download-routing decision carries forward unchanged).
 **Related:** [User Profile Report](./2026-06-08-user-profile-report-design.md) (Spec B) adds the second report card on top of this structure; [Streaming Report Exports](./2026-06-08-streaming-report-exports-design.md) (Spec A) owns the export mechanism. This spec is the reports-area restructure; it lands before Spec B.
 

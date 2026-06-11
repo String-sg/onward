@@ -21,7 +21,6 @@ Delete these comments in the real spec.
 -->
 
 **Status:** Draft <!-- Draft | Approved -->
-**Issue:** <link to tracking issue, or "none">
 **Depends on / Related:** <link sibling specs/ADRs, or delete>
 
 ## Overview

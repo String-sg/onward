@@ -1,6 +1,6 @@
 # User Profile Report — Design
 
-**Status:** Draft
+**Status:** Approved
 **Issue:** [String-sg/onward#571](https://github.com/String-sg/onward/issues/571) — Expose subscriber list and content preference on Glow admin
 **Depends on / Related:** [Streaming Report Exports](./2026-06-08-streaming-report-exports-design.md) (Spec A) and [Card-Grid Report Index](./2026-06-10-card-grid-report-index-design.md) (Spec C). This is Spec B; it reuses the `generateReport` helper, the `sanitizeSpreadsheetCell` sanitizer, and the already-nested `download/quiz` route that Spec A introduces, and it plugs a new report into the card-grid reports area that Spec C restructures. Spec A and Spec C land first.
 
