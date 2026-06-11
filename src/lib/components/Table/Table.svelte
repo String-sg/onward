@@ -21,7 +21,12 @@
       <thead class="bg-slate-100">
         <tr>
           {#each columns as column (column.key)}
-            <th class="px-6 py-3 text-left text-xs font-medium tracking-wider uppercase">
+            <th
+              class={[
+                'px-6 py-3 text-left text-xs font-medium tracking-wider uppercase',
+                column.class,
+              ]}
+            >
               {column.label}
             </th>
           {/each}
@@ -36,7 +41,7 @@
             onclick={() => onrowclick?.(item)}
           >
             {#each columns as column (column.key)}
-              <td class="px-6 py-4">
+              <td class={['px-6 py-4', column.class]}>
                 {item[column.key]}
               </td>
             {/each}

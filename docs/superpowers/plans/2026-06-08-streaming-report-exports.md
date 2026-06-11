@@ -8,7 +8,7 @@
 
 **Tech Stack:** SvelteKit (adapter-node, Node 24), Svelte 5, Prisma (pg adapter), `exceljs`, Vitest. Package manager: `pnpm`.
 
-**Scope:** This is **PR1 of 2** (Spec A — [streaming foundation + quiz migration](../specs/2026-06-08-streaming-report-exports-design.md)). The onboarding report (Spec B) is a separate plan, stacked on this branch, written after PR1 lands. Decisions: [ADR-0001](../../decisions/0001-stream-report-exports-with-exceljs.md) (streaming via generic helper), [ADR-0002](../../decisions/0002-keyset-cursor-pagination-on-primary-key.md) (keyset cursor on primary key).
+**Scope:** This is **PR1 of 2** (Spec A — [streaming foundation + quiz migration](../specs/2026-06-08-streaming-report-exports-design.md)). The user profile report (Spec B) is a separate plan, stacked on this branch, written after PR1 lands. Decisions: [ADR-0001](../../decisions/0001-stream-report-exports-with-exceljs.md) (streaming via generic helper), [ADR-0002](../../decisions/0002-keyset-cursor-pagination-on-primary-key.md) (keyset cursor on primary key).
 
 **Conventions (from CLAUDE.md + project memory):**
 
@@ -88,7 +88,7 @@ git commit -m "chore: add exceljs dependency"
 
 ## Task 2: Shared pure utilities (`sanitizeSpreadsheetCell`, `formatTimestamp`)
 
-Two pure helpers co-located in `reports/helpers.ts`, both shared by the quiz export and the onboarding report (Spec B): `sanitizeSpreadsheetCell` neutralizes CSV/formula injection by prefixing a leading formula-trigger character with `'`; `formatTimestamp` formats a `Date` as a `DDMMYYYYHHmmss` filename prefix.
+Two pure helpers co-located in `reports/helpers.ts`, both shared by the quiz export and the user profile report (Spec B): `sanitizeSpreadsheetCell` neutralizes CSV/formula injection by prefixing a leading formula-trigger character with `'`; `formatTimestamp` formats a `Date` as a `DDMMYYYYHHmmss` filename prefix.
 
 **Files:**
 
