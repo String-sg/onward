@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.15.0 (2026-06-11)
+
+### Features ✨
+
+- feat: streaming report exports ([#584](https://github.com/String-sg/onward/pull/584)) ([b450359e](https://github.com/String-sg/onward/commit/b450359e))
+- feat: improve ask ai retrieval ([#572](https://github.com/String-sg/onward/pull/572)) ([2bad386f](https://github.com/String-sg/onward/commit/2bad386f))
+
+### Chores 🧹
+
+- chore: resolve npm audit vulnerabilities ([#591](https://github.com/String-sg/onward/pull/591)) ([1b95745e](https://github.com/String-sg/onward/commit/1b95745e))
+
 ## 1.14.1 (2026-05-12)
 
 ### Bug Fixes 🐛
