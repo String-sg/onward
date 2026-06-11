@@ -12,7 +12,7 @@ ENV NODE_ENV="production"
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN mkdir $PNPM_HOME && \
-        wget -qO- "https://github.com/pnpm/pnpm/releases/download/v10.18.1/pnpm-linuxstatic-arm64" > "$PNPM_HOME/pnpm" && \
+        wget -qO- "https://github.com/pnpm/pnpm/releases/download/v10.33.4/pnpm-linuxstatic-arm64" > "$PNPM_HOME/pnpm" && \
         chmod +x $PNPM_HOME/pnpm && \
         ln -s $PNPM_HOME/pnpm /usr/local/bin/pnpm
 
