@@ -1,5 +1,6 @@
 import { error, redirect } from '@sveltejs/kit';
 
+import { env } from '$env/dynamic/private';
 import { db, type UserFindUniqueArgs, type UserGetPayload } from '$lib/server/db';
 
 import type { LayoutServerLoad } from './$types';
@@ -39,5 +40,8 @@ export const load: LayoutServerLoad = async (event) => {
     username: user.name,
     csrfToken: event.locals.session.csrfToken(),
     onboarded,
+    featureFlags: {
+      aiChat: env.FEATURE_AI_CHAT === 'true',
+    },
   };
 };
