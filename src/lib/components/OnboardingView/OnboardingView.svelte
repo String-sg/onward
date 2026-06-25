@@ -8,6 +8,17 @@
   import { Modal } from '$lib/components/Modal/index.js';
   import { IsWithinViewport } from '$lib/helpers/index.js';
 
+  export interface Topic {
+    id: string;
+    title: string;
+    description: string;
+    /**
+     * The associated tag code (e.g. `AI`, `BOB`), used to select the topic
+     * icon. Null when the collection has no tag.
+     */
+    code: string | null;
+  }
+
   export interface Props {
     /**
      * Indicates whether the view is open.
@@ -17,9 +28,37 @@
      * A callback invoked when the view is closed.
      */
     onclose: () => void;
+    /**
+     * The selectable topic collections, sourced from the database.
+     */
+    topics: Topic[];
   }
 
-  const { isopen, onclose }: Props = $props();
+  const { isopen, onclose, topics }: Props = $props();
+
+  /**
+   * Tag codes that have a topic icon. Keep in sync with the `enhanced:img`
+   * mapping in the topic-selection markup below; a topic whose code is not
+   * here has no icon and is not shown.
+   */
+  const TOPIC_ICON_CODES = new Set([
+    'AI',
+    'CAREER',
+    'EDU_VOICES',
+    'EMP_ENGAGEMENT',
+    'NEWS',
+    'INFRA',
+    'INNOV',
+    'BOB',
+    'PROD',
+    'STU_DEV',
+    'STU_WELL',
+    'WELLBEING',
+  ]);
+
+  const displayedTopics = $derived(
+    topics.filter((topic) => topic.code !== null && TOPIC_ICON_CODES.has(topic.code)),
+  );
 
   let target = $state<HTMLElement | null>(null);
   let isStartPage = $state(true);
@@ -64,7 +103,7 @@
 
   const handleConfirm = async () => {
     const payload = {
-      topics: selectedTopics,
+      collectionIds: selectedTopics,
       frequency: selectedFrequency,
       csrfToken: page.data.csrfToken,
     };
@@ -127,67 +166,12 @@
     await handleClose();
   };
 
-  const handleTopicChange = (title: string, checked: boolean) => {
+  const handleTopicChange = (id: string, checked: boolean) => {
     if (checked) {
-      selectedTopics = [...selectedTopics, title];
+      selectedTopics = [...selectedTopics, id];
     } else {
-      selectedTopics = selectedTopics.filter((topic) => topic !== title);
+      selectedTopics = selectedTopics.filter((topic) => topic !== id);
     }
-  };
-
-  const collectionsList = {
-    'artificial-intelligence': {
-      title: 'Artificial Intelligence',
-      description: 'AI news, use cases and tools to master the changing landscape.',
-    },
-    'career-growth': {
-      title: 'Career Growth',
-      description: 'Tips to help you set career goals and transform potential into performance.',
-    },
-    'educator-voices': {
-      title: 'Educator Voices',
-      description: 'Inspiring stories from fellow educators.',
-    },
-    'employee-engagement': {
-      title: 'Employee Engagement',
-      description:
-        'Analyze EES results and get practical tips to maintain workplace staff engagement.',
-    },
-    'in-the-news': {
-      title: 'In the News',
-      description: 'Education news and survey highlights for ground insights.',
-    },
-    infrastructure: {
-      title: 'Infrastructure',
-      description: 'Learn about device setups, connectivity, and digital tools for efficient work.',
-    },
-    innovation: {
-      title: 'Innovation',
-      description: 'Strategies to empower new ideas, innovation, and creative thinking.',
-    },
-    'learn-with-bob': {
-      title: 'Learn with Bob',
-      description: 'SPACES framework for purposeful work and a sustainable pace.',
-    },
-    productivity: {
-      title: 'Productivity',
-      description:
-        'Master time management and workflows to minimize distractions and reach goals faster.',
-    },
-    'student-development': {
-      title: 'Student Development',
-      description:
-        "Learn ways to develop students' cognitive, affective, physical and aesthetic abilities.",
-    },
-    'student-wellbeing': {
-      title: 'Student Wellbeing',
-      description: 'Learn ways to support students emotional and physical health.',
-    },
-    wellbeing: {
-      title: 'Wellbeing',
-      description:
-        'Identify workplace stress, monitor peer distress, conduct check-ins, and provide support resources.',
-    },
   };
 </script>
 
@@ -277,7 +261,7 @@
 
           <div class="overflow-y-auto pt-6">
             <div class="flex w-full flex-col gap-y-2" role="group" aria-labelledby="topic">
-              {#each Object.entries(collectionsList) as [key, { title, description }] (key)}
+              {#each displayedTopics as { id, title, description, code } (id)}
                 <label
                   class={[
                     'group flex cursor-pointer items-center rounded-3xl border border-slate-200 bg-white',
@@ -291,79 +275,79 @@
                     <input
                       type="checkbox"
                       name="topics"
-                      value={title}
+                      value={id}
                       class="sr-only"
-                      onchange={(e) => handleTopicChange(title, e.currentTarget.checked)}
+                      onchange={(e) => handleTopicChange(id, e.currentTarget.checked)}
                     />
 
                     <div class="flex h-24 w-20 shrink-0 items-center justify-center">
-                      {#if key === 'artificial-intelligence'}
+                      {#if code === 'AI'}
                         <enhanced:img
                           src="$lib/assets/collections/artificial-intelligence.png"
                           alt={title}
                           class="max-h-full max-w-full object-contain"
                         />
-                      {:else if key === 'career-growth'}
+                      {:else if code === 'CAREER'}
                         <enhanced:img
                           src="$lib/assets/collections/career-growth.png"
                           alt={title}
                           class="max-h-full max-w-full object-contain"
                         />
-                      {:else if key === 'educator-voices'}
+                      {:else if code === 'EDU_VOICES'}
                         <enhanced:img
                           src="$lib/assets/collections/educator-voices.png"
                           alt={title}
                           class="max-h-full max-w-full object-contain"
                         />
-                      {:else if key === 'employee-engagement'}
+                      {:else if code === 'EMP_ENGAGEMENT'}
                         <enhanced:img
                           src="$lib/assets/collections/employee-engagement.png"
                           alt={title}
                           class="max-h-full max-w-full object-contain"
                         />
-                      {:else if key === 'in-the-news'}
+                      {:else if code === 'NEWS'}
                         <enhanced:img
                           src="$lib/assets/collections/in-the-news.png"
                           alt={title}
                           class="max-h-full max-w-full object-contain"
                         />
-                      {:else if key === 'infrastructure'}
+                      {:else if code === 'INFRA'}
                         <enhanced:img
                           src="$lib/assets/collections/infrastructure.png"
                           alt={title}
                           class="max-h-full max-w-full object-contain"
                         />
-                      {:else if key === 'innovation'}
+                      {:else if code === 'INNOV'}
                         <enhanced:img
                           src="$lib/assets/collections/innovation.png"
                           alt={title}
                           class="max-h-full max-w-full object-contain"
                         />
-                      {:else if key === 'learn-with-bob'}
+                      {:else if code === 'BOB'}
                         <enhanced:img
                           src="$lib/assets/collections/learn-with-bob.png"
                           alt={title}
                           class="max-h-full max-w-full object-contain"
                         />
-                      {:else if key === 'productivity'}
+                      {:else if code === 'PROD'}
                         <enhanced:img
                           src="$lib/assets/collections/productivity.png"
                           alt={title}
                           class="max-h-full max-w-full object-contain"
                         />
-                      {:else if key === 'student-development'}
+                      {:else if code === 'STU_DEV'}
                         <enhanced:img
                           src="$lib/assets/collections/student-development.png"
                           alt={title}
                           class="max-h-full max-w-full object-contain"
                         />
-                      {:else if key === 'student-wellbeing'}
+                      {:else if code === 'STU_WELL'}
                         <enhanced:img
                           src="$lib/assets/collections/student-wellbeing.png"
                           alt={title}
                           class="max-h-full max-w-full object-contain"
                         />
-                      {:else if key === 'wellbeing'}
+                      {:else if code === 'WELLBEING'}
                         <enhanced:img
                           src="$lib/assets/collections/wellbeing.png"
                           alt={title}

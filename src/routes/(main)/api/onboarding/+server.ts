@@ -1,6 +1,11 @@
 import { json } from '@sveltejs/kit';
 
-import { db, type UserProfileCreateArgs } from '$lib/server/db';
+import {
+  type CollectionFindManyArgs,
+  type CollectionGetPayload,
+  db,
+  type UserProfileCreateArgs,
+} from '$lib/server/db';
 
 import type { RequestHandler } from './$types';
 
@@ -25,9 +30,10 @@ export const POST: RequestHandler = async (event) => {
     if (
       !params ||
       typeof params !== 'object' ||
-      !('topics' in params) ||
-      !Array.isArray(params['topics']) ||
-      params['topics'].length < 3 ||
+      !('collectionIds' in params) ||
+      !Array.isArray(params['collectionIds']) ||
+      params['collectionIds'].length < 3 ||
+      !params['collectionIds'].every((id: unknown) => typeof id === 'string') ||
       !('frequency' in params) ||
       typeof params['frequency'] !== 'string' ||
       !('csrfToken' in params) ||
@@ -40,24 +46,34 @@ export const POST: RequestHandler = async (event) => {
     return json(null, { status: 400 });
   }
 
-  const { topics, frequency } = params;
+  const { collectionIds, frequency } = params;
+
+  const uniqueCollectionIds = [...new Set<string>(collectionIds)];
 
   try {
-    const collections = await db.collection.findMany({
+    const collectionArgs = {
       select: {
         id: true,
       },
       where: {
-        title: {
-          in: topics,
+        id: {
+          in: uniqueCollectionIds,
         },
         isTopic: true,
       },
-    });
+    } satisfies CollectionFindManyArgs;
 
-    if (collections.length === 0) {
-      logger.warn({ topics }, 'No valid collections found');
-      return json(null, { status: 400 });
+    const collections: CollectionGetPayload<typeof collectionArgs>[] =
+      await db.collection.findMany(collectionArgs);
+
+    if (collections.length !== uniqueCollectionIds.length) {
+      const resolvedIds = new Set(collections.map((collection) => collection.id));
+      const unresolvedIds = uniqueCollectionIds.filter((id) => !resolvedIds.has(id));
+      logger.warn(
+        { userId: user.id, submittedIds: uniqueCollectionIds, unresolvedIds },
+        'One or more collectionIds did not resolve to a topic collection',
+      );
+      return json(null, { status: 422 });
     }
 
     const userProfileArgs = {
