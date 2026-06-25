@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.15.1 (2026-06-25)
+
+### Bug Fixes 🐛
+
+- fix(onboarding): source topic list from DB to stop selections being silently dropped ([#599](https://github.com/String-sg/onward/pull/599)) ([0eb6d4e](https://github.com/String-sg/onward/commit/0eb6d4e))
+
 ## 1.15.0 (2026-06-11)
 
 ### Features ✨
