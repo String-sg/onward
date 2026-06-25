@@ -55,6 +55,9 @@ export const load: LayoutServerLoad = async (event) => {
     where: {
       isTopic: true,
     },
+    orderBy: {
+      title: 'asc',
+    },
   } satisfies CollectionFindManyArgs;
 
   let topics: CollectionGetPayload<typeof topicArgs>[];
