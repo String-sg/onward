@@ -329,4 +329,8 @@
 
 <ChatView isopen={isChatViewOpen} onclose={handleChatViewClose} />
 
-<OnboardingView isopen={isOnboardingViewOpen} onclose={handleOnboardingViewClose} />
+<OnboardingView
+  isopen={isOnboardingViewOpen}
+  onclose={handleOnboardingViewClose}
+  topics={page.data.onboardingTopics ?? []}
+/>
