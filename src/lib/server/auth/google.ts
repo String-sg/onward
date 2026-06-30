@@ -176,7 +176,7 @@ export async function verifyIdToken(idToken: string): Promise<GoogleProfile> {
 
   const allowedDomains = getAllowedHostedDomains();
   if (allowedDomains.length > 0 && (!payload.hd || !allowedDomains.includes(payload.hd))) {
-    throw new InvalidIdTokenError(
+    throw new HostedDomainMismatchError(
       'Google ID token hosted domain does not match a configured hosted domain',
     );
   }
@@ -193,3 +193,11 @@ export class InvalidIdTokenError extends Error {
     this.name = this.constructor.name;
   }
 }
+
+/**
+ * Thrown when the token is otherwise valid but its hosted domain is not one of
+ * the domains configured in `GOOGLE_HOSTED_DOMAIN`. A subclass of
+ * `InvalidIdTokenError` so existing catch-all handling still rejects it, while
+ * callers that care can distinguish it to surface a domain-specific message.
+ */
+export class HostedDomainMismatchError extends InvalidIdTokenError {}

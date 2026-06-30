@@ -44,7 +44,12 @@ describe('verifyIdToken hosted-domain enforcement', () => {
     env.GOOGLE_HOSTED_DOMAIN = 'moe.edu.sg';
     mockVerifyIdToken.mockResolvedValue(payloadWithHd('gmail.com'));
 
-    const { verifyIdToken, InvalidIdTokenError } = await import('./google.js');
+    const { verifyIdToken, HostedDomainMismatchError, InvalidIdTokenError } = await import(
+      './google.js'
+    );
+    // A subclass of InvalidIdTokenError so existing catch-all handling still applies,
+    // but distinguishable so the callback can show a domain-specific message.
+    await expect(verifyIdToken('token')).rejects.toBeInstanceOf(HostedDomainMismatchError);
     await expect(verifyIdToken('token')).rejects.toBeInstanceOf(InvalidIdTokenError);
   });
 
@@ -60,8 +65,8 @@ describe('verifyIdToken hosted-domain enforcement', () => {
     env.GOOGLE_HOSTED_DOMAIN = 'moe.edu.sg,hci.edu.sg';
     mockVerifyIdToken.mockResolvedValue(payloadWithHd('nus.edu.sg'));
 
-    const { verifyIdToken, InvalidIdTokenError } = await import('./google.js');
-    await expect(verifyIdToken('token')).rejects.toBeInstanceOf(InvalidIdTokenError);
+    const { verifyIdToken, HostedDomainMismatchError } = await import('./google.js');
+    await expect(verifyIdToken('token')).rejects.toBeInstanceOf(HostedDomainMismatchError);
   });
 
   test('tolerates whitespace around comma-separated domains', async () => {
@@ -76,8 +81,8 @@ describe('verifyIdToken hosted-domain enforcement', () => {
     env.GOOGLE_HOSTED_DOMAIN = 'moe.edu.sg';
     mockVerifyIdToken.mockResolvedValue(payloadWithHd(undefined));
 
-    const { verifyIdToken, InvalidIdTokenError } = await import('./google.js');
-    await expect(verifyIdToken('token')).rejects.toBeInstanceOf(InvalidIdTokenError);
+    const { verifyIdToken, HostedDomainMismatchError } = await import('./google.js');
+    await expect(verifyIdToken('token')).rejects.toBeInstanceOf(HostedDomainMismatchError);
   });
 
   test('accepts any hd when no domain is configured', async () => {

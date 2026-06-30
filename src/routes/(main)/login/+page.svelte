@@ -2,6 +2,8 @@
   import { page } from '$app/state';
   import { LinkButton } from '$lib/components/Button/index.js';
   import { HOME_PATH } from '$lib/helpers/index.js';
+
+  const isDomainNotAllowed = $derived(page.url.searchParams.get('error') === 'domain_not_allowed');
 </script>
 
 <main class="flex min-h-svh flex-col">
@@ -22,6 +24,16 @@
           <span class="font-logo text-center text-3xl">Small Bites.<br />Big Growth.</span>
 
           <div class="flex flex-col items-center gap-y-4">
+            {#if isDomainNotAllowed}
+              <div
+                role="alert"
+                class="w-full max-w-sm rounded-2xl bg-red-50 px-4 py-3 text-center text-sm text-red-700"
+              >
+                You can only sign in with an approved organisation account. Please try again with
+                your work email.
+              </div>
+            {/if}
+
             <LinkButton
               href={`/auth/google?return_to=${encodeURIComponent(page.url.searchParams.get('return_to') || HOME_PATH)}`}
               data-sveltekit-reload
