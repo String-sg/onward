@@ -3,7 +3,21 @@
   import { LinkButton } from '$lib/components/Button/index.js';
   import { HOME_PATH } from '$lib/helpers/index.js';
 
-  const isDomainNotAllowed = $derived(page.url.searchParams.get('error') === 'domain_not_allowed');
+  const ERROR_MESSAGES: Record<string, string> = {
+    domain_not_allowed:
+      'You can only sign in with an approved organisation account. Please try again with your work email.',
+  };
+  const GENERIC_ERROR_MESSAGE = 'Something went wrong while signing you in. Please try again.';
+
+  // Map the `error` query param to a user-facing message. Known codes get a
+  // tailored message; any other non-empty code falls back to the generic one.
+  const errorMessage = $derived.by(() => {
+    const error = page.url.searchParams.get('error');
+    if (!error) {
+      return null;
+    }
+    return ERROR_MESSAGES[error] ?? GENERIC_ERROR_MESSAGE;
+  });
 </script>
 
 <main class="flex min-h-svh flex-col">
@@ -24,13 +38,12 @@
           <span class="font-logo text-center text-3xl">Small Bites.<br />Big Growth.</span>
 
           <div class="flex flex-col items-center gap-y-4">
-            {#if isDomainNotAllowed}
+            {#if errorMessage}
               <div
                 role="alert"
                 class="w-full max-w-sm rounded-2xl bg-red-50 px-4 py-3 text-center text-sm text-red-700"
               >
-                You can only sign in with an approved organisation account. Please try again with
-                your work email.
+                {errorMessage}
               </div>
             {/if}
 

@@ -148,11 +148,20 @@ export async function exchangeCodeForIdToken({
  * Verifies the Google ID token and extracts the profile information.
  *
  * Throws `InvalidIdTokenError` when the token cannot be trusted — bad
- * signature, expired, missing claims, or hosted-domain mismatch.
+ * signature, expired, or missing claims — and `HostedDomainMismatchError`
+ * (a subclass) when the token's hosted domain is not allow-listed.
+ *
+ * The hosted-domain restriction is enforced on the Google-verified `hd`
+ * (Workspace) claim, not on the email address. `hd` is the account's Workspace
+ * primary domain, so any account belonging to an allow-listed Workspace is
+ * admitted regardless of its email's literal domain (e.g. a secondary or alias
+ * domain). This matches the `GOOGLE_HOSTED_DOMAIN` semantics — it lists
+ * Workspace domains, not email domains — and is Google's recommended gate.
  *
  * @param idToken - The Google ID token to verify.
  * @returns The Google profile.
  * @throws InvalidIdTokenError
+ * @throws HostedDomainMismatchError
  */
 export async function verifyIdToken(idToken: string): Promise<GoogleProfile> {
   const client = getOAuth2Client();
@@ -174,6 +183,8 @@ export async function verifyIdToken(idToken: string): Promise<GoogleProfile> {
     throw new InvalidIdTokenError(`Google ID token missing claim: ${missing}`);
   }
 
+  // Gate on the verified `hd` (Workspace) claim, not the email domain — see the
+  // function docstring for why.
   const allowedDomains = getAllowedHostedDomains();
   if (allowedDomains.length > 0 && (!payload.hd || !allowedDomains.includes(payload.hd))) {
     throw new HostedDomainMismatchError(
