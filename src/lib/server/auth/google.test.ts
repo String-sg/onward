@@ -77,6 +77,14 @@ describe('verifyIdToken hosted-domain enforcement', () => {
     await expect(verifyIdToken('token')).resolves.toMatchObject({ email: 'a@b.com' });
   });
 
+  test('matches domains case-insensitively', async () => {
+    env.GOOGLE_HOSTED_DOMAIN = 'MOE.edu.sg';
+    mockVerifyIdToken.mockResolvedValue(payloadWithHd('moe.edu.sg'));
+
+    const { verifyIdToken } = await import('./google.js');
+    await expect(verifyIdToken('token')).resolves.toMatchObject({ email: 'a@b.com' });
+  });
+
   test('rejects a token with no hd claim when a domain is configured', async () => {
     env.GOOGLE_HOSTED_DOMAIN = 'moe.edu.sg';
     mockVerifyIdToken.mockResolvedValue(payloadWithHd(undefined));

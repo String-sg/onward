@@ -30,14 +30,16 @@ const GOOGLE_REDIRECT_URL_PATH = '/auth/google/callback';
 
 /**
  * Parses `GOOGLE_HOSTED_DOMAIN` into the list of allowed Google Workspace
- * domains. Accepts a single domain or a comma-separated list (whitespace
- * around entries is ignored). Returns an empty array when unset, meaning no
- * hosted-domain restriction is enforced.
+ * domains. Accepts a single domain or a comma-separated list; whitespace around
+ * entries is ignored and entries are lower-cased so matching is
+ * case-insensitive (Google's `hd` claim is always lower-case, so a config like
+ * `MOE.edu.sg` would otherwise silently reject every user). Returns an empty
+ * array when unset, meaning no hosted-domain restriction is enforced.
  */
 function getAllowedHostedDomains(): string[] {
   return (env.GOOGLE_HOSTED_DOMAIN ?? '')
     .split(',')
-    .map((domain) => domain.trim())
+    .map((domain) => domain.trim().toLowerCase())
     .filter((domain) => domain.length > 0);
 }
 
