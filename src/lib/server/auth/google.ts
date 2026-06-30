@@ -28,6 +28,19 @@ export interface GoogleProfile {
  */
 const GOOGLE_REDIRECT_URL_PATH = '/auth/google/callback';
 
+/**
+ * Parses `GOOGLE_HOSTED_DOMAIN` into the list of allowed Google Workspace
+ * domains. Accepts a single domain or a comma-separated list (whitespace
+ * around entries is ignored). Returns an empty array when unset, meaning no
+ * hosted-domain restriction is enforced.
+ */
+function getAllowedHostedDomains(): string[] {
+  return (env.GOOGLE_HOSTED_DOMAIN ?? '')
+    .split(',')
+    .map((domain) => domain.trim())
+    .filter((domain) => domain.length > 0);
+}
+
 function getOAuth2Client() {
   return new OAuth2Client({
     client_id: env.GOOGLE_CLIENT_ID,
@@ -67,6 +80,14 @@ export function generateAuthURL({
 }): string {
   const client = getOAuth2Client();
 
+  // `hd` is only an account-chooser hint and accepts a single value. With one
+  // configured domain we pass it directly; with several we fall back to `*`,
+  // which limits the chooser to managed Workspace accounts. The actual
+  // restriction is enforced in `verifyIdToken`.
+  const allowedDomains = getAllowedHostedDomains();
+  const hd =
+    allowedDomains.length === 0 ? undefined : allowedDomains.length === 1 ? allowedDomains[0] : '*';
+
   return client.generateAuthUrl({
     redirect_uri: origin + GOOGLE_REDIRECT_URL_PATH,
     scope: [
@@ -76,7 +97,7 @@ export function generateAuthURL({
     state,
     code_challenge: createHash('sha256').update(codeVerifier).digest('base64url'),
     code_challenge_method: CodeChallengeMethod.S256,
-    hd: env.GOOGLE_HOSTED_DOMAIN,
+    hd,
     prompt,
   });
 }
@@ -153,9 +174,10 @@ export async function verifyIdToken(idToken: string): Promise<GoogleProfile> {
     throw new InvalidIdTokenError(`Google ID token missing claim: ${missing}`);
   }
 
-  if (env.GOOGLE_HOSTED_DOMAIN && payload.hd !== env.GOOGLE_HOSTED_DOMAIN) {
+  const allowedDomains = getAllowedHostedDomains();
+  if (allowedDomains.length > 0 && (!payload.hd || !allowedDomains.includes(payload.hd))) {
     throw new InvalidIdTokenError(
-      'Google ID token hosted domain does not match the configured hosted domain',
+      'Google ID token hosted domain does not match a configured hosted domain',
     );
   }
 
