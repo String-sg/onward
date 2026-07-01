@@ -38,3 +38,7 @@ export function objectKey(prefix: string, dataset: string, date: string): string
 export function formatDateUtc(now: Date): string {
   return now.toISOString().slice(0, 10);
 }
+
+export function toNdjson(rows: readonly Record<string, unknown>[]): string {
+  return rows.map((row) => `${JSON.stringify(row)}\n`).join('');
+}
