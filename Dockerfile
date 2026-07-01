@@ -41,6 +41,9 @@ RUN pnpm db:generate
 # Build the app.
 RUN pnpm build
 
+# Bundle the NLDS export script into build/ (see ADR-0006).
+RUN pnpm export:nlds:bundle
+
 # Install production dependencies.
 RUN find . -type d -name "node_modules" -prune -exec rm -rf {} +
 RUN pnpm install --offline --prod

@@ -39,3 +39,4 @@ the ADR; the spec consumes its outcome.
 - [0002 — Read streaming exports with keyset cursor pagination on the primary key](./0002-keyset-cursor-pagination-on-primary-key.md) — accepted
 - [0003 — Nested per-report download endpoints and separate per-report page routes](./0003-report-export-routing-and-page-routes.md) — accepted
 - [0004 — Card-grid report index with per-page back navigation](./0004-card-grid-report-index.md) — accepted
+- [0006 — Package the NLDS export as a bundled script inside the existing app image](./0006-package-nlds-export-as-bundled-script-in-app-image.md) — accepted
