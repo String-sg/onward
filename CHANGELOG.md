@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.16.0 (2026-07-01)
+
+### Features ✨
+
+- feat(auth): support multiple Google hosted domains ([#605](https://github.com/String-sg/onward/pull/605)) ([d30cc2e](https://github.com/String-sg/onward/commit/d30cc2e))
+
+### Chores 🧹
+
+- chore: update vulnerable dependencies ([#607](https://github.com/String-sg/onward/pull/607)) ([3d1f10d](https://github.com/String-sg/onward/commit/3d1f10d))
+
 ## 1.15.1 (2026-06-25)
 
 ### Bug Fixes 🐛
