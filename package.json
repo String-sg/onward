@@ -45,7 +45,7 @@
     "@types/node": "^24.10.1",
     "@vitest/coverage-v8": "^3.2.6",
     "date-fns": "^4.1.0",
-    "dompurify": "^3.4.0",
+    "dompurify": "^3.4.11",
     "dotenv": "^17.2.2",
     "eslint": "^9.39.3",
     "eslint-plugin-simple-import-sort": "^12.1.1",
@@ -70,22 +70,15 @@
     "typescript": "^5.9.2",
     "typescript-eslint": "^8.56.1",
     "uuid": "^14.0.0",
-    "vite": "^7.3.2",
+    "vite": "^7.3.5",
     "vitest": "^3.2.6"
   },
   "pnpm": {
     "overrides": {
       "@hono/node-server": ">=1.19.13",
-      "hono": "^4.12.21",
       "fast-xml-parser": "^5.7.0",
-      "fast-xml-builder": "^1.1.7",
-      "fast-uri": "^3.1.2",
-      "devalue": "^5.8.1",
-      "postcss": "^8.5.10",
-      "ws": "^8.20.1",
-      "protobufjs": "^7.5.8",
+      "esbuild": "^0.28.1",
       "cookie": ">=0.7.0",
-      "minimatch@10>brace-expansion": "^5.0.6",
       "exceljs>uuid": "^11.1.1"
     }
   }
