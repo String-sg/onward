@@ -1,6 +1,7 @@
 import { describe, expect, test, vi } from 'vitest';
 
 import {
+  datasets,
   formatDateUtc,
   loadConfig,
   mandatoryQuizOutcomesDataset,
@@ -44,6 +45,13 @@ describe('loadConfig', () => {
 describe('objectKey', () => {
   test('composes prefix + dataset + date + .ndjson', () => {
     expect(objectKey('glow/', 'users', '2026-07-01')).toBe('glow/users/2026-07-01.ndjson');
+  });
+
+  test('composes keys that stay within the prefix for every dataset', () => {
+    for (const dataset of datasets) {
+      const key = objectKey('glow/', dataset.name, '2026-07-01');
+      expect(key.startsWith('glow/')).toBe(true);
+    }
   });
 });
 

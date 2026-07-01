@@ -110,7 +110,7 @@ export const mandatoryQuizOutcomesDataset: Dataset<MandatoryQuizOutcomeRow> = {
       user_id: r.userId,
       learning_unit_id: r.learningUnitId,
       learning_unit_title: r.learningUnit.title,
-      due_date: r.learningUnit.dueDate ? r.learningUnit.dueDate.toISOString().slice(0, 10) : null,
+      due_date: r.learningUnit.dueDate ? formatDateUtc(r.learningUnit.dueDate) : null,
       is_completed: r.isCompleted,
       is_quiz_attempted: r.isQuizAttempted,
       is_quiz_passed: r.isQuizPassed,
