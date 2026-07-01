@@ -4,6 +4,7 @@ import { HOME_PATH } from '$lib/helpers';
 import {
   exchangeCodeForIdToken,
   type GoogleProfile,
+  HostedDomainMismatchError,
   learnerAuth,
   verifyIdToken,
 } from '$lib/server/auth/index.js';
@@ -72,6 +73,10 @@ export const GET: RequestHandler = async (event) => {
   try {
     profile = await verifyIdToken(idToken);
   } catch (err) {
+    if (err instanceof HostedDomainMismatchError) {
+      logger.warn({ err }, 'Rejected sign-in from a non-allowed hosted domain');
+      return redirect(302, '/login?error=domain_not_allowed');
+    }
     logger.error({ err }, 'Failed to verify ID token');
     return redirect(302, '/login?error=oauth2_callback_failed');
   }

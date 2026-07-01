@@ -28,6 +28,21 @@ export interface GoogleProfile {
  */
 const GOOGLE_REDIRECT_URL_PATH = '/auth/google/callback';
 
+/**
+ * Parses `GOOGLE_HOSTED_DOMAIN` into the list of allowed Google Workspace
+ * domains. Accepts a single domain or a comma-separated list; whitespace around
+ * entries is ignored and entries are lower-cased so matching is
+ * case-insensitive (Google's `hd` claim is always lower-case, so a config like
+ * `MOE.edu.sg` would otherwise silently reject every user). Returns an empty
+ * array when unset, meaning no hosted-domain restriction is enforced.
+ */
+function getAllowedHostedDomains(): string[] {
+  return (env.GOOGLE_HOSTED_DOMAIN ?? '')
+    .split(',')
+    .map((domain) => domain.trim().toLowerCase())
+    .filter((domain) => domain.length > 0);
+}
+
 function getOAuth2Client() {
   return new OAuth2Client({
     client_id: env.GOOGLE_CLIENT_ID,
@@ -67,6 +82,14 @@ export function generateAuthURL({
 }): string {
   const client = getOAuth2Client();
 
+  // `hd` is only an account-chooser hint and accepts a single value. With one
+  // configured domain we pass it directly; with several we fall back to `*`,
+  // which limits the chooser to managed Workspace accounts. The actual
+  // restriction is enforced in `verifyIdToken`.
+  const allowedDomains = getAllowedHostedDomains();
+  const hd =
+    allowedDomains.length === 0 ? undefined : allowedDomains.length === 1 ? allowedDomains[0] : '*';
+
   return client.generateAuthUrl({
     redirect_uri: origin + GOOGLE_REDIRECT_URL_PATH,
     scope: [
@@ -76,7 +99,7 @@ export function generateAuthURL({
     state,
     code_challenge: createHash('sha256').update(codeVerifier).digest('base64url'),
     code_challenge_method: CodeChallengeMethod.S256,
-    hd: env.GOOGLE_HOSTED_DOMAIN,
+    hd,
     prompt,
   });
 }
@@ -127,11 +150,20 @@ export async function exchangeCodeForIdToken({
  * Verifies the Google ID token and extracts the profile information.
  *
  * Throws `InvalidIdTokenError` when the token cannot be trusted — bad
- * signature, expired, missing claims, or hosted-domain mismatch.
+ * signature, expired, or missing claims — and `HostedDomainMismatchError`
+ * (a subclass) when the token's hosted domain is not allow-listed.
+ *
+ * The hosted-domain restriction is enforced on the Google-verified `hd`
+ * (Workspace) claim, not on the email address. `hd` is the account's Workspace
+ * primary domain, so any account belonging to an allow-listed Workspace is
+ * admitted regardless of its email's literal domain (e.g. a secondary or alias
+ * domain). This matches the `GOOGLE_HOSTED_DOMAIN` semantics — it lists
+ * Workspace domains, not email domains — and is Google's recommended gate.
  *
  * @param idToken - The Google ID token to verify.
  * @returns The Google profile.
  * @throws InvalidIdTokenError
+ * @throws HostedDomainMismatchError
  */
 export async function verifyIdToken(idToken: string): Promise<GoogleProfile> {
   const client = getOAuth2Client();
@@ -153,9 +185,12 @@ export async function verifyIdToken(idToken: string): Promise<GoogleProfile> {
     throw new InvalidIdTokenError(`Google ID token missing claim: ${missing}`);
   }
 
-  if (env.GOOGLE_HOSTED_DOMAIN && payload.hd !== env.GOOGLE_HOSTED_DOMAIN) {
-    throw new InvalidIdTokenError(
-      'Google ID token hosted domain does not match the configured hosted domain',
+  // Gate on the verified `hd` (Workspace) claim, not the email domain — see the
+  // function docstring for why.
+  const allowedDomains = getAllowedHostedDomains();
+  if (allowedDomains.length > 0 && (!payload.hd || !allowedDomains.includes(payload.hd))) {
+    throw new HostedDomainMismatchError(
+      'Google ID token hosted domain does not match a configured hosted domain',
     );
   }
 
@@ -171,3 +206,11 @@ export class InvalidIdTokenError extends Error {
     this.name = this.constructor.name;
   }
 }
+
+/**
+ * Thrown when the token is otherwise valid but its hosted domain is not one of
+ * the domains configured in `GOOGLE_HOSTED_DOMAIN`. A subclass of
+ * `InvalidIdTokenError` so existing catch-all handling still rejects it, while
+ * callers that care can distinguish it to surface a domain-specific message.
+ */
+export class HostedDomainMismatchError extends InvalidIdTokenError {}
