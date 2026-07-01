@@ -48,6 +48,9 @@ importers:
         specifier: ^3.13.0
         version: 3.13.0
     devDependencies:
+      esbuild:
+        specifier: ^0.28.1
+        version: 0.28.1
       '@eslint/js':
         specifier: ^9.39.3
         version: 9.39.3

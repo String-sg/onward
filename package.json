@@ -17,6 +17,8 @@
     "check": "svelte-kit sync && svelte-check --fail-on-warnings",
     "format": "prettier --check \"**/*.{svelte,js,ts,md,html,css,json,yaml}\"",
     "lint": "eslint \"**/*.{svelte,js,ts}\"",
+    "export:nlds:bundle": "esbuild scripts/export-nlds.ts --bundle --platform=node --format=esm --target=node24 --packages=external --outfile=build/export-nlds.js",
+    "export:nlds": "node build/export-nlds.js",
     "prepare": "svelte-kit sync || echo '' && node \"./.husky/install.js\""
   },
   "dependencies": {
@@ -32,6 +34,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.3",
+    "esbuild": "^0.28.1",
     "@lucide/svelte": "^0.511.0",
     "@sveltejs/adapter-node": "^5.2.12",
     "@sveltejs/enhanced-img": "^0.8.1",
