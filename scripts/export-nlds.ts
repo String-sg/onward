@@ -1,3 +1,5 @@
+import { type PrismaClient } from '../src/generated/prisma/client.js';
+
 export interface ExportConfig {
   postgresUrl: string;
   bucket: string;
@@ -42,3 +44,77 @@ export function formatDateUtc(now: Date): string {
 export function toNdjson(rows: readonly Record<string, unknown>[]): string {
   return rows.map((row) => `${JSON.stringify(row)}\n`).join('');
 }
+
+export interface Dataset<Row extends Record<string, unknown>> {
+  readonly name: string;
+  fetch(client: PrismaClient): Promise<Row[]>;
+}
+
+interface UserRow extends Record<string, unknown> {
+  id: string;
+  name: string;
+  email: string;
+  created_at: string;
+}
+
+interface MandatoryQuizOutcomeRow extends Record<string, unknown> {
+  user_id: string;
+  learning_unit_id: string;
+  learning_unit_title: string;
+  due_date: string | null;
+  is_completed: boolean;
+  is_quiz_attempted: boolean;
+  is_quiz_passed: boolean | null;
+  number_of_attempts: number;
+  updated_at: string;
+}
+
+export const usersDataset: Dataset<UserRow> = {
+  name: 'users',
+  async fetch(client) {
+    const rows = await client.user.findMany({
+      select: { id: true, name: true, email: true, createdAt: true },
+    });
+    return rows.map((r) => ({
+      id: r.id,
+      name: r.name,
+      email: r.email,
+      created_at: r.createdAt.toISOString(),
+    }));
+  },
+};
+
+export const mandatoryQuizOutcomesDataset: Dataset<MandatoryQuizOutcomeRow> = {
+  name: 'mandatory_quiz_outcomes',
+  async fetch(client) {
+    const rows = await client.learningJourney.findMany({
+      select: {
+        userId: true,
+        learningUnitId: true,
+        isCompleted: true,
+        isQuizAttempted: true,
+        isQuizPassed: true,
+        numberOfAttempts: true,
+        updatedAt: true,
+        learningUnit: { select: { title: true, dueDate: true } },
+      },
+      where: { learningUnit: { isRequired: true } },
+    });
+    return rows.map((r) => ({
+      user_id: r.userId,
+      learning_unit_id: r.learningUnitId,
+      learning_unit_title: r.learningUnit.title,
+      due_date: r.learningUnit.dueDate ? r.learningUnit.dueDate.toISOString().slice(0, 10) : null,
+      is_completed: r.isCompleted,
+      is_quiz_attempted: r.isQuizAttempted,
+      is_quiz_passed: r.isQuizPassed,
+      number_of_attempts: r.numberOfAttempts,
+      updated_at: r.updatedAt.toISOString(),
+    }));
+  },
+};
+
+export const datasets: readonly Dataset<Record<string, unknown>>[] = [
+  usersDataset,
+  mandatoryQuizOutcomesDataset,
+];

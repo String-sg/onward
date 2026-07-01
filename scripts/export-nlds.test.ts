@@ -1,6 +1,13 @@
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 
-import { formatDateUtc, loadConfig, objectKey, toNdjson } from './export-nlds.js';
+import {
+  formatDateUtc,
+  loadConfig,
+  mandatoryQuizOutcomesDataset,
+  objectKey,
+  toNdjson,
+  usersDataset,
+} from './export-nlds.js';
 
 const fullEnv = {
   POSTGRES_URL: 'postgresql://u:p@localhost:5432/db',
@@ -60,5 +67,98 @@ describe('toNdjson', () => {
 
   test('preserves null fields (does not coerce to empty string)', () => {
     expect(toNdjson([{ a: null }])).toBe('{"a":null}\n');
+  });
+});
+
+describe('usersDataset', () => {
+  test('selects exactly the four identity fields and maps to snake_case rows', async () => {
+    const findMany = vi
+      .fn()
+      .mockResolvedValue([
+        { id: 'u1', name: 'Ada', email: 'ada@x.gov', createdAt: new Date('2026-01-02T00:00:00Z') },
+      ]);
+    const client = {
+      user: { findMany },
+    } as unknown as import('../src/generated/prisma/client.js').PrismaClient;
+
+    const rows = await usersDataset.fetch(client);
+
+    expect(findMany).toHaveBeenCalledWith({
+      select: { id: true, name: true, email: true, createdAt: true },
+    });
+    expect(rows).toEqual([
+      { id: 'u1', name: 'Ada', email: 'ada@x.gov', created_at: '2026-01-02T00:00:00.000Z' },
+    ]);
+  });
+});
+
+describe('mandatoryQuizOutcomesDataset', () => {
+  test('filters to required units and projects the nine fields as snake_case', async () => {
+    const findMany = vi.fn().mockResolvedValue([
+      {
+        userId: 'u1',
+        learningUnitId: 'lu1',
+        isCompleted: true,
+        isQuizAttempted: true,
+        isQuizPassed: null,
+        numberOfAttempts: 2,
+        updatedAt: new Date('2026-06-30T10:00:00Z'),
+        learningUnit: { title: 'Cyber Hygiene', dueDate: new Date('2026-12-31T00:00:00Z') },
+      },
+    ]);
+    const client = {
+      learningJourney: { findMany },
+    } as unknown as import('../src/generated/prisma/client.js').PrismaClient;
+
+    const rows = await mandatoryQuizOutcomesDataset.fetch(client);
+
+    expect(findMany).toHaveBeenCalledWith({
+      select: {
+        userId: true,
+        learningUnitId: true,
+        isCompleted: true,
+        isQuizAttempted: true,
+        isQuizPassed: true,
+        numberOfAttempts: true,
+        updatedAt: true,
+        learningUnit: { select: { title: true, dueDate: true } },
+      },
+      where: { learningUnit: { isRequired: true } },
+    });
+    expect(rows).toEqual([
+      {
+        user_id: 'u1',
+        learning_unit_id: 'lu1',
+        learning_unit_title: 'Cyber Hygiene',
+        due_date: '2026-12-31',
+        is_completed: true,
+        is_quiz_attempted: true,
+        is_quiz_passed: null,
+        number_of_attempts: 2,
+        updated_at: '2026-06-30T10:00:00.000Z',
+      },
+    ]);
+  });
+
+  test('emits null due_date when the unit has none', async () => {
+    const findMany = vi.fn().mockResolvedValue([
+      {
+        userId: 'u1',
+        learningUnitId: 'lu1',
+        isCompleted: false,
+        isQuizAttempted: false,
+        isQuizPassed: null,
+        numberOfAttempts: 0,
+        updatedAt: new Date('2026-06-30T10:00:00Z'),
+        learningUnit: { title: 'AI Literacy', dueDate: null },
+      },
+    ]);
+    const client = {
+      learningJourney: { findMany },
+    } as unknown as import('../src/generated/prisma/client.js').PrismaClient;
+
+    const [row] = await mandatoryQuizOutcomesDataset.fetch(client);
+
+    expect(row.due_date).toBeNull();
   });
 });
