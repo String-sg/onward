@@ -6,6 +6,7 @@ import {
   mandatoryQuizOutcomesDataset,
   objectKey,
   putObject,
+  runExport,
   toNdjson,
   usersDataset,
 } from './export-nlds.js';
@@ -188,5 +189,55 @@ describe('putObject', () => {
       ServerSideEncryption: 'aws:kms',
       SSEKMSKeyId: 'arn:kms:key',
     });
+  });
+});
+
+describe('runExport', () => {
+  const cfg = {
+    postgresUrl: 'x',
+    bucket: 'nlds-bucket',
+    prefix: 'glow/',
+    kmsKeyId: 'arn:kms:key',
+    region: 'ap-southeast-1',
+  };
+
+  test('uploads both datasets under dated keys and returns their row counts', async () => {
+    const client = {
+      user: {
+        findMany: vi
+          .fn()
+          .mockResolvedValue([
+            { id: 'u1', name: 'Ada', email: 'a@x', createdAt: new Date('2026-01-01T00:00:00Z') },
+          ]),
+      },
+      learningJourney: { findMany: vi.fn().mockResolvedValue([]) },
+    } as unknown as import('../src/generated/prisma/client.js').PrismaClient;
+    const send = vi.fn().mockResolvedValue({});
+    const s3 = { send } as unknown as import('@aws-sdk/client-s3').S3Client;
+
+    const results = await runExport({ client, s3, cfg, now: new Date('2026-07-01T00:00:00Z') });
+
+    expect(results).toEqual([
+      { name: 'users', key: 'glow/users/2026-07-01.ndjson', rowCount: 1 },
+      {
+        name: 'mandatory_quiz_outcomes',
+        key: 'glow/mandatory_quiz_outcomes/2026-07-01.ndjson',
+        rowCount: 0,
+      },
+    ]);
+    expect(send).toHaveBeenCalledTimes(2);
+  });
+
+  test('propagates an upload failure (aborting the run)', async () => {
+    const client = {
+      user: { findMany: vi.fn().mockResolvedValue([]) },
+      learningJourney: { findMany: vi.fn().mockResolvedValue([]) },
+    } as unknown as import('../src/generated/prisma/client.js').PrismaClient;
+    const send = vi.fn().mockRejectedValue(new Error('AccessDenied'));
+    const s3 = { send } as unknown as import('@aws-sdk/client-s3').S3Client;
+
+    await expect(
+      runExport({ client, s3, cfg, now: new Date('2026-07-01T00:00:00Z') }),
+    ).rejects.toThrow('AccessDenied');
   });
 });

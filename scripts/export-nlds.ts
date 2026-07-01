@@ -1,6 +1,10 @@
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import process from 'node:process';
+import { fileURLToPath } from 'node:url';
 
-import { type PrismaClient } from '../src/generated/prisma/client.js';
+import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { PrismaPg } from '@prisma/adapter-pg';
+
+import { PrismaClient } from '../src/generated/prisma/client.js';
 
 export interface ExportConfig {
   postgresUrl: string;
@@ -138,3 +142,50 @@ export const datasets: readonly Dataset<Record<string, unknown>>[] = [
   usersDataset,
   mandatoryQuizOutcomesDataset,
 ];
+
+export interface DatasetResult {
+  name: string;
+  key: string;
+  rowCount: number;
+}
+
+export async function runExport(deps: {
+  client: PrismaClient;
+  s3: S3Client;
+  cfg: ExportConfig;
+  now: Date;
+}): Promise<DatasetResult[]> {
+  const { client, s3, cfg, now } = deps;
+  const date = formatDateUtc(now);
+  const results: DatasetResult[] = [];
+  for (const dataset of datasets) {
+    const rows = await dataset.fetch(client);
+    const key = objectKey(cfg.prefix, dataset.name, date);
+    await putObject(s3, cfg, key, toNdjson(rows));
+    results.push({ name: dataset.name, key, rowCount: rows.length });
+  }
+  return results;
+}
+
+async function main(): Promise<void> {
+  const cfg = loadConfig(process.env);
+  const client = new PrismaClient({
+    adapter: new PrismaPg({ connectionString: cfg.postgresUrl }),
+  });
+  const s3 = new S3Client({ region: cfg.region });
+  try {
+    const results = await runExport({ client, s3, cfg, now: new Date() });
+    for (const r of results) {
+      console.log(`exported ${r.rowCount} rows -> s3://${cfg.bucket}/${r.key}`);
+    }
+  } finally {
+    await client.$disconnect();
+  }
+}
+
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  main().catch((err) => {
+    console.error('NLDS export failed:', err);
+    process.exit(1);
+  });
+}
