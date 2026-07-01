@@ -1,3 +1,5 @@
+import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+
 import { type PrismaClient } from '../src/generated/prisma/client.js';
 
 export interface ExportConfig {
@@ -113,6 +115,24 @@ export const mandatoryQuizOutcomesDataset: Dataset<MandatoryQuizOutcomeRow> = {
     }));
   },
 };
+
+export async function putObject(
+  client: S3Client,
+  cfg: ExportConfig,
+  key: string,
+  body: string,
+): Promise<void> {
+  await client.send(
+    new PutObjectCommand({
+      Bucket: cfg.bucket,
+      Key: key,
+      Body: body,
+      ContentType: 'application/x-ndjson',
+      ServerSideEncryption: 'aws:kms',
+      SSEKMSKeyId: cfg.kmsKeyId,
+    }),
+  );
+}
 
 export const datasets: readonly Dataset<Record<string, unknown>>[] = [
   usersDataset,

@@ -5,6 +5,7 @@ import {
   loadConfig,
   mandatoryQuizOutcomesDataset,
   objectKey,
+  putObject,
   toNdjson,
   usersDataset,
 } from './export-nlds.js';
@@ -160,5 +161,32 @@ describe('mandatoryQuizOutcomesDataset', () => {
     const [row] = await mandatoryQuizOutcomesDataset.fetch(client);
 
     expect(row.due_date).toBeNull();
+  });
+});
+
+describe('putObject', () => {
+  test('sends the object with SSE-KMS, correct bucket/key and NDJSON content type', async () => {
+    const send = vi.fn().mockResolvedValue({});
+    const client = { send } as unknown as import('@aws-sdk/client-s3').S3Client;
+    const cfg = {
+      postgresUrl: 'x',
+      bucket: 'nlds-bucket',
+      prefix: 'glow/',
+      kmsKeyId: 'arn:kms:key',
+      region: 'ap-southeast-1',
+    };
+
+    await putObject(client, cfg, 'glow/users/2026-07-01.ndjson', '{"a":1}\n');
+
+    expect(send).toHaveBeenCalledTimes(1);
+    const command = send.mock.calls[0][0];
+    expect(command.input).toEqual({
+      Bucket: 'nlds-bucket',
+      Key: 'glow/users/2026-07-01.ndjson',
+      Body: '{"a":1}\n',
+      ContentType: 'application/x-ndjson',
+      ServerSideEncryption: 'aws:kms',
+      SSEKMSKeyId: 'arn:kms:key',
+    });
   });
 });
