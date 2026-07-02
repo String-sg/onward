@@ -1,5 +1,5 @@
 ---
-status: 'proposed'
+status: 'accepted'
 date: 2026-06-26
 decision-makers: nicholasjjlim (Glow engineering), elsonlim-gt (NLDS Product Ops)
 consulted:
@@ -90,6 +90,16 @@ only cross-account grant is on the write path: a scoped bucket policy lets Glow'
 export identity assume a least-privilege role to write to its prefix — NLDS reads
 within its own account and needs no cross-account role. Objects are encrypted at
 rest with KMS, and exposure can be narrowed further to specific bucket prefixes.
+
+The mechanism itself is content-agnostic: the export path would carry a
+whole-database dump just as readily as curated slices, so this approach is a
+superset of the rejected snapshot-export option rather than an alternative to it.
+Constraining what Glow writes to curated datasets is therefore a deliberate
+governance choice, not a limitation of the pattern — and it is the choice that
+delivers the small-blast-radius benefit above. The concrete dataset selection is
+deferred (see below), but the intent recorded here is curated exports; landing
+the entire database would forfeit the curated-only exposure that motivates this
+decision and should be treated as a reversal of it, not a routine configuration.
 
 ```mermaid
 flowchart LR
