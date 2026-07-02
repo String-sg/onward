@@ -13,18 +13,23 @@ informed:
 The NLDS Product Ops team wants Glow's learning data centralized in the NLDS
 data warehouse for analytics and reporting. Glow has no automated pipeline to
 NLDS today, so the data is moved by hand or not at all. This decision evaluates
-three candidate connector patterns and names a single recommended approach;
-implementation, warehouse schema/table mapping, historical backfill, and the
-question of which datasets qualify for extraction are explicitly out of scope
+candidate connector patterns and names a single recommended approach; connector
+implementation, warehouse schema/table mapping, and historical backfill are
+explicitly out of scope
 (see [issue #597](https://github.com/String-sg/onward/issues/597)).
 
+There is **no hard requirement to curate** what is sent. Glow's learning data is
+not sensitive in nature, and NLDS will decide how it wants to use the data, so
+the connector exports the **whole database** rather than a filtered subset.
+Curating the export to specific datasets could be re-explored in the future, but
+nothing about the current use case requires it.
+
 Two facts about the environment shape the decision. First, the reporting and
-analytics use case tolerates **batch freshness** — daily or hourly data is
-acceptable; there is no near-real-time requirement. Second, Glow and NLDS run in
-**separate AWS accounts within the same AWS Organization**, so cross-account
-mechanisms are available but the two networks are not one VPC. No external policy
-mandates or forbids a particular network posture, so the options are judged on
-their merits.
+analytics use case tolerates **batch freshness** — daily data is acceptable;
+there is no near-real-time requirement. Second, Glow and NLDS run in **separate
+AWS accounts within the same AWS Organization**, so cross-account mechanisms are
+available but the two networks are not one VPC. No external policy mandates or
+forbids a particular network posture, so the options are judged on their merits.
 
 ## Decision Drivers
 
@@ -40,8 +45,8 @@ their merits.
 
 ## Considered Options
 
-- **S3 data-lake intermediary** — Glow exports curated datasets to an S3 bucket;
-  NLDS ingests from there on its own schedule.
+- **S3 data-lake intermediary** — Glow exports a whole-database snapshot to an S3
+  bucket; NLDS ingests from there on its own schedule.
 - **Database replica exposed via AWS PrivateLink** — NLDS connects to a read
   replica of Glow's database over a one-directional, account-to-account private
   endpoint.
@@ -60,12 +65,14 @@ database-to-warehouse mechanisms to be addressed.
 
 ## Decision Outcome
 
-Chosen option: **S3 data-lake intermediary**, because it is the only option whose
-freshness profile matches the batch requirement while also being the cheapest,
-the least network-exposed, and the lowest-effort to stand up and operate. Glow
-already runs an S3 integration in the same region, so the producer side reuses
-existing infrastructure rather than introducing a database replica, a network
-path, or a private endpoint.
+Chosen option: **S3 data-lake intermediary**, with an **RDS snapshot export** as
+the producer, because it is the only option whose freshness profile matches the
+batch requirement while also being the cheapest, the least network-exposed, and
+the lowest-effort to stand up and operate. The snapshot export lands the whole
+database in S3 as Parquet with no export code to write, and NLDS ingests from
+there on its own schedule. Glow already runs an S3 integration in the same
+region, so this reuses existing infrastructure rather than introducing a database
+replica, a network path, or a private endpoint.
 
 Both database-replica options provide near-real-time freshness that the use case
 does not ask for, and they pay for it with a materially larger blast radius (a
@@ -74,46 +81,46 @@ heavier standing operational burden (replica provisioning, credential rotation,
 and either an endpoint service or a peered network to maintain). With batch
 freshness accepted, that trade buys nothing.
 
-The two AWS-native database mechanisms do not displace the choice either. DMS
-also reads from the source database — so it carries the same operational-database
-exposure as the replica options — and is better understood here as a possible
-loader _into_ the S3 lake than as a rival to it. RDS snapshot export is the
-lowest-effort producer of all, but it exports the entire database, sacrificing
-the curated-only exposure that makes the S3 approach attractive; pushing dataset
-selection downstream into NLDS weakens Glow's control over what leaves its
-boundary.
+The two AWS-native database mechanisms relate to the choice differently. DMS also
+reads from the source database — so it carries the same operational-database
+exposure as the replica options, and runs a replication instance continuously —
+and is better understood here as a possible loader _into_ the S3 lake than as a
+rival to it. RDS snapshot export, by contrast, is **the chosen producer** for the
+S3 intermediary: it is the lowest-effort producer of all, it reads an automated
+snapshot rather than the live instance, and it writes analytics-friendly Parquet
+with no export code. Its usual drawback — that it exports the entire database
+rather than curated subsets — does not apply here, because there is no
+requirement to curate what is sent.
 
-The S3 intermediary also keeps the two systems decoupled: Glow controls exactly
-which curated datasets land in the bucket, NLDS ingests on its own cadence, and
-neither side gains reachability into the other's network or live schema. The
-only cross-account grant is on the write path: a scoped bucket policy lets Glow's
-export identity assume a least-privilege role to write to its prefix — NLDS reads
-within its own account and needs no cross-account role. Objects are encrypted at
-rest with KMS, and exposure can be narrowed further to specific bucket prefixes.
+The S3 intermediary also keeps the two systems decoupled: Glow produces the
+export, NLDS ingests on its own cadence, and neither side gains reachability into
+the other's network or live schema. The only cross-account grant is on the write
+path: a scoped bucket policy lets Glow's export identity assume a least-privilege
+role to write to its prefix — NLDS reads within its own account and needs no
+cross-account role. Objects are encrypted at rest with KMS, and exposure can be
+narrowed further to specific bucket prefixes.
 
-The mechanism itself is content-agnostic: the export path would carry a
-whole-database dump just as readily as curated slices, so this approach is a
-superset of the rejected snapshot-export option rather than an alternative to it.
-Constraining what Glow writes to curated datasets is therefore a deliberate
-governance choice, not a limitation of the pattern — and it is the choice that
-delivers the small-blast-radius benefit above. The concrete dataset selection is
-deferred (see below), but the intent recorded here is curated exports; landing
-the entire database would forfeit the curated-only exposure that motivates this
-decision and should be treated as a reversal of it, not a routine configuration.
+The mechanism is content-agnostic: the same export path carries a whole-database
+dump and curated slices equally well. The whole database is exported here because
+Glow's data is not sensitive and NLDS has no need for a filtered subset. Should
+curation ever become desirable, it would be a change of producer and content
+within this same S3 pattern — swapping the snapshot export for a purpose-built
+export job — not a new architecture, since no network path, replica, or endpoint
+is introduced either way.
 
 ```mermaid
 flowchart LR
     subgraph GlowAcct["Glow AWS account"]
-        Glow["Glow app / scheduled export job"]
+        Glow["Glow database<br/>(RDS snapshot export)"]
     end
     subgraph NldsAcct["NLDS AWS account (same Organization)"]
-        Bucket["S3 landing bucket<br/>(curated datasets, SSE-KMS,<br/>bucket-owner-enforced)"]
+        Bucket["S3 landing bucket<br/>(Parquet, SSE-KMS,<br/>bucket-owner-enforced)"]
         Ingest["NLDS ingestion"]
         Warehouse["NLDS data warehouse"]
         Bucket --> Ingest
         Ingest --> Warehouse
     end
-    Glow -->|"batch export (daily/hourly):<br/>cross-account write to a scoped prefix"| Bucket
+    Glow -->|"batch export (per snapshot schedule):<br/>cross-account write to a scoped prefix"| Bucket
 ```
 
 ### Bucket ownership
@@ -142,26 +149,31 @@ is to centralize learning data in the NLDS warehouse.
 
 ### Consequences
 
-- Good, because it is the cheapest option — S3 storage plus a periodic export
-  job, with no hourly endpoint or replica running cost.
-- Good, because it has the smallest security surface: there is no network path
-  between the two accounts, and only curated, exported datasets are reachable —
-  never the live operational database.
-- Good, because it reuses Glow's existing S3 integration — the build is an export
-  job that writes cross-account to a scoped prefix, plus a bucket policy, rather
-  than new database or network infrastructure.
+- Good, because it is the cheapest option — S3 storage plus a periodic snapshot
+  export, with no standing endpoint or replica running cost.
+- Good, because there is no network path between the two accounts, and the
+  producer reads a database snapshot rather than the live operational instance —
+  so the live database is never reachable by NLDS.
+- Good, because it is the lowest build effort of all — a configured RDS snapshot
+  export plus a bucket policy, with no export code to write, rather than new
+  database or network infrastructure.
 - Good, because siting the bucket in the NLDS account keeps retention, lifecycle,
   the encryption key, and cataloging of the centralized data under the warehouse
   owner, while Glow operates no long-lived bucket.
 - Good, because the two systems stay decoupled and can evolve their schemas and
   schedules independently.
-- Bad, because freshness is limited to the export cadence; if NLDS later needs
-  near-real-time data, this pattern will not satisfy it and the PrivateLink
+- Bad, because freshness is limited to the snapshot/export cadence; if NLDS later
+  needs near-real-time data, this pattern will not satisfy it and the PrivateLink
   option becomes the documented upgrade path.
-- Bad, because the export step is a new producer responsibility Glow must own and
-  monitor (job success, completeness, and bucket lifecycle).
-- Neutral, because dataset selection and warehouse mapping are deferred to a
-  later decision, as this spike scoped them out.
+- Neutral, because the whole database is exported, placing Glow's full operational
+  schema (as Parquet) in the NLDS account; this is acceptable because the data is
+  not sensitive, and curating the export could narrow it if that ever changes.
+- Bad, because the export step is a producer responsibility Glow must own and
+  monitor (snapshot-export configuration and success).
+- Neutral, because warehouse schema and table mapping are out of scope and will
+  be decided separately.
+- Neutral, because the connector exports the whole database; curating what is
+  sent can be re-explored later if the need arises.
 
 ### Confirmation
 
@@ -175,22 +187,22 @@ alternatives.
 
 ### S3 data-lake intermediary
 
-Glow writes curated exports cross-account to an S3 bucket in the NLDS account;
-NLDS reads them from its own account on its own schedule.
+Glow writes a whole-database RDS snapshot export cross-account to an S3 bucket in
+the NLDS account; NLDS reads it from its own account on its own schedule.
 
-- Good, because cost is lowest — storage plus a periodic job, no standing
+- Good, because cost is lowest — storage plus a periodic export, no standing
   endpoint or replica charges.
 - Good, because there is no network path between accounts; the only cross-account
   grant is a scoped bucket policy letting Glow's export identity write to its
   prefix, while NLDS reads within its own account with no cross-account role.
-- Good, because only curated datasets are exposed, not the live operational
-  schema, keeping the blast radius small.
-- Good, because it reuses Glow's existing S3 integration, minimizing build
-  effort.
+- Good, because the producer reads a snapshot rather than exposing the live
+  operational schema, keeping the network blast radius small.
+- Good, because it reuses Glow's existing S3 integration, minimizing build effort
+  — the snapshot export needs no export code at all.
 - Good, because producer and consumer stay decoupled and independently
   evolvable.
 - Bad, because freshness is bounded by the export cadence (batch only).
-- Bad, because Glow takes on a new export job to run and monitor.
+- Bad, because Glow takes on an export to run and monitor.
 
 ### Database replica exposed via AWS PrivateLink
 
@@ -201,8 +213,8 @@ account-to-account private endpoint.
 - Good, because the private endpoint is one-directional and scoped to a single
   service, avoiding broad network-level reachability.
 - Good, because it needs no CIDR coordination between the two accounts.
-- Bad, because it exposes a replica of the operational database to another
-  account, a much larger surface than curated exports.
+- Bad, because it exposes a live replica of the operational database to another
+  account — a larger, live surface than a static S3 export of the same data.
 - Bad, because ongoing cost is higher — private endpoint hours, a load balancer,
   and per-GB processing.
 - Bad, because operational burden is heavier — replica provisioning, an endpoint
@@ -250,22 +262,25 @@ in full-load (batch) or change-data-capture mode.
 ### RDS snapshot export to S3
 
 Glow's managed database exports automated snapshots to S3 as Parquet with no
-application export code; NLDS ingests from there.
+application export code; NLDS ingests from there. This is the **selected producer
+for the S3 intermediary** (see Decision Outcome), not a rejected alternative — it
+is listed here for completeness against the other mechanisms.
 
 - Good, because it is the lowest build effort — a configured export, no export
   job to write or maintain.
 - Good, because it lands analytics-friendly Parquet in S3 and reuses the
   cross-account S3 access path the chosen approach already establishes.
-- Bad, because ongoing cost scales with the full database — per-GB snapshot
-  export charges plus storage of a whole-database Parquet copy each run, versus a
-  smaller incremental curated export.
-- Bad, because it exports the entire database rather than curated datasets,
-  directly undercutting the "only curated data is exposed" security benefit that
-  motivates the chosen approach.
-- Bad, because freshness is tied to the snapshot schedule and a full export is
-  coarser and heavier than an incremental curated export.
-- Bad, because it pushes dataset selection and filtering downstream into NLDS
-  ingestion rather than letting Glow control exactly what leaves its boundary.
+- Good, because it reads an automated snapshot rather than the live instance, so
+  it needs no replication endpoint and never exposes the live operational
+  database.
+- Neutral, because ongoing cost scales with the full database — per-GB snapshot
+  export charges plus storage of a whole-database Parquet copy each run;
+  acceptable given there is no requirement to reduce what is sent.
+- Neutral, because it exports the entire database rather than curated datasets —
+  the intended behaviour, since Glow's data is not sensitive and NLDS has no need
+  for a filtered subset.
+- Neutral, because freshness is tied to the snapshot schedule, but that is
+  sufficient for the daily batch use case.
 
 ## More Information
 
@@ -289,6 +304,10 @@ option.
 This decision should be revisited if NLDS develops a genuine near-real-time
 requirement, in which case the PrivateLink replica is the recommended next step
 (with DMS in change-data-capture mode as the likely loading mechanism) and would
-be captured in a superseding ADR. Follow-on work — dataset selection, warehouse
-schema and table mapping, and historical backfill — is out of scope here and
-will be decided separately, referencing this ADR for the connector direction.
+be captured in a superseding ADR. Curating the export to specific datasets —
+rather than sending the whole database — could be re-explored in the future if
+the need arises; because it would swap the snapshot export for a purpose-built
+export job while keeping the S3 architecture, it would stay within this decision
+rather than supersede it. That possibility, along with warehouse schema and table
+mapping and historical backfill, is out of scope here and will be decided
+separately, referencing this ADR for the connector direction.
