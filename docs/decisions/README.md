@@ -40,3 +40,4 @@ the ADR; the spec consumes its outcome.
 - [0003 — Nested per-report download endpoints and separate per-report page routes](./0003-report-export-routing-and-page-routes.md) — accepted
 - [0004 — Card-grid report index with per-page back navigation](./0004-card-grid-report-index.md) — accepted
 - [0005 — Connect Glow to the NLDS warehouse through an S3 data-lake intermediary](./0005-glow-nlds-warehouse-connector.md) — proposed
+- [0006 — Store OTPaaS learners in the User table with an optional name and Google ID](./0006-store-otpaas-learners-in-user-table.md) — proposed
